@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Login from './login.tsx'; 
-import Register from './register.tsx'; 
+import Login from './components/Login.tsx'; 
+import Register from './components/Register.tsx'; 
 
 // Definición de la interfaz para una entrada
 interface Ticket {
@@ -10,13 +10,14 @@ interface Ticket {
   location: string;
   price: number;
   availableTickets: number;
-  imageUrl: string;}
+  imageUrl: string;
+}
 
 const App: React.FC = () => {
   // Estado para controlar qué vista se muestra: 'main_app', 'login', 'register'
   const [currentView, setCurrentView] = useState<'main_app' | 'login' | 'register'>('main_app'); 
 
-  //Estados para manejo
+  //Estados para los manejos
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
@@ -30,7 +31,7 @@ const App: React.FC = () => {
     if (currentView === 'main_app') {
       const dummyTickets: Ticket[] = [
         { id: '1', eventName: 'Concierto de Rock', date: '2025-07-20', location: 'Estadio Nacional', price: 50.00, availableTickets: 100, imageUrl: 'https://placehold.co/600x400/FF5733/FFFFFF?text=Concierto' },
-        { id: '2', eventName: 'Obra de Teatro Clásica', date: '2025-08-10', location: 'Teatro Municipal', price: 30.00, availableTickets: 50, imageUrl: 'https://placehold.co/600x400/33FF57/FFFFFF?text=Teatro' },
+        { id: '2', eventName: 'Obra de Teatro Clásica', date: '2025-08-10', location: 'Teatro Municipal', price: 30.00, availableTickets: 6, imageUrl: 'https://placehold.co/600x400/33FF57/FFFFFF?text=Teatro' },
         { id: '3', eventName: 'Festival de Cine Independiente', date: '2025-09-01', location: 'Centro Cultural', price: 20.00, availableTickets: 200, imageUrl: 'https://placehold.co/600x400/3357FF/FFFFFF?text=Cine' },
         { id: '4', eventName: 'Espectáculo de Magia', date: '2025-09-15', location: 'Teatro Fantasía', price: 25.00, availableTickets: 75, imageUrl: 'https://placehold.co/600x400/FF33CC/FFFFFF?text=Magia' },
         { id: '5', eventName: 'Exposición de Arte Moderno', date: '2025-10-05', location: 'Galería Central', price: 15.00, availableTickets: 150, imageUrl: 'https://placehold.co/600x400/33CCFF/FFFFFF?text=Arte' },
@@ -69,11 +70,6 @@ const App: React.FC = () => {
   const handleConfirmPurchase = () => {
     if (!selectedTicket) {
       setModalErrorMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
-      return;
-    }
-
-    if (quantity <= 0) {
-      setModalErrorMessage('Por favor, selecciona una cantidad válida.');
       return;
     }
 
@@ -194,7 +190,7 @@ const App: React.FC = () => {
               <h2 className="text-4xl font-extrabold text-indigo-800 mb-8 text-center animate-fade-in-down">Eventos Destacados</h2>
 
               {/* Contenedor del Carrusel */}
-              <div className="relative flex items-center justify-center w-full max-w-4xl mx-auto py-8"> {/* Añadido padding vertical */}
+              <div className="relative flex items-center justify-center w-full max-w-4xl mx-auto py-8"> 
                 <button
                   onClick={goToPreviousEvent}
                   className="absolute -left-10 md:-left-12 p-3 bg-gray-200 text-gray-700 rounded-full shadow-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 z-10"
@@ -204,7 +200,7 @@ const App: React.FC = () => {
 
                 {/* Contenido del Evento Actual */}
                 {currentEvent ? (
-                  <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col justify-between w-full max-w-2xl mx-auto"> {/* Aumentado el tamaño con max-w-2xl */}
+                  <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col justify-between w-full max-w-2xl mx-auto"> 
                     <img
                       src={currentEvent.imageUrl}
                       alt={currentEvent.eventName}
