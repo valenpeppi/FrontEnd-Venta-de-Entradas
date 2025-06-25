@@ -146,7 +146,7 @@ const App: React.FC = () => {
         // Si no hay tickets, mostrar un mensaje de carga o vacío
         if (tickets.length === 0) {
           return (
-            <div className="flex items-center justify-center min-h-screen">
+            <div className="app-center-screen">
               <p className="text-gray-600 text-xl">Cargando eventos...</p>
             </div>
           );
@@ -155,17 +155,17 @@ const App: React.FC = () => {
 
         return (
           <>
-            <nav className="bg-white shadow-md p-4 sticky top-0 z-40">
-              <div className="container mx-auto flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-indigo-700">TicketApp</h1>
-                <ul className="flex space-x-6 items-center"> 
-                  <li><a href="#" className="text-gray-600 hover:text-indigo-700 font-medium">Inicio</a></li>
-                  <li><a href="#" className="text-gray-600 hover:text-indigo-700 font-medium">Mis Entradas</a></li>
-                  <li><a href="#" className="text-gray-600 hover:text-indigo-700 font-medium">Ayuda</a></li>
-                  <li className="ml-6"> 
+            <nav className="app-navbar">
+              <div className="app-navbar-container">
+                <h1 className="app-navbar-title">TicketApp</h1>
+                <ul className="app-navbar-list"> 
+                  <li><a href="#" className="app-navbar-link">Inicio</a></li>
+                  <li><a href="#" className="app-navbar-link">Mis Entradas</a></li>
+                  <li><a href="#" className="app-navbar-link">Ayuda</a></li>
+                  <li className="app-navbar-login-btn"> 
                     <button
                       onClick={() => setCurrentView('login')}
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-full shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      className="app-btn-login"
                     >
                       Iniciar Sesión
                     </button>
@@ -173,7 +173,7 @@ const App: React.FC = () => {
                   <li>
                     <button
                       onClick={() => setCurrentView('register')}
-                      className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                      className="app-btn-register"
                     >
                       Registrarse
                     </button>
@@ -182,42 +182,35 @@ const App: React.FC = () => {
               </div>
             </nav>
 
-            <main className="container mx-auto p-6 md:p-8">
-              <div className="relative">
+            <main className="app-main">
+              <div className="app-message-container">
                 <MessageDisplay message={appMessage} type={appMessage?.includes('comprado') ? 'success' : 'error'} />
               </div>
-
-              <h2 className="text-4xl font-extrabold text-indigo-800 mb-8 text-center animate-fade-in-down">Eventos Destacados</h2>
-
-              {/* Contenedor del Carrusel */}
-              <div className="relative flex items-center justify-center w-full max-w-4xl mx-auto py-8"> 
+              <h2 className="app-title">Eventos Destacados</h2>
+              <div className="app-carousel">
                 <button
                   onClick={goToPreviousEvent}
-                  className="absolute -left-10 md:-left-12 p-3 bg-gray-200 text-gray-700 rounded-full shadow-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 z-10"
+                  className="app-carousel-btn-left"
                 >
-                  <i className="fas fa-chevron-left text-2xl"></i>
+                  <i className="fas fa-chevron-left app-carousel-icon"></i>
                 </button>
-
-                {/* Contenido del Evento Actual */}
                 {currentEvent ? (
-                  <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col justify-between w-full max-w-2xl mx-auto"> 
+                  <div className="app-event-card">
                     <img
                       src={currentEvent.imageUrl}
                       alt={currentEvent.eventName}
-                      className="w-full h-64 object-cover rounded-lg mb-4" 
+                      className="app-event-img"
                     />
                     <div>
-                      <h3 className="text-3xl font-semibold text-gray-900 mb-2">{currentEvent.eventName}</h3>
-                      <p className="text-gray-700 text-lg mb-1"><i className="fas fa-calendar-alt mr-2 text-indigo-500"></i>{currentEvent.date}</p>
-                      <p className="text-gray-700 text-lg mb-4"><i className="fas fa-map-marker-alt mr-2 text-indigo-500"></i>{currentEvent.location}</p>
+                      <h3 className="app-event-title">{currentEvent.eventName}</h3>
+                      <p className="app-event-date"><i className="fas fa-calendar-alt app-event-date-icon"></i>{currentEvent.date}</p>
+                      <p className="app-event-location"><i className="fas fa-map-marker-alt app-event-location-icon"></i>{currentEvent.location}</p>
                     </div>
-                    <div className="flex justify-between items-center mt-4">
-                      <span className="text-4xl font-bold text-indigo-700">${currentEvent.price.toFixed(2)}</span> 
+                    <div className="app-event-footer">
+                      <span className="app-event-price">${currentEvent.price.toFixed(2)}</span>
                       <button
                         onClick={() => handleBuyClick(currentEvent)}
-                        className={`px-8 py-3 rounded-full font-semibold text-white transition-all duration-300 text-lg
-                          ${currentEvent.availableTickets > 0 ? 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2' : 'bg-gray-400 cursor-not-allowed'}`
-                        }
+                        className={`app-btn-buy${currentEvent.availableTickets > 0 ? '' : ' app-btn-buy-disabled'}`}
                         disabled={currentEvent.availableTickets === 0}
                       >
                         {currentEvent.availableTickets > 0 ? `Comprar (${currentEvent.availableTickets} restantes)` : 'Agotado'}
@@ -225,29 +218,28 @@ const App: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-gray-600 text-xl">No hay eventos disponibles.</p>
+                  <p className="app-no-events">No hay eventos disponibles.</p>
                 )}
-                {/* Botones de navegación del carrusel */}
                 <button
                   onClick={goToNextEvent}
-                  className="absolute -right-10 md:-right-12 p-3 bg-gray-200 text-gray-700 rounded-full shadow-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 z-10"
+                  className="app-carousel-btn-right"
                 >
-                  <i className="fas fa-chevron-right text-2xl"></i>
+                  <i className="fas fa-chevron-right app-carousel-icon"></i>
                 </button>
               </div>
             </main>
 
             {showPurchaseModal && selectedTicket && (
-              <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md animate-scale-in">
-                  <h3 className="text-3xl font-bold text-indigo-800 mb-6 text-center">Comprar Entradas</h3>
-                  <div className="mb-4">
-                    <p className="text-gray-700 text-lg mb-2">Evento: <span className="font-semibold">{selectedTicket.eventName}</span></p>
-                    <p className="text-gray-700 text-lg mb-2">Precio por entrada: <span className="font-semibold">${selectedTicket.price.toFixed(2)}</span></p>
-                    <p className="text-gray-700 text-lg mb-4">Entradas disponibles: <span className="font-semibold">{selectedTicket.availableTickets}</span></p>
+              <div className="app-modal-bg">
+                <div className="app-modal">
+                  <h3 className="app-modal-title">Comprar Entradas</h3>
+                  <div className="app-modal-info">
+                    <p className="app-modal-event">Evento: <span className="app-modal-event-name">{selectedTicket.eventName}</span></p>
+                    <p className="app-modal-price">Precio por entrada: <span className="app-modal-price-value">${selectedTicket.price.toFixed(2)}</span></p>
+                    <p className="app-modal-available">Entradas disponibles: <span className="app-modal-available-value">{selectedTicket.availableTickets}</span></p>
                   </div>
-                  <div className="flex items-center justify-center mb-6">
-                    <label htmlFor="quantity" className="text-gray-700 text-lg mr-4">Cantidad:</label>
+                  <div className="app-modal-quantity-row">
+                    <label htmlFor="quantity" className="app-modal-quantity-label">Cantidad:</label>
                     <input
                       type="number"
                       id="quantity"
@@ -255,20 +247,20 @@ const App: React.FC = () => {
                       max={selectedTicket.availableTickets}
                       value={quantity}
                       onChange={(e) => setQuantity(Math.max(1, Math.min(selectedTicket.availableTickets, parseInt(e.target.value) || 1)))}
-                      className="w-24 p-3 border border-gray-300 rounded-md text-center text-lg focus:ring-indigo-500 focus:border-indigo-500"
+                      className="app-modal-quantity-input"
                     />
                   </div>
                   <MessageDisplay message={modalErrorMessage} type="error" />
-                  <div className="flex justify-around space-x-4">
+                  <div className="app-modal-btn-row">
                     <button
                       onClick={handleConfirmPurchase}
-                      className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      className="app-modal-btn-confirm"
                     >
                       Confirmar Compra
                     </button>
                     <button
                       onClick={handleCloseModal}
-                      className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-6 rounded-lg shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                      className="app-modal-btn-cancel"
                     >
                       Cancelar
                     </button>
@@ -284,7 +276,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 font-inter text-gray-800 antialiased">
+    <div className="app-root">
       {renderContent()}
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />

@@ -40,48 +40,48 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, onGoToLogin }) =
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 font-inter text-gray-800 antialiased">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md animate-scale-in">
-        <h2 className="text-3xl font-bold text-indigo-800 mb-6 text-center">Registrarse</h2>
+    <div className="register-root">
+      <div className="register-card">
+        <h2 className="register-title">Registrarse</h2>
         {error && (
-          <div className="p-3 rounded-md shadow-sm mb-4 bg-red-100 text-red-800 text-center">
+          <div className="register-error-message">
             {error}
           </div>
         )}
         {successMessage && (
-          <div className="p-3 rounded-md shadow-sm mb-4 bg-green-100 text-green-800 text-center">
+          <div className="register-success-message">
             {successMessage}
           </div>
         )}
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="register-email" className="block text-gray-700 text-lg font-semibold mb-2">Email:</label>
+          <div className="register-field">
+            <label htmlFor="register-email" className="register-label">Email:</label>
             <input
               type="email"
               id="register-email"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="register-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="register-password" className="block text-gray-700 text-lg font-semibold mb-2">Contraseña:</label>
+          <div className="register-field">
+            <label htmlFor="register-password" className="register-label">Contraseña:</label>
             <input
               type="password"
               id="register-password"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="register-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-          <div className="mb-6">
-            <label htmlFor="confirm-password" className="block text-gray-700 text-lg font-semibold mb-2">Confirmar Contraseña:</label>
+          <div className="register-field">
+            <label htmlFor="confirm-password" className="register-label">Confirmar Contraseña:</label>
             <input
               type="password"
               id="confirm-password"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="register-input"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -89,16 +89,17 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, onGoToLogin }) =
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="register-btn-submit"
           >
             Registrarse
           </button>
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">¿Ya tienes una cuenta?{' '}
+          <div className="register-login-link-row">
+            <p className="register-login-link-text">
+              ¿Ya tienes una cuenta?{' '}
               <button
                 type="button"
                 onClick={onGoToLogin}
-                className="text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none"
+                className="register-login-link-btn"
               >
                 Inicia sesión aquí
               </button>
