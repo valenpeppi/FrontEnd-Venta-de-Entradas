@@ -455,6 +455,16 @@
   cursor: pointer;
   outline: none;
   transition: color 0.2s;
+  height: 100%;
+  padding: 0;
+}
+.login-password-toggle i {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
 }
 .login-password-toggle:hover {
   color: #111827;
@@ -581,4 +591,14 @@
 }
 .register-login-link-btn:hover {
   color: #3730a3;
+}
+
+/* Oculta el botón nativo de mostrar/ocultar contraseña en navegadores */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-input-password-toggle-button,
+input[type="password"]::-webkit-input-clear-button,
+input[type="password"]::-webkit-input-password-reveal-button {
+  display: none !important;
 }

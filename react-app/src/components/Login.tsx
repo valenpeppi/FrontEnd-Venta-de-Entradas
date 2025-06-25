@@ -12,7 +12,6 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [error, setError] = useState<string | null>(null)
-  const [showPassword, setShowPassword] = useState<boolean>(false) // Estado para mostrar/ocultar contraseña
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,10 +24,6 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     } else {
       setError("Usuario o contraseña incorrectos.")
     }
-  }
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
   }
 
   return (
@@ -55,21 +50,13 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
               Password
             </label>
             <input
-              type={showPassword ? "text" : "password"}
+              type="password"
               id="password"
               className="login-input-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="login-password-toggle"
-              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-            >
-              <i className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
-            </button>
           </div>
           <button
             type="submit"
