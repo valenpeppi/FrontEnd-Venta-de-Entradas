@@ -30,11 +30,11 @@ const App: React.FC = () => {
   useEffect(() => {
     if (currentView === 'main_app') {
       const dummyTickets: Ticket[] = [
-        { id: '1', eventName: 'Concierto de Rock', date: '2025-07-20', location: 'Estadio Nacional', price: 50.00, availableTickets: 100, imageUrl: 'https://placehold.co/600x400/FF5733/FFFFFF?text=Concierto' },
-        { id: '2', eventName: 'Obra de Teatro Clásica', date: '2025-08-10', location: 'Teatro Municipal', price: 30.00, availableTickets: 6, imageUrl: 'https://placehold.co/600x400/33FF57/FFFFFF?text=Teatro' },
-        { id: '3', eventName: 'Festival de Cine Independiente', date: '2025-09-01', location: 'Centro Cultural', price: 20.00, availableTickets: 200, imageUrl: 'https://placehold.co/600x400/3357FF/FFFFFF?text=Cine' },
-        { id: '4', eventName: 'Espectáculo de Magia', date: '2025-09-15', location: 'Teatro Fantasía', price: 25.00, availableTickets: 75, imageUrl: 'https://placehold.co/600x400/FF33CC/FFFFFF?text=Magia' },
-        { id: '5', eventName: 'Exposición de Arte Moderno', date: '2025-10-05', location: 'Galería Central', price: 15.00, availableTickets: 150, imageUrl: 'https://placehold.co/600x400/33CCFF/FFFFFF?text=Arte' },
+        { id: '1', eventName: 'Miranda', date: '2025-07-20', location: 'Estadio Metropolitano', price: 10000.00, availableTickets: 2000, imageUrl: 'https://placehold.co/600x400/FF5733/FFFFFF?text=Concierto' },
+        { id: '2', eventName: 'Nicky Nicole', date: '2025-08-10', location: 'Bioceres Arena', price: 6000.00, availableTickets: 6000, imageUrl: 'https://placehold.co/600x400/33FF57/FFFFFF?text=Trap' },
+        { id: '3', eventName: 'Super Otto', date: '2025-09-01', location: 'Complejo Forest', price: 7000.00, availableTickets: 900, imageUrl: 'https://placehold.co/600x400/3357FF/FFFFFF?text=Fiesta' },
+        { id: '4', eventName: 'Los Midachi', date: '2025-09-15', location: 'Teatro Opera', price: 4500.00, availableTickets: 100, imageUrl: 'https://placehold.co/600x400/FF33CC/FFFFFF?text=Humor' },
+        { id: '5', eventName: 'Exposición de Arte Contemporaneo', date: '2025-10-05', location: 'Centro Cultural Roberto Fontanarrosa', price: 2500.00, availableTickets: 150, imageUrl: 'https://placehold.co/600x400/33CCFF/FFFFFF?text=Arte' },
       ];
       setTickets(dummyTickets);
     }
