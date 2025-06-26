@@ -1,0 +1,126 @@
+/* Modal de compra */
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 40px 0 rgba(31, 41, 55, 0.2);
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.modal-info {
+  margin-bottom: 1.5rem;
+}
+
+.modal-event,
+.modal-price,
+.modal-available {
+  margin-bottom: 0.5rem;
+  color: #4b5563;
+}
+
+.modal-event-name,
+.modal-price-value,
+.modal-available-value {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.modal-quantity-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-quantity-label {
+  font-weight: 600;
+  color: #4b5563;
+  min-width: 80px;
+}
+
+.modal-quantity-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modal-quantity-input:focus {
+  border-color: #4338ca;
+  box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.1);
+}
+
+.modal-error-message {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.modal-btn-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modal-btn-confirm {
+  background: #4338ca;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  transition: background 0.2s;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-btn-confirm:hover {
+  background: #3730a3;
+}
+
+.modal-btn-cancel {
+  background: #f3f4f6;
+  color: #4b5563;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  transition: background 0.2s;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-btn-cancel:hover {
+  background: #e5e7eb;
+} 

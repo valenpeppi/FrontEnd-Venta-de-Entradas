@@ -1,0 +1,139 @@
+/* Carrusel */
+.carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.carousel-btn-left,
+.carousel-btn-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.75rem;
+  background: #e5e7eb;
+  color: #374151;
+  border-radius: 9999px;
+  box-shadow: 0 4px 16px 0 rgba(31, 41, 55, 0.12);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+  outline: none;
+}
+
+.carousel-btn-left {
+  left: -2.5rem;
+}
+
+.carousel-btn-right {
+  right: -2.5rem;
+}
+
+.carousel-btn-left:hover,
+.carousel-btn-right:hover {
+  background: #d1d5db;
+}
+
+.carousel-icon {
+  font-size: 2rem;
+}
+
+/* Tarjeta de evento */
+.event-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px 0 rgba(31, 41, 55, 0.12);
+  transition: box-shadow 0.3s;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.event-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(31, 41, 55, 0.18);
+}
+
+.event-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.event-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.event-date,
+.event-location {
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.event-date-icon,
+.event-location-icon {
+  color: #4338ca;
+  width: 1rem;
+}
+
+.event-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.event-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.btn-buy {
+  background: #4338ca;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  transition: background 0.2s;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-buy:hover {
+  background: #3730a3;
+}
+
+.btn-buy-disabled,
+.btn-buy:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.no-events {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.125rem;
+  padding: 2rem;
+} 
