@@ -1,0 +1,52 @@
+/* Página principal */
+.homepage {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #eff6ff, #c7d2fe);
+  font-family: 'Inter', sans-serif;
+  color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Estado de carga */
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.loading-state-text {
+  color: #6b7280;
+  font-size: 1.25rem;
+}
+
+/* Contenido principal */
+.homepage-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+}
+
+.notification-container {
+  position: relative;
+}
+
+.homepage-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #3730a3;
+  margin-bottom: 2rem;
+  text-align: center;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 

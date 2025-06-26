@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
 
 // Definición de las props que el componente Login recibirá
 interface LoginProps {
@@ -12,6 +13,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,6 +23,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     // Posteriormente linkear con una API real
     if (username === "usuario" && password === "contraseña") {
       onLoginSuccess()
+      navigate('/') // Redirigir a la página principal después del login
     } else {
       setError("Usuario o contraseña incorrectos.")
     }
@@ -65,6 +68,9 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             Login
           </button>
         </form>
+        <div className="login-register-link">
+          <p>¿No tienes cuenta? <Link to="/register" className="login-register-link-btn">Regístrate aquí</Link></p>
+        </div>
       </div>
     </div>
   )

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-
+import { useNavigate, Link } from 'react-router-dom';
 
 interface RegisterProps {
   onRegisterSuccess: () => void; 
-  onGoToLogin: () => void; 
 }
 
-const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, onGoToLogin }) => {
+const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +36,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, onGoToLogin }) =
     setSuccessMessage('¡Registro exitoso! Serás redirigido para iniciar sesión.');
     setTimeout(() => {
       onRegisterSuccess();
+      navigate('/login'); // Redirigir a la página de login después del registro
     }, 2000); // Redirige después de 2 segundos para que el usuario vea el mensaje
   };
 
@@ -96,13 +97,9 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, onGoToLogin }) =
           <div className="register-login-link-row">
             <p className="register-login-link-text">
               ¿Ya tienes una cuenta?{' '}
-              <button
-                type="button"
-                onClick={onGoToLogin}
-                className="register-login-link-btn"
-              >
+              <Link to="/login" className="register-login-link-btn">
                 Inicia sesión aquí
-              </button>
+              </Link>
             </p>
           </div>
         </form>
