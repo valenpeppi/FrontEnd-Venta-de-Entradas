@@ -1,5 +1,5 @@
-/* Carrusel */
-.carousel {
+/* Carrusel de eventos */
+.event-carousel {
   position: relative;
   display: flex;
   align-items: center;
@@ -10,8 +10,7 @@
   padding: 2rem 0;
 }
 
-.carousel-btn-left,
-.carousel-btn-right {
+.carousel-navigation-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -27,20 +26,19 @@
   outline: none;
 }
 
-.carousel-btn-left {
+.carousel-navigation-btn--prev {
   left: -2.5rem;
 }
 
-.carousel-btn-right {
+.carousel-navigation-btn--next {
   right: -2.5rem;
 }
 
-.carousel-btn-left:hover,
-.carousel-btn-right:hover {
+.carousel-navigation-btn:hover {
   background: #d1d5db;
 }
 
-.carousel-icon {
+.carousel-navigation-icon {
   font-size: 2rem;
 }
 
@@ -63,7 +61,7 @@
   box-shadow: 0 8px 32px 0 rgba(31, 41, 55, 0.18);
 }
 
-.event-img {
+.event-card-image {
   width: 100%;
   height: 200px;
   object-fit: cover;
@@ -71,15 +69,18 @@
   margin-bottom: 1rem;
 }
 
-.event-title {
+.event-card-content {
+  flex: 1;
+}
+
+.event-card-title {
   font-size: 1.5rem;
   font-weight: 700;
   color: #1f2937;
   margin-bottom: 0.5rem;
 }
 
-.event-date,
-.event-location {
+.event-card-details {
   color: #6b7280;
   margin-bottom: 0.25rem;
   display: flex;
@@ -87,13 +88,12 @@
   gap: 0.5rem;
 }
 
-.event-date-icon,
-.event-location-icon {
+.event-card-icon {
   color: #4338ca;
   width: 1rem;
 }
 
-.event-footer {
+.event-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -102,13 +102,13 @@
   border-top: 1px solid #e5e7eb;
 }
 
-.event-price {
+.event-card-price {
   font-size: 1.25rem;
   font-weight: 700;
   color: #059669;
 }
 
-.btn-buy {
+.btn-purchase {
   background: #4338ca;
   color: #fff;
   font-weight: 600;
@@ -121,17 +121,17 @@
   cursor: pointer;
 }
 
-.btn-buy:hover {
+.btn-purchase:hover {
   background: #3730a3;
 }
 
-.btn-buy-disabled,
-.btn-buy:disabled {
+.btn-purchase--disabled,
+.btn-purchase:disabled {
   background: #9ca3af;
   cursor: not-allowed;
 }
 
-.no-events {
+.event-carousel-empty {
   text-align: center;
   color: #6b7280;
   font-size: 1.125rem;

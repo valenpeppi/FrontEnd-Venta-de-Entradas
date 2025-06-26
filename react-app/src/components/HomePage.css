@@ -1,4 +1,4 @@
-/* HomePage */
+/* Página principal */
 .homepage {
   min-height: 100vh;
   background: linear-gradient(to bottom right, #eff6ff, #c7d2fe);
@@ -7,31 +7,31 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* Centrado de pantalla */
-.center-screen {
+/* Estado de carga */
+.loading-state {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
 }
 
-.loading-text {
+.loading-state-text {
   color: #6b7280;
   font-size: 1.25rem;
 }
 
-/* Main y títulos */
-.main {
+/* Contenido principal */
+.homepage-main {
   max-width: 1280px;
   margin: 0 auto;
   padding: 1.5rem 2rem;
 }
 
-.message-container {
+.notification-container {
   position: relative;
 }
 
-.title {
+.homepage-title {
   font-size: 2.25rem;
   font-weight: 800;
   color: #3730a3;

@@ -19,8 +19,8 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   if (tickets.length === 0) {
     return (
-      <div className="carousel">
-        <p className="no-events">No hay eventos disponibles.</p>
+      <div className="event-carousel">
+        <p className="event-carousel-empty">No hay eventos disponibles.</p>
       </div>
     );
   }
@@ -28,14 +28,14 @@ const Carousel: React.FC<CarouselProps> = ({
   const currentEvent = tickets[currentEventIndex];
 
   return (
-    <div className="carousel">
+    <div className="event-carousel">
       <button
         onClick={onPreviousEvent}
-        className="carousel-btn-left"
+        className="carousel-navigation-btn carousel-navigation-btn--prev"
         title="Evento anterior"
         aria-label="Evento anterior"
       >
-        <i className="fas fa-chevron-left carousel-icon"></i>
+        <i className="fas fa-chevron-left carousel-navigation-icon"></i>
       </button>
       
       {currentEvent ? (
@@ -43,24 +43,24 @@ const Carousel: React.FC<CarouselProps> = ({
           <img
             src={currentEvent.imageUrl}
             alt={currentEvent.eventName}
-            className="event-img"
+            className="event-card-image"
           />
-          <div>
-            <h3 className="event-title">{currentEvent.eventName}</h3>
-            <p className="event-date">
-              <i className="fas fa-calendar-alt event-date-icon"></i>
+          <div className="event-card-content">
+            <h3 className="event-card-title">{currentEvent.eventName}</h3>
+            <p className="event-card-details">
+              <i className="fas fa-calendar-alt event-card-icon"></i>
               {currentEvent.date}
             </p>
-            <p className="event-location">
-              <i className="fas fa-map-marker-alt event-location-icon"></i>
+            <p className="event-card-details">
+              <i className="fas fa-map-marker-alt event-card-icon"></i>
               {currentEvent.location}
             </p>
           </div>
-          <div className="event-footer">
-            <span className="event-price">${currentEvent.price.toFixed(2)}</span>
+          <div className="event-card-footer">
+            <span className="event-card-price">${currentEvent.price.toFixed(2)}</span>
             <button
               onClick={() => onBuyClick(currentEvent)}
-              className={`btn-buy${currentEvent.availableTickets > 0 ? '' : ' btn-buy-disabled'}`}
+              className={`btn-purchase${currentEvent.availableTickets > 0 ? '' : ' btn-purchase--disabled'}`}
               disabled={currentEvent.availableTickets === 0}
             >
               {currentEvent.availableTickets > 0 ? `Comprar (${currentEvent.availableTickets} restantes)` : 'Agotado'}
@@ -68,16 +68,16 @@ const Carousel: React.FC<CarouselProps> = ({
           </div>
         </div>
       ) : (
-        <p className="no-events">No hay eventos disponibles.</p>
+        <p className="event-carousel-empty">No hay eventos disponibles.</p>
       )}
       
       <button
         onClick={onNextEvent}
-        className="carousel-btn-right"
+        className="carousel-navigation-btn carousel-navigation-btn--next"
         title="Siguiente evento"
         aria-label="Siguiente evento"
       >
-        <i className="fas fa-chevron-right carousel-icon"></i>
+        <i className="fas fa-chevron-right carousel-navigation-icon"></i>
       </button>
     </div>
   );

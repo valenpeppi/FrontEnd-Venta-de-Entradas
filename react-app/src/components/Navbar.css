@@ -16,7 +16,7 @@
   align-items: center;
 }
 
-.navbar-title {
+.navbar-brand {
   font-size: 2rem;
   font-weight: bold;
   color: #4338ca;
@@ -24,11 +24,11 @@
   transition: color 0.2s;
 }
 
-.navbar-title:hover {
+.navbar-brand:hover {
   color: #3730a3;
 }
 
-.navbar-list {
+.navbar-menu {
   display: flex;
   gap: 1.5rem;
   align-items: center;
@@ -37,22 +37,22 @@
   padding: 0;
 }
 
-.navbar-link {
+.navbar-menu-item {
   color: #4b5563;
   font-weight: 500;
   transition: color 0.2s;
   text-decoration: none;
 }
 
-.navbar-link:hover {
+.navbar-menu-item:hover {
   color: #4338ca;
 }
 
-.navbar-login-btn {
+.navbar-auth-section {
   margin-left: 1.5rem;
 }
 
-.btn-login {
+.btn-primary {
   background: #4f46e5;
   color: #fff;
   font-weight: 600;
@@ -65,11 +65,11 @@
   cursor: pointer;
 }
 
-.btn-login:hover {
+.btn-primary:hover {
   background: #3730a3;
 }
 
-.btn-register {
+.btn-secondary {
   background: #d1d5db;
   color: #1f2937;
   font-weight: 600;
@@ -82,6 +82,6 @@
   cursor: pointer;
 }
 
-.btn-register:hover {
+.btn-secondary:hover {
   background: #9ca3af;
 } 

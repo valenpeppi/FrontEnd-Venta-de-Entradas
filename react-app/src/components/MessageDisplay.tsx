@@ -10,7 +10,7 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ message, type }) => {
   if (!message) return null;
 
   return (
-    <div className={`message-display message-${type}`}>
+    <div className={`notification-message notification-message--${type}`}>
       {message}
     </div>
   );

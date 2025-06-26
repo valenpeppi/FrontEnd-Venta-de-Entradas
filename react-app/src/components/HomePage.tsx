@@ -100,8 +100,8 @@ const HomePage: React.FC = () => {
     return (
       <div className="homepage">
         <Navbar />
-        <div className="center-screen">
-          <p className="loading-text">Cargando eventos...</p>
+        <div className="loading-state">
+          <p className="loading-state-text">Cargando eventos...</p>
         </div>
       </div>
     );
@@ -111,15 +111,15 @@ const HomePage: React.FC = () => {
     <div className="homepage">
       <Navbar />
       
-      <main className="main">
-        <div className="message-container">
+      <main className="homepage-main">
+        <div className="notification-container">
           <MessageDisplay 
             message={appMessage} 
             type={appMessage?.includes('comprado') ? 'success' : 'error'} 
           />
         </div>
         
-        <h2 className="title">Eventos Destacados</h2>
+        <h2 className="homepage-title">Eventos Destacados</h2>
         
         <Carousel
           tickets={tickets}

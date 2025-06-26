@@ -8,15 +8,15 @@ const Navbar: React.FC = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <h1 className="navbar-title" onClick={() => navigate('/')}>TicketApp</h1>
-        <ul className="navbar-list"> 
-          <li><Link to="/" className="navbar-link">Inicio</Link></li>
-          <li><a href="#" className="navbar-link">Mis Entradas</a></li>
-          <li><a href="#" className="navbar-link">Ayuda</a></li>
-          <li className="navbar-login-btn"> 
+        <h1 className="navbar-brand" onClick={() => navigate('/')}>TicketApp</h1>
+        <ul className="navbar-menu"> 
+          <li><Link to="/" className="navbar-menu-item">Inicio</Link></li>
+          <li><a href="#" className="navbar-menu-item">Mis Entradas</a></li>
+          <li><a href="#" className="navbar-menu-item">Ayuda</a></li>
+          <li className="navbar-auth-section"> 
             <button
               onClick={() => navigate('/login')}
-              className="btn-login"
+              className="btn-primary"
             >
               Iniciar Sesión
             </button>
@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
           <li>
             <button
               onClick={() => navigate('/register')}
-              className="btn-register"
+              className="btn-secondary"
             >
               Registrarse
             </button>

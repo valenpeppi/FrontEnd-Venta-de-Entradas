@@ -26,22 +26,22 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   }
 
   return (
-    <div className="modal-bg">
-      <div className="modal">
-        <h3 className="modal-title">Comprar Entradas</h3>
-        <div className="modal-info">
-          <p className="modal-event">
-            Evento: <span className="modal-event-name">{selectedTicket.eventName}</span>
+    <div className="purchase-modal-overlay">
+      <div className="purchase-modal">
+        <h3 className="purchase-modal-header">Comprar Entradas</h3>
+        <div className="purchase-modal-info">
+          <p className="purchase-modal-info-item">
+            Evento: <span className="purchase-modal-info-value">{selectedTicket.eventName}</span>
           </p>
-          <p className="modal-price">
-            Precio por entrada: <span className="modal-price-value">${selectedTicket.price.toFixed(2)}</span>
+          <p className="purchase-modal-info-item">
+            Precio por entrada: <span className="purchase-modal-info-value">${selectedTicket.price.toFixed(2)}</span>
           </p>
-          <p className="modal-available">
-            Entradas disponibles: <span className="modal-available-value">{selectedTicket.availableTickets}</span>
+          <p className="purchase-modal-info-item">
+            Entradas disponibles: <span className="purchase-modal-info-value">{selectedTicket.availableTickets}</span>
           </p>
         </div>
-        <div className="modal-quantity-row">
-          <label htmlFor="quantity" className="modal-quantity-label">Cantidad:</label>
+        <div className="purchase-modal-quantity-section">
+          <label htmlFor="quantity" className="purchase-modal-quantity-label">Cantidad:</label>
           <input
             type="number"
             id="quantity"
@@ -49,24 +49,24 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             max={selectedTicket.availableTickets}
             value={quantity}
             onChange={(e) => onQuantityChange(Math.max(1, Math.min(selectedTicket.availableTickets, parseInt(e.target.value) || 1)))}
-            className="modal-quantity-input"
+            className="purchase-modal-quantity-input"
           />
         </div>
         {errorMessage && (
-          <div className="modal-error-message">
+          <div className="purchase-modal-error">
             {errorMessage}
           </div>
         )}
-        <div className="modal-btn-row">
+        <div className="purchase-modal-actions">
           <button
             onClick={onConfirmPurchase}
-            className="modal-btn-confirm"
+            className="btn-confirm"
           >
             Confirmar Compra
           </button>
           <button
             onClick={onCloseModal}
-            className="modal-btn-cancel"
+            className="btn-cancel"
           >
             Cancelar
           </button>
