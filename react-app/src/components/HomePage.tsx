@@ -4,6 +4,9 @@ import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import MessageDisplay from './MessageDisplay';
 import './HomePage.css';
+import { Footer } from './Navbar';
+
+const USUARIO_ACTUAL = 'usuario_demo'; // Simulación de usuario actual
 
 // Definición de la interfaz para una entrada
 export interface Ticket {
@@ -83,6 +86,19 @@ const HomePage: React.FC = () => {
       return;
     }
 
+    // Guardar la compra en localStorage para el usuario actual, luego vincularemos con backend
+    const entrada = {
+      eventName: selectedTicket.eventName,
+      date: selectedTicket.date,
+      location: selectedTicket.location,
+      price: selectedTicket.price,
+      quantity,
+      imageUrl: selectedTicket.imageUrl,
+    };
+    const key = `entradas_${USUARIO_ACTUAL}`;
+    const prev = JSON.parse(localStorage.getItem(key) || '[]');
+    localStorage.setItem(key, JSON.stringify([...prev, entrada]));
+
     // Si todo es válido, proceder con la compra simulada
     setTickets(prevTickets =>
       prevTickets.map(ticket =>
@@ -139,6 +155,7 @@ const HomePage: React.FC = () => {
         onCloseModal={handleCloseModal}
         errorMessage={modalErrorMessage}
       />
+      <Footer />
     </div>
   );
 };

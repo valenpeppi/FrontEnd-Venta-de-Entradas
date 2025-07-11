@@ -49,4 +49,66 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.mis-entradas-root {
+  min-height: 100vh;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.mis-entradas-main {
+  max-width: 900px;
+  margin: 120px auto 120px auto;
+  padding: 2rem;
+  background: rgba(255,255,255,0.95);
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px 0 rgba(31, 41, 55, 0.10);
+}
+
+.mis-entradas-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.entrada-card {
+  background: #e3f0fa;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.10);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 320px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.entrada-card-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  margin-right: 1.5rem;
+}
+
+.entrada-card-content {
+  flex: 1;
+}
+
+.entrada-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3730a3;
+  margin-bottom: 0.5rem;
+}
+
+.entrada-card-details {
+  color: #374151;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
 } 

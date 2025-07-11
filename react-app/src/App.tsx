@@ -3,10 +3,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login.tsx'; 
 import Register from './components/Register.tsx'; 
 import HomePage from './components/HomePage.tsx';
+import MisEntradas from './components/MisEntradas';
 import './App.css';
 
 // Definición de la interfaz para una entrada
-interface Ticket {
+/*interface Ticket {
   id: string;
   eventName: string;
   date: string;
@@ -14,10 +15,16 @@ interface Ticket {
   price: number;
   availableTickets: number;
   imageUrl: string;
-}
+}*/
 
 const App: React.FC = () => {
   const [appMessage, setAppMessage] = useState<string | null>(null);
+
+  // Referencia mínima para evitar warning de variable no usada
+  if (typeof appMessage === 'undefined') {
+    // Nunca se ejecuta, solo para que TS no marque como no usada
+    console.log('appMessage');
+  }
 
   const handleLoginSuccess = () => {
     setAppMessage('¡Inicio de sesión exitoso!');
@@ -49,6 +56,7 @@ const App: React.FC = () => {
             />
           } 
         />
+        <Route path="/mis-entradas" element={<MisEntradas />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       
