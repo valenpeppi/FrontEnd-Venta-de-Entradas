@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login.tsx'; 
 import Register from './components/Register.tsx'; 
+import HomePage from './components/HomePage.tsx'; // Importa HomePage
 import './App.css';
 import CarritoPage from './components/CarritoPage.tsx';
 import Pay from './components/Pay.tsx';
@@ -9,6 +10,7 @@ import MyTickets from './components/MyTickets.tsx';
 import Help from './components/Help.tsx';
 
 // Definición de la interfaz para una entrada
+export interface Ticket {
   id: string;
   eventName: string;
   date: string;
@@ -16,13 +18,19 @@ import Help from './components/Help.tsx';
   price: number;
   availableTickets: number;
   imageUrl: string;
-}*/
+}
 
 const App: React.FC = () => {
   const [appMessage, setAppMessage] = useState<string | null>(null);
   // Estado para la autenticación
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userName, setUserName] = useState<string | null>(null);
+
+  const handleLoginSuccess = (loggedInUserName: string) => {
+    setIsLoggedIn(true);
+    setUserName(loggedInUserName);
+    setAppMessage(`¡Inicio de sesión exitoso como ${loggedInUserName}!`);
+  };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -66,7 +74,6 @@ const App: React.FC = () => {
             />
           } 
         />
-        <Route path="/mis-entradas" element={<MisEntradas />} />
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/cart" element={<CarritoPage />} />
         <Route path="/pay" element={<Pay />} />
