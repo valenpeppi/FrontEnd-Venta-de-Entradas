@@ -1,12 +1,14 @@
 import React from 'react';
-import type { Ticket } from './HomePage';
+import type { Ticket } from './HomePage'; // Asegúrate de que Ticket se importa correctamente
 import './PurchaseModal.css';
 
-interface PurchaseModalProps {
+// Interfaz para las props del componente PurchaseModal
+export interface PurchaseModalProps {
   isOpen: boolean;
   selectedTicket: Ticket | null;
   quantity: number;
   onQuantityChange: (quantity: number) => void;
+  onConfirmPurchase: () => void;
   onCloseModal: () => void;
   errorMessage: string | null;
 }
@@ -16,28 +18,17 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   selectedTicket,
   quantity,
   onQuantityChange,
+  onConfirmPurchase, // Asegúrate de que esta prop se desestructura
   onCloseModal,
   errorMessage
 }) => {
   const handleAddToCart = () => {
     if (!selectedTicket) return;
     
-    const cartItems = JSON.parse(localStorage.getItem('ticket') || '[]');
-    const existingItemIndex = cartItems.findIndex((item: Ticket) => item.id === selectedTicket.id);
-
-    if (existingItemIndex >= 0) {
-      // Si ya existe, actualiza la cantidad
-      cartItems[existingItemIndex].quantity += quantity;
-    } else {
-      // Si no existe, agrega nuevo item
-      cartItems.push({
-        ...selectedTicket,
-        quantity: quantity
-      });
-    }
-
-    localStorage.setItem('ticket', JSON.stringify(cartItems));
-    onCloseModal();
+    // Aquí puedes llamar a onConfirmPurchase que HomePage te pasa
+    // y dentro de HomePage, manejar la lógica de addToCart del contexto
+    onConfirmPurchase(); // Llama a la función que viene de HomePage
+    onCloseModal(); // Cierra el modal después de la acción
   };
 
   if (!isOpen || !selectedTicket) {
