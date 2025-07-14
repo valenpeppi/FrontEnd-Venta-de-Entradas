@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
           <li><a href="#" className="navbar-menu-item">Ayuda</a></li>
           <li className="navbar-cart-container">
             <img className="navbar-cart" src="/cart1.png" alt="Carrito de Compras" />
-            <span id="cart-count">0</span>
+            <span id="cart-count">0</span> 
             <button onClick={() => navigate('/cart')}
               className="btn"></button>
             </li>
