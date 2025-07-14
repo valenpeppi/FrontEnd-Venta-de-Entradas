@@ -7,7 +7,6 @@ interface PurchaseModalProps {
   selectedTicket: Ticket | null;
   quantity: number;
   onQuantityChange: (quantity: number) => void;
-  onConfirmPurchase: () => void;
   onCloseModal: () => void;
   errorMessage: string | null;
 }
@@ -17,10 +16,30 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   selectedTicket,
   quantity,
   onQuantityChange,
-  onConfirmPurchase,
   onCloseModal,
   errorMessage
 }) => {
+  const handleAddToCart = () => {
+    if (!selectedTicket) return;
+    
+    const cartItems = JSON.parse(localStorage.getItem('ticket') || '[]');
+    const existingItemIndex = cartItems.findIndex((item: Ticket) => item.id === selectedTicket.id);
+
+    if (existingItemIndex >= 0) {
+      // Si ya existe, actualiza la cantidad
+      cartItems[existingItemIndex].quantity += quantity;
+    } else {
+      // Si no existe, agrega nuevo item
+      cartItems.push({
+        ...selectedTicket,
+        quantity: quantity
+      });
+    }
+
+    localStorage.setItem('ticket', JSON.stringify(cartItems));
+    onCloseModal();
+  };
+
   if (!isOpen || !selectedTicket) {
     return null;
   }
@@ -59,7 +78,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
         )}
         <div className="purchase-modal-actions">
           <button
-            onClick={onConfirmPurchase}
+            onClick={handleAddToCart}
             className="btn-confirm"
           >
             Agregar al Carrito
@@ -76,4 +95,4 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   );
 };
 
-export default PurchaseModal; 
+export default PurchaseModal;
