@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Navbar.css';
 
@@ -11,6 +11,20 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
   const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false); // Estado para el modal de confirmación
+
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true); // Muestra el modal de confirmación al hacer clic en "Cerrar Sesión"
+  };
+
+  const handleConfirmLogout = () => {
+    onLogout(); // Llama a la función de cerrar sesión pasada por props
+    setShowLogoutConfirm(false); // Cierra el modal
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false); // Cierra el modal sin cerrar sesión
+  };
 
   return (
     <nav className="navbar">
@@ -39,8 +53,8 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
               <li className="navbar-auth-section">
                 <span className="text-gray-700 font-semibold mr-2">Hola, {userName}</span> {/* Muestra el nombre del usuario */}
                 <button
-                  onClick={onLogout}
-                  className="btn-secondary" // Puedes usar una clase diferente para "Cerrar Sesión"
+                  onClick={handleLogoutClick} // Llama a la función para mostrar el modal
+                  className="btn-logout" 
                 >
                   Cerrar Sesión
                 </button>
@@ -68,6 +82,21 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
           )}
         </ul>
       </div>
+
+      {/* Modal de confirmación de cierre de sesión */}
+      {showLogoutConfirm && (
+        <div className="logout-confirm-overlay">
+          <div className="logout-confirm-modal">
+            <p className="logout-confirm-message">¿Estás seguro de que deseas cerrar sesión?</p>
+            <div className="logout-confirm-actions">
+              {/* Botón "Sí" con estilo más liviano y borde */}
+              <button onClick={handleConfirmLogout} className="btn-logout-confirm-yes">Sí</button>
+              {/* Botón "No" con estilo más visible y borde */}
+              <button onClick={handleCancelLogout} className="btn-logout-confirm-no">No</button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
