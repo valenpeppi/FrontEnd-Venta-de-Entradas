@@ -4,7 +4,6 @@ import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import MessageDisplay from './MessageDisplay';
 import './HomePage.css';
-import Footer from './Footer';
 
 // Definición de la interfaz para una entrada
 export interface Ticket {
@@ -91,6 +90,19 @@ const HomePage: React.FC<HomePageProps> = ({ isLoggedIn, userName, onLogout }) =
       setModalErrorMessage('No hay suficientes entradas disponibles para tu solicitud.');
       return;
     }
+
+    // Guardar la compra en localStorage para el usuario actual, luego vincularemos con backend
+    const entrada = {
+      eventName: selectedTicket.eventName,
+      date: selectedTicket.date,
+      location: selectedTicket.location,
+      price: selectedTicket.price,
+      quantity,
+      imageUrl: selectedTicket.imageUrl,
+    };
+    const key = `entradas_${USUARIO_ACTUAL}`;
+    const prev = JSON.parse(localStorage.getItem(key) || '[]');
+    localStorage.setItem(key, JSON.stringify([...prev, entrada]));
 
     // Si todo es válido, proceder con la compra simulada
     setTickets(prevTickets =>
