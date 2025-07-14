@@ -8,11 +8,22 @@ const Navbar: React.FC = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <h1 className="navbar-brand" onClick={() => navigate('/')}>TicketApp</h1>
-        <ul className="navbar-menu"> 
+        <h1 className="navbar-brand" onClick={() => navigate('/')}>
+  <img className="image1" src="ticket.png" alt="logo" />
+  TicketApp
+</h1>
+
+        <ul className="navbar-menu">
           <li><Link to="/" className="navbar-menu-item">Inicio</Link></li>
           <li><a href="#" className="navbar-menu-item">Mis Entradas</a></li>
           <li><a href="#" className="navbar-menu-item">Ayuda</a></li>
+          <li className="navbar-cart-container">
+            <img className="navbar-cart" src="/cart1.png" alt="Carrito de Compras" />
+            <span id="cart-count">0</span>
+            <button onClick={() => navigate('/cart')}
+              className="btn"></button>
+            </li>
+
           <li className="navbar-auth-section"> 
             <button
               onClick={() => navigate('/login')}
@@ -28,6 +39,7 @@ const Navbar: React.FC = () => {
             >
               Registrarse
             </button>
+
           </li>
         </ul>
       </div>

@@ -1,0 +1,9 @@
+.btn btn-primary {
+  background-color: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(31, 41, 55, 0.08);
+  transition: background-color 0.2s;
+}

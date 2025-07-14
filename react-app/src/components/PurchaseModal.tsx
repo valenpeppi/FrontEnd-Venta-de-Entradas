@@ -28,7 +28,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   return (
     <div className="purchase-modal-overlay">
       <div className="purchase-modal">
-        <h3 className="purchase-modal-header">Comprar Entradas</h3>
+        <h3 className="purchase-modal-header">Agregar Entradas al Carrito</h3>
         <div className="purchase-modal-info">
           <p className="purchase-modal-info-item">
             Evento: <span className="purchase-modal-info-value">{selectedTicket.eventName}</span>
@@ -62,7 +62,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             onClick={onConfirmPurchase}
             className="btn-confirm"
           >
-            Confirmar Compra
+            Agregar al Carrito
           </button>
           <button
             onClick={onCloseModal}

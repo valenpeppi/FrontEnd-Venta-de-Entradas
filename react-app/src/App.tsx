@@ -4,6 +4,8 @@ import Login from './components/Login.tsx';
 import Register from './components/Register.tsx'; 
 import HomePage from './components/HomePage.tsx';
 import './App.css';
+import CarritoPage from './components/CarritoPage.tsx';
+import Pay from './components/Pay.tsx';
 
 // Definición de la interfaz para una entrada
 interface Ticket {
@@ -50,6 +52,8 @@ const App: React.FC = () => {
           } 
         />
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/cart" element={<CarritoPage />} />
+        <Route path="/pay" element={<Pay />} />
       </Routes>
       
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />

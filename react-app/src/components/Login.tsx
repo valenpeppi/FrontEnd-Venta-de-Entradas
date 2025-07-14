@@ -50,7 +50,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           </div>
           <div className="login-field-password">
             <label htmlFor="password" className="login-label">
-              Password
+              Contraseña
             </label>
             <input
               type="password"
@@ -65,7 +65,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             type="submit"
             className="login-btn-submit"
           >
-            Login
+            Iniciar Sesión
           </button>
         </form>
         <div className="login-register-link">
