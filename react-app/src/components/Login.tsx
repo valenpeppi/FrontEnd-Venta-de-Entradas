@@ -6,7 +6,7 @@ import { useNavigate, Link } from "react-router-dom"
 
 // Definición de las props que el componente Login recibirá
 interface LoginProps {
-  onLoginSuccess: () => void // Función que se llamará al iniciar sesión con éxito
+  onLoginSuccess: (userName: string) => void // Función que se llamará al iniciar sesión con éxito, ahora recibe el nombre de usuario
 }
 
 const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
@@ -22,7 +22,8 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     // Simulación de un proceso de autenticación
     // Posteriormente linkear con una API real
     if (username === "usuario" && password === "contraseña") {
-      onLoginSuccess()
+      // Pasa el nombre de usuario (puedes usar el email o un nombre de usuario real de tu backend)
+      onLoginSuccess(username); 
       navigate('/') // Redirigir a la página principal después del login
     } else {
       setError("Usuario o contraseña incorrectos.")
@@ -50,7 +51,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           </div>
           <div className="login-field-password">
             <label htmlFor="password" className="login-label">
-              Password
+              Contraseña
             </label>
             <input
               type="password"
@@ -65,7 +66,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             type="submit"
             className="login-btn-submit"
           >
-            Login
+            Iniciar Sesión
           </button>
         </form>
         <div className="login-register-link">

@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login.tsx'; 
 import Register from './components/Register.tsx'; 
-import HomePage from './components/HomePage.tsx';
-import MisEntradas from './components/MisEntradas';
 import './App.css';
+import CarritoPage from './components/CarritoPage.tsx';
+import Pay from './components/Pay.tsx';
+import MyTickets from './components/MyTickets.tsx';
+import Help from './components/Help.tsx';
 
 // Definición de la interfaz para una entrada
-/*interface Ticket {
   id: string;
   eventName: string;
   date: string;
@@ -19,16 +20,15 @@ import './App.css';
 
 const App: React.FC = () => {
   const [appMessage, setAppMessage] = useState<string | null>(null);
+  // Estado para la autenticación
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string | null>(null);
 
-  // Referencia mínima para evitar warning de variable no usada
-  if (typeof appMessage === 'undefined') {
-    // Nunca se ejecuta, solo para que TS no marque como no usada
-    console.log('appMessage');
-  }
-
-  const handleLoginSuccess = () => {
-    setAppMessage('¡Inicio de sesión exitoso!');
-
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserName(null);
+    setAppMessage('Has cerrado sesión.');
+    // Aquí podrías añadir lógica para limpiar tokens o datos de sesión
   };
 
   // Función para manejar el registro 
@@ -39,7 +39,17 @@ const App: React.FC = () => {
   return (
     <div className="app-root">
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        {/* HomePage ahora recibe props de autenticación */}
+        <Route 
+          path="/" 
+          element={
+            <HomePage 
+              isLoggedIn={isLoggedIn} 
+              userName={userName} 
+              onLogout={handleLogout} 
+            />
+          } 
+        />
         <Route 
           path="/login" 
           element={
@@ -58,6 +68,10 @@ const App: React.FC = () => {
         />
         <Route path="/mis-entradas" element={<MisEntradas />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/cart" element={<CarritoPage />} />
+        <Route path="/pay" element={<Pay />} />
+        <Route path="/myTickets" element={<MyTickets />} />
+        <Route path="/help" element={<Help />} />
       </Routes>
       
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />

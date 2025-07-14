@@ -1,8 +1,9 @@
 import React from 'react';
-import type { Ticket } from './HomePage';
+import type { Ticket } from './HomePage'; // Asegúrate de que Ticket se importa correctamente
 import './PurchaseModal.css';
 
-interface PurchaseModalProps {
+// Interfaz para las props del componente PurchaseModal
+export interface PurchaseModalProps {
   isOpen: boolean;
   selectedTicket: Ticket | null;
   quantity: number;
@@ -17,10 +18,19 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   selectedTicket,
   quantity,
   onQuantityChange,
-  onConfirmPurchase,
+  onConfirmPurchase, // Asegúrate de que esta prop se desestructura
   onCloseModal,
   errorMessage
 }) => {
+  const handleAddToCart = () => {
+    if (!selectedTicket) return;
+    
+    // Aquí puedes llamar a onConfirmPurchase que HomePage te pasa
+    // y dentro de HomePage, manejar la lógica de addToCart del contexto
+    onConfirmPurchase(); // Llama a la función que viene de HomePage
+    onCloseModal(); // Cierra el modal después de la acción
+  };
+
   if (!isOpen || !selectedTicket) {
     return null;
   }
@@ -28,7 +38,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   return (
     <div className="purchase-modal-overlay">
       <div className="purchase-modal">
-        <h3 className="purchase-modal-header">Comprar Entradas</h3>
+        <h3 className="purchase-modal-header">Agregar Entradas al Carrito</h3>
         <div className="purchase-modal-info">
           <p className="purchase-modal-info-item">
             Evento: <span className="purchase-modal-info-value">{selectedTicket.eventName}</span>
@@ -59,10 +69,10 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
         )}
         <div className="purchase-modal-actions">
           <button
-            onClick={onConfirmPurchase}
+            onClick={handleAddToCart}
             className="btn-confirm"
           >
-            Confirmar Compra
+            Agregar al Carrito
           </button>
           <button
             onClick={onCloseModal}
@@ -76,4 +86,4 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   );
 };
 
-export default PurchaseModal; 
+export default PurchaseModal;

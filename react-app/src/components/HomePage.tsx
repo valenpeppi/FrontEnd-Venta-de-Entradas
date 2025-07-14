@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar';
+import Navbar from './Navbar'; // Importa Navbar
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import MessageDisplay from './MessageDisplay';
 import './HomePage.css';
-import { Footer } from './Navbar';
-
-const USUARIO_ACTUAL = 'usuario_demo'; // Simulación de usuario actual
 
 // Definición de la interfaz para una entrada
 export interface Ticket {
@@ -19,7 +16,15 @@ export interface Ticket {
   imageUrl: string;
 }
 
-const HomePage: React.FC = () => {
+// Interfaz para las props de HomePage
+interface HomePageProps {
+  isLoggedIn: boolean;
+  userName: string | null;
+  onLogout: () => void;
+}
+
+// Componente principal de la página de inicio
+const HomePage: React.FC<HomePageProps> = ({ isLoggedIn, userName, onLogout }) => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
@@ -115,17 +120,28 @@ const HomePage: React.FC = () => {
   if (tickets.length === 0) {
     return (
       <div className="homepage">
-        <Navbar />
+        {/* Pasa las props de autenticación a Navbar */}
+        <Navbar 
+          isLoggedIn={isLoggedIn} 
+          userName={userName} 
+          onLogout={onLogout} 
+        /> 
         <div className="loading-state">
           <p className="loading-state-text">Cargando eventos...</p>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
     <div className="homepage">
-      <Navbar />
+      {/* Pasa las props de autenticación a Navbar */}
+      <Navbar 
+        isLoggedIn={isLoggedIn} 
+        userName={userName} 
+        onLogout={onLogout} 
+      /> 
       
       <main className="homepage-main">
         <div className="notification-container">
@@ -160,4 +176,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage; 
+export default HomePage;
