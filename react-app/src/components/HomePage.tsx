@@ -4,6 +4,7 @@ import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import MessageDisplay from './MessageDisplay';
 import './HomePage.css';
+import Footer from './Footer';
 
 // Definición de la interfaz para una entrada
 export interface Ticket {
@@ -15,7 +16,7 @@ export interface Ticket {
   availableTickets: number;
   imageUrl: string;
 }
-
+// Componente principal de la página de inicio
 const HomePage: React.FC = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
@@ -103,6 +104,7 @@ const HomePage: React.FC = () => {
         <div className="loading-state">
           <p className="loading-state-text">Cargando eventos...</p>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -139,6 +141,7 @@ const HomePage: React.FC = () => {
         onCloseModal={handleCloseModal}
         errorMessage={modalErrorMessage}
       />
+      <Footer />
     </div>
   );
 };

@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Ticket } from './HomePage';
-import './CarritoPage.css'; // Archivo CSS separado
-
+import './CarritoPage.css'; 
+import Navbar from './Navbar';
+import Footer from './Footer';
 interface CartItem extends Ticket {
   quantity: number;
 }
 
 const CarritoPage = () => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);      // Estado para almacenar los items del carrito
 
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem('ticket') || '[]');
-    setCartItems(items);
+    setCartItems(items);                                                  // Cargar los items del carrito desde localStorage al montar el componente
   }, []);
 
   const removeItem = (index: number) => {
     const newCartItems = cartItems.filter((_, i) => i !== index);
-    localStorage.setItem('ticket', JSON.stringify(newCartItems));
+    localStorage.setItem('ticket', JSON.stringify(newCartItems));  // Actualizar localStorage al eliminar un item
     setCartItems(newCartItems);
   };
 
@@ -26,14 +27,17 @@ const CarritoPage = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
+  // Renderizado del componente CarritoPage
   return (
+    <div>
+    <div><Navbar /></div>
     <div className="cart-container">
       <h2 className="cart-title">Carrito de compras</h2>
       
       {cartItems.length > 0 ? (
         <>
           <div className="cart-items-container">
-            {cartItems.map((item, index) => (
+            {cartItems.map((item, index) => (                               // Mapeo de los items del carrito
               <div key={index} className="cart-item">
                 <div className="item-info">
                   <h3 className="item-name">{item.eventName}</h3>
@@ -83,6 +87,8 @@ const CarritoPage = () => {
           </button>
         </div>
       )}
+    </div>
+    <div><Footer /></div>
     </div>
   );
 };

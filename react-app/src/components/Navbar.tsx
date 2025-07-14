@@ -8,15 +8,17 @@ const Navbar: React.FC = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <h1 className="navbar-brand" onClick={() => navigate('/')}>
-  <img className="image1" src="ticket.png" alt="logo" />
-  TicketApp
-</h1>
-
+        <button className="navbar-brand" onClick={() => navigate('/')}><img className="image1" src="ticket.png" alt="logo" />TicketApp</button>
+        <div className="navbar-search">
+          <img className="search-icon" src="/lupa.png" alt="Buscar" />
+          <input type="text" placeholder="Buscar eventos..." className="navbar-search-input" />
+          <button className="navbar-search-button"></button>
+        </div>
         <ul className="navbar-menu">
-          <li><Link to="/" className="navbar-menu-item">Inicio</Link></li>
-          <li><a href="#" className="navbar-menu-item">Mis Entradas</a></li>
-          <li><a href="#" className="navbar-menu-item">Ayuda</a></li>
+          <li><button onClick={() => navigate('/myTickets')}className="btn-navbar-menu-item">Mis Entradas
+           </button></li>
+          <li><button onClick={() => navigate('/help')}className="btn-navbar-menu-item">Ayuda
+           </button></li>
           <li className="navbar-cart-container">
             <img className="navbar-cart" src="/cart1.png" alt="Carrito de Compras" />
             <span id="cart-count">0</span> 

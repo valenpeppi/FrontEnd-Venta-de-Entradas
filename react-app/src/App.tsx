@@ -6,6 +6,8 @@ import HomePage from './components/HomePage.tsx';
 import './App.css';
 import CarritoPage from './components/CarritoPage.tsx';
 import Pay from './components/Pay.tsx';
+import MyTickets from './components/MyTickets.tsx';
+import Help from './components/Help.tsx';
 
 // Definición de la interfaz para una entrada
 interface Ticket {
@@ -54,6 +56,8 @@ const App: React.FC = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/cart" element={<CarritoPage />} />
         <Route path="/pay" element={<Pay />} />
+        <Route path="/myTickets" element={<MyTickets />} />
+        <Route path="/help" element={<Help />} />
       </Routes>
       
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
