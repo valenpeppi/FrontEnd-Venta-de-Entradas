@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
-import { useCart } from '../context/CartContext'; // Asegúrate de que esta importación sea correcta
+import { useCart } from '../context/CartContext';
 
 export interface Ticket {
   id: string;
@@ -22,7 +22,7 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const [modalErrorMessage, setModalErrorMessage] = useState<string | null>(null);
+  // Eliminado: [modalErrorMessage, setModalErrorMessage] ya no es necesario aquí
   const [currentEventIndex, setCurrentEventIndex] = useState<number>(0);
 
   const { addToCart } = useCart();
@@ -33,7 +33,7 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
       { id: '2', eventName: 'Nicky Nicole', date: '2025-08-10', location: 'Bioceres Arena', price: 6000.00, availableTickets: 6000, imageUrl: 'https://placehold.co/600x400/33FF57/FFFFFF?text=Trap' },
       { id: '3', eventName: 'Super Otto', date: '2025-09-01', location: 'Complejo Forest', price: 7000.00, availableTickets: 900, imageUrl: 'https://placehold.co/600x400/3357FF/FFFFFF?text=Fiesta' },
       { id: '4', eventName: 'Los Midachi', date: '2025-09-15', location: 'Teatro Opera', price: 4500.00, availableTickets: 100, imageUrl: 'https://placehold.co/600x400/FF33CC/FFFFFF?text=Humor' },
-      { id: '5', eventName: 'Exposición de Arte Contemporaneo', date: '2025-10-05', location: 'Centro Cultural Roberto Fontanarrosa', price: 2500.00, availableTickets: 150, imageUrl: 'https://placehold.co/600x400/33CCFF/FFFFFF?text=Arte' },
+      { id: '5', eventName: 'Exposición de Arte Contemporaneo', date: '2025-10-05', location: 'Centro Cultural Roberto Fontanarrosa', price: 2500.00, availableTickets: 10, imageUrl: 'https://placehold.co/600x400/33CCFF/FFFFFF?text=Arte' },
     ];
     setTickets(dummyTickets);
   }, []);
@@ -54,34 +54,29 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
     setSelectedTicket(ticket);
     setQuantity(1);
     setShowPurchaseModal(true);
-    if (setAppMessage) setAppMessage(null);
-    setModalErrorMessage(null);
+    if (setAppMessage) setAppMessage(null); // Limpia el mensaje global al abrir modal
   };
 
   const handleCloseModal = () => {
     setShowPurchaseModal(false);
     setSelectedTicket(null);
-    setModalErrorMessage(null);
   };
 
   const handleConfirmPurchase = (purchasedQuantity: number) => {
     if (!selectedTicket) {
-      setModalErrorMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
+      // Este caso ya debería ser manejado por PurchaseModal, pero lo mantenemos como fallback
+      if (setAppMessage) setAppMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
+      handleCloseModal(); // Cierra el modal si hay un error inesperado aquí
       return;
     }
 
-    if (purchasedQuantity > 3) {
-      setModalErrorMessage('No puedes comprar más de 3 entradas a la vez.');
-      return;
-    }
+    // Las validaciones de cantidad se han movido a PurchaseModal.
+    // Aquí solo se ejecuta si PurchaseModal ya validó la cantidad.
 
-    if (purchasedQuantity > selectedTicket.availableTickets) {
-      setModalErrorMessage('No hay suficientes entradas disponibles para tu solicitud.');
-      return;
-    }
-
+    // Si todo es válido, añadir al carrito usando el contexto
     addToCart(selectedTicket, purchasedQuantity);
     
+    // Actualizar la cantidad de tickets disponibles en el estado local de HomePage
     setTickets(prevTickets =>
       prevTickets.map(ticket =>
         ticket.id === selectedTicket.id
@@ -90,10 +85,11 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
       )
     );
 
+    // Usa setAppMessage para mostrar el mensaje globalmente (éxito)
     if (setAppMessage) {
       setAppMessage(`¡Has agregado ${purchasedQuantity} entradas para ${selectedTicket.eventName} al carrito!`);
     }
-    handleCloseModal();
+    handleCloseModal(); // Cierra el modal solo si la compra es exitosa
   };
 
   if (tickets.length === 0) {
@@ -125,7 +121,6 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
         onQuantityChange={setQuantity}
         onConfirmPurchase={handleConfirmPurchase}
         onCloseModal={handleCloseModal}
-        errorMessage={modalErrorMessage}
       />
     </div>
   );
