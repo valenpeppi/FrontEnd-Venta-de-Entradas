@@ -70,20 +70,21 @@
 .navbar-search {
   display: flex;
   align-items: center;
-  position: relative;
+  position: relative; /* Esencial para posicionar el dropdown */
 }
 
 .navbar-search-input {
   padding: 0.5rem 2rem 0.5rem 3rem;
-  border: 1px solid #a0aec0; /* Borde ligeramente más oscuro por defecto */
+  border: 1px solid #a0aec0;
   border-radius: 9999px;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s; /* Transición para sombra también */
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 250px; /* Ancho fijo para la barra de búsqueda */
 }
 
 .navbar-search-input:focus {
-  border-color: #4f46e5; /* Borde primario al enfocar */
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); /* Sombra sutil al enfocar */
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
 }
 
 .navbar-menu {
@@ -130,31 +131,31 @@
 /* Estilo para el botón de registro (bordeado) */
 .btn-outline-primary {
   background: transparent;
-  color: #4f46e5; /* Color del texto igual al primario */
+  color: #4f46e5;
   font-weight: 600;
   padding: 0.5rem 1rem;
   border-radius: 9999px;
-  border: 2px solid #4f46e5; /* Borde con el color primario */
-  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08); /* Sombra sutil */
+  border: 2px solid #4f46e5;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
   transition: background 0.2s, color 0.2s, border-color 0.2s;
   outline: none;
   cursor: pointer;
 }
 
 .btn-outline-primary:hover {
-  background: #4f46e5; /* Fondo primario al pasar el ratón */
-  color: #fff; /* Texto blanco al pasar el ratón */
-  border-color: #4f46e5; /* Mantiene el borde del mismo color */
+  background: #4f46e5;
+  color: #fff;
+  border-color: #4f46e5;
 }
 
 /* Estilo para el botón de cerrar sesión */
 .btn-logout {
-  background: #ef4444; /* Un rojo vibrante */
+  background: #ef4444;
   color: #fff;
   font-weight: 600;
   padding: 0.5rem 1rem;
-  border-radius: 9999px; /* Mantiene el estilo redondeado */
-  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3), 0 2px 4px rgba(239, 68, 68, 0.15); /* Sombra más pronunciada y acorde al color */
+  border-radius: 9999px;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3), 0 2px 4px rgba(239, 68, 68, 0.15);
   transition: background 0.2s, box-shadow 0.2s;
   outline: none;
   border: none;
@@ -162,7 +163,7 @@
 }
 
 .btn-logout:hover {
-  background: #dc2626; /* Un rojo más oscuro al pasar el ratón */
+  background: #dc2626;
   box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4), 0 3px 6px rgba(220, 38, 38, 0.2);
 }
 
@@ -174,10 +175,48 @@
 }
 
 .search-icon {
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
+
+/* Estilos para el mini-menú desplegable de búsqueda */
+.search-dropdown-container {
+  position: absolute;
+  top: 100%; /* Debajo del input de búsqueda */
+  left: 0;
+  width: 100%; /* Mismo ancho que el input */
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 30; /* Por encima de otros elementos pero debajo del Navbar */
+  max-height: 200px; /* Altura máxima para scroll */
+  overflow-y: auto; /* Scroll si hay muchas sugerencias */
+  margin-top: 0.5rem; /* Pequeño espacio entre el input y el dropdown */
+}
+
+.search-dropdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-dropdown-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  color: #1f2937;
+  transition: background-color 0.2s;
+}
+
+.search-dropdown-item:hover {
+  background-color: #f3f4f6;
+  color: #4f46e5; /* Resalta el texto al pasar el ratón */
+}
+
 
 /* Estilos para el modal de confirmación de cierre de sesión */
 .logout-confirm-overlay {
@@ -190,60 +229,60 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100; /* Asegura que esté por encima de otros elementos */
+  z-index: 100;
 }
 
 .logout-confirm-modal {
   background: #fff;
-  border-radius: 1.5rem; /* Más redondeado */
-  padding: 2.5rem; /* Más espacio interno */
-  max-width: 400px; /* max-w-md */
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  max-width: 400px;
   width: 90%;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08); /* Sombra más suave y moderna */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
 
 .logout-confirm-message {
-  font-size: 1.25rem; /* text-xl */
-  font-weight: 600; /* font-semibold */
-  color: #1f2937; /* text-gray-800 */
-  margin-bottom: 1.5rem; /* mb-6 */
-  line-height: 1.4; /* Mejora la legibilidad en varias líneas */
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
 }
 
 .logout-confirm-actions {
   display: flex;
   justify-content: center;
-  gap: 1rem; /* space-x-4 */
+  gap: 1rem;
 }
 
 /* Estilos para los botones del modal de confirmación */
 .btn-logout-confirm-yes {
-  background: #fff; /* Fondo blanco */
-  color: #4338ca; /* Texto violeta */
+  background: #fff;
+  color: #4338ca;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
-  border: 1px solid #4338ca; /* Borde violeta */
-  box-shadow: 0 2px 8px 0 rgba(67, 56, 202, 0.1); /* Sombra sutil */
+  border: 1px solid #4338ca;
+  box-shadow: 0 2px 8px 0 rgba(67, 56, 202, 0.1);
   transition: background 0.2s, border-color 0.2s, color 0.2s;
   outline: none;
   cursor: pointer;
 }
 
 .btn-logout-confirm-yes:hover {
-  background: #e0e7ff; /* Fondo más claro al pasar el ratón */
+  background: #e0e7ff;
   color: #3730a3;
   border-color: #3730a3;
 }
 
 .btn-logout-confirm-no {
-  background: #4338ca; /* Fondo violeta */
-  color: #fff; /* Texto blanco */
+  background: #4338ca;
+  color: #fff;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
-  border: 1px solid #4338ca; /* Borde violeta */
+  border: 1px solid #4338ca;
   box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
   transition: background 0.2s, border-color 0.2s;
   outline: none;
@@ -251,6 +290,6 @@
 }
 
 .btn-logout-confirm-no:hover {
-  background: #3730a3; /* Violeta más oscuro al pasar el ratón */
+  background: #3730a3;
   border-color: #3730a3;
 }

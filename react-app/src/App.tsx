@@ -7,7 +7,8 @@ import CarritoPage from './components/CarritoPage.tsx';
 import Pay from './components/Pay.tsx';
 import MyTickets from './components/MyTickets.tsx';
 import Help from './components/Help.tsx';
-import Layout from './components/Layout.tsx'; // Importa el nuevo componente Layout
+import EventDetailPage from './components/EventDetailPage.tsx'; // Importa el nuevo componente
+import Layout from './components/Layout.tsx';
 
 import './App.css';
 
@@ -59,8 +60,8 @@ const App: React.FC = () => {
               isLoggedIn={isLoggedIn} 
               userName={userName} 
               onLogout={handleLogout}
-              appMessage={appMessage} // Pasa el mensaje global
-              setAppMessage={setAppMessage} // Pasa la función para establecerlo
+              appMessage={appMessage}
+              setAppMessage={setAppMessage}
             >
               <HomePage />
             </Layout>
@@ -119,6 +120,21 @@ const App: React.FC = () => {
               setAppMessage={setAppMessage}
             >
               <Help />
+            </Layout>
+          } 
+        />
+        {/* Nueva ruta para el detalle del evento */}
+        <Route 
+          path="/event/:id" 
+          element={
+            <Layout 
+              isLoggedIn={isLoggedIn} 
+              userName={userName} 
+              onLogout={handleLogout}
+              appMessage={appMessage}
+              setAppMessage={setAppMessage}
+            >
+              <EventDetailPage setAppMessage={setAppMessage} />
             </Layout>
           } 
         />

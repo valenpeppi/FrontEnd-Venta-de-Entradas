@@ -9,6 +9,7 @@ export interface PurchaseModalProps {
   quantity: number;
   onQuantityChange: (quantity: number) => void;
   onCloseModal: () => void;
+  errorMessage: string | null; // Añadido: Propiedad errorMessage
   onConfirmPurchase: (purchasedQuantity: number) => void;
 }
 
@@ -18,6 +19,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   quantity,
   onQuantityChange,
   onCloseModal,
+  errorMessage, // Añadido: Desestructurar la propiedad errorMessage
   onConfirmPurchase 
 }) => {
   const [internalQuantity, setInternalQuantity] = useState<number>(quantity);
@@ -48,7 +50,6 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
       return;
     }
 
-    // Validaciones de cantidad
     if (internalQuantity <= 0) {
       setLocalErrorMessage('La cantidad debe ser al menos 1.');
       isSubmitting.current = false;
@@ -57,7 +58,6 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
 
     if (internalQuantity > 3) {
       setLocalErrorMessage('No puedes comprar más de 3 entradas a la vez.');
-      isSubmitting.current = false;
       return;
     }
 
@@ -97,19 +97,16 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
           <input
             type="number"
             id="quantity"
-            // Eliminado: min="1" para permitir borrar el campo
             max={Math.min(selectedTicket.availableTickets, 3)} 
-            value={internalQuantity === 0 ? '' : internalQuantity} // Muestra vacío si es 0
+            value={internalQuantity === 0 ? '' : internalQuantity}
             onChange={(e) => {
               const value = e.target.value;
-              const newValue = value === '' ? 0 : parseInt(value); // Si está vacío, es 0
+              const newValue = value === '' ? 0 : parseInt(value);
               
-              // Si el valor no es un número válido y no es una cadena vacía, no actualices.
               if (isNaN(newValue) && value !== '') {
                 return;
               }
 
-              // Clamping solo si el valor es un número válido
               const clampedValue = isNaN(newValue) ? 0 : Math.max(0, Math.min(selectedTicket.availableTickets, newValue));
               
               setInternalQuantity(clampedValue);
@@ -120,9 +117,10 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             className="purchase-modal-quantity-input"
           />
         </div>
-        {localErrorMessage && (
+        {/* Usar errorMessage de las props si existe, de lo contrario usar localErrorMessage */}
+        {(errorMessage || localErrorMessage) && (
           <div className="purchase-modal-error">
-            {localErrorMessage}
+            {errorMessage || localErrorMessage}
           </div>
         )}
         <div className="purchase-modal-actions">
