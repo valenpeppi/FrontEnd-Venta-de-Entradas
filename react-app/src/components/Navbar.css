@@ -16,8 +16,6 @@
   align-items: center;
 }
 
-
-
 .navbar-brand {
   display: flex;
   align-items: center;
@@ -77,14 +75,15 @@
 
 .navbar-search-input {
   padding: 0.5rem 2rem 0.5rem 3rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #a0aec0; /* Borde ligeramente más oscuro por defecto */
   border-radius: 9999px;
   outline: none;
-  transition: border 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s; /* Transición para sombra también */
 }
 
 .navbar-search-input:focus {
-  border: 1px solid #4f46e5;
+  border-color: #4f46e5; /* Borde primario al enfocar */
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); /* Sombra sutil al enfocar */
 }
 
 .navbar-menu {
@@ -128,24 +127,27 @@
   background: #3730a3;
 }
 
-.btn-secondary {
-  background: #d1d5db;
-  color: #1f2937;
+/* Estilo para el botón de registro (bordeado) */
+.btn-outline-primary {
+  background: transparent;
+  color: #4f46e5; /* Color del texto igual al primario */
   font-weight: 600;
   padding: 0.5rem 1rem;
   border-radius: 9999px;
-  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
-  transition: background 0.2s;
+  border: 2px solid #4f46e5; /* Borde con el color primario */
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08); /* Sombra sutil */
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
   outline: none;
-  border: none;
   cursor: pointer;
 }
 
-.btn-secondary:hover {
-  background: #e5e7eb;
-} 
+.btn-outline-primary:hover {
+  background: #4f46e5; /* Fondo primario al pasar el ratón */
+  color: #fff; /* Texto blanco al pasar el ratón */
+  border-color: #4f46e5; /* Mantiene el borde del mismo color */
+}
 
-/* Nuevo estilo para el botón de cerrar sesión */
+/* Estilo para el botón de cerrar sesión */
 .btn-logout {
   background: #ef4444; /* Un rojo vibrante */
   color: #fff;
@@ -215,7 +217,7 @@
   gap: 1rem; /* space-x-4 */
 }
 
-/* Nuevos estilos para los botones del modal de confirmación */
+/* Estilos para los botones del modal de confirmación */
 .btn-logout-confirm-yes {
   background: #fff; /* Fondo blanco */
   color: #4338ca; /* Texto violeta */

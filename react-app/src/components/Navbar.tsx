@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext'; // Importa el hook useCart
 import './Navbar.css';
 
 // Añade props para el estado de autenticación
@@ -11,6 +12,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
   const navigate = useNavigate();
+  const { cartCount } = useCart(); // Obtiene el cartCount del contexto
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false); // Estado para el modal de confirmación
 
   const handleLogoutClick = () => {
@@ -42,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
             </button></li>
           <li className="navbar-cart-container">
             <img className="navbar-cart" src="/cart1.png" alt="Carrito de Compras" />
-            <span id="cart-count">0</span> 
+            <span id="cart-count">{cartCount}</span> {/* Muestra dinámicamente el número de ítems en el carrito */}
             <button onClick={() => navigate('/cart')}
               className="btn"></button>
             </li>
@@ -73,7 +75,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
               <li>
                 <button
                   onClick={() => navigate('/register')}
-                  className="btn-secondary"
+                  className="btn-outline-primary" /* CLASE ACTUALIZADA A btn-outline-primary */
                 >
                   Registrarse
                 </button>

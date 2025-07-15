@@ -1,75 +1,74 @@
 import React, { useState, useEffect, useRef } from 'react';
-import type { Ticket } from './HomePage'; // Asegúrate de que Ticket se importa correctamente desde HomePage
+import type { Ticket } from './HomePage';
 
 import './PurchaseModal.css';
 
-// Interfaz para las props del componente PurchaseModal
 export interface PurchaseModalProps {
   isOpen: boolean;
   selectedTicket: Ticket | null;
   quantity: number;
   onQuantityChange: (quantity: number) => void;
   onCloseModal: () => void;
-  errorMessage: string | null;
-  onConfirmPurchase: (purchasedQuantity: number) => void; // Asegúrate de que esta línea esté correcta
+  onConfirmPurchase: (purchasedQuantity: number) => void;
 }
 
-const PurchaseModal: React.FC<PurchaseModalProps> = ({ // Asegúrate de que React.FC<PurchaseModalProps> esté aquí
+const PurchaseModal: React.FC<PurchaseModalProps> = ({
   isOpen,
   selectedTicket,
   quantity,
   onQuantityChange,
   onCloseModal,
-  errorMessage,
   onConfirmPurchase 
 }) => {
   const [internalQuantity, setInternalQuantity] = useState<number>(quantity);
+  const [localErrorMessage, setLocalErrorMessage] = useState<string | null>(null);
   const isSubmitting = useRef(false); 
 
   useEffect(() => {
     if (isOpen) {
       setInternalQuantity(quantity);
+      setLocalErrorMessage(null);
       isSubmitting.current = false;
       console.log('PurchaseModal: Modal abierto, internalQuantity reseteado a prop quantity. isSubmitting reseteado a false.');
     }
   }, [isOpen, quantity]);
 
-  const handleConfirmPurchase = () => {
+  const handleConfirm = () => {
     if (isSubmitting.current) {
       console.log('PurchaseModal: Intento de doble clic detectado, ignorando.');
       return; 
     }
     isSubmitting.current = true;
+    setLocalErrorMessage(null);
 
-    console.log('PurchaseModal: handleConfirmPurchase activado.');
+    console.log('PurchaseModal: handleConfirm activado.');
     if (!selectedTicket) {
-      console.log('PurchaseModal: No hay ticket seleccionado, retornando.');
+      setLocalErrorMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
       isSubmitting.current = false;
       return;
     }
 
+    // Validaciones de cantidad
     if (internalQuantity <= 0) {
-      console.log('PurchaseModal: Cantidad <= 0, retornando.');
+      setLocalErrorMessage('La cantidad debe ser al menos 1.');
       isSubmitting.current = false;
       return;
     }
-    if (internalQuantity > 3) { 
-      console.log('PurchaseModal: Cantidad > 3, retornando.');
+
+    if (internalQuantity > 3) {
+      setLocalErrorMessage('No puedes comprar más de 3 entradas a la vez.');
       isSubmitting.current = false;
-      return; 
+      return;
     }
+
     if (selectedTicket.availableTickets < internalQuantity) {
-      console.log('PurchaseModal: No hay suficientes entradas disponibles, retornando.');
+      setLocalErrorMessage('No hay suficientes entradas disponibles para tu solicitud.');
       isSubmitting.current = false;
       return;
     }
 
-    console.log(`PurchaseModal: Llamando al callback onConfirmPurchase con cantidad: ${internalQuantity}`);
     onConfirmPurchase(internalQuantity); 
-
-    console.log('PurchaseModal: Cerrando modal.');
-    onCloseModal(); 
-    isSubmitting.current = false;
+    isSubmitting.current = false; 
   };
 
   if (!isOpen || !selectedTicket) {
@@ -98,27 +97,37 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ // Asegúrate de que Reac
           <input
             type="number"
             id="quantity"
-            min="1"
+            // Eliminado: min="1" para permitir borrar el campo
             max={Math.min(selectedTicket.availableTickets, 3)} 
-            value={internalQuantity}
+            value={internalQuantity === 0 ? '' : internalQuantity} // Muestra vacío si es 0
             onChange={(e) => {
-              const newValue = parseInt(e.target.value) || 1;
-              const clampedValue = Math.max(1, Math.min(selectedTicket.availableTickets, newValue));
+              const value = e.target.value;
+              const newValue = value === '' ? 0 : parseInt(value); // Si está vacío, es 0
+              
+              // Si el valor no es un número válido y no es una cadena vacía, no actualices.
+              if (isNaN(newValue) && value !== '') {
+                return;
+              }
+
+              // Clamping solo si el valor es un número válido
+              const clampedValue = isNaN(newValue) ? 0 : Math.max(0, Math.min(selectedTicket.availableTickets, newValue));
+              
               setInternalQuantity(clampedValue);
               onQuantityChange(clampedValue);
+              setLocalErrorMessage(null);
               console.log('PurchaseModal: Cantidad del input cambiada a:', clampedValue);
             }}
             className="purchase-modal-quantity-input"
           />
         </div>
-        {errorMessage && (
+        {localErrorMessage && (
           <div className="purchase-modal-error">
-            {errorMessage}
+            {localErrorMessage}
           </div>
         )}
         <div className="purchase-modal-actions">
           <button
-            onClick={handleConfirmPurchase}
+            onClick={handleConfirm}
             className="btn-confirm"
           >
             Agregar al Carrito
