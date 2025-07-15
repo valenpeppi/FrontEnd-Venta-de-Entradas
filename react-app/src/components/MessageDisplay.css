@@ -1,27 +1,52 @@
 /* Mensajes de notificación */
 .notification-message {
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  margin-bottom: 1rem;
+  /* Posicionamiento fijo en la parte superior central */
+  position: fixed;
+  top: 1rem; /* top-4 */
+  left: 50%; /* left-1/2 */
+  transform: translateX(-50%); /* -translate-x-1/2 para centrar */
+  z-index: 50; /* z-50: Asegura que esté por encima de la mayoría de los elementos */
+
+  /* Estilos base */
+  padding: 0.75rem 1.5rem; /* p-3, un poco más de padding horizontal */
+  border-radius: 0.5rem; /* rounded-lg */
+  font-weight: 600; /* font-semibold */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* shadow-lg más pronunciada */
   text-align: center;
-  font-weight: 500;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+
+  /* Transiciones */
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Transición para opacidad y movimiento */
 }
 
+/* Clases para controlar la visibilidad */
+.notification-message--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0); /* Posición final visible */
+}
+
+.notification-message--hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-20px); /* Se mueve hacia arriba y se desvanece */
+  pointer-events: none; /* Evita que el elemento bloquee clics cuando está oculto */
+}
+
+
+/* Colores para tipos de mensaje */
 .notification-message--success {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #a7f3d0;
+  background: #10b981; /* Un verde más oscuro para el fondo */
+  color: #fff; /* Texto blanco */
+  border: 1px solid #059669; /* Borde más oscuro */
 }
 
 .notification-message--error {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fca5a5;
+  background: #ef4444; /* Un rojo más vibrante */
+  color: #fff; /* Texto blanco */
+  border: 1px solid #dc2626; /* Borde más oscuro */
 }
 
 .notification-message--info {
-  background: #dbeafe;
-  color: #1e40af;
-  border: 1px solid #93c5fd;
-} 
+  background: #3b82f6; /* Un azul más vibrante */
+  color: #fff; /* Texto blanco */
+  border: 1px solid #2563eb; /* Borde más oscuro */
+}

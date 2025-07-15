@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login.tsx'; 
 import Register from './components/Register.tsx'; 
-import HomePage from './components/HomePage.tsx'; // Importa HomePage
-import './App.css';
+import HomePage from './components/HomePage.tsx';
 import CarritoPage from './components/CarritoPage.tsx';
 import Pay from './components/Pay.tsx';
 import MyTickets from './components/MyTickets.tsx';
 import Help from './components/Help.tsx';
+import Layout from './components/Layout.tsx'; // Importa el nuevo componente Layout
+
+import './App.css';
 
 // Definición de la interfaz para una entrada
 export interface Ticket {
@@ -21,7 +23,9 @@ export interface Ticket {
 }
 
 const App: React.FC = () => {
+  // Estado para mensajes globales de la aplicación
   const [appMessage, setAppMessage] = useState<string | null>(null);
+
   // Estado para la autenticación
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userName, setUserName] = useState<string | null>(null);
@@ -47,17 +51,79 @@ const App: React.FC = () => {
   return (
     <div className="app-root">
       <Routes>
-        {/* HomePage ahora recibe props de autenticación */}
+        {/* Rutas que usan el Layout */}
         <Route 
           path="/" 
           element={
-            <HomePage 
+            <Layout 
               isLoggedIn={isLoggedIn} 
               userName={userName} 
-              onLogout={handleLogout} 
-            />
+              onLogout={handleLogout}
+              appMessage={appMessage} // Pasa el mensaje global
+              setAppMessage={setAppMessage} // Pasa la función para establecerlo
+            >
+              <HomePage />
+            </Layout>
           } 
         />
+        <Route 
+          path="/cart" 
+          element={
+            <Layout 
+              isLoggedIn={isLoggedIn} 
+              userName={userName} 
+              onLogout={handleLogout}
+              appMessage={appMessage}
+              setAppMessage={setAppMessage}
+            >
+              <CarritoPage />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/pay" 
+          element={
+            <Layout 
+              isLoggedIn={isLoggedIn} 
+              userName={userName} 
+              onLogout={handleLogout}
+              appMessage={appMessage}
+              setAppMessage={setAppMessage}
+            >
+              <Pay />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/myTickets" 
+          element={
+            <Layout 
+              isLoggedIn={isLoggedIn} 
+              userName={userName} 
+              onLogout={handleLogout}
+              appMessage={appMessage}
+              setAppMessage={setAppMessage}
+            >
+              <MyTickets />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/help" 
+          element={
+            <Layout 
+              isLoggedIn={isLoggedIn} 
+              userName={userName} 
+              onLogout={handleLogout}
+              appMessage={appMessage}
+              setAppMessage={setAppMessage}
+            >
+              <Help />
+            </Layout>
+          } 
+        />
+
+        {/* Rutas que NO usan el Layout (ej. Login y Register) */}
         <Route 
           path="/login" 
           element={
@@ -75,10 +141,6 @@ const App: React.FC = () => {
           } 
         />
         <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path="/cart" element={<CarritoPage />} />
-        <Route path="/pay" element={<Pay />} />
-        <Route path="/myTickets" element={<MyTickets />} />
-        <Route path="/help" element={<Help />} />
       </Routes>
       
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
