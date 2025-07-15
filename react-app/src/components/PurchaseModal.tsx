@@ -9,7 +9,7 @@ export interface PurchaseModalProps {
   quantity: number;
   onQuantityChange: (quantity: number) => void;
   onCloseModal: () => void;
-  errorMessage: string | null; // Añadido: Propiedad errorMessage
+  errorMessage: string | null;
   onConfirmPurchase: (purchasedQuantity: number) => void;
 }
 
@@ -19,7 +19,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   quantity,
   onQuantityChange,
   onCloseModal,
-  errorMessage, // Añadido: Desestructurar la propiedad errorMessage
+  errorMessage,
   onConfirmPurchase 
 }) => {
   const [internalQuantity, setInternalQuantity] = useState<number>(quantity);
@@ -117,7 +117,6 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             className="purchase-modal-quantity-input"
           />
         </div>
-        {/* Usar errorMessage de las props si existe, de lo contrario usar localErrorMessage */}
         {(errorMessage || localErrorMessage) && (
           <div className="purchase-modal-error">
             {errorMessage || localErrorMessage}

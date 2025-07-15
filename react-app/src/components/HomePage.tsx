@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import { useCart } from '../context/CartContext';
-import { useEvents } from '../context/EventsContext'; // Importa el hook useEvents
+import { useEvents } from '../context/EventsContext';
 
 export interface Ticket {
   id: string;
@@ -12,6 +12,7 @@ export interface Ticket {
   price: number;
   availableTickets: number;
   imageUrl: string;
+  time: string;
 }
 
 interface HomePageProps {
@@ -19,7 +20,7 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
-  const { allTickets, setAllTickets } = useEvents(); // Obtiene todos los tickets del contexto
+  const { allTickets, setAllTickets } = useEvents();
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
@@ -27,8 +28,6 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
 
   const { addToCart } = useCart();
 
-  // No necesitamos un useEffect para cargar dummyTickets aquí, EventsContext lo hace.
-  // Pero necesitamos un useEffect para actualizar currentEventIndex cuando allTickets cambian
   useEffect(() => {
     if (currentEventIndex >= allTickets.length && allTickets.length > 0) {
       setCurrentEventIndex(0);
@@ -71,9 +70,8 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
 
     addToCart(selectedTicket, purchasedQuantity);
     
-    // Actualizar la cantidad de tickets disponibles en el estado global de EventsContext
-    setAllTickets((prevTickets: Ticket[]) => // Explicitly type prevTickets as Ticket[]
-      prevTickets.map((ticket: Ticket) => // Explicitly type ticket as Ticket
+    setAllTickets((prevTickets: Ticket[]) =>
+      prevTickets.map((ticket: Ticket) =>
         ticket.id === selectedTicket.id
           ? { ...ticket, availableTickets: ticket.availableTickets - purchasedQuantity }
           : ticket
@@ -100,7 +98,7 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
         <h2 className="homepage-title">Eventos Destacados</h2>
         
         <Carousel
-          tickets={allTickets} // Siempre pasa todos los tickets al carrusel
+          tickets={allTickets}
           currentEventIndex={currentEventIndex}
           onPreviousEvent={goToPreviousEvent}
           onNextEvent={goToNextEvent}

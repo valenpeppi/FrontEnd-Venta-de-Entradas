@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useSearch } from '../context/SearchContext';
-import { useEvents } from '../context/EventsContext'; // Importa el hook useEvents
+import { useEvents } from '../context/EventsContext';
 import './Navbar.css';
 
 interface NavbarProps {
@@ -15,13 +15,12 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
   const navigate = useNavigate();
   const { cartCount } = useCart();
   const { searchQuery, setSearchQuery } = useSearch();
-  const { allTickets } = useEvents(); // Obtiene todos los tickets del contexto de eventos
+  const { allTickets } = useEvents();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
-  // Filtra los eventos reales basados en el término de búsqueda
   const filteredSuggestions = allTickets.filter(ticket =>
     searchQuery && ticket.eventName.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -52,28 +51,26 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
       );
 
       if (matchedEvent) {
-        navigate(`/event/${matchedEvent.id}`); // Navega al detalle del evento
-        setSearchQuery(''); // Limpia la barra de búsqueda
+        navigate(`/event/${matchedEvent.id}`);
+        setSearchQuery('');
       } else {
-        // Opcional: Mostrar un mensaje global si no se encontró el evento
-        // if (setAppMessage) setAppMessage(`No se encontró el evento "${searchQuery}".`);
         console.log(`No se encontró el evento "${searchQuery}".`);
       }
-      setShowSuggestions(false); // Oculta las sugerencias al presionar Enter
+      setShowSuggestions(false);
     }
   };
 
   const handleSuggestionClick = (suggestionName: string) => {
-    setSearchQuery(suggestionName); // Establece el término de búsqueda con la sugerencia seleccionada
-    setShowSuggestions(false); // Oculta las sugerencias
+    setSearchQuery(suggestionName);
+    setShowSuggestions(false);
 
     const matchedEvent = allTickets.find(ticket =>
       ticket.eventName.toLowerCase() === suggestionName.toLowerCase()
     );
 
     if (matchedEvent) {
-      navigate(`/event/${matchedEvent.id}`); // Navega al detalle del evento
-      setSearchQuery(''); // Limpia la barra de búsqueda
+      navigate(`/event/${matchedEvent.id}`);
+      setSearchQuery('');
     }
   };
 
@@ -109,11 +106,11 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
             <div className="search-dropdown-container">
               <ul className="search-dropdown-list">
                 {filteredSuggestions.length > 0 ? (
-                  filteredSuggestions.map((ticket, index) => ( // Mapea directamente el objeto ticket
+                  filteredSuggestions.map((ticket) => (
                     <li
-                      key={ticket.id} // Usa el ID del ticket como key
+                      key={ticket.id}
                       className="search-dropdown-item"
-                      onClick={() => handleSuggestionClick(ticket.eventName)} // Pasa el nombre del evento
+                      onClick={() => handleSuggestionClick(ticket.eventName)}
                     >
                       {ticket.eventName}
                     </li>

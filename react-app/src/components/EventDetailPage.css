@@ -2,10 +2,10 @@
 .event-detail-page {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Alinea al inicio para que el contenido no se centre verticalmente si es corto */
-  min-height: calc(100vh - 10rem); /* Altura mínima, ajusta según Navbar y Footer */
+  align-items: flex-start;
+  min-height: calc(100vh - 10rem);
   padding: 2rem;
-  background: linear-gradient(to bottom right, #eff6ff, #c7d2fe); /* Fondo coherente */
+  background: linear-gradient(to bottom right, #eff6ff, #c7d2fe);
   font-family: 'Inter', sans-serif;
   color: #1f2937;
 }
@@ -22,17 +22,17 @@
   border-radius: 1rem;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column; /* Por defecto en columna para móviles */
-  max-width: 800px; /* Ancho máximo de la tarjeta */
+  flex-direction: column;
+  max-width: 800px;
   width: 100%;
-  overflow: hidden; /* Asegura que la imagen redondeada se vea bien */
+  overflow: hidden;
 }
 
 .event-detail-image {
-  width: 100%; /* La imagen ocupa el 100% del ancho de su contenedor */
-  height: 250px; /* Altura fija para móviles, puedes ajustar si es necesario */
-  object-fit: cover; /* Recorta la imagen para cubrir el área sin distorsionar */
-  border-radius: 1rem 1rem 0 0; /* Bordes redondeados solo arriba para móvil */
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 1rem 1rem 0 0;
 }
 
 .event-detail-content {
@@ -66,7 +66,7 @@
 .event-detail-price {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #059669; /* Verde para el precio */
+  color: #059669;
   margin-top: 1rem;
 }
 
@@ -116,20 +116,20 @@
   background: #c7d2fe;
 }
 
-/* Responsive adjustments for larger screens */
+/* Responsive adjustments */
 @media (min-width: 768px) {
   .event-detail-card {
-    flex-direction: row; /* En fila para pantallas más grandes */
+    flex-direction: row;
   }
 
   .event-detail-image {
-    width: 40%; /* La imagen ocupa el 40% del ancho */
-    height: auto; /* Altura automática para mantener la proporción */
-    border-radius: 1rem 0 0 1rem; /* Bordes redondeados solo a la izquierda */
+    width: 40%;
+    height: auto;
+    border-radius: 1rem 0 0 1rem;
   }
 
   .event-detail-content {
-    width: 60%; /* El contenido ocupa el 60% restante */
+    width: 60%;
     padding: 2rem;
   }
 }

@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; // Importa el hook useCart
-import './CarritoPage.css'; 
-// Navbar y Footer ya no se importan aquí, ya que están en el Layout y se proporcionan a través de él.
-
-// No es necesario definir CartItem aquí si ya se exporta desde CartContext
-// interface CartItem extends Ticket {
-//   quantity: number;
-// }
+import { useCart } from '../context/CartContext';
+import './CarritoPage.css';
 
 const CarritoPage = () => {
   const navigate = useNavigate();
-  // Obtiene cartItems y removeItem del contexto del carrito
   const { cartItems, removeItem } = useCart();
 
-  // Log para ver el estado del carrito al renderizar la página
   useEffect(() => {
     console.log('CarritoPage: Renderizando. Items en el carrito:', cartItems);
   }, [cartItems]);
@@ -24,16 +16,15 @@ const CarritoPage = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
-  // Renderizado del componente CarritoPage
   return (
-    <div className="cart-container"> {/* Elimina los divs redundantes de Navbar y Footer */}
+    <div className="cart-container">
       <h2 className="cart-title">Carrito de compras</h2>
       
       {cartItems.length > 0 ? (
         <>
           <div className="cart-items-container">
-            {cartItems.map((item) => (                           // Mapeo de los items del carrito, usando item.id como key
-              <div key={item.id} className="cart-item"> {/* Usa item.id como key */}
+            {cartItems.map((item) => (
+              <div key={item.id} className="cart-item">
                 <div className="item-info">
                   <h3 className="item-name">{item.eventName}</h3>
                   {item.date && <p className="item-date">{item.date}</p>}
@@ -50,7 +41,7 @@ const CarritoPage = () => {
                 </div>
                 
                 <button 
-                  onClick={() => removeItem(item.id)} // Llama a removeItem del contexto, pasando el ID
+                  onClick={() => removeItem(item.id)}
                   className="item-remove-btn"
                 >
                   Eliminar

@@ -21,7 +21,7 @@
   align-items: center;
   font-size: 2rem;
   font-weight: bold;
-  color: #4f46e5; /* el mismo violeta */
+  color: #4f46e5;
 }
 .navbar-brand:hover {
   color: #3730a3;
@@ -70,7 +70,7 @@
 .navbar-search {
   display: flex;
   align-items: center;
-  position: relative; /* Esencial para posicionar el dropdown */
+  position: relative;
 }
 
 .navbar-search-input {
@@ -79,7 +79,7 @@
   border-radius: 9999px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
-  width: 250px; /* Ancho fijo para la barra de búsqueda */
+  width: 250px;
 }
 
 .navbar-search-input:focus {
@@ -187,16 +187,16 @@
 /* Estilos para el mini-menú desplegable de búsqueda */
 .search-dropdown-container {
   position: absolute;
-  top: 100%; /* Debajo del input de búsqueda */
+  top: 100%;
   left: 0;
-  width: 100%; /* Mismo ancho que el input */
+  width: 100%;
   background-color: #fff;
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 30; /* Por encima de otros elementos pero debajo del Navbar */
-  max-height: 200px; /* Altura máxima para scroll */
-  overflow-y: auto; /* Scroll si hay muchas sugerencias */
-  margin-top: 0.5rem; /* Pequeño espacio entre el input y el dropdown */
+  z-index: 30;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 0.5rem;
 }
 
 .search-dropdown-list {
@@ -214,7 +214,19 @@
 
 .search-dropdown-item:hover {
   background-color: #f3f4f6;
-  color: #4f46e5; /* Resalta el texto al pasar el ratón */
+  color: #4f46e5;
+}
+
+.search-dropdown-item.no-results {
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
+  cursor: default;
+}
+
+.search-dropdown-item.no-results:hover {
+  background-color: transparent;
+  color: #6b7280;
 }
 
 

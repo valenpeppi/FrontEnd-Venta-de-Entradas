@@ -5,15 +5,14 @@ import './index.css'
 import App from './App.tsx'
 import { CartProvider } from './context/CartContext.tsx';
 import { SearchProvider } from './context/SearchContext.tsx';
-import { EventsProvider } from './context/EventsContext.tsx'; // Importa el EventsProvider
+import { EventsProvider } from './context/EventsContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      {/* Envuelve la aplicación con todos los proveedores de contexto */}
       <CartProvider>
         <SearchProvider>
-          <EventsProvider> {/* Nuevo: Envuelve con EventsProvider */}
+          <EventsProvider>
             <App />
           </EventsProvider>
         </SearchProvider>

@@ -7,7 +7,7 @@ import CarritoPage from './components/CarritoPage.tsx';
 import Pay from './components/Pay.tsx';
 import MyTickets from './components/MyTickets.tsx';
 import Help from './components/Help.tsx';
-import EventDetailPage from './components/EventDetailPage.tsx'; // Importa el nuevo componente
+import EventDetailPage from './components/EventDetailPage.tsx';
 import Layout from './components/Layout.tsx';
 
 import './App.css';
@@ -21,13 +21,12 @@ export interface Ticket {
   price: number;
   availableTickets: number;
   imageUrl: string;
+  time: string;
 }
 
 const App: React.FC = () => {
-  // Estado para mensajes globales de la aplicación
   const [appMessage, setAppMessage] = useState<string | null>(null);
 
-  // Estado para la autenticación
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userName, setUserName] = useState<string | null>(null);
 
@@ -41,10 +40,8 @@ const App: React.FC = () => {
     setIsLoggedIn(false);
     setUserName(null);
     setAppMessage('Has cerrado sesión.');
-    // Aquí podrías añadir lógica para limpiar tokens o datos de sesión
   };
 
-  // Función para manejar el registro 
   const handleRegisterSuccess = () => {
     setAppMessage('¡Registro exitoso! Por favor, inicia sesión.');
   };
@@ -52,7 +49,6 @@ const App: React.FC = () => {
   return (
     <div className="app-root">
       <Routes>
-        {/* Rutas que usan el Layout */}
         <Route 
           path="/" 
           element={
@@ -123,7 +119,6 @@ const App: React.FC = () => {
             </Layout>
           } 
         />
-        {/* Nueva ruta para el detalle del evento */}
         <Route 
           path="/event/:id" 
           element={
@@ -139,7 +134,6 @@ const App: React.FC = () => {
           } 
         />
 
-        {/* Rutas que NO usan el Layout (ej. Login y Register) */}
         <Route 
           path="/login" 
           element={

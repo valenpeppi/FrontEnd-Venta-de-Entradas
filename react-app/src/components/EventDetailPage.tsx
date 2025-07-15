@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEvents } from '../context/EventsContext';
 import { useCart } from '../context/CartContext';
-import PurchaseModal from './PurchaseModal'; // Reutiliza el modal de compra
-import type { Ticket } from '../App'; // Importa la interfaz Ticket
+import PurchaseModal from './PurchaseModal';
+import type { Ticket } from '../App';
 
-import './EventDetailPage.css'; // Crea este archivo CSS para estilos
+import './EventDetailPage.css';
 
 interface EventDetailPageProps {
   setAppMessage?: (message: string | null) => void;
 }
 
 const EventDetailPage: React.FC<EventDetailPageProps> = ({ setAppMessage }) => {
-  const { id } = useParams<{ id: string }>(); // Obtiene el ID del evento de la URL
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { allTickets, setAllTickets } = useEvents(); // Obtiene todos los tickets del contexto
+  const { allTickets, setAllTickets } = useEvents();
   const { addToCart } = useCart();
 
   const [event, setEvent] = useState<Ticket | undefined>(undefined);
@@ -23,29 +23,26 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ setAppMessage }) => {
   const [modalErrorMessage, setModalErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Busca el evento por ID en la lista de todos los tickets
     const foundEvent = allTickets.find(ticket => ticket.id === id);
     setEvent(foundEvent);
     if (!foundEvent && id) {
-      // Si no se encuentra el evento, podrías redirigir a una página 404 o a la home
       console.warn(`Evento con ID ${id} no encontrado.`);
-      // navigate('/'); // Opcional: redirigir a la página principal
     }
-  }, [id, allTickets]); // Depende de id y allTickets para re-buscar si cambian
+  }, [id, allTickets]);
 
   const handleBuyClick = () => {
     if (event) {
-      setQuantity(1); // Reinicia la cantidad a 1
-      setModalErrorMessage(null); // Limpia mensajes de error previos
+      setQuantity(1);
+      setModalErrorMessage(null);
       setShowPurchaseModal(true);
-      if (setAppMessage) setAppMessage(null); // Limpia el mensaje global
+      if (setAppMessage) setAppMessage(null);
     }
   };
 
   const handleCloseModal = () => {
     setShowPurchaseModal(false);
-    setQuantity(1); // Resetear cantidad al cerrar
-    setModalErrorMessage(null); // Limpia el mensaje de error del modal
+    setQuantity(1);
+    setModalErrorMessage(null);
   };
 
   const handleConfirmPurchase = (purchasedQuantity: number) => {
@@ -69,13 +66,11 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ setAppMessage }) => {
       return;
     }
 
-    // Añadir al carrito
     addToCart(event, purchasedQuantity);
 
-    // Actualizar la cantidad de tickets disponibles en el contexto de eventos
-    setAllTickets((prevTickets: Ticket[]) => // Explicitly type prevTickets as Ticket[]
-      prevTickets.map((ticket: Ticket) => // Explicitly type ticket as Ticket
-        ticket.id === event!.id // Corrección aquí: Usar el operador de aserción no nula '!'
+    setAllTickets((prevTickets: Ticket[]) =>
+      prevTickets.map((ticket: Ticket) =>
+        ticket.id === event!.id
           ? { ...ticket, availableTickets: ticket.availableTickets - purchasedQuantity }
           : ticket
       )
@@ -84,7 +79,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ setAppMessage }) => {
     if (setAppMessage) {
       setAppMessage(`¡Has agregado ${purchasedQuantity} entradas para ${event.eventName} al carrito!`);
     }
-    handleCloseModal(); // Cierra el modal solo si la compra es exitosa
+    handleCloseModal();
   };
 
   if (!event) {
@@ -103,6 +98,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ setAppMessage }) => {
           <h1 className="event-detail-title">{event.eventName}</h1>
           <p className="event-detail-info">
             <i className="fas fa-calendar-alt"></i> Fecha: {event.date}
+          </p>
+          <p className="event-detail-info">
+            <i className="fas fa-clock"></i> Hora: {event.time}
           </p>
           <p className="event-detail-info">
             <i className="fas fa-map-marker-alt"></i> Lugar: {event.location}
@@ -127,12 +125,12 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ setAppMessage }) => {
       {showPurchaseModal && (
         <PurchaseModal
           isOpen={showPurchaseModal}
-          selectedTicket={event} // Pasa el evento actual al modal
+          selectedTicket={event}
           quantity={quantity}
           onQuantityChange={setQuantity}
           onConfirmPurchase={handleConfirmPurchase}
           onCloseModal={handleCloseModal}
-          errorMessage={modalErrorMessage} // Pasa el error local del modal
+          errorMessage={modalErrorMessage}
         />
       )}
     </div>
