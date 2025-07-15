@@ -1,5 +1,6 @@
-import React from 'react';
-import type { Ticket } from './HomePage'; // Asegúrate de que Ticket se importa correctamente
+import React, { useState, useEffect, useRef } from 'react';
+import type { Ticket } from './HomePage'; // Asegúrate de que Ticket se importa correctamente desde HomePage
+
 import './PurchaseModal.css';
 
 // Interfaz para las props del componente PurchaseModal
@@ -8,32 +9,74 @@ export interface PurchaseModalProps {
   selectedTicket: Ticket | null;
   quantity: number;
   onQuantityChange: (quantity: number) => void;
-  onConfirmPurchase: () => void;
   onCloseModal: () => void;
   errorMessage: string | null;
+  onConfirmPurchase: (purchasedQuantity: number) => void; // Asegúrate de que esta línea esté correcta
 }
 
-const PurchaseModal: React.FC<PurchaseModalProps> = ({
+const PurchaseModal: React.FC<PurchaseModalProps> = ({ // Asegúrate de que React.FC<PurchaseModalProps> esté aquí
   isOpen,
   selectedTicket,
   quantity,
   onQuantityChange,
-  onConfirmPurchase, // Asegúrate de que esta prop se desestructura
   onCloseModal,
-  errorMessage
+  errorMessage,
+  onConfirmPurchase 
 }) => {
-  const handleAddToCart = () => {
-    if (!selectedTicket) return;
-    
-    // Aquí puedes llamar a onConfirmPurchase que HomePage te pasa
-    // y dentro de HomePage, manejar la lógica de addToCart del contexto
-    onConfirmPurchase(); // Llama a la función que viene de HomePage
-    onCloseModal(); // Cierra el modal después de la acción
+  const [internalQuantity, setInternalQuantity] = useState<number>(quantity);
+  const isSubmitting = useRef(false); 
+
+  useEffect(() => {
+    if (isOpen) {
+      setInternalQuantity(quantity);
+      isSubmitting.current = false;
+      console.log('PurchaseModal: Modal abierto, internalQuantity reseteado a prop quantity. isSubmitting reseteado a false.');
+    }
+  }, [isOpen, quantity]);
+
+  const handleConfirmPurchase = () => {
+    if (isSubmitting.current) {
+      console.log('PurchaseModal: Intento de doble clic detectado, ignorando.');
+      return; 
+    }
+    isSubmitting.current = true;
+
+    console.log('PurchaseModal: handleConfirmPurchase activado.');
+    if (!selectedTicket) {
+      console.log('PurchaseModal: No hay ticket seleccionado, retornando.');
+      isSubmitting.current = false;
+      return;
+    }
+
+    if (internalQuantity <= 0) {
+      console.log('PurchaseModal: Cantidad <= 0, retornando.');
+      isSubmitting.current = false;
+      return;
+    }
+    if (internalQuantity > 3) { 
+      console.log('PurchaseModal: Cantidad > 3, retornando.');
+      isSubmitting.current = false;
+      return; 
+    }
+    if (selectedTicket.availableTickets < internalQuantity) {
+      console.log('PurchaseModal: No hay suficientes entradas disponibles, retornando.');
+      isSubmitting.current = false;
+      return;
+    }
+
+    console.log(`PurchaseModal: Llamando al callback onConfirmPurchase con cantidad: ${internalQuantity}`);
+    onConfirmPurchase(internalQuantity); 
+
+    console.log('PurchaseModal: Cerrando modal.');
+    onCloseModal(); 
+    isSubmitting.current = false;
   };
 
   if (!isOpen || !selectedTicket) {
     return null;
   }
+
+  console.log('PurchaseModal: Renderizando. internalQuantity actual:', internalQuantity);
 
   return (
     <div className="purchase-modal-overlay">
@@ -56,9 +99,15 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
             type="number"
             id="quantity"
             min="1"
-            max={selectedTicket.availableTickets}
-            value={quantity}
-            onChange={(e) => onQuantityChange(Math.max(1, Math.min(selectedTicket.availableTickets, parseInt(e.target.value) || 1)))}
+            max={Math.min(selectedTicket.availableTickets, 3)} 
+            value={internalQuantity}
+            onChange={(e) => {
+              const newValue = parseInt(e.target.value) || 1;
+              const clampedValue = Math.max(1, Math.min(selectedTicket.availableTickets, newValue));
+              setInternalQuantity(clampedValue);
+              onQuantityChange(clampedValue);
+              console.log('PurchaseModal: Cantidad del input cambiada a:', clampedValue);
+            }}
             className="purchase-modal-quantity-input"
           />
         </div>
@@ -69,7 +118,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
         )}
         <div className="purchase-modal-actions">
           <button
-            onClick={handleAddToCart}
+            onClick={handleConfirmPurchase}
             className="btn-confirm"
           >
             Agregar al Carrito

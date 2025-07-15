@@ -24,6 +24,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     if (username === "usuario" && password === "contraseña") {
       // Pasa el nombre de usuario (puedes usar el email o un nombre de usuario real de tu backend)
       onLoginSuccess(username); 
+      console.log(`Login: Llamando a onLoginSuccess con usuario: ${username}`); // Log para depuración
       navigate('/') // Redirigir a la página principal después del login
     } else {
       setError("Usuario o contraseña incorrectos.")

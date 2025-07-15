@@ -1,0 +1,22 @@
+/* src/components/Layout.css */
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #eff6ff, #c7d2fe); /* Fondo general de la app */
+  font-family: 'Inter', sans-serif;
+  color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+}
+
+.layout-main-content {
+  flex-grow: 1; /* Permite que el contenido principal ocupe el espacio disponible */
+  padding: 1.5rem 2rem; /* Padding general para el contenido de la página */
+  max-width: 1280px; /* Ancho máximo para el contenido */
+  margin: 0 auto; /* Centra el contenido */
+  width: 100%; /* Asegura que ocupe el 100% del ancho disponible en su contenedor */
+}
+
+/* El MessageDisplay se renderiza directamente en el Layout,
+   sus estilos de posicionamiento (como margin-bottom) vendrán de MessageDisplay.css */

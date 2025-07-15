@@ -142,8 +142,27 @@
 }
 
 .btn-secondary:hover {
-  background: #9ca3af;
+  background: #e5e7eb;
 } 
+
+/* Nuevo estilo para el botón de cerrar sesión */
+.btn-logout {
+  background: #ef4444; /* Un rojo vibrante */
+  color: #fff;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px; /* Mantiene el estilo redondeado */
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3), 0 2px 4px rgba(239, 68, 68, 0.15); /* Sombra más pronunciada y acorde al color */
+  transition: background 0.2s, box-shadow 0.2s;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  background: #dc2626; /* Un rojo más oscuro al pasar el ratón */
+  box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4), 0 3px 6px rgba(220, 38, 38, 0.2);
+}
 
 .image1 { 
   width: 50px;
@@ -156,4 +175,80 @@
   width: 30px;
   height: 30px;
   margin-right: 10px;
+}
+
+/* Estilos para el modal de confirmación de cierre de sesión */
+.logout-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100; /* Asegura que esté por encima de otros elementos */
+}
+
+.logout-confirm-modal {
+  background: #fff;
+  border-radius: 1.5rem; /* Más redondeado */
+  padding: 2.5rem; /* Más espacio interno */
+  max-width: 400px; /* max-w-md */
+  width: 90%;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08); /* Sombra más suave y moderna */
+  text-align: center;
+}
+
+.logout-confirm-message {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600; /* font-semibold */
+  color: #1f2937; /* text-gray-800 */
+  margin-bottom: 1.5rem; /* mb-6 */
+  line-height: 1.4; /* Mejora la legibilidad en varias líneas */
+}
+
+.logout-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem; /* space-x-4 */
+}
+
+/* Nuevos estilos para los botones del modal de confirmación */
+.btn-logout-confirm-yes {
+  background: #fff; /* Fondo blanco */
+  color: #4338ca; /* Texto violeta */
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #4338ca; /* Borde violeta */
+  box-shadow: 0 2px 8px 0 rgba(67, 56, 202, 0.1); /* Sombra sutil */
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  outline: none;
+  cursor: pointer;
+}
+
+.btn-logout-confirm-yes:hover {
+  background: #e0e7ff; /* Fondo más claro al pasar el ratón */
+  color: #3730a3;
+  border-color: #3730a3;
+}
+
+.btn-logout-confirm-no {
+  background: #4338ca; /* Fondo violeta */
+  color: #fff; /* Texto blanco */
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #4338ca; /* Borde violeta */
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  transition: background 0.2s, border-color 0.2s;
+  outline: none;
+  cursor: pointer;
+}
+
+.btn-logout-confirm-no:hover {
+  background: #3730a3; /* Violeta más oscuro al pasar el ratón */
+  border-color: #3730a3;
 }

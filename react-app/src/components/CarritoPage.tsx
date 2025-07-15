@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Ticket } from './HomePage';
+import { useCart } from '../context/CartContext'; // Importa el hook useCart
 import './CarritoPage.css'; 
-import Navbar from './Navbar';
-import Footer from './Footer';
-interface CartItem extends Ticket {
-  quantity: number;
-}
+// Navbar y Footer ya no se importan aquí, ya que están en el Layout y se proporcionan a través de él.
+
+// No es necesario definir CartItem aquí si ya se exporta desde CartContext
+// interface CartItem extends Ticket {
+//   quantity: number;
+// }
 
 const CarritoPage = () => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);      // Estado para almacenar los items del carrito
+  // Obtiene cartItems y removeItem del contexto del carrito
+  const { cartItems, removeItem } = useCart();
 
+  // Log para ver el estado del carrito al renderizar la página
   useEffect(() => {
-    const items = JSON.parse(localStorage.getItem('ticket') || '[]');
-    setCartItems(items);                                                  // Cargar los items del carrito desde localStorage al montar el componente
-  }, []);
+    console.log('CarritoPage: Renderizando. Items en el carrito:', cartItems);
+  }, [cartItems]);
 
-  const removeItem = (index: number) => {
-    const newCartItems = cartItems.filter((_, i) => i !== index);
-    localStorage.setItem('ticket', JSON.stringify(newCartItems));  // Actualizar localStorage al eliminar un item
-    setCartItems(newCartItems);
-  };
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -29,16 +26,14 @@ const CarritoPage = () => {
 
   // Renderizado del componente CarritoPage
   return (
-    <div>
-    <div><Navbar /></div>
-    <div className="cart-container">
+    <div className="cart-container"> {/* Elimina los divs redundantes de Navbar y Footer */}
       <h2 className="cart-title">Carrito de compras</h2>
       
       {cartItems.length > 0 ? (
         <>
           <div className="cart-items-container">
-            {cartItems.map((item, index) => (                               // Mapeo de los items del carrito
-              <div key={index} className="cart-item">
+            {cartItems.map((item) => (                           // Mapeo de los items del carrito, usando item.id como key
+              <div key={item.id} className="cart-item"> {/* Usa item.id como key */}
                 <div className="item-info">
                   <h3 className="item-name">{item.eventName}</h3>
                   {item.date && <p className="item-date">{item.date}</p>}
@@ -55,7 +50,7 @@ const CarritoPage = () => {
                 </div>
                 
                 <button 
-                  onClick={() => removeItem(index)} 
+                  onClick={() => removeItem(item.id)} // Llama a removeItem del contexto, pasando el ID
                   className="item-remove-btn"
                 >
                   Eliminar
@@ -87,8 +82,6 @@ const CarritoPage = () => {
           </button>
         </div>
       )}
-    </div>
-    <div><Footer /></div>
     </div>
   );
 };

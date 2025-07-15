@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar'; // Importa Navbar
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
-import MessageDisplay from './MessageDisplay';
-import './HomePage.css';
-import Footer from './Footer';
+import { useCart } from '../context/CartContext'; // Asegúrate de que esta importación sea correcta
 
-// Definición de la interfaz para una entrada
 export interface Ticket {
   id: string;
   eventName: string;
@@ -17,24 +13,20 @@ export interface Ticket {
   imageUrl: string;
 }
 
-// Interfaz para las props de HomePage
 interface HomePageProps {
-  isLoggedIn: boolean;
-  userName: string | null;
-  onLogout: () => void;
+  setAppMessage?: (message: string | null) => void;
 }
 
-// Componente principal de la página de inicio
-const HomePage: React.FC<HomePageProps> = ({ isLoggedIn, userName, onLogout }) => {
+const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const [appMessage, setAppMessage] = useState<string | null>(null);
   const [modalErrorMessage, setModalErrorMessage] = useState<string | null>(null);
   const [currentEventIndex, setCurrentEventIndex] = useState<number>(0);
 
-  // useEffect para cargar datos iniciales
+  const { addToCart } = useCart();
+
   useEffect(() => {
     const dummyTickets: Ticket[] = [
       { id: '1', eventName: 'Miranda', date: '2025-07-20', location: 'Estadio Metropolitano', price: 10000.00, availableTickets: 2000, imageUrl: 'https://placehold.co/600x400/FF5733/FFFFFF?text=Concierto' },
@@ -46,7 +38,6 @@ const HomePage: React.FC<HomePageProps> = ({ isLoggedIn, userName, onLogout }) =
     setTickets(dummyTickets);
   }, []);
 
-  // Navegacion del carrusel
   const goToPreviousEvent = () => {
     setCurrentEventIndex(prevIndex =>
       prevIndex === 0 ? tickets.length - 1 : prevIndex - 1
@@ -59,12 +50,11 @@ const HomePage: React.FC<HomePageProps> = ({ isLoggedIn, userName, onLogout }) =
     );
   };
 
-  // Funciones para manejar la compra de entradas
   const handleBuyClick = (ticket: Ticket) => {
     setSelectedTicket(ticket);
     setQuantity(1);
     setShowPurchaseModal(true);
-    setAppMessage(null);
+    if (setAppMessage) setAppMessage(null);
     setModalErrorMessage(null);
   };
 
@@ -74,71 +64,49 @@ const HomePage: React.FC<HomePageProps> = ({ isLoggedIn, userName, onLogout }) =
     setModalErrorMessage(null);
   };
 
-  // Función para simular el proceso de compra
-  const handleConfirmPurchase = () => {
+  const handleConfirmPurchase = (purchasedQuantity: number) => {
     if (!selectedTicket) {
       setModalErrorMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
       return;
     }
 
-    //No permitir comprar más de 3 entradas a la vez
-    if (quantity > 3) {
+    if (purchasedQuantity > 3) {
       setModalErrorMessage('No puedes comprar más de 3 entradas a la vez.');
       return;
     }
 
-    if (quantity > selectedTicket.availableTickets) {
+    if (purchasedQuantity > selectedTicket.availableTickets) {
       setModalErrorMessage('No hay suficientes entradas disponibles para tu solicitud.');
       return;
     }
 
-    // Si todo es válido, proceder con la compra simulada
+    addToCart(selectedTicket, purchasedQuantity);
+    
     setTickets(prevTickets =>
       prevTickets.map(ticket =>
         ticket.id === selectedTicket.id
-          ? { ...ticket, availableTickets: ticket.availableTickets - quantity }
+          ? { ...ticket, availableTickets: ticket.availableTickets - purchasedQuantity }
           : ticket
       )
     );
-    setAppMessage(`¡Has comprado ${quantity} entradas para ${selectedTicket.eventName}!`);
+
+    if (setAppMessage) {
+      setAppMessage(`¡Has agregado ${purchasedQuantity} entradas para ${selectedTicket.eventName} al carrito!`);
+    }
     handleCloseModal();
   };
 
-  // Si no hay tickets, mostrar un mensaje de carga
   if (tickets.length === 0) {
     return (
-      <div className="homepage">
-        {/* Pasa las props de autenticación a Navbar */}
-        <Navbar 
-          isLoggedIn={isLoggedIn} 
-          userName={userName} 
-          onLogout={onLogout} 
-        /> 
-        <div className="loading-state">
-          <p className="loading-state-text">Cargando eventos...</p>
-        </div>
-        <Footer />
+      <div className="loading-state">
+        <p className="loading-state-text">Cargando eventos...</p>
       </div>
     );
   }
 
   return (
     <div className="homepage">
-      {/* Pasa las props de autenticación a Navbar */}
-      <Navbar 
-        isLoggedIn={isLoggedIn} 
-        userName={userName} 
-        onLogout={onLogout} 
-      /> 
-      
       <main className="homepage-main">
-        <div className="notification-container">
-          <MessageDisplay 
-            message={appMessage} 
-            type={appMessage?.includes('comprado') ? 'success' : 'error'} 
-          />
-        </div>
-        
         <h2 className="homepage-title">Eventos Destacados</h2>
         
         <Carousel
@@ -159,7 +127,6 @@ const HomePage: React.FC<HomePageProps> = ({ isLoggedIn, userName, onLogout }) =
         onCloseModal={handleCloseModal}
         errorMessage={modalErrorMessage}
       />
-      <Footer />
     </div>
   );
 };
