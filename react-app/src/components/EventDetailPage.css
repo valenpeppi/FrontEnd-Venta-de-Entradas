@@ -1,0 +1,135 @@
+/* Estilos para la página de detalle de evento */
+.event-detail-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 10rem);
+  padding: 2rem;
+  background: linear-gradient(to bottom right, #eff6ff, #c7d2fe);
+  font-family: 'Inter', sans-serif;
+  color: #1f2937;
+}
+
+.event-detail-loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #6b7280;
+  padding: 5rem;
+}
+
+.event-detail-card {
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.event-detail-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.event-detail-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-detail-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #3730a3;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.event-detail-info {
+  font-size: 1.1rem;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.event-detail-info i {
+  color: #4f46e5;
+  font-size: 1.2rem;
+}
+
+.event-detail-price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #059669;
+  margin-top: 1rem;
+}
+
+.event-detail-available {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.btn-purchase {
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  transition: background 0.2s;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+.btn-purchase:hover {
+  background: #3730a3;
+}
+
+.btn-purchase--disabled,
+.btn-purchase:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-back-home {
+  background: #e0e7ff;
+  color: #4f46e5;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #4f46e5;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.btn-back-home:hover {
+  background: #c7d2fe;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .event-detail-card {
+    flex-direction: row;
+  }
+
+  .event-detail-image {
+    width: 40%;
+    height: auto;
+    border-radius: 1rem 0 0 1rem;
+  }
+
+  .event-detail-content {
+    width: 60%;
+    padding: 2rem;
+  }
+}

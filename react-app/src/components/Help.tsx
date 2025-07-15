@@ -1,15 +1,12 @@
-// Eliminado: import Navbar from "./Navbar";
-// Eliminado: import Footer from "./Footer";
 import React from "react";
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate si se usa
+import { useNavigate } from 'react-router-dom';
 import './Help.css'; 
 
 const Help: React.FC = () => {
-  const navigate = useNavigate(); // Inicializa useNavigate
+  const navigate = useNavigate();
 
   return (
-    // Eliminado: div con clase help-page que contenía Navbar y Footer
-    <main className="help-container"> {/* main ahora es el contenedor principal de la página */}
+    <main className="help-container">
       <section className="help-hero">
         <h1 className="help-title">Centro de Ayuda</h1>
         <p className="help-subtitle">¿Tienes alguna pregunta o necesitas ayuda? Estamos aquí para asistirte.</p>
@@ -65,9 +62,8 @@ const Help: React.FC = () => {
           </div>
         </div>
       </section>
-      <button onClick={() => navigate('/')} className="btn btn-primary mt-8">Volver a la página principal</button> {/* Agregué un botón de volver */}
+      <button onClick={() => navigate('/')} className="btn btn-primary mt-8">Volver a la página principal</button>
     </main>
-    // Eliminado: Footer
   );
 };
 

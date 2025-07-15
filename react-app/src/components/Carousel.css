@@ -27,11 +27,11 @@
 }
 
 .carousel-navigation-btn--prev {
-  left: -2.5rem;
+  left: 1rem;
 }
 
 .carousel-navigation-btn--next {
-  right: -2.5rem;
+  right: 1rem;
 }
 
 .carousel-navigation-btn:hover {
@@ -40,6 +40,14 @@
 
 .carousel-navigation-icon {
   font-size: 2rem;
+}
+
+/* Enlace de la tarjeta de evento */
+.event-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
 }
 
 /* Tarjeta de evento */
@@ -136,4 +144,4 @@
   color: #6b7280;
   font-size: 1.125rem;
   padding: 2rem;
-} 
+}

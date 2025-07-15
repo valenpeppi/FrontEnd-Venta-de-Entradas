@@ -1,9 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Pay.css';
-// Navbar y Footer ya no se importan aquí, ya que están en el Layout
 
-// PayPage ya no necesita props de autenticación ni setAppMessage
 const Pay: React.FC = () => {
   const navigate = useNavigate();
 

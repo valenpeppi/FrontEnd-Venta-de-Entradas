@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; // Importa el hook useCart
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { useSearch } from '../context/SearchContext';
+import { useEvents } from '../context/EventsContext';
 import './Navbar.css';
 
-// Añade props para el estado de autenticación
 interface NavbarProps {
   isLoggedIn: boolean;
   userName: string | null;
@@ -12,30 +13,116 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
   const navigate = useNavigate();
-  const { cartCount } = useCart(); // Obtiene el cartCount del contexto
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false); // Estado para el modal de confirmación
+  const { cartCount } = useCart();
+  const { searchQuery, setSearchQuery } = useSearch();
+  const { allTickets } = useEvents();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  const filteredSuggestions = allTickets.filter(ticket =>
+    searchQuery && ticket.eventName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleLogoutClick = () => {
-    setShowLogoutConfirm(true); // Muestra el modal de confirmación al hacer clic en "Cerrar Sesión"
+    setShowLogoutConfirm(true);
   };
 
   const handleConfirmLogout = () => {
-    onLogout(); // Llama a la función de cerrar sesión pasada por props
-    setShowLogoutConfirm(false); // Cierra el modal
+    onLogout();
+    setShowLogoutConfirm(false);
   };
 
   const handleCancelLogout = () => {
-    setShowLogoutConfirm(false); // Cierra el modal sin cerrar sesión
+    setShowLogoutConfirm(false);
   };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setShowSuggestions(true);
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      console.log('Búsqueda activada:', searchQuery);
+      const matchedEvent = allTickets.find(ticket =>
+        ticket.eventName.toLowerCase() === searchQuery.toLowerCase()
+      );
+
+      if (matchedEvent) {
+        navigate(`/event/${matchedEvent.id}`);
+        setSearchQuery('');
+      } else {
+        console.log(`No se encontró el evento "${searchQuery}".`);
+      }
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSuggestionClick = (suggestionName: string) => {
+    setSearchQuery(suggestionName);
+    setShowSuggestions(false);
+
+    const matchedEvent = allTickets.find(ticket =>
+      ticket.eventName.toLowerCase() === suggestionName.toLowerCase()
+    );
+
+    if (matchedEvent) {
+      navigate(`/event/${matchedEvent.id}`);
+      setSearchQuery('');
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <button className="navbar-brand" onClick={() => navigate('/')}><img className="image1" src="ticket.png" alt="logo" />TicketApp</button>
-        <div className="navbar-search">
+        <div className="navbar-search" ref={searchContainerRef}>
           <img className="search-icon" src="/lupa.png" alt="Buscar" />
-          <input type="text" placeholder="Buscar eventos..." className="navbar-search-input" />
-          <button className="navbar-search-button"></button>
+          <input
+            type="text"
+            placeholder="Buscar eventos..."
+            className="navbar-search-input"
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+            onKeyDown={handleSearchKeyDown}
+            onFocus={() => setShowSuggestions(true)}
+          />
+          {showSuggestions && searchQuery && (
+            <div className="search-dropdown-container">
+              <ul className="search-dropdown-list">
+                {filteredSuggestions.length > 0 ? (
+                  filteredSuggestions.map((ticket) => (
+                    <li
+                      key={ticket.id}
+                      className="search-dropdown-item"
+                      onClick={() => handleSuggestionClick(ticket.eventName)}
+                    >
+                      {ticket.eventName}
+                    </li>
+                  ))
+                ) : (
+                  <li className="search-dropdown-item no-results">
+                    No se encontraron resultados para "{searchQuery}"
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
         </div>
         <ul className="navbar-menu">
           <li><button onClick={() => navigate('/myTickets')}className="btn-navbar-menu-item">Mis Entradas
@@ -44,18 +131,17 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
             </button></li>
           <li className="navbar-cart-container">
             <img className="navbar-cart" src="/cart1.png" alt="Carrito de Compras" />
-            <span id="cart-count">{cartCount}</span> {/* Muestra dinámicamente el número de ítems en el carrito */}
+            <span id="cart-count">{cartCount}</span>
             <button onClick={() => navigate('/cart')}
               className="btn"></button>
             </li>
 
-          {/* Renderizado condicional de botones de autenticación o nombre de usuario */}
           {isLoggedIn ? (
             <>
               <li className="navbar-auth-section">
-                <span className="text-gray-700 font-semibold mr-2">Hola, {userName}</span> {/* Muestra el nombre del usuario */}
+                <span className="text-gray-700 font-semibold mr-2">Hola, {userName}</span>
                 <button
-                  onClick={handleLogoutClick} // Llama a la función para mostrar el modal
+                  onClick={handleLogoutClick}
                   className="btn-logout" 
                 >
                   Cerrar Sesión
@@ -75,7 +161,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
               <li>
                 <button
                   onClick={() => navigate('/register')}
-                  className="btn-outline-primary" /* CLASE ACTUALIZADA A btn-outline-primary */
+                  className="btn-outline-primary"
                 >
                   Registrarse
                 </button>
@@ -85,15 +171,12 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
         </ul>
       </div>
 
-      {/* Modal de confirmación de cierre de sesión */}
       {showLogoutConfirm && (
         <div className="logout-confirm-overlay">
           <div className="logout-confirm-modal">
             <p className="logout-confirm-message">¿Estás seguro de que deseas cerrar sesión?</p>
             <div className="logout-confirm-actions">
-              {/* Botón "Sí" con estilo más liviano y borde */}
               <button onClick={handleConfirmLogout} className="btn-logout-confirm-yes">Sí</button>
-              {/* Botón "No" con estilo más visible y borde */}
               <button onClick={handleCancelLogout} className="btn-logout-confirm-no">No</button>
             </div>
           </div>
