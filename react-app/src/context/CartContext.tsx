@@ -12,6 +12,7 @@ interface CartContextType {
   addToCart: (ticket: Ticket, quantity: number) => boolean;
   removeItem: (id: string) => void;
   clearCart: () => void;
+  updateItemQuantity: (id: string, newQuantity: number) => boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -83,12 +84,26 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setCartItems([]);
   };
 
+  const updateItemQuantity = (id: string, newQuantity: number): boolean => {
+    if (newQuantity < 1 || newQuantity > 3) return false;
+    let wasUpdated = false;
+    setCartItems(prevItems => {
+      const idx = prevItems.findIndex(item => item.id === id);
+      if (idx === -1) return prevItems;
+      const updatedItems = [...prevItems];
+      updatedItems[idx] = { ...updatedItems[idx], quantity: newQuantity };
+      wasUpdated = true;
+      return updatedItems;
+    });
+    return wasUpdated;
+  };
+
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   console.log('CartContext: cartCount actual:', cartCount);
 
 
   return (
-    <CartContext.Provider value={{ cartItems, cartCount, addToCart, removeItem, clearCart }}>
+    <CartContext.Provider value={{ cartItems, cartCount, addToCart, removeItem, clearCart, updateItemQuantity }}>
       {children}
     </CartContext.Provider>
   );

@@ -5,7 +5,8 @@ import './CarritoPage.css';
 
 const CarritoPage = () => {
   const navigate = useNavigate();
-  const { cartItems, removeItem } = useCart();
+  const { cartItems, removeItem, updateItemQuantity } = useCart();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     console.log('CarritoPage: Renderizando. Items en el carrito:', cartItems);
@@ -16,10 +17,21 @@ const CarritoPage = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
+  const handleQuantityChange = (id: string, value: string) => {
+    const newQuantity = parseInt(value);
+    if (isNaN(newQuantity)) return;
+    const ok = updateItemQuantity(id, newQuantity);
+    if (!ok) {
+      setErrorMsg('Solo puedes tener entre 1 y 3 entradas por evento.');
+    } else {
+      setErrorMsg(null);
+    }
+  };
+
   return (
     <div className="cart-container">
       <h2 className="cart-title">Carrito de compras</h2>
-      
+      {errorMsg && <div className="cart-error-message">{errorMsg}</div>}
       {cartItems.length > 0 ? (
         <>
           <div className="cart-items-container">
@@ -33,7 +45,18 @@ const CarritoPage = () => {
                 </div>
                 
                 <div className="item-quantity">
-                  <span>Cantidad: {item.quantity}</span>
+                  <label>
+                    Cantidad:
+                    <input
+                      type="number"
+                      min={1}
+                      max={3}
+                      value={item.quantity}
+                      onChange={e => handleQuantityChange(item.id, e.target.value)}
+                      className="cart-quantity-input"
+                      style={{ width: '50px', marginLeft: '8px' }}
+                    />
+                  </label>
                 </div>
                 
                 <div className="item-subtotal">
