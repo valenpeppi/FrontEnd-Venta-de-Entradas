@@ -66,7 +66,12 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ setAppMessage }) => {
       return;
     }
 
-    addToCart(event, purchasedQuantity);
+    // Validación acumulada
+    const wasAdded = addToCart(event, purchasedQuantity);
+    if (!wasAdded) {
+      setModalErrorMessage('No puedes tener más de 3 entradas para este evento en tu carrito.');
+      return;
+    }
 
     setAllTickets((prevTickets: Ticket[]) =>
       prevTickets.map((ticket: Ticket) =>

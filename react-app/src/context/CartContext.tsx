@@ -9,7 +9,7 @@ export interface CartItem extends Ticket {
 interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
-  addToCart: (ticket: Ticket, quantity: number) => void;
+  addToCart: (ticket: Ticket, quantity: number) => boolean;
   removeItem: (id: string) => void;
   clearCart: () => void;
 }
@@ -42,22 +42,31 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }
   }, [cartItems]);
 
-  const addToCart = (ticket: Ticket, quantity: number) => {
+  const addToCart = (ticket: Ticket, quantity: number): boolean => {
     console.log(`CartContext: addToCart llamado para ticket ID: ${ticket.id}, cantidad: ${quantity}`);
+    let wasAdded = false;
     setCartItems(prevItems => {
       console.log('CartContext: Estado previo del carrito (dentro de addToCart):', prevItems);
       const existingItemIndex = prevItems.findIndex(item => item.id === ticket.id);
-
+      const currentQuantity = existingItemIndex > -1 ? prevItems[existingItemIndex].quantity : 0;
+      if (currentQuantity + quantity > 3) {
+        // No se puede agregar más de 3 entradas en total para este evento
+        wasAdded = false;
+        return prevItems;
+      }
       if (existingItemIndex > -1) {
         const updatedItems = [...prevItems];
         updatedItems[existingItemIndex].quantity += quantity;
         console.log('CartContext: Ticket existente, cantidad actualizada a:', updatedItems[existingItemIndex].quantity);
+        wasAdded = true;
         return updatedItems;
       } else {
         console.log('CartContext: Ticket nuevo, añadiendo al carrito.');
+        wasAdded = true;
         return [...prevItems, { ...ticket, quantity }];
       }
     });
+    return wasAdded;
   };
 
   const removeItem = (id: string) => {

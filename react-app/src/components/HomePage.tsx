@@ -68,7 +68,11 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
       return;
     }
 
-    addToCart(selectedTicket, purchasedQuantity);
+    const wasAdded = addToCart(selectedTicket, purchasedQuantity);
+    if (!wasAdded) {
+      if (setAppMessage) setAppMessage('No puedes tener más de 3 entradas para este evento en tu carrito.');
+      return;
+    }
     
     setAllTickets((prevTickets: Ticket[]) =>
       prevTickets.map((ticket: Ticket) =>
