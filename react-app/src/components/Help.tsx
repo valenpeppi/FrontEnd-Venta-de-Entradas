@@ -37,7 +37,7 @@ const Help: React.FC = () => {
         </div>
       </section>
 
-      <section className="help-section contact-section">
+      <section className="help-section contact-section" id="contacto">
         <h2 className="help-section-title">Contacto</h2>
         <div className="contact-methods">
           <div className="contact-card">
