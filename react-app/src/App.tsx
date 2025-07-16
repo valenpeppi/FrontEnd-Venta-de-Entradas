@@ -9,6 +9,7 @@ import MyTickets from './components/MyTickets.tsx';
 import Help from './components/Help.tsx';
 import EventDetailPage from './components/EventDetailPage.tsx';
 import Layout from './components/Layout.tsx';
+import About from './components/About.tsx';
 
 import './App.css';
 
@@ -132,6 +133,20 @@ const App: React.FC = () => {
               <EventDetailPage setAppMessage={setAppMessage} />
             </Layout>
           } 
+        />
+        <Route 
+          path="/about" 
+          element={
+            <Layout 
+              isLoggedIn={isLoggedIn} 
+              userName={userName} 
+              onLogout={handleLogout}
+              appMessage={appMessage}
+              setAppMessage={setAppMessage}
+            >
+              <About />
+            </Layout>
+          }
         />
 
         <Route 
