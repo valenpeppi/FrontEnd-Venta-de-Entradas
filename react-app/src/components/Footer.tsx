@@ -36,8 +36,8 @@ const Footer: React.FC = () => {
           <div className="footer-links-column">
             <h4>Compañía</h4>
             <ul>
-              <li><Link to="/about">Sobre nosotros</Link></li>
-              <li><Link to="/contact">Contacto</Link></li>
+              <li><a href="/about#sobre-nosotros">Sobre nosotros</a></li>
+              <li><a href="/about#contacto">Contacto</a></li>
             </ul>
           </div>
 

@@ -78,8 +78,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   console.log('PurchaseModal: Renderizando. internalQuantity actual:', internalQuantity);
 
   return (
-    <div className="purchase-modal-overlay">
-      <div className="purchase-modal">
+    <div className="purchase-modal-overlay" onClick={onCloseModal}>
         <h3 className="purchase-modal-header">Agregar Entradas al Carrito</h3>
         <div className="purchase-modal-info">
           <p className="purchase-modal-info-item">
@@ -137,7 +136,6 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
   );
 };
 
