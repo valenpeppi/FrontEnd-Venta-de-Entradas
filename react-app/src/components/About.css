@@ -24,42 +24,4 @@
   margin-bottom: 2.2rem;
   text-align: center;
   line-height: 1.7;
-}
-
-.about-contact-section {
-  width: 100%;
-  background: #f3f4f6;
-  border-radius: 10px;
-  padding: 1.5rem 1rem 1.2rem 1rem;
-  box-shadow: 0 2px 8px rgba(67, 56, 202, 0.05);
-}
-
-.about-contact-title {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #3730a3;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.about-contact-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  align-items: center;
-}
-
-.about-contact-link {
-  color: #4f46e5;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.about-contact-link:hover {
-  color: #22c55e;
-  text-decoration: underline;
 } 
