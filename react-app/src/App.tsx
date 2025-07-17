@@ -10,8 +10,9 @@ import Help from './components/Help.tsx';
 import EventDetailPage from './components/EventDetailPage.tsx';
 import Layout from './components/Layout.tsx';
 import About from './components/About.tsx';
-
+import UsersList from './components/UsersList.tsx';
 import './App.css';
+
 
 // Definición de la interfaz para una entrada
 export interface Ticket {
@@ -165,7 +166,20 @@ const App: React.FC = () => {
             />
           } 
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route 
+          path="/userslist" 
+          element={
+            <Layout 
+              isLoggedIn={isLoggedIn} 
+              userName={userName} 
+              onLogout={handleLogout}
+              appMessage={appMessage}
+              setAppMessage={setAppMessage}
+            >
+              <UsersList />
+            </Layout>
+          }
+        />
       </Routes>
       
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />

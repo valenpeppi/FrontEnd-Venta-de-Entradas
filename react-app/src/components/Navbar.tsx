@@ -127,6 +127,8 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
         <ul className="navbar-menu">
           <li><button onClick={() => navigate('/myTickets')}className="btn-navbar-menu-item">Mis Entradas
             </button></li>
+          <li><button onClick={() => navigate('/userslist')}className="btn-navbar-menu-item">Lista de Usuarios
+            </button></li>
           <li><button onClick={() => navigate('/help')}className="btn-navbar-menu-item">Ayuda
             </button></li>
           <li className="navbar-cart-container">
