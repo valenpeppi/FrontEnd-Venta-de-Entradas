@@ -1,86 +1,203 @@
+/* Estilos generales para el contenedor principal */
 .admin-home-container {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 24px;
-  background: #f8fafc;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif; /* Usar Inter como fuente principal */
+  background-color: #f4f7f6; /* Un fondo suave */
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
+/* Estilos para el título */
 .admin-home-container h1 {
   text-align: center;
-  margin-bottom: 32px;
-  color: #1e293b;
+  margin-bottom: 30px;
+  color: #2c3e50; /* Un color de texto oscuro y profesional */
+  font-size: 2.8em; /* Tamaño de fuente más grande */
+  font-weight: 700; /* Negrita */
+  letter-spacing: -0.5px;
+  padding-top: 20px;
 }
 
+/* Mensaje de no solicitudes */
+.admin-home-container p {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 1.2em;
+  padding: 20px;
+}
+
+/* Contenedor de las tarjetas de eventos */
+.admin-home-container > div:not(:first-child) { /* Selecciona los divs que contienen las tarjetas de eventos */
+  display: flex;
+  flex-wrap: wrap; /* Permite que las tarjetas se envuelvan a la siguiente línea */
+  gap: 25px; /* Espacio entre las tarjetas */
+  justify-content: center; /* Centra las tarjetas horizontalmente */
+  padding: 10px;
+}
+
+/* Estilos para cada tarjeta de evento */
 .event-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(30,41,59,0.08);
-  margin-bottom: 24px;
-  padding: 20px 28px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  padding: 25px;
+  width: 100%; /* Por defecto ocupa todo el ancho en móviles */
+  max-width: 380px; /* Ancho máximo para tarjetas individuales */
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  transition: box-shadow 0.2s;
+  justify-content: space-between;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  border: 1px solid #e0e0e0;
 }
 
 .event-card:hover {
-  box-shadow: 0 6px 24px rgba(30,41,59,0.13);
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
 }
 
+/* Título del evento dentro de la tarjeta */
 .event-title {
-  font-size: 1.2rem;
+  font-size: 1.8em;
   font-weight: 600;
-  color: #0f172a;
+  color: #34495e;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
+/* Información del evento (solicitante, fecha) */
 .event-info {
-  color: #475569;
-  font-size: 1rem;
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
 
+.event-info b {
+  color: #2c3e50;
+}
+
+/* Estado del evento */
 .event-status {
-  font-size: 0.95rem;
-  font-weight: 500;
-  margin-top: 6px;
+  font-size: 1.15em;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
 .event-status.pendiente {
-  color: #f59e42;
-}
-.event-status.aceptado {
-  color: #22c55e;
-}
-.event-status.rechazado {
-  color: #ef4444;
+  background-color: #fcf8e3;
+  color: #8a6d3b;
+  border: 1px solid #faebcc;
 }
 
+.event-status.aceptado {
+  background-color: #dff0d8;
+  color: #3c763d;
+  border: 1px solid #d6e9c6;
+}
+
+.event-status.rechazado {
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px solid #ebccd1;
+}
+
+/* Acciones (botones) */
 .event-actions {
-  margin-top: 10px;
   display: flex;
-  gap: 12px;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: center;
 }
 
 .event-actions button {
-  padding: 6px 18px;
+  padding: 12px 25px;
   border: none;
-  border-radius: 6px;
-  font-weight: 500;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.event-actions button:first-child {
-  background: #22c55e;
-  color: #fff;
+.event-actions button:first-child { /* Botón Aceptar */
+  background-color: #28a745; /* Verde */
+  color: white;
 }
-.event-actions button:last-child {
-  background: #ef4444;
-  color: #fff;
+
+.event-actions button:first-child:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
 }
-.event-actions button:disabled {
-  background: #cbd5e1;
-  color: #64748b;
-  cursor: not-allowed;
+
+.event-actions button:last-child { /* Botón Rechazar */
+  background-color: #dc3545; /* Rojo */
+  color: white;
+}
+
+.event-actions button:last-child:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+/* Media Queries para responsividad */
+
+/* Para tablets y pantallas medianas (min-width: 768px) */
+@media (min-width: 768px) {
+  .admin-home-container h1 {
+    font-size: 3.2em;
+  }
+
+  .event-card {
+    width: calc(50% - 25px); /* Dos tarjetas por fila con espacio */
+  }
+}
+
+/* Para desktops y pantallas grandes (min-width: 1024px) */
+@media (min-width: 1024px) {
+  .admin-home-container h1 {
+    font-size: 3.5em;
+  }
+
+  .event-card {
+    width: calc(33.333% - 25px); /* Tres tarjetas por fila con espacio */
+  }
+}
+
+/* Ajustes para pantallas muy pequeñas (ej. iPhone 5/SE) */
+@media (max-width: 375px) {
+  .admin-home-container {
+    padding: 15px;
+  }
+
+  .admin-home-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  .event-card {
+    padding: 20px;
+  }
+
+  .event-title {
+    font-size: 1.5em;
+  }
+
+  .event-info, .event-status {
+    font-size: 1em;
+  }
+
+  .event-actions button {
+    padding: 10px 20px;
+    font-size: 1em;
+  }
 }

@@ -143,3 +143,77 @@
   color: #3730a3;
   text-decoration: underline;
 }
+/* Estilos para el botón "Volver atrás" */
+.back-button {
+  background-color: #f3f4f6; /* Un gris suave */
+  color: #4b5563; /* Texto gris oscuro */
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db; /* Borde sutil */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  outline: none;
+  cursor: pointer;
+  width: 100%; /* Ocupa todo el ancho */
+  margin-top: 1rem; /* Espacio superior */
+  text-align: center;
+}
+
+.back-button:hover {
+  background-color: #e5e7eb; /* Un gris ligeramente más oscuro al pasar el ratón */
+  color: #1f2937; /* Texto más oscuro */
+  border-color: #9ca3af;
+}
+
+/* Responsive adjustments for back-button */
+@media (max-width: 768px) {
+  .back-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+/* Estilos para el botón "Volver" */
+.back-button {
+  background-color: #f3f4f6; /* Un gris suave */
+  color: #4b5563; /* Texto gris oscuro */
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db; /* Borde sutil */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  outline: none;
+  cursor: pointer;
+  width: 100%; /* Ocupa todo el ancho */
+  margin-top: 1rem; /* Espacio superior */
+  text-align: center;
+}
+
+.back-button:hover {
+  background-color: #e5e7eb; /* Un gris ligeramente más oscuro al pasar el ratón */
+  color: #1f2937; /* Texto más oscuro */
+  border-color: #9ca3af;
+}
+
+/* Responsive adjustments for back-button */
+@media (max-width: 768px) {
+  .back-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}

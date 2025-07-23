@@ -1,17 +1,24 @@
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react" // Importa useEffect
 import { useNavigate, Link } from "react-router-dom"
+import './Login.css' 
 
 // Definición de las props que el componente Login recibirá
 interface LoginProps {
-  onLoginSuccess: (userName: string) => void // Función que se llamará al iniciar sesión con éxito, ahora recibe el nombre de usuario
+  onLoginSuccess: (userName: string) => void; // Función que se llamará al iniciar sesión con éxito
+  setAppMessage: (message: string | null) => void; // Nueva prop para limpiar mensajes de la aplicación
 }
 
-const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
+const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+
+  // Limpia cualquier mensaje de la aplicación cuando el componente Login se monta
+  useEffect(() => {
+    setAppMessage(null);
+  }, [setAppMessage]); // Se ejecuta una vez al montar, dependiendo de setAppMessage
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,9 +45,16 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       }
 
       const data = await response.json();
-      // Aquí puedes guardar el token, usuario, etc.
-      onLoginSuccess(data.userName || email); // Usa el nombre si el backend lo devuelve, si no el email
-      navigate('/');
+      console.log('Respuesta del backend:', data);
+
+       // Usar el nombre real si viene
+      
+      if (data.user?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+
     } catch (err) {
       console.error('Error en login:', err);
       setError('Error de red o del servidor.');
@@ -89,6 +103,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         <div className="login-register-link">
           <p>¿No tienes cuenta? <Link to="/register" className="login-register-link-btn">Regístrate aquí</Link></p>
         </div>
+        <button onClick={() => navigate(-1)} className="back-button">Volver</button>
       </div>
     </div>
   )

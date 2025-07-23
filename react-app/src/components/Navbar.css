@@ -22,49 +22,43 @@
   font-size: 2rem;
   font-weight: bold;
   color: #4f46e5;
+  text-decoration: none; /* Asegura que el enlace no tenga subrayado */
 }
 .navbar-brand:hover {
   color: #3730a3;
 }
+
+/* Contenedor del carrito (ahora dentro de un <li> del menú) */
 .navbar-cart-container {
   position: relative;
-  display: inline-flex;  
+  display: flex; /* Para alinear el icono del carrito y el contador */
   align-items: center;
-  margin-left: 10px;
+  /* El espaciado lo manejará el 'gap' del .navbar-menu */
 }
 
 .navbar-cart {
   width: 30px;
   height: 30px;
-  position: relative;  
-}
-
-.btn {
-  position: absolute; 
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;  
-  cursor: pointer;
+  display: block; /* Asegura que la imagen se comporte como un bloque */
 }
 
 #cart-count {
   position: absolute;
-  top: -5px;
-  right: -15px;
-  width: 20px;
-  height: 20px;
-  background-color: red;
+  top: -6px; /* Ajustado ligeramente hacia arriba */
+  right: -18px; /* Ajustado para moverlo más a la izquierda del icono */
+  width: 22px; /* Ligeramente más grande */
+  height: 22px; /* Ligeramente más grande */
+  background-color: #e74c3c; /* Rojo más vibrante */
   color: white;
-  font-size: 12px;
+  font-size: 13px; /* Tamaño de fuente ajustado */
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  box-shadow: 0 0 3px rgba(0,0,0,0.3);
-  z-index: 2;  
-  pointer-events: none;  
+  box-shadow: 0 0 5px rgba(0,0,0,0.4); /* Sombra más definida */
+  border: 1.5px solid #fff; /* Borde blanco para mayor definición */
+  z-index: 2;
+  pointer-events: none;
 }
 
 .navbar-search {
@@ -89,7 +83,7 @@
 
 .navbar-menu {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.5rem; /* Espacio entre los ítems del menú, incluyendo el carrito */
   align-items: center;
   list-style: none;
   margin: 0;
@@ -108,7 +102,16 @@
 }
 
 .navbar-auth-section {
-  margin-left: 1.5rem;
+  margin-left: 1.5rem; /* Mantiene el margen para separar del menú/carrito */
+  display: flex; /* Asegura que los elementos dentro se alineen */
+  align-items: center;
+  gap: 0.8rem; /* Espacio entre los elementos de la sección de autenticación */
+}
+
+.navbar-username {
+  color: #1f2937;
+  font-weight: 600;
+  white-space: nowrap; /* Evita que el nombre de usuario se rompa */
 }
 
 .btn-primary {
@@ -148,26 +151,26 @@
   border-color: #4f46e5;
 }
 
-/* Estilo para el botón de cerrar sesión */
+/* Estilo para el botón de cerrar sesión (solo letras) */
 .btn-logout {
-  background: #ef4444;
-  color: #fff;
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3), 0 2px 4px rgba(239, 68, 68, 0.15);
-  transition: background 0.2s, box-shadow 0.2s;
+  background: transparent; /* Fondo transparente */
+  color: #666; /* Color de texto */
+  font-weight: 500; /* Peso de la fuente */
+  padding: 0.5rem 1rem; /* Padding para el área de clic */
+  border-radius: 0; /* Sin bordes redondeados */
+  box-shadow: none; /* Sin sombra */
+  transition: color 0.2s; /* Transición solo para el color */
   outline: none;
-  border: none;
+  border: none; /* Sin borde */
   cursor: pointer;
 }
 
 .btn-logout:hover {
-  background: #dc2626;
-  box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4), 0 3px 6px rgba(220, 38, 38, 0.2);
+  color: #333; /* Color de texto más oscuro al pasar el ratón */
+  background: transparent; /* Asegura que el fondo siga siendo transparente */
 }
 
-.image1 { 
+.image1 {
   width: 50px;
   height: 50px;
   margin-right: 10px;
@@ -304,4 +307,116 @@
 .btn-logout-confirm-no:hover {
   background: #3730a3;
   border-color: #3730a3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .navbar-search-input {
+    width: 200px; /* Reduce el ancho de la barra de búsqueda */
+  }
+
+  .navbar-menu {
+    gap: 1rem; /* Reduce el espacio entre ítems del menú */
+  }
+
+  .navbar-auth-section {
+    margin-left: 1rem; /* Reduce el margen */
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+    justify-content: center; /* Centra los elementos */
+    gap: 1rem; /* Espacio entre filas */
+  }
+
+  .navbar-brand {
+    width: 100%; /* El logo ocupa todo el ancho */
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .navbar-search {
+    order: 3; /* Mueve la barra de búsqueda al final */
+    width: 100%;
+    justify-content: center;
+  }
+
+  .navbar-search-input {
+    width: 90%; /* Ocupa más ancho en móvil */
+    max-width: 300px;
+  }
+
+  .navbar-menu {
+    order: 2; /* Mueve el menú de navegación */
+    width: 100%;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .navbar-auth-section {
+    order: 4; /* Mueve la sección de autenticación al final */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-left: 0; /* Elimina el margen izquierdo */
+  }
+
+  /* Ajustes específicos para el carrito en móvil */
+  .navbar-cart-container {
+    /* No necesita orden específico aquí, ya que está dentro de navbar-menu */
+    /* Asegura que no haya un flex-basis implícito que lo desplace */
+    flex-shrink: 0;
+  }
+
+  .btn-primary, .btn-outline-primary, .btn-logout {
+    padding: 0.4rem 0.8rem; /* Reduce el padding de los botones */
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.8rem;
+  }
+
+  .navbar-brand {
+    font-size: 1.8rem;
+  }
+
+  .navbar-search-input {
+    padding: 0.4rem 1.8rem 0.4rem 2.5rem; /* Ajusta padding para icono */
+    font-size: 0.9rem;
+  }
+
+  .search-icon {
+    left: 0.8rem;
+    width: 18px;
+    height: 18px;
+  }
+
+  .navbar-menu-item {
+    font-size: 0.9rem;
+  }
+
+  .btn-primary, .btn-outline-primary, .btn-logout {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .navbar-cart {
+    width: 25px;
+    height: 25px;
+  }
+
+  #cart-count {
+    top: -3px;
+    right: -10px;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
 }

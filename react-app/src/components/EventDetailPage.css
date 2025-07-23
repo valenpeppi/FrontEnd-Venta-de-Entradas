@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-height: calc(100vh - 10rem);
+  min-height: calc(100vh - 10rem); /* Ajustado para el layout */
   padding: 2rem;
   background: linear-gradient(to bottom right, #eff6ff, #c7d2fe);
   font-family: 'Inter', sans-serif;
@@ -22,7 +22,7 @@
   border-radius: 1rem;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Por defecto columna para móviles */
   max-width: 800px;
   width: 100%;
   overflow: hidden;
@@ -33,7 +33,7 @@
   height: 250px;
   object-fit: cover;
   object-position: center;
-  border-radius: 1rem 1rem 0 0;
+  border-radius: 1rem 1rem 0 0; /* Bordes redondeados solo arriba para móviles */
   background: #e5e7eb;
   display: block;
 }
@@ -120,21 +120,67 @@
 }
 
 /* Responsive adjustments */
-@media (min-width: 768px) {
+@media (max-width: 767px) { /* Para pantallas pequeñas (móviles) */
+  .event-detail-page {
+    padding: 1rem; /* Reduce el padding general */
+    align-items: center; /* Centra la tarjeta verticalmente */
+  }
+
   .event-detail-card {
-    flex-direction: row;
+    border-radius: 0.75rem; /* Ligeramente menos redondeado en móviles */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Sombra más suave */
+  }
+
+  .event-detail-image {
+    height: 200px; /* Reduce la altura de la imagen en móviles */
+    border-radius: 0.75rem 0.75rem 0 0; /* Ajusta bordes */
+  }
+
+  .event-detail-content {
+    padding: 1.5rem; /* Reduce el padding del contenido */
+    gap: 0.8rem;
+  }
+
+  .event-detail-title {
+    font-size: 2rem; /* Reduce el tamaño del título */
+    margin-bottom: 0.8rem;
+  }
+
+  .event-detail-info {
+    font-size: 1rem; /* Reduce el tamaño de la info */
+    flex-direction: column; /* Apila la info para mejor legibilidad */
+    align-items: flex-start;
+  }
+
+  .event-detail-info i {
+    font-size: 1.1rem;
+  }
+
+  .event-detail-price {
+    font-size: 1.5rem; /* Reduce el tamaño del precio */
+    margin-top: 0.8rem;
+  }
+
+  .btn-purchase, .btn-back-home {
+    padding: 0.6rem 1.2rem; /* Reduce el padding de los botones */
+    font-size: 1rem;
+    width: 100%; /* Botones ocupan todo el ancho */
+    text-align: center;
+  }
+}
+
+
+@media (min-width: 768px) { /* Para tablets y desktops */
+  .event-detail-card {
+    flex-direction: row; /* Vuelve a la disposición en fila */
   }
 
   .event-detail-image {
     width: 40%;
-    height: 100%;
+    height: auto; /* Altura automática para mantener proporción */
     min-height: 350px;
     max-height: 500px;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 1rem 0 0 1rem;
-    background: #e5e7eb;
-    display: block;
+    border-radius: 1rem 0 0 1rem; /* Bordes redondeados a la izquierda */
   }
 
   .event-detail-content {

@@ -13,11 +13,13 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  flex-direction: column; /* Para apilar texto y spinner si hubiera */
 }
 
 .loading-state-text {
   color: #6b7280;
   font-size: 1.25rem;
+  margin-top: 1rem; /* Espacio si hay un spinner */
 }
 
 /* Contenido principal */
@@ -49,4 +51,31 @@
     opacity: 1;
     transform: translateY(0);
   }
-} 
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .homepage-main {
+    padding: 1rem 1.5rem; /* Reduce el padding en pantallas más pequeñas */
+  }
+
+  .homepage-title {
+    font-size: 1.8rem; /* Reduce el tamaño del título */
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .homepage-main {
+    padding: 0.8rem 1rem; /* Más reducción de padding */
+  }
+
+  .homepage-title {
+    font-size: 1.5rem; /* Aún más pequeño para móviles */
+    margin-bottom: 1rem;
+  }
+
+  .loading-state-text {
+    font-size: 1rem; /* Ajusta el tamaño del texto de carga */
+  }
+}

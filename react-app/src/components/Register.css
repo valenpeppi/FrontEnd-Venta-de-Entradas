@@ -139,3 +139,71 @@
 .register-login-link:hover {
   text-decoration: underline;
 }
+
+/* Responsive adjustments */
+@media (max-width: 767px) { /* Para pantallas pequeñas (móviles) */
+  .register-card {
+    padding: 1.5rem; /* Reduce el padding */
+    margin: 1rem; /* Añade un margen para que no se pegue a los bordes */
+    border-radius: 0.75rem;
+  }
+
+  .register-title {
+    font-size: 1.8rem; /* Reduce el tamaño del título */
+    margin-bottom: 1rem;
+  }
+
+  .register-form-grid {
+    grid-template-columns: 1fr; /* Siempre una columna en móviles */
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .register-label {
+    font-size: 1rem; /* Reduce el tamaño de la etiqueta */
+  }
+
+  .register-input {
+    padding: 0.6rem; /* Reduce el padding del input */
+    font-size: 0.9rem;
+  }
+
+  .register-submit-btn {
+    padding: 0.6rem 1.2rem; /* Reduce el padding del botón */
+    font-size: 1rem;
+  }
+
+  .register-login-link-container {
+    margin-top: 1rem;
+  }
+
+  .register-login-link-text,
+  .register-login-link {
+    font-size: 0.9rem; /* Reduce el tamaño del texto del enlace */
+  }
+}
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .register-title {
+    font-size: 1.5rem;
+  }
+
+  .register-label {
+    font-size: 0.9rem;
+  }
+
+  .register-input {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .register-submit-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}

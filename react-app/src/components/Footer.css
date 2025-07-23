@@ -161,12 +161,88 @@
 
 @media (max-width: 768px) {
   .footer-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Apila las columnas */
+    padding: 0 1rem; /* Reduce el padding horizontal */
   }
-  
+
+  .footer-brand,
+  .footer-links-column,
+  .footer-newsletter {
+    text-align: center; /* Centra el texto en móviles */
+    margin-bottom: 1.5rem; /* Añade espacio entre secciones apiladas */
+  }
+
+  .footer-social {
+    justify-content: center; /* Centra los íconos sociales */
+  }
+
+  .footer-links {
+    grid-template-columns: 1fr; /* Apila los enlaces en una columna */
+    gap: 1rem;
+  }
+
+  .footer-links-column ul {
+    text-align: center; /* Centra los elementos de la lista */
+  }
+
+  .newsletter-form {
+    flex-direction: column; /* Apila el input y el botón */
+    gap: 0.8rem;
+  }
+
   .footer-bottom-container {
-    flex-direction: column;
+    flex-direction: column; /* Apila el copyright y los métodos de pago */
     gap: 1rem;
     text-align: center;
+    padding: 0 1rem; /* Reduce el padding horizontal */
+  }
+
+  .footer-payment-methods {
+    justify-content: center; /* Centra los métodos de pago */
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding-top: 2rem;
+  }
+
+  .footer-container {
+    gap: 1.5rem;
+  }
+
+  .footer-brand {
+    font-size: 1.3rem;
+  }
+
+  .footer-slogan {
+    font-size: 0.9rem;
+  }
+
+  .footer-links-column h4 {
+    font-size: 1rem;
+  }
+
+  .footer-links-column a {
+    font-size: 0.9rem;
+  }
+
+  .newsletter-form input,
+  .btn-primary {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .footer-bottom {
+    margin-top: 2rem;
+    padding: 1rem 0;
+  }
+
+  .footer-bottom p {
+    font-size: 0.8rem;
+  }
+
+  .footer-payment-methods img {
+    height: 20px;
   }
 }

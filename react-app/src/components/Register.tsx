@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Register.css'; // Importa el nuevo archivo CSS
 
 interface RegisterProps {
-  onRegisterSuccess: () => void; 
+  onRegisterSuccess: () => void;
 }
 
 const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
@@ -17,7 +17,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccessMessage(null);
@@ -40,20 +40,49 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
       return;
     }
 
-    // Aquí iría la lógica para registrar el usuario en la base de datos
-    console.log('Intentando registrar usuario con los siguientes datos:', {
-      dni,
-      fullName,
-      email,
-      password, // En una aplicación real, nunca envíes la contraseña en texto plano
-      birthDate,
-    });
+    // Dividir fullName en name y surname
+    const nameParts = fullName.trim().split(' ');
+    let name = '';
+    let surname = '';
 
-    setSuccessMessage('¡Registro exitoso! Serás redirigido para iniciar sesión.');
-    setTimeout(() => {
-      onRegisterSuccess();
-      navigate('/login'); // Redirigir a la página de login después del registro
-    }, 2000); 
+    if (nameParts.length > 1) {
+      name = nameParts[0];
+      surname = nameParts.slice(1).join(' '); // El resto es el apellido
+    } else {
+      name = fullName; // Si solo hay una palabra, se asume que es el nombre
+      surname = ''; // El apellido queda vacío
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dni,
+          name, // Enviamos el nombre separado
+          surname, // Enviamos el apellido separado
+          mail: email, // El backend espera 'mail'
+          password,
+          birthDate,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.message || 'Error al registrar el usuario.');
+        return;
+      }
+
+      setSuccessMessage('¡Registro exitoso! Serás redirigido para iniciar sesión.');
+      setTimeout(() => {
+        onRegisterSuccess();
+        navigate('/login');
+      }, 2000);
+    } catch (err) {
+      setError('Error de red o del servidor.');
+    }
   };
 
   return (

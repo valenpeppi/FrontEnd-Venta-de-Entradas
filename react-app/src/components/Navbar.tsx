@@ -1,185 +1,156 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
-import { useSearch } from '../context/SearchContext';
-import { useEvents } from '../context/EventsContext';
-import './Navbar.css';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './Navbar.css'; // Asegúrate de que este archivo CSS existe
+import logoTicket from '../assets/ticket.png'; // Importa la imagen del logo
+import cartIcon from '../assets/cart.png'; // Importa la imagen del carrito
+import { useCart } from '../context/CartContext'; // Importa el hook useCart
 
 interface NavbarProps {
   isLoggedIn: boolean;
   userName: string | null;
   onLogout: () => void;
+  userRole: string | null; // Mantenemos userRole aunque ya no se use para la visibilidad del botón de crear evento
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout }) => {
-  const navigate = useNavigate();
-  const { cartCount } = useCart();
-  const { searchQuery, setSearchQuery } = useSearch();
-  const { allTickets } = useEvents();
+const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout, userRole }) => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]); // Puedes tipar esto mejor
+  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
+  const { cartCount } = useCart(); // Obtiene el cartCount del contexto del carrito
 
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const searchContainerRef = useRef<HTMLDivElement>(null);
+  // Función de búsqueda simulada (reemplazar con tu lógica de backend)
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    if (term.length > 2) {
+      // Aquí harías una llamada a tu API de búsqueda de eventos
+      // const response = await fetch(`/api/events/search?q=${term}`);
+      // const data = await response.json();
+      // setSearchResults(data);
+      // Simulando resultados
+      setSearchResults([
+        { id: '1', name: 'Concierto de Verano' },
+        { id: '2', name: 'Festival de Jazz' },
+      ]);
+      setShowDropdown(true);
+    } else {
+      setSearchResults([]);
+      setShowDropdown(false);
+    }
+  };
 
-  const filteredSuggestions = allTickets.filter(ticket =>
-    searchQuery && ticket.eventName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleSearchItemClick = (id: string) => {
+    navigate(`/event/${id}`);
+    setSearchTerm('');
+    setSearchResults([]);
+    setShowDropdown(false);
+  };
 
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true);
   };
 
-  const handleConfirmLogout = () => {
+  const confirmLogout = () => {
     onLogout();
     setShowLogoutConfirm(false);
+    navigate('/login'); // Redirigir al login después de cerrar sesión
   };
 
-  const handleCancelLogout = () => {
+  const cancelLogout = () => {
     setShowLogoutConfirm(false);
   };
-
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setShowSuggestions(true);
-  };
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      console.log('Búsqueda activada:', searchQuery);
-      const matchedEvent = allTickets.find(ticket =>
-        ticket.eventName.toLowerCase() === searchQuery.toLowerCase()
-      );
-
-      if (matchedEvent) {
-        navigate(`/event/${matchedEvent.id}`);
-        setSearchQuery('');
-      } else {
-        console.log(`No se encontró el evento "${searchQuery}".`);
-      }
-      setShowSuggestions(false);
-    }
-  };
-
-  const handleSuggestionClick = (suggestionName: string) => {
-    setSearchQuery(suggestionName);
-    setShowSuggestions(false);
-
-    const matchedEvent = allTickets.find(ticket =>
-      ticket.eventName.toLowerCase() === suggestionName.toLowerCase()
-    );
-
-    if (matchedEvent) {
-      navigate(`/event/${matchedEvent.id}`);
-      setSearchQuery('');
-    }
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <button className="navbar-brand" onClick={() => navigate('/')}><img className="image1" src="ticket.png" alt="logo" />TicketApp</button>
-        <div className="navbar-search" ref={searchContainerRef}>
-          <img className="search-icon" src="/lupa.png" alt="Buscar" />
+        <Link to="/" className="navbar-brand">
+          {/* Usa la imagen importada para el logo */}
+          <img src={logoTicket} alt="TicketApp Logo" className="image1" />
+          TicketApp
+        </Link>
+
+        <div className="navbar-search">
           <input
             type="text"
             placeholder="Buscar eventos..."
             className="navbar-search-input"
-            value={searchQuery}
-            onChange={handleSearchInputChange}
-            onKeyDown={handleSearchKeyDown}
-            onFocus={() => setShowSuggestions(true)}
+            value={searchTerm}
+            onChange={handleSearch}
+            onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 100)} // Retraso para permitir el clic
           />
-          {showSuggestions && searchQuery && (
+          <i className="fas fa-search search-icon"></i>
+          {showDropdown && (
             <div className="search-dropdown-container">
               <ul className="search-dropdown-list">
-                {filteredSuggestions.length > 0 ? (
-                  filteredSuggestions.map((ticket) => (
+                {searchResults.length > 0 ? (
+                  searchResults.map(result => (
                     <li
-                      key={ticket.id}
+                      key={result.id}
                       className="search-dropdown-item"
-                      onClick={() => handleSuggestionClick(ticket.eventName)}
+                      onMouseDown={() => handleSearchItemClick(result.id)} // Usar onMouseDown para que se active antes que onBlur
                     >
-                      {ticket.eventName}
+                      {result.name}
                     </li>
                   ))
                 ) : (
-                  <li className="search-dropdown-item no-results">
-                    No se encontraron resultados para "{searchQuery}"
-                  </li>
+                  <li className="search-dropdown-item no-results">No hay resultados</li>
                 )}
               </ul>
             </div>
           )}
         </div>
-        <ul className="navbar-menu">
-          <li><button onClick={() => navigate('/myTickets')}className="btn-navbar-menu-item">Mis Entradas
-            </button></li>
-          <li><button onClick={() => navigate('/userslist')}className="btn-navbar-menu-item">Lista de Usuarios
-            </button></li>
-          <li><button onClick={() => navigate('/help')}className="btn-navbar-menu-item">Ayuda
-            </button></li>
-          <li className="navbar-cart-container">
-            <img className="navbar-cart" src="/cart1.png" alt="Carrito de Compras" />
-            <span id="cart-count">{cartCount}</span>
-            <button onClick={() => navigate('/cart')}
-              className="btn"></button>
-            </li>
 
+        <ul className="navbar-menu">
+          <li><Link to="/help" className="navbar-menu-item">Ayuda</Link></li>
+          {isLoggedIn && <li><Link to="/myTickets" className="navbar-menu-item">Mis Entradas</Link></li>}
+          {/* Mueve el carrito AQUI, como un item de menú */}
+          <li>
+            <div className="navbar-cart-container"> {/* Mantén este wrapper para posicionar el contador */}
+              <Link to="/cart" className="navbar-menu-item"> {/* Aplica el estilo de item de menú al enlace */}
+                <img src={cartIcon} alt="Carrito de compras" className="navbar-cart" />
+                <span id="cart-count">{cartCount}</span> {/* Muestra el cartCount dinámico */}
+              </Link>
+            </div>
+          </li>
+        </ul>
+
+        <div className="navbar-auth-section">
           {isLoggedIn ? (
             <>
-              <li className="navbar-auth-section">
-                <span className="text-gray-700 font-semibold mr-2">Hola, {userName}</span>
-                <button
-                  onClick={handleLogoutClick}
-                  className="btn-logout" 
-                >
-                  Cerrar Sesión
-                </button>
-              </li>
+              <span className="navbar-username">Hola, {userName}</span>
+              {/* Botón para crear evento, ahora visible si está logueado (sin importar el rol) */}
+              {isLoggedIn && (
+                <Link to="/create-event" className="btn-primary create-event-btn">
+                  Crear Evento
+                </Link>
+              )}
+              <button onClick={handleLogoutClick} className="btn-logout">
+                Cerrar Sesión
+              </button>
             </>
           ) : (
             <>
-              <li className="navbar-auth-section"> 
-                <button
-                  onClick={() => navigate('/login')}
-                  className="btn-primary"
-                >
-                  Iniciar Sesión
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigate('/register')}
-                  className="btn-outline-primary"
-                >
-                  Registrarse
-                </button>
-              </li>
+              <Link to="/login" className="btn-primary">
+                Iniciar Sesión
+              </Link>
+              <Link to="/register" className="btn-outline-primary">
+                Registrarse
+              </Link>
             </>
           )}
-        </ul>
+        </div>
       </div>
 
       {showLogoutConfirm && (
         <div className="logout-confirm-overlay">
           <div className="logout-confirm-modal">
-            <p className="logout-confirm-message">¿Estás seguro de que deseas cerrar sesión?</p>
+            <p className="logout-confirm-message">¿Estás seguro de que quieres cerrar sesión?</p>
             <div className="logout-confirm-actions">
-              <button onClick={handleConfirmLogout} className="btn-logout-confirm-yes">Sí</button>
-              <button onClick={handleCancelLogout} className="btn-logout-confirm-no">No</button>
+              <button onClick={confirmLogout} className="btn-logout-confirm-yes">Sí, cerrar sesión</button>
+              <button onClick={cancelLogout} className="btn-logout-confirm-no">No, cancelar</button>
             </div>
           </div>
         </div>
