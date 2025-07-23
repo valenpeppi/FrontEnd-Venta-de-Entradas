@@ -47,6 +47,7 @@ const Carousel: React.FC<CarouselProps> = ({
               src={currentEvent.imageUrl}
               alt={currentEvent.eventName}
               className="event-card-image"
+              onError={e => { e.currentTarget.src = '/public/ticket.png'; }}
             />
             <div className="event-card-content">
               <h3 className="event-card-title">{currentEvent.eventName}</h3>
@@ -69,7 +70,7 @@ const Carousel: React.FC<CarouselProps> = ({
                 className={`btn-purchase${currentEvent.availableTickets > 0 ? '' : ' btn-purchase--disabled'}`}
                 disabled={currentEvent.availableTickets === 0}
               >
-                {currentEvent.availableTickets > 0 ? `Comprar (${currentEvent.availableTickets} restantes)` : 'Agotado'}
+                {currentEvent.availableTickets > 0 ? 'Comprar' : 'Agotado'}
               </button>
             </div>
           </div>
