@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './Register.css'; // Importa el nuevo archivo CSS
+import './RegisterCompany.css'; 
 
 interface RegisterProps {
   onRegisterSuccess: () => void;
@@ -8,15 +8,21 @@ interface RegisterProps {
 }
 
 const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage }) => {
-  const [dni, setDni] = useState<string>('');
-  const [fullName, setFullName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+  const [dniOrganiser, setDniOrganiser] = useState<string>('');
+  const [company_name, setCompanyName] = useState<string>('');
+  const [cuil, setCuil] = useState<string>('');
+  const [contactEmail, setContactEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [birthDate, setBirthDate] = useState<string>(''); // Para la fecha de nacimiento
+  const [phone, setPhone] = useState<string>('');
+  const [adress, setAdress] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setAppMessage(null); // Limpia cualquier mensaje al montar
+  }, [setAppMessage]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +30,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
     setSuccessMessage(null);
 
     // Validaciones
-    if (!dni || !fullName || !email || !password || !confirmPassword || !birthDate) {
+    if (!dniOrganiser || !company_name || !contactEmail || !password || !confirmPassword || !phone || !adress) {
       setError('Por favor, completa todos los campos.');
       return;
     }
@@ -36,50 +42,39 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
 
     // Validación básica de formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(contactEmail)) {
       setError('Por favor, introduce un email válido.');
       return;
     }
 
-    // Dividir fullName en name y surname
-    const nameParts = fullName.trim().split(' ');
-    let name = '';
-    let surname = '';
-
-    if (nameParts.length > 1) {
-      name = nameParts[0];
-      surname = nameParts.slice(1).join(' '); // El resto es el apellido
-    } else {
-      name = fullName; // Si solo hay una palabra, se asume que es el nombre
-      surname = ''; // El apellido queda vacío
-    }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
+      const response = await fetch('http://localhost:3000/api/auth/register-company', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          dni,
-          name, // Enviamos el nombre separado
-          surname, // Enviamos el apellido separado
-          mail: email, // El backend espera 'mail'
-          password,
-          birthDate,
+          dniOrganiser: dniOrganiser,
+          company_name: company_name,
+          cuil: cuil,
+          contactEmail: contactEmail,
+          password: password,
+          phone: phone,
+          adress: adress,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.message || 'Error al registrar el usuario.');
+        setError(errorData.message || 'Error al registrar la empresa.');
         return;
       }
 
       setSuccessMessage('¡Registro exitoso! Serás redirigido para iniciar sesión.');
       setTimeout(() => {
         onRegisterSuccess();
-        navigate('/login');
+        navigate('/logincompany'); // Redirige al login de empresa
       }, 2000);
     } catch (err) {
       setError('Error de red o del servidor.');
@@ -87,70 +82,76 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
   };
 
   return (
-    <div className="register-container"> {/* Clase CSS para el contenedor principal */}
-      <div className="register-card"> {/* Clase CSS para la tarjeta del formulario */}
-        <h2 className="register-title">Registrarse</h2> {/* Clase CSS para el título */}
+    <div className="register-container"> 
+      <div className="register-card"> 
+        <h2 className="register-title">Registrarse</h2> 
         {error && (
-          <div className="register-error-message"> {/* Clase CSS para mensajes de error */}
+          <div className="register-error-message"> 
             {error}
           </div>
         )}
         {successMessage && (
-          <div className="register-success-message"> {/* Clase CSS para mensajes de éxito */}
+          <div className="register-success-message"> 
             {successMessage}
           </div>
         )}
         <form onSubmit={handleSubmit}>
-          <div className="register-form-grid"> {/* Clase CSS para la cuadrícula de campos */}
-            {/* DNI */}
-            <div className="register-field-col-span"> {/* Clase CSS para el contenedor de cada campo */}
-              <label htmlFor="register-dni" className="register-label">DNI:</label> {/* Clase CSS para la etiqueta */}
+          <div className="register-form-grid"> 
+            <div className="register-field-col-span"> 
+              <label htmlFor="register-CUIL" className="register-label">CUIL:</label>
               <input
                 type="text"
-                id="register-dni"
-                className="register-input" /* Clase CSS para el input */
-                value={dni}
-                onChange={(e) => setDni(e.target.value)}
-                required
-              />
-            </div>
-            {/* Nombre y Apellido */}
-            <div className="register-field-col-span">
-              <label htmlFor="register-fullName" className="register-label">Nombre y Apellido:</label>
-              <input
-                type="text"
-                id="register-fullName"
+                id="register-CUIL"
                 className="register-input"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                value={cuil}
+                onChange={(e) => setCuil(e.target.value)} // Corregido a setCuil
                 required
               />
             </div>
-            {/* Email */}
             <div className="register-field-col-span">
-              <label htmlFor="register-email" className="register-label">Email:</label>
+              <label htmlFor="register-companyName" className="register-label">Nombre de la Empresa:</label>
+              <input
+                type="text"
+                id="register-companyName"
+                className="register-input"
+                value={company_name}
+                onChange={(e) => setCompanyName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="register-field-col-span">
+              <label htmlFor="register-email" className="register-label">Email de Contacto:</label>
               <input
                 type="email"
                 id="register-email"
                 className="register-input"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
                 required
               />
             </div>
-            {/* Fecha de Nacimiento */}
             <div className="register-field-col-span">
-              <label htmlFor="register-birthDate" className="register-label">Fecha de Nacimiento:</label>
+              <label htmlFor="register-phone" className="register-label">Teléfono:</label>
               <input
-                type="date"
-                id="register-birthDate"
+                type="text"
+                id="register-phone"
                 className="register-input"
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 required
               />
             </div>
-            {/* Contraseña */}
+            <div className="register-field-col-span">
+              <label htmlFor="register-adress" className="register-label">Dirección:</label>
+              <input
+                type="text"
+                id="register-adress"
+                className="register-input"
+                value={adress}
+                onChange={(e) => setAdress(e.target.value)}
+                required
+              />
+            </div>
             <div className="register-field-col-span">
               <label htmlFor="register-password" className="register-label">Contraseña:</label>
               <input
@@ -162,7 +163,6 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
                 required
               />
             </div>
-            {/* Confirmar Contraseña */}
             <div className="register-field-col-span">
               <label htmlFor="confirm-password" className="register-label">Confirmar Contraseña:</label>
               <input
@@ -177,19 +177,20 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
           </div>
           <button
             type="submit"
-            className="register-submit-btn" /* Clase CSS para el botón de enviar */
+            className="register-submit-btn"
           >
             Registrarse
           </button>
-          <div className="register-login-link-container"> {/* Clase CSS para el contenedor del enlace */}
-            <p className="register-login-link-text"> {/* Clase CSS para el texto */}
+          <div className="register-login-link-container">
+            <p className="register-login-link-text">
               ¿Ya tienes una cuenta?{' '}
-              <Link to="/login" className="register-login-link"> {/* Clase CSS para el enlace */}
+              <Link to="/logincompany" className="register-login-link">
                 Inicia sesión aquí
               </Link>
             </p>
           </div>
         </form>
+        <button onClick={() => navigate(-1)} className="back-button">Volver</button> {/* Botón "Volver" añadido */}
       </div>
     </div>
   );
