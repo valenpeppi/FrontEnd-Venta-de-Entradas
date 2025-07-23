@@ -27,7 +27,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email, // o email, según tu backend
+          mail: email, 
           password,
         }),
       });
@@ -41,7 +41,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
       const data = await response.json();
       // Aquí puedes guardar el token, usuario, etc.
-      onLoginSuccess(email); // O data.userName si tu backend lo devuelve
+      onLoginSuccess(data.userName || email); // Usa el nombre si el backend lo devuelve, si no el email
       navigate('/');
     } catch (err) {
       console.error('Error en login:', err);
@@ -60,7 +60,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
               Email
             </label>
             <input
-              type="text"
+              type="email"
               id="email"
               className="login-input"
               value={email}
