@@ -22,17 +22,11 @@ interface CartProviderProps {
 }
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    try {
-      const storedItems = localStorage.getItem('ticket-cart');
-      const parsedItems = storedItems ? JSON.parse(storedItems) : [];
-      console.log('CartContext: Inicializando carrito desde localStorage:', parsedItems);
-      return parsedItems;
-    } catch (error) {
-      console.error("CartContext: Error al cargar el carrito desde localStorage:", error);
-      return [];
-    }
-  });
+  useEffect(() => {
+    localStorage.removeItem('ticket-cart');
+  }, []);
+
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
     try {

@@ -79,6 +79,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
 
   return (
     <div className="purchase-modal-overlay" onClick={onCloseModal}>
+      <div className="purchase-modal" onClick={e => e.stopPropagation()}>
         <h3 className="purchase-modal-header">Agregar Entradas al Carrito</h3>
         <div className="purchase-modal-info">
           <p className="purchase-modal-info-item">
@@ -136,6 +137,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
           </button>
         </div>
       </div>
+    </div>
   );
 };
 
