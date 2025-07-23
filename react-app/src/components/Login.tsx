@@ -10,26 +10,44 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
-  const [username, setUsername] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
 
-    // Simulación de un proceso de autenticación
-    // Posteriormente linkear con una API real
-    if (username === "usuario" && password === "contraseña") {
-      // Pasa el nombre de usuario (puedes usar el email o un nombre de usuario real de tu backend)
-      onLoginSuccess(username); 
-      console.log(`Login: Llamando a onLoginSuccess con usuario: ${username}`); // Log para depuración
-      navigate('/') // Redirigir a la página principal después del login
-    } else {
-      setError("Usuario o contraseña incorrectos.")
+    try {
+      console.log('Enviando login:', email, password);
+      const response = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email, // o email, según tu backend
+          password,
+        }),
+      });
+
+      if (!response.ok) {
+        // Si la respuesta no es 2xx, lanza error
+        const errorData = await response.json();
+        setError(errorData.message || 'Usuario o contraseña incorrectos.');
+        return;
+      }
+
+      const data = await response.json();
+      // Aquí puedes guardar el token, usuario, etc.
+      onLoginSuccess(email); // O data.userName si tu backend lo devuelve
+      navigate('/');
+    } catch (err) {
+      console.error('Error en login:', err);
+      setError('Error de red o del servidor.');
     }
-  }
+  };
 
   return (
     <div className="login-root">
@@ -38,15 +56,15 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         {error && <div className="login-error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="login-field">
-            <label htmlFor="username" className="login-label">
+            <label htmlFor="email" className="login-label">
               Email
             </label>
             <input
               type="text"
-              id="username"
+              id="email"
               className="login-input"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
