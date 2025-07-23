@@ -12,7 +12,9 @@ import EventDetailPage from './components/EventDetailPage.tsx';
 import Layout from './components/Layout.tsx';
 import About from './components/About.tsx';
 import UsersList from './components/UsersList.tsx';
-import CreateEventPage from './components/CreateEventPage.tsx'; // Importa el nuevo componente CreateEventPage
+import CreateEventPage from './components/CreateEventPage.tsx';
+import LoginCompany from './components/LoginCompany.tsx'; // Importa el nuevo componente
+import RegisterCompany from './components/RegisterCompany.tsx'; // Importa el nuevo componente
 import './App.css';
 
 
@@ -33,41 +35,47 @@ const App: React.FC = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userName, setUserName] = useState<string | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null); // Estado para almacenar el rol del usuario
+  const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirige a la página de administración si el usuario es admin y está logueado
-    // Nota: userRole ya no se establecerá a través de handleLoginSuccess en esta lógica.
-    // Necesitarías otra forma de establecer userRole si quieres que esta redirección funcione.
     if (isLoggedIn && userRole === 'admin') {
       navigate('/admin');
     }
   }, [isLoggedIn, userRole, navigate]);
 
-  // La función handleLoginSuccess ahora solo recibe el nombre de usuario,
-  // volviendo a la lógica anterior.
-  const handleLoginSuccess = (loggedInUserName: string) => {
+  const handleLoginSuccess = (loggedInUserName: string, role?: string) => {
     setIsLoggedIn(true);
     setUserName(loggedInUserName);
-    // Si necesitas el rol del usuario aquí, tu componente Login.tsx
-    // y la respuesta del backend deberán proporcionarlo de alguna otra manera.
-    // Por ejemplo: podrías hacer otra llamada a la API para obtener el rol,
-    // o el backend podría devolverlo en la respuesta de login y lo almacenarías aquí.
-    // setUserRole(roleDelBackend); // Esto necesitaría una fuente externa.
+    setUserRole(role || null); // <--- Guarda el rol
     setAppMessage(`¡Inicio de sesión exitoso como ${loggedInUserName}!`);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserName(null);
-    setUserRole(null); // Limpiar el rol al cerrar sesión
+    setUserRole(null);
     setAppMessage('Has cerrado sesión.');
   };
 
   const handleRegisterSuccess = () => {
     setAppMessage('¡Registro exitoso! Por favor, inicia sesión.');
   };
+
+  // Nueva función para manejar el login exitoso de la empresa
+  const handleCompanyLoginSuccess = (companyName: string) => {
+    setIsLoggedIn(true); // Considera si quieres que el login de empresa también marque isLoggedIn
+    setUserName(companyName); // Puedes usar el nombre de la empresa aquí
+    setUserRole('company'); // Establece un rol específico para la empresa
+    setAppMessage(`¡Inicio de sesión exitoso como organizador ${companyName}!`);
+    navigate('/admin'); // O a una página específica para organizadores
+  };
+
+  // Nueva función para manejar el registro exitoso de la empresa
+  const handleCompanyRegisterSuccess = () => {
+    setAppMessage('¡Registro de organizador exitoso! Por favor, inicia sesión.');
+  };
+
 
   return (
     <div className="app-root">
@@ -190,7 +198,7 @@ const App: React.FC = () => {
           element={
             <Login
               onLoginSuccess={handleLoginSuccess}
-              setAppMessage={setAppMessage} // Pasa setAppMessage al componente Login
+              setAppMessage={setAppMessage}
             />
           }
         />
@@ -199,7 +207,7 @@ const App: React.FC = () => {
           element={
             <Register
               onRegisterSuccess={handleRegisterSuccess}
-              setAppMessage={setAppMessage} // Pasa setAppMessage al componente Register
+              setAppMessage={setAppMessage}
             />
           }
         />
@@ -217,7 +225,6 @@ const App: React.FC = () => {
             </Layout>
           }
         />
-        {/* Nueva ruta para crear eventos */}
         <Route
           path="/create-event"
           element={
@@ -230,6 +237,25 @@ const App: React.FC = () => {
             >
               <CreateEventPage setAppMessage={setAppMessage} />
             </Layout>
+          }
+        />
+        
+        <Route
+          path="/logincompany"
+          element={
+            <LoginCompany
+              onLoginSuccess={handleCompanyLoginSuccess}
+              setAppMessage={setAppMessage}
+            />
+          }
+        />
+        <Route
+          path="/registercompany"
+          element={
+            <RegisterCompany
+              onRegisterSuccess={handleCompanyRegisterSuccess}
+              setAppMessage={setAppMessage}
+            />
           }
         />
       </Routes>

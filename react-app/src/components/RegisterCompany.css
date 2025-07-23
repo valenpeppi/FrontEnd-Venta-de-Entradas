@@ -1,0 +1,232 @@
+/* RegisterCompany.css */
+
+/* Contenedor principal */
+.register-company-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, #e0f2fe, #c7d2fe); /* from-blue-50 to-indigo-100 */
+  font-family: 'Inter', sans-serif;
+  color: #1f2937; /* text-gray-800 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tarjeta del formulario */
+.register-company-card {
+  background-color: #ffffff; /* bg-white */
+  border-radius: 1rem; /* rounded-xl */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* shadow-2xl */
+  padding: 2rem; /* p-8 */
+  width: 100%; /* w-full */
+  max-width: 48rem; /* max-w-2xl (approx 768px, using 48rem for more width) */
+  animation: scaleIn 0.3s ease-out forwards; /* animate-scale-in */
+}
+
+/* Título del formulario */
+.register-company-title {
+  font-size: 2.25rem; /* text-3xl */
+  font-weight: 700; /* font-bold */
+  color: #4338ca; /* text-indigo-800 */
+  margin-bottom: 1.5rem; /* mb-6 */
+  text-align: center;
+}
+
+/* Mensajes de error */
+.register-company-error-message {
+  background-color: #fee2e2; /* bg-red-100 */
+  color: #b91c1c; /* text-red-700 */
+  padding: 0.75rem; /* p-3 */
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  margin-bottom: 1rem; /* mb-4 */
+  text-align: center;
+}
+
+/* Mensajes de éxito */
+.register-company-success-message {
+  background-color: #d1fae5; /* bg-green-100 */
+  color: #065f46; /* text-green-700 */
+  padding: 0.75rem; /* p-3 */
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  margin-bottom: 1rem; /* mb-4 */
+  text-align: center;
+}
+
+/* Contenedor de la cuadrícula de campos */
+.register-company-form-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* grid-cols-1 */
+  gap: 1rem 1.5rem; /* gap-x-6 gap-y-4 */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+/* Media query para dos columnas en pantallas medianas */
+@media (min-width: 768px) { /* md: */
+  .register-company-form-grid {
+    grid-template-columns: 1fr 1fr; /* md:grid-cols-2 */
+  }
+}
+
+/* Contenedor de cada campo */
+.register-company-field-col-span {
+  grid-column: span 1 / span 1; /* col-span-1 */
+}
+
+/* Etiqueta del campo */
+.register-company-label {
+  display: block;
+  color: #374151; /* text-gray-700 */
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600; /* font-semibold */
+  margin-bottom: 0.25rem; /* mb-1 */
+}
+
+/* Input del campo */
+.register-company-input {
+  width: 100%; /* w-full */
+  padding: 0.75rem; /* p-3 */
+  border: 1px solid #d1d5db; /* border border-gray-300 */
+  border-radius: 0.5rem; /* rounded-lg */
+  outline: none;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s; /* transition duration-200 */
+}
+
+.register-company-input:focus {
+  border-color: #6366f1; /* focus:border-indigo-500 */
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5); /* focus:ring-2 focus:ring-indigo-500 */
+}
+
+/* Botón de enviar */
+.register-company-submit-btn {
+  width: 100%; /* w-full */
+  background-color: #4f46e5; /* bg-indigo-600 */
+  color: #ffffff; /* text-white */
+  font-weight: 700; /* font-bold */
+  padding: 0.75rem 1.5rem; /* py-3 px-6 */
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* shadow-md */
+  transition: background-color 0.3s; /* transition duration-300 */
+  font-size: 1.125rem; /* text-lg */
+  border: none;
+  cursor: pointer;
+}
+
+.register-company-submit-btn:hover {
+  background-color: #4338ca; /* hover:bg-indigo-700 */
+}
+
+/* Enlace de "Ya tienes una cuenta" */
+.register-company-login-link-container {
+  margin-top: 1.5rem; /* mt-6 */
+  text-align: center;
+}
+
+.register-company-login-link-text {
+  color: #4b5563; /* text-gray-600 */
+}
+
+.register-company-login-link {
+  color: #4f46e5; /* text-indigo-600 */
+  font-weight: 600; /* font-semibold */
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.register-company-login-link:hover {
+  text-decoration: underline;
+}
+
+/* Estilos para el botón "Volver" */
+.back-button {
+  background-color: #f3f4f6; /* Un gris suave */
+  color: #4b5563; /* Texto gris oscuro */
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db; /* Borde sutil */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  outline: none;
+  cursor: pointer;
+  width: 100%; /* Ocupa todo el ancho */
+  margin-top: 1rem; /* Espacio superior */
+  text-align: center;
+}
+
+.back-button:hover {
+  background-color: #e5e7eb; /* Un gris ligeramente más oscuro al pasar el ratón */
+  color: #1f2937; /* Texto más oscuro */
+  border-color: #9ca3af;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) { /* Para pantallas pequeñas (móviles) */
+  .register-company-card {
+    padding: 1.5rem; /* Reduce el padding */
+    margin: 1rem; /* Añade un margen para que no se pegue a los bordes */
+    border-radius: 0.75rem;
+  }
+
+  .register-company-title {
+    font-size: 1.8rem; /* Reduce el tamaño del título */
+    margin-bottom: 1rem;
+  }
+
+  .register-company-form-grid {
+    grid-template-columns: 1fr; /* Siempre una columna en móviles */
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .register-company-label {
+    font-size: 1rem; /* Reduce el tamaño de la etiqueta */
+  }
+
+  .register-company-input {
+    padding: 0.6rem; /* Reduce el padding del input */
+    font-size: 0.9rem;
+  }
+
+  .register-company-submit-btn {
+    padding: 0.6rem 1.2rem; /* Reduce el padding del botón */
+    font-size: 1rem;
+  }
+
+  .register-company-login-link-container {
+    margin-top: 1rem;
+  }
+
+  .register-company-login-link-text,
+  .register-company-login-link {
+    font-size: 0.9rem; /* Reduce el tamaño del texto del enlace */
+  }
+}
+
+@media (max-width: 480px) {
+  .register-company-card {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .register-company-title {
+    font-size: 1.5rem;
+  }
+
+  .register-company-label {
+    font-size: 0.9rem;
+  }
+
+  .register-company-input {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .register-company-submit-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
