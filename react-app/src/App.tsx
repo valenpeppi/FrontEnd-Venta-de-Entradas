@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Login from './components/Login.tsx'; 
 import Register from './components/Register.tsx'; 
 import HomePage from './components/HomePage.tsx';
+import AdminHomePage from './components/AdminHomePage.tsx';
 import CarritoPage from './components/CarritoPage.tsx';
 import Pay from './components/Pay.tsx';
 import MyTickets from './components/MyTickets.tsx';
@@ -31,10 +32,19 @@ const App: React.FC = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleLoginSuccess = (loggedInUserName: string) => {
+  useEffect(() => {
+    if (isLoggedIn && userRole === 'admin') {
+      navigate('/admin');
+    }
+  }, [isLoggedIn, userRole, navigate]);
+
+  const handleLoginSuccess = (loggedInUserName: string, role: string) => {
     setIsLoggedIn(true);
     setUserName(loggedInUserName);
+    setUserRole(role);
     setAppMessage(`¡Inicio de sesión exitoso como ${loggedInUserName}!`);
   };
 
@@ -91,10 +101,24 @@ const App: React.FC = () => {
             >
               <Pay />
             </Layout>
-          } 
-        />
-        <Route 
-          path="/myTickets" 
+          }
+          />
+        <Route
+          path="/admin"
+          element={
+            <Layout
+              isLoggedIn={isLoggedIn}
+              userName={userName}
+              onLogout={handleLogout}
+              appMessage={appMessage}
+              setAppMessage={setAppMessage}
+            >
+              <AdminHomePage />
+            </Layout>
+  }
+          />
+        <Route
+          path="/myTickets"
           element={
             <Layout 
               isLoggedIn={isLoggedIn} 

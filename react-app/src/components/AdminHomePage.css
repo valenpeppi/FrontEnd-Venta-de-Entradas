@@ -1,0 +1,86 @@
+.admin-home-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #f8fafc;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+}
+
+.admin-home-container h1 {
+  text-align: center;
+  margin-bottom: 32px;
+  color: #1e293b;
+}
+
+.event-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(30,41,59,0.08);
+  margin-bottom: 24px;
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: box-shadow 0.2s;
+}
+
+.event-card:hover {
+  box-shadow: 0 6px 24px rgba(30,41,59,0.13);
+}
+
+.event-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.event-info {
+  color: #475569;
+  font-size: 1rem;
+}
+
+.event-status {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+.event-status.pendiente {
+  color: #f59e42;
+}
+.event-status.aceptado {
+  color: #22c55e;
+}
+.event-status.rechazado {
+  color: #ef4444;
+}
+
+.event-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+}
+
+.event-actions button {
+  padding: 6px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.event-actions button:first-child {
+  background: #22c55e;
+  color: #fff;
+}
+.event-actions button:last-child {
+  background: #ef4444;
+  color: #fff;
+}
+.event-actions button:disabled {
+  background: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+}
