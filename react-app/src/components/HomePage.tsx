@@ -99,8 +99,6 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
   return (
     <div className="homepage">
       <main className="homepage-main">
-        <h2 className="homepage-title">Eventos Destacados</h2>
-        
         <Carousel
           tickets={allTickets}
           currentEventIndex={currentEventIndex}
