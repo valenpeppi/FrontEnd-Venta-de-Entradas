@@ -1,15 +1,244 @@
+/* Pay.css */
 
-.btn.btn-primary {
-  background-color: #4f46e5;
-  color: white;
+/* Contenedor principal de la página de pago */
+.pay-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', sans-serif;
+  color: #1f2937;
+}
+
+/* Título de la página */
+.pay-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #3730a3;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+/* Sección de resumen de la compra */
+.pay-summary-section {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 20px;
+}
+
+.pay-summary-section h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 15px;
+}
+
+.pay-summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 1.1rem;
+  color: #4b5563;
+}
+
+.pay-summary-total {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #059669;
+  text-align: right;
+  margin-top: 15px;
+}
+
+/* Sección de formulario de pago */
+.pay-form-section {
+  margin-bottom: 30px;
+}
+
+.pay-form-section h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 15px;
+}
+
+.pay-form-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Por defecto una columna */
+  gap: 15px;
+}
+
+.pay-form-field {
+  margin-bottom: 10px;
+}
+
+.pay-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 5px;
+}
+
+.pay-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.pay-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.pay-error-message {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid #ef4444;
+}
+
+/* Botones de acción */
+.pay-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.btn-back, .btn-confirm-pay {
+  padding: 12px 25px;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.375rem;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.btn.btn-primary:hover {
-  background-color: #4338ca;
+.btn-back {
+  background-color: #6c757d;
+  color: white;
 }
 
+.btn-back:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+.btn-confirm-pay {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-confirm-pay:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (min-width: 600px) {
+  .pay-form-grid {
+    grid-template-columns: 1fr 1fr; /* Dos columnas para pantallas medianas */
+  }
+
+  .pay-form-field.full-width { /* Clase opcional para campos que ocupen todo el ancho */
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .pay-container {
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .pay-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+
+  .pay-summary-section h2,
+  .pay-form-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+
+  .pay-summary-item {
+    font-size: 1rem;
+  }
+
+  .pay-summary-total {
+    font-size: 1.2rem;
+  }
+
+  .pay-label {
+    font-size: 0.95rem;
+  }
+
+  .pay-input {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+
+  .pay-actions {
+    flex-direction: column; /* Apila los botones */
+    gap: 10px;
+    align-items: stretch; /* Estira los botones */
+  }
+
+  .btn-back, .btn-confirm-pay {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pay-container {
+    margin: 10px;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .pay-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .pay-summary-section h2,
+  .pay-form-section h2 {
+    font-size: 1.2rem;
+  }
+
+  .pay-summary-item {
+    font-size: 0.9rem;
+  }
+
+  .pay-summary-total {
+    font-size: 1.1rem;
+  }
+
+  .pay-label {
+    font-size: 0.85rem;
+  }
+
+  .pay-input {
+    padding: 7px 9px;
+    font-size: 0.85rem;
+  }
+
+  .btn-back, .btn-confirm-pay {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+}

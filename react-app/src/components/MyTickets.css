@@ -4,14 +4,54 @@
   border: 1px solid #eee;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px; /* Añadido un max-width para centrar el contenido */
+  margin: 2rem auto; /* Centrar el contenedor */
 }
 
 .my-tickets-container h1 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.8rem; /* Aumentado el tamaño del título */
+  margin-bottom: 1.5rem;
+  text-align: center; /* Centrar el título */
+  color: #333;
 }
 
 .my-tickets-container p {
-  font-size: 1rem;
+  font-size: 1.1rem; /* Aumentado el tamaño del texto */
   color: #666;
+  text-align: center; /* Centrar el texto */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .my-tickets-container {
+    padding: 1.5rem;
+    margin: 1.5rem auto;
+    border-radius: 0.4rem;
+  }
+
+  .my-tickets-container h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .my-tickets-container p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .my-tickets-container {
+    padding: 1rem;
+    margin: 1rem auto;
+    border-radius: 0.3rem;
+  }
+
+  .my-tickets-container h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .my-tickets-container p {
+    font-size: 0.9rem;
+  }
 }

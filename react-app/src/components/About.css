@@ -1,3 +1,5 @@
+/* About.css */
+
 .about-container {
   max-width: 600px;
   margin: 48px auto;
@@ -62,4 +64,54 @@
 .about-contact-link:hover {
   color: #22c55e;
   text-decoration: underline;
-} 
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .about-container {
+    margin: 20px auto;
+    padding: 1.5rem 1rem;
+    border-radius: 12px;
+  }
+
+  .about-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .about-description {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-contact-section {
+    padding: 1rem 0.8rem;
+  }
+
+  .about-contact-title {
+    font-size: 1.1rem;
+  }
+
+  .about-contact-list {
+    gap: 0.5rem;
+  }
+
+  .about-contact-link {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-container {
+    margin: 15px;
+    padding: 1rem;
+  }
+
+  .about-title {
+    font-size: 1.8rem;
+  }
+
+  .about-description {
+    font-size: 0.9rem;
+  }
+}

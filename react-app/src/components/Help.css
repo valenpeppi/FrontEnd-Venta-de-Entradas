@@ -4,6 +4,7 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: #f9fafb;
+  font-family: 'Inter', sans-serif; /* Consistencia de fuente */
 }
 
 .help-container {
@@ -21,7 +22,8 @@
   margin-bottom: 2rem;
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   color: white;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem; /* Ligeramente más redondeado */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .help-title {
@@ -57,21 +59,22 @@
 
 .faq-item {
   background: white;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem; /* Más redondeado */
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Sombra más suave */
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .faq-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px); /* Efecto de elevación más pronunciado */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
 }
 
 .faq-question {
   font-size: 1.25rem;
   color: #4f46e5;
   margin-bottom: 0.75rem;
+  font-weight: 600; /* Más negrita */
 }
 
 .faq-answer {
@@ -83,8 +86,8 @@
 .contact-section {
   background: white;
   padding: 2rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem; /* Más redondeado */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .contact-methods {
@@ -97,25 +100,28 @@
 .contact-card {
   text-align: center;
   padding: 2rem;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem; /* Más redondeado */
   background: #f9fafb;
   transition: all 0.3s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05); /* Sombra sutil */
 }
 
 .contact-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .contact-icon {
-  font-size: 2.5rem;
+  font-size: 2.8rem; /* Iconos más grandes */
   margin-bottom: 1rem;
+  color: #4f46e5; /* Color de icono */
 }
 
 .contact-card h3 {
-  font-size: 1.25rem;
+  font-size: 1.35rem; /* Título de tarjeta más grande */
   color: #1f2937;
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .contact-card p {
@@ -159,6 +165,7 @@
 @media (max-width: 768px) {
   .help-hero {
     padding: 2rem 1rem;
+    border-radius: 0.5rem; /* Menos redondeado en móvil */
   }
   
   .help-title {
@@ -169,7 +176,107 @@
     font-size: 1rem;
   }
   
+  .help-section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .faq-container {
+    gap: 1rem;
+  }
+
+  .faq-item {
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .faq-question {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .faq-answer {
+    font-size: 0.95rem;
+  }
+
+  .contact-section {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+  }
+
   .contact-methods {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Apila las tarjetas de contacto */
+    gap: 1.5rem;
+  }
+
+  .contact-card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+  }
+
+  .contact-icon {
+    font-size: 2.2rem;
+  }
+
+  .contact-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .contact-card p {
+    font-size: 0.9rem;
+  }
+
+  .contact-link {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .help-container {
+    padding: 1rem;
+  }
+
+  .help-hero {
+    padding: 1.5rem 0.8rem;
+  }
+
+  .help-title {
+    font-size: 1.8rem;
+  }
+
+  .help-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .help-section-title {
+    font-size: 1.3rem;
+  }
+
+  .faq-item {
+    padding: 0.8rem;
+  }
+
+  .faq-question {
+    font-size: 1rem;
+  }
+
+  .faq-answer {
+    font-size: 0.85rem;
+  }
+
+  .contact-section {
+    padding: 1rem;
+  }
+
+  .contact-methods {
+    gap: 1rem;
+  }
+
+  .contact-card {
+    padding: 1rem;
+  }
+
+  .contact-icon {
+    font-size: 2rem;
   }
 }

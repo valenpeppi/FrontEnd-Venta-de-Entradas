@@ -18,5 +18,15 @@
   width: 100%; /* Asegura que ocupe el 100% del ancho disponible en su contenedor */
 }
 
-/* El MessageDisplay se renderiza directamente en el Layout,
-   sus estilos de posicionamiento (como margin-bottom) vendrán de MessageDisplay.css */
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .layout-main-content {
+    padding: 1rem 1.5rem; /* Reduce el padding en pantallas medianas */
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-main-content {
+    padding: 0.8rem 1rem; /* Más reducción de padding para móviles pequeños */
+  }
+}

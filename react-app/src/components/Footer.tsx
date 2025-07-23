@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
             <h4>Compañía</h4>
             <ul>
               <li><a href="/about#sobre-nosotros">Sobre nosotros</a></li>
-              <li><a href="/about#contacto">Contacto</a></li>
+              <li><Link to="/Help">Contacto</Link></li>
             </ul>
           </div>
 

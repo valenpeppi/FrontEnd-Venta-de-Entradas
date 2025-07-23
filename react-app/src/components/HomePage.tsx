@@ -98,26 +98,27 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
 
   return (
     <div className="homepage">
-      <main className="homepage-main">
-        <Carousel
-          tickets={allTickets}
-          currentEventIndex={currentEventIndex}
-          onPreviousEvent={goToPreviousEvent}
-          onNextEvent={goToNextEvent}
-          onBuyClick={handleBuyClick}
-        />
-      </main>
-
-      <PurchaseModal
-        isOpen={showPurchaseModal}
-        selectedTicket={selectedTicket}
-        quantity={quantity}
-        onQuantityChange={setQuantity}
-        onConfirmPurchase={handleConfirmPurchase}
-        onCloseModal={handleCloseModal}
-        errorMessage={null}
+    <main className="homepage-main">
+      <h1 className="homepage-title">Eventos destacados</h1>
+      <Carousel
+        tickets={allTickets}
+        currentEventIndex={currentEventIndex}
+        onPreviousEvent={goToPreviousEvent}
+        onNextEvent={goToNextEvent}
+        onBuyClick={handleBuyClick}
       />
-    </div>
+    </main>
+
+    <PurchaseModal
+      isOpen={showPurchaseModal}
+      selectedTicket={selectedTicket}
+      quantity={quantity}
+      onQuantityChange={setQuantity}
+      onConfirmPurchase={handleConfirmPurchase}
+      onCloseModal={handleCloseModal}
+      errorMessage={null}
+    />
+  </div>
   );
 };
 

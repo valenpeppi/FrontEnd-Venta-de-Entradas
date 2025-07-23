@@ -4,7 +4,6 @@ import { useEvents } from '../context/EventsContext';
 import { useCart } from '../context/CartContext';
 import PurchaseModal from './PurchaseModal';
 import type { Ticket } from '../App';
-
 import './EventDetailPage.css';
 
 interface EventDetailPageProps {

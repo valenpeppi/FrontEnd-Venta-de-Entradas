@@ -119,4 +119,82 @@
 
 .btn-cancel:hover {
   background: #e5e7eb;
-} 
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .purchase-modal {
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    width: 95%; /* Ocupa más ancho en móvil */
+  }
+
+  .purchase-modal-header {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .purchase-modal-info-item {
+    font-size: 0.95rem;
+  }
+
+  .purchase-modal-quantity-section {
+    flex-direction: column; /* Apila etiqueta y input */
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .purchase-modal-quantity-label {
+    min-width: auto; /* Elimina ancho mínimo */
+  }
+
+  .purchase-modal-quantity-input {
+    width: 100%; /* Ocupa todo el ancho */
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .purchase-modal-error {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .purchase-modal-actions {
+    flex-direction: column; /* Apila los botones */
+    gap: 0.8rem;
+  }
+
+  .btn-confirm, .btn-cancel {
+    width: 100%; /* Botones ocupan todo el ancho */
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .purchase-modal {
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .purchase-modal-header {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .purchase-modal-info-item {
+    font-size: 0.85rem;
+  }
+
+  .purchase-modal-quantity-input {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .btn-confirm, .btn-cancel {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
