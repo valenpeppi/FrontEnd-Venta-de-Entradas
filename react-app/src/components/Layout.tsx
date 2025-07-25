@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import Navbar from './Navbar'; // Importa el Navbar
 import Footer from './Footer'; // Importa el Footer (asumiendo que existe o lo crearías)
 import MessageDisplay from './MessageDisplay'; // Importa MessageDisplay
+import './Layout.css';
 
 // Interfaz para las props del componente Layout
 interface LayoutProps {

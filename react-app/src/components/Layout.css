@@ -16,6 +16,7 @@
   max-width: 1280px; /* Ancho máximo para el contenido */
   margin: 0 auto; /* Centra el contenido */
   width: 100%; /* Asegura que ocupe el 100% del ancho disponible en su contenedor */
+  background-color: transparent;
 }
 
 /* Responsive adjustments */

@@ -1,29 +1,35 @@
 /* Navbar */
 .navbar {
-  background: #fff;
-  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
-  padding: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 40;
+    background: #fff;
+    box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+    padding: 1.25rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 40;
 }
+  
 
 .navbar-container {
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
+
 
 .navbar-brand {
   display: flex;
   align-items: center;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: bold;
   color: #4f46e5;
-  text-decoration: none; /* Asegura que el enlace no tenga subrayado */
+  text-decoration: none;
 }
+
+
 .navbar-brand:hover {
   color: #3730a3;
 }
@@ -73,7 +79,7 @@
   border-radius: 9999px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
-  width: 250px;
+  width: 350px;
 }
 
 .navbar-search-input:focus {
@@ -90,11 +96,16 @@
   padding: 0;
 }
 
+
+
 .navbar-menu-item {
   color: #4b5563;
   font-weight: 500;
   transition: color 0.2s;
   text-decoration: none;
+  padding: 0 0.75rem; 
+  display: inline-flex;
+  align-items: center;
 }
 
 .navbar-menu-item:hover {
@@ -102,10 +113,9 @@
 }
 
 .navbar-auth-section {
-  margin-left: 1.5rem; /* Mantiene el margen para separar del menú/carrito */
-  display: flex; /* Asegura que los elementos dentro se alineen */
+  display: flex;
   align-items: center;
-  gap: 0.8rem; /* Espacio entre los elementos de la sección de autenticación */
+  gap: 0.8rem;
 }
 
 .navbar-username {
@@ -171,9 +181,9 @@
 }
 
 .image1 {
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
+  width: 55px;   /* Antes 50px */
+  height: 55px;  /* Antes 50px */
+  margin-right: 12px;
   vertical-align: middle;
 }
 
@@ -364,7 +374,12 @@
     gap: 0.8rem;
     margin-left: 0; /* Elimina el margen izquierdo */
   }
-
+  .navbar-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, auto);
+    text-align: center;
+  }
+  
   /* Ajustes específicos para el carrito en móvil */
   .navbar-cart-container {
     /* No necesita orden específico aquí, ya que está dentro de navbar-menu */
@@ -419,4 +434,13 @@
     height: 18px;
     font-size: 10px;
   }
+}
+
+.navbar-brand,
+.navbar-search,
+.navbar-menu,
+.navbar-auth-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

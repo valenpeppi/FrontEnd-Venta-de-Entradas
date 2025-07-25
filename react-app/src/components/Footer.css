@@ -172,22 +172,19 @@
 
 /* Nuevos estilos para el botón de Iniciar Sesión de Organizador */
 .btn-organizer-login {
-  background-color: #1d4ed8; /* Un azul oscuro distintivo */
-  color: #ffffff;
+  background: transparent;
+  color: white;
   font-weight: 600;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s, box-shadow 0.2s;
-  text-decoration: none; /* Para enlaces */
-  display: inline-block; /* Para que padding y margin funcionen correctamente */
-  border: none;
-  cursor: pointer;
+  border: 2px solid white;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
 }
 
 .btn-organizer-login:hover {
-  background-color: #1e40af; /* Un azul más oscuro al pasar el ratón */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Nuevo estilo para el botón de Registrarse de Organizador */

@@ -3,6 +3,8 @@ import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import { useCart } from '../context/CartContext';
 import { useEvents } from '../context/EventsContext';
+import './HomePage.css';
+
 
 export interface Ticket {
   id: string;

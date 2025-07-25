@@ -80,14 +80,14 @@ const Footer: React.FC = () => {
             <p className="organizer-promo-text">
               ¿Quieres ser organizador de eventos?{' '}
               {/* El texto "¡Regístrate ya!" ahora es un botón/enlace con estilo de btn-outline-primary */}
-              <Link to="/registercompany" className="btn-outline-primary">
+              <Link to="/registercompany" className="btn-organizer-register">
                 ¡Regístrate ya!
               </Link>
             </p>
             <ul>
               <li>
                 {/* El botón de Iniciar Sesión usa el estilo de btn-primary */}
-                <Link to="/logincompany" className="btn-primary">
+                <Link to="/logincompany" className="btn-organizer-login">
                   Iniciar Sesión
                 </Link>
               </li>
