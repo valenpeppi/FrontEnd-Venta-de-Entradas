@@ -3,18 +3,17 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Inter', sans-serif; /* Usar Inter para consistencia */
+  font-family: 'Inter', sans-serif; 
 }
 
 .cart-title {
   color: #333;
   text-align: center;
   margin-bottom: 30px;
-  font-size: 2.5rem; /* Un poco más grande */
+  font-size: 2.5rem; 
   font-weight: 700;
 }
 
-/* Estilos para items del carrito */
 .cart-items-container {
   display: flex;
   flex-direction: column;
