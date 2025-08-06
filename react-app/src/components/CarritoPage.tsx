@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import './CarritoPage.css';
@@ -54,7 +54,6 @@ const CarritoPage = () => {
                       value={item.quantity}
                       onChange={e => handleQuantityChange(item.id, e.target.value)}
                       className="cart-quantity-input"
-                      style={{ width: '50px', marginLeft: '8px' }}
                     />
                   </label>
                 </div>

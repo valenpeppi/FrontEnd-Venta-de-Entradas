@@ -4,7 +4,6 @@ import './Register.css'; // Importa el nuevo archivo CSS
 
 interface RegisterProps {
   onRegisterSuccess: () => void;
-  setAppMessage: (message: string | null) => void;
 }
 
 interface RegisterState {
@@ -56,7 +55,7 @@ const registerReducer = (state: RegisterState, action: RegisterAction): Register
   }
 };
 
-const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage }) => {
+const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const [state, dispatch] = useReducer(registerReducer, {
     dni: '',
     fullName: '',

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useEvents } from '../context/EventsContext';
+import { useCart } from '../context/CartContext';
+import { useMessage } from '../context/MessageContext';
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
-import { useCart } from '../context/CartContext';
-import { useEvents } from '../context/EventsContext';
 import './HomePage.css';
-
 
 export interface Ticket {
   id: string;
@@ -17,11 +17,7 @@ export interface Ticket {
   time: string;
 }
 
-interface HomePageProps {
-  setAppMessage?: (message: string | null) => void;
-}
-
-const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
+const HomePage: React.FC = () => {
   const { allTickets, updateAvailableTickets } = useEvents();
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
@@ -29,6 +25,7 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState<number>(0);
 
   const { addToCart } = useCart();
+  const { setAppMessage } = useMessage();
 
   useEffect(() => {
     if (currentEventIndex >= allTickets.length && allTickets.length > 0) {
@@ -37,7 +34,6 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
       setCurrentEventIndex(0);
     }
   }, [allTickets, currentEventIndex]);
-
 
   const goToPreviousEvent = () => {
     setCurrentEventIndex(prevIndex =>
@@ -55,7 +51,7 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
     setSelectedTicket(ticket);
     setQuantity(1);
     setShowPurchaseModal(true);
-    if (setAppMessage) setAppMessage(null);
+    setAppMessage(null);
   };
 
   const handleCloseModal = () => {
@@ -65,22 +61,20 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
 
   const handleConfirmPurchase = (purchasedQuantity: number) => {
     if (!selectedTicket) {
-      if (setAppMessage) setAppMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
+      setAppMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
       handleCloseModal();
       return;
     }
 
     const wasAdded = addToCart(selectedTicket, purchasedQuantity);
     if (!wasAdded) {
-      if (setAppMessage) setAppMessage('No puedes tener más de 3 entradas para este evento en tu carrito.');
+      setAppMessage('No puedes tener más de 3 entradas para este evento en tu carrito.');
       return;
     }
     
     updateAvailableTickets(selectedTicket.id, purchasedQuantity);
 
-    if (setAppMessage) {
-      setAppMessage(`¡Has agregado ${purchasedQuantity} entradas para ${selectedTicket.eventName} al carrito!`);
-    }
+    setAppMessage(`¡Has agregado ${purchasedQuantity} entradas para ${selectedTicket.eventName} al carrito!`);
     handleCloseModal();
   };
 
@@ -94,27 +88,27 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
 
   return (
     <div className="homepage">
-    <main className="homepage-main">
-      <h1 className="homepage-title">Eventos destacados</h1>
-      <Carousel
-        tickets={allTickets}
-        currentEventIndex={currentEventIndex}
-        onPreviousEvent={goToPreviousEvent}
-        onNextEvent={goToNextEvent}
-        onBuyClick={handleBuyClick}
-      />
-    </main>
+      <main className="homepage-main">
+        <h1 className="homepage-title">Eventos destacados</h1>
+        <Carousel
+          tickets={allTickets}
+          currentEventIndex={currentEventIndex}
+          onPreviousEvent={goToPreviousEvent}
+          onNextEvent={goToNextEvent}
+          onBuyClick={handleBuyClick}
+        />
+      </main>
 
-    <PurchaseModal
-      isOpen={showPurchaseModal}
-      selectedTicket={selectedTicket}
-      quantity={quantity}
-      onQuantityChange={setQuantity}
-      onConfirmPurchase={handleConfirmPurchase}
-      onCloseModal={handleCloseModal}
-      errorMessage={null}
-    />
-  </div>
+      <PurchaseModal
+        isOpen={showPurchaseModal}
+        selectedTicket={selectedTicket}
+        quantity={quantity}
+        onQuantityChange={setQuantity}
+        onConfirmPurchase={handleConfirmPurchase}
+        onCloseModal={handleCloseModal}
+        errorMessage={null}
+      />
+    </div>
   );
 };
 

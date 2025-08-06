@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useMessage } from '../context/MessageContext';
 import './RegisterCompany.css';
 
 interface RegisterProps {
   onRegisterSuccess: () => void;
-  setAppMessage: (message: string | null) => void;
 }
 
-const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage }) => {
-  // Eliminado dniOrganiser
+const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const [company_name, setCompanyName] = useState<string>('');
   const [cuil, setCuil] = useState<string>('');
   const [contactEmail, setContactEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
-  const [address, setAddress] = useState<string>(''); // Corregido 'adress' a 'address'
+  const [address, setAddress] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { clearMessages } = useMessage();
 
   useEffect(() => {
-    setAppMessage(null); // Limpia cualquier mensaje al montar
-  }, [setAppMessage]);
+    clearMessages();
+  }, [clearMessages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +30,6 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
     setSuccessMessage(null);
 
     // Validaciones
-    // Ahora solo se verifican los campos que corresponden a la tabla organiser_company
     if (!company_name || !contactEmail || !password || !confirmPassword || !phone || !address) {
       setError('Por favor, completa todos los campos obligatorios: Nombre de la Empresa, Email, Contraseña, Confirmar Contraseña, Teléfono y Dirección.');
       return;
@@ -55,13 +54,12 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          // Eliminado dniOrganiser del body
           company_name: company_name,
-          cuil: cuil, // CUIL es opcional según tu tabla, pero si lo envías, debe estar aquí
-          contactEmail: contactEmail, // Backend lo mapeará a contact_email
+          cuil: cuil,
+          contactEmail: contactEmail,
           password: password,
           phone: phone,
-          address: address, // Corregido 'adress' a 'address'
+          address: address,
         }),
       });
 
@@ -74,7 +72,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
       setSuccessMessage('¡Registro exitoso! Serás redirigido para iniciar sesión.');
       setTimeout(() => {
         onRegisterSuccess();
-        navigate('/logincompany'); // Redirige al login de empresa
+        navigate('/logincompany');
       }, 2000);
     } catch (err) {
       setError('Error de red o del servidor.');
@@ -84,7 +82,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
   return (
     <div className="register-container">
       <div className="register-card">
-        <h2 className="register-title">Registrar Empresa</h2> {/* Título más específico */}
+        <h2 className="register-title">Registrar Empresa</h2>
         {error && (
           <div className="register-error-message">
             {error}
@@ -115,7 +113,6 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
               className="register-input"
               value={cuil}
               onChange={(e) => setCuil(e.target.value)}
-              // cuil no es required según tu schema de DB
             />
           </div>
           <div className="register-form-group">
@@ -141,13 +138,13 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
             />
           </div>
           <div className="register-form-group">
-            <label htmlFor="register-address" className="register-label">Dirección</label> {/* Corregido 'adress' a 'address' */}
+            <label htmlFor="register-address" className="register-label">Dirección</label>
             <input
               type="text"
               id="register-address"
               className="register-input"
-              value={address} // Corregido 'adress' a 'address'
-              onChange={(e) => setAddress(e.target.value)} // Corregido 'setAdress' a 'setAddress'
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               required
             />
           </div>

@@ -1,6 +1,6 @@
 /* Navbar */
 .navbar {
-    background: #fff;
+    background: linear-gradient(to right, #e0f2fe, #c7d2fe);
     box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
     padding: 1.25rem 2rem;
     position: sticky;
@@ -48,21 +48,21 @@
   display: block; /* Asegura que la imagen se comporte como un bloque */
 }
 
-#cart-count {
+.cart-count {
   position: absolute;
-  top: -6px; /* Ajustado ligeramente hacia arriba */
-  right: -18px; /* Ajustado para moverlo más a la izquierda del icono */
-  width: 22px; /* Ligeramente más grande */
-  height: 22px; /* Ligeramente más grande */
-  background-color: #e74c3c; /* Rojo más vibrante */
+  top: -6px;
+  right: -18px;
+  width: 22px;
+  height: 22px;
+  background-color: #e74c3c;
   color: white;
-  font-size: 13px; /* Tamaño de fuente ajustado */
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  box-shadow: 0 0 5px rgba(0,0,0,0.4); /* Sombra más definida */
-  border: 1.5px solid #fff; /* Borde blanco para mayor definición */
+  box-shadow: 0 0 5px rgba(0,0,0,0.4);
+  border: 1.5px solid #fff;
   z-index: 2;
   pointer-events: none;
 }
@@ -118,11 +118,81 @@
   gap: 0.8rem;
 }
 
+.navbar-user-section {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
 .navbar-username {
   color: #1f2937;
   font-weight: 600;
-  white-space: nowrap; /* Evita que el nombre de usuario se rompa */
+  white-space: nowrap;
 }
+
+.navbar-logout-btn {
+  background: transparent;
+  color: #666;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  box-shadow: none;
+  transition: color 0.2s;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar-logout-btn:hover {
+  color: #333;
+  background: transparent;
+}
+
+.navbar-auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.navbar-login-btn {
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  transition: background 0.2s;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.navbar-login-btn:hover {
+  background: #3730a3;
+}
+
+.navbar-register-btn {
+  background: transparent;
+  color: #4f46e5;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 2px solid #4f46e5;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.navbar-register-btn:hover {
+  background: #4f46e5;
+  color: #fff;
+  border-color: #4f46e5;
+}
+
+
 
 .btn-primary {
   background: #4f46e5;
@@ -244,7 +314,7 @@
 
 
 /* Estilos para el modal de confirmación de cierre de sesión */
-.logout-confirm-overlay {
+.logout-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -257,7 +327,7 @@
   z-index: 100;
 }
 
-.logout-confirm-modal {
+.logout-modal {
   background: #fff;
   border-radius: 1.5rem;
   padding: 2.5rem;
@@ -267,7 +337,7 @@
   text-align: center;
 }
 
-.logout-confirm-message {
+.logout-modal h3 {
   font-size: 1.25rem;
   font-weight: 600;
   color: #1f2937;
@@ -275,33 +345,13 @@
   line-height: 1.4;
 }
 
-.logout-confirm-actions {
+.logout-modal-buttons {
   display: flex;
   justify-content: center;
   gap: 1rem;
 }
 
-/* Estilos para los botones del modal de confirmación */
-.btn-logout-confirm-yes {
-  background: #fff;
-  color: #4338ca;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid #4338ca;
-  box-shadow: 0 2px 8px 0 rgba(67, 56, 202, 0.1);
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
-  outline: none;
-  cursor: pointer;
-}
-
-.btn-logout-confirm-yes:hover {
-  background: #e0e7ff;
-  color: #3730a3;
-  border-color: #3730a3;
-}
-
-.btn-logout-confirm-no {
+.logout-confirm-btn {
   background: #4338ca;
   color: #fff;
   font-weight: 600;
@@ -314,10 +364,31 @@
   cursor: pointer;
 }
 
-.btn-logout-confirm-no:hover {
+.logout-confirm-btn:hover {
   background: #3730a3;
   border-color: #3730a3;
 }
+
+.logout-cancel-btn {
+  background: #fff;
+  color: #4338ca;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #4338ca;
+  box-shadow: 0 2px 8px 0 rgba(67, 56, 202, 0.1);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  outline: none;
+  cursor: pointer;
+}
+
+.logout-cancel-btn:hover {
+  background: #e0e7ff;
+  color: #3730a3;
+  border-color: #3730a3;
+}
+
+
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
@@ -387,8 +458,8 @@
     flex-shrink: 0;
   }
 
-  .btn-primary, .btn-outline-primary, .btn-logout {
-    padding: 0.4rem 0.8rem; /* Reduce el padding de los botones */
+  .navbar-login-btn, .navbar-register-btn, .navbar-logout-btn {
+    padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
   }
 }
@@ -417,7 +488,7 @@
     font-size: 0.9rem;
   }
 
-  .btn-primary, .btn-outline-primary, .btn-logout {
+  .navbar-login-btn, .navbar-register-btn, .navbar-logout-btn {
     padding: 0.3rem 0.6rem;
     font-size: 0.8rem;
   }
@@ -427,7 +498,7 @@
     height: 25px;
   }
 
-  #cart-count {
+  .cart-count {
     top: -3px;
     right: -10px;
     width: 18px;

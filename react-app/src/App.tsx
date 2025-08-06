@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import Login from './components/Login.tsx';
-import Register from './components/Register.tsx';
-import HomePage from './components/HomePage.tsx';
-import AdminHomePage from './components/AdminHomePage.tsx';
-import CarritoPage from './components/CarritoPage.tsx';
-import Pay from './components/Pay.tsx';
-import MyTickets from './components/MyTickets.tsx';
-import Help from './components/Help.tsx';
-import EventDetailPage from './components/EventDetailPage.tsx';
-import Layout from './components/Layout.tsx';
-import About from './components/About.tsx';
-import UsersList from './components/UsersList.tsx';
-import CreateEventPage from './components/CreateEventPage.tsx';
-import LoginCompany from './components/LoginCompany.tsx'; // Importa el nuevo componente
-import RegisterCompany from './components/RegisterCompany.tsx'; // Importa el nuevo componente
+import React, { useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import Layout from './components/Layout';
+import HomePage from './components/HomePage';
+import CarritoPage from './components/CarritoPage';
+import Pay from './components/Pay';
+import AdminHomePage from './components/AdminHomePage';
+import MyTickets from './components/MyTickets';
+import Help from './components/Help';
+import EventDetailPage from './components/EventDetailPage';
+import About from './components/About';
+import Login from './components/Login';
+import Register from './components/Register';
+import UsersList from './components/UsersList';
+import CreateEventPage from './components/CreateEventPage';
+import LoginCompany from './components/LoginCompany';
+import RegisterCompany from './components/RegisterCompany';
+import { useAuth } from './context/AuthContext';
+import { useMessage } from './context/MessageContext';
 import './App.css';
 
-
-// Definición de la interfaz para una entrada
 export interface Ticket {
   id: string;
   eventName: string;
@@ -31,51 +31,36 @@ export interface Ticket {
 }
 
 const App: React.FC = () => {
-  const [appMessage, setAppMessage] = useState<string | null>(null);
-
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userName, setUserName] = useState<string | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const { isLoggedIn, user, login, logout } = useAuth();
+  const { setAppMessage } = useMessage();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoggedIn && userRole === 'admin') {
+    if (isLoggedIn && user?.role === 'admin') {
       navigate('/admin');
     }
-  }, [isLoggedIn, userRole, navigate]);
+  }, [isLoggedIn, user?.role, navigate]);
 
   const handleLoginSuccess = (loggedInUserName: string, role?: string) => {
-    setIsLoggedIn(true);
-    setUserName(loggedInUserName);
-    setUserRole(role || null); // <--- Guarda el rol
+    login(loggedInUserName, role);
     setAppMessage(`¡Inicio de sesión exitoso como ${loggedInUserName}!`);
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUserName(null);
-    setUserRole(null);
-    setAppMessage('Has cerrado sesión.');
-  };
+
 
   const handleRegisterSuccess = () => {
     setAppMessage('¡Registro exitoso! Por favor, inicia sesión.');
   };
 
-  // Nueva función para manejar el login exitoso de la empresa
   const handleCompanyLoginSuccess = (companyName: string) => {
-    setIsLoggedIn(true); // Considera si quieres que el login de empresa también marque isLoggedIn
-    setUserName(companyName); // Puedes usar el nombre de la empresa aquí
-    setUserRole('company'); // Establece un rol específico para la empresa
+    login(companyName, 'company');
     setAppMessage(`¡Inicio de sesión exitoso como organizador ${companyName}!`);
-    navigate('/admin'); // O a una página específica para organizadores
+    navigate('/admin');
   };
 
-  // Nueva función para manejar el registro exitoso de la empresa
   const handleCompanyRegisterSuccess = () => {
     setAppMessage('¡Registro de organizador exitoso! Por favor, inicia sesión.');
   };
-
 
   return (
     <div className="app-root">
@@ -83,13 +68,7 @@ const App: React.FC = () => {
         <Route
           path="/"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
+            <Layout>
               <HomePage />
             </Layout>
           }
@@ -97,13 +76,7 @@ const App: React.FC = () => {
         <Route
           path="/cart"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
+            <Layout>
               <CarritoPage />
             </Layout>
           }
@@ -111,41 +84,23 @@ const App: React.FC = () => {
         <Route
           path="/pay"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
+            <Layout>
               <Pay />
             </Layout>
           }
-          />
+        />
         <Route
           path="/admin"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
+            <Layout>
               <AdminHomePage />
             </Layout>
           }
-          />
+        />
         <Route
           path="/myTickets"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
+            <Layout>
               <MyTickets />
             </Layout>
           }
@@ -153,13 +108,7 @@ const App: React.FC = () => {
         <Route
           path="/help"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
+            <Layout>
               <Help />
             </Layout>
           }
@@ -167,38 +116,24 @@ const App: React.FC = () => {
         <Route
           path="/event/:id"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
-              <EventDetailPage setAppMessage={setAppMessage} />
+            <Layout>
+              <EventDetailPage />
             </Layout>
           }
         />
         <Route
           path="/about"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
+            <Layout>
               <About />
             </Layout>
           }
         />
-
         <Route
           path="/login"
           element={
             <Login
               onLoginSuccess={handleLoginSuccess}
-              setAppMessage={setAppMessage}
             />
           }
         />
@@ -207,20 +142,13 @@ const App: React.FC = () => {
           element={
             <Register
               onRegisterSuccess={handleRegisterSuccess}
-              setAppMessage={setAppMessage}
             />
           }
         />
         <Route
           path="/userslist"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
+            <Layout>
               <UsersList />
             </Layout>
           }
@@ -228,24 +156,16 @@ const App: React.FC = () => {
         <Route
           path="/create-event"
           element={
-            <Layout
-              isLoggedIn={isLoggedIn}
-              userName={userName}
-              onLogout={handleLogout}
-              appMessage={appMessage}
-              setAppMessage={setAppMessage}
-            >
-              <CreateEventPage setAppMessage={setAppMessage} />
+            <Layout>
+              <CreateEventPage />
             </Layout>
           }
         />
-        
         <Route
           path="/logincompany"
           element={
             <LoginCompany
               onLoginSuccess={handleCompanyLoginSuccess}
-              setAppMessage={setAppMessage}
             />
           }
         />
@@ -254,7 +174,6 @@ const App: React.FC = () => {
           element={
             <RegisterCompany
               onRegisterSuccess={handleCompanyRegisterSuccess}
-              setAppMessage={setAppMessage}
             />
           }
         />

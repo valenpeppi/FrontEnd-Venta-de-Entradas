@@ -1,9 +1,10 @@
 import React, { useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './CreateEventPage.css'; // Importa el CSS para este componente
+import { useMessage } from '../context/MessageContext';
+import './CreateEventPage.css';
 
 interface CreateEventPageProps {
-  setAppMessage: (message: string | null) => void;
+  // Removed setAppMessage prop
 }
 
 interface CreateEventState {
@@ -50,7 +51,7 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
   }
 };
 
-const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
+const CreateEventPage: React.FC<CreateEventPageProps> = () => {
   const [state, dispatch] = useReducer(createEventReducer, {
     eventName: '',
     description: '',
@@ -63,6 +64,7 @@ const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
   });
   
   const navigate = useNavigate();
+  const { setAppMessage } = useMessage();
 
   const handleFieldChange = (field: keyof Omit<CreateEventState, 'error'>, value: string) => {
     dispatch({ type: 'SET_FIELD', payload: { field, value } });
@@ -81,22 +83,17 @@ const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
     const eventData = {
       name: state.eventName,
       description: state.description,
-      date: `${state.date}T${state.time}:00`, // Combina fecha y hora para el formato datetime
+      date: `${state.date}T${state.time}:00`,
       eventType: state.eventType,
       place: state.place,
       price: parseFloat(state.price),
-      // Aquí podrías añadir un campo para el organizador si lo tienes en el backend
-      // dniOrganiser: 'DNI_DEL_USUARIO_LOGUEADO',
     };
 
     try {
-      // Reemplaza esta URL con tu endpoint de backend para crear eventos
       const response = await fetch('http://localhost:3000/api/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Si necesitas autenticación (token JWT), añádelo aquí:
-          // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify(eventData),
       });
@@ -109,7 +106,7 @@ const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
       }
 
       setAppMessage('¡Evento creado exitosamente!');
-      navigate('/'); // Redirigir a la página principal o a una página de confirmación
+      navigate('/');
     } catch (err) {
       console.error('Error al crear evento:', err);
       dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor al crear el evento.' } });

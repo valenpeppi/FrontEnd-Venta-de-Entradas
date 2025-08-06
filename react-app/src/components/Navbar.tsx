@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Navbar.css'; // Asegúrate de que este archivo CSS existe
-import logoTicket from '../assets/ticket.png'; // Importa la imagen del logo
-import cartIcon from '../assets/cart.png'; // Importa la imagen del carrito
-import { useCart } from '../context/CartContext'; // Importa el hook useCart
+import './Navbar.css';
+import logoTicket from '../assets/ticket.png';
+import cartIcon from '../assets/cart.png';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
-interface NavbarProps {
-  isLoggedIn: boolean;
-  userName: string | null;
-  onLogout: () => void;
-  userRole: string | null; // Mantenemos userRole aunque ya no se use para la visibilidad del botón de crear evento
-}
-
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout, userRole }) => {
+const Navbar: React.FC = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]); // Puedes tipar esto mejor
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
-  const { cartCount } = useCart(); // Obtiene el cartCount del contexto del carrito
+  const { cartCount } = useCart();
+  const { isLoggedIn, user, logout } = useAuth();
 
   // Función de búsqueda simulada (reemplazar con tu lógica de backend)
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,9 +48,9 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout, userRol
   };
 
   const confirmLogout = () => {
-    onLogout();
+    logout();
     setShowLogoutConfirm(false);
-    navigate('/login'); // Redirigir al login después de cerrar sesión
+    navigate('/login');
   };
 
   const cancelLogout = () => {
@@ -66,7 +61,6 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout, userRol
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-brand">
-          {/* Usa la imagen importada para el logo */}
           <img src={logoTicket} alt="TicketApp Logo" className="image1" />
           TicketApp
         </Link>
@@ -79,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout, userRol
             value={searchTerm}
             onChange={handleSearch}
             onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 100)} // Retraso para permitir el clic
+            onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
           />
           <i className="fas fa-search search-icon"></i>
           {showDropdown && (
@@ -90,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout, userRol
                     <li
                       key={result.id}
                       className="search-dropdown-item"
-                      onMouseDown={() => handleSearchItemClick(result.id)} // Usar onMouseDown para que se active antes que onBlur
+                      onMouseDown={() => handleSearchItemClick(result.id)}
                     >
                       {result.name}
                     </li>
@@ -106,51 +100,49 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, userName, onLogout, userRol
         <ul className="navbar-menu">
           <li><Link to="/help" className="navbar-menu-item">Ayuda</Link></li>
           {isLoggedIn && <li><Link to="/myTickets" className="navbar-menu-item">Mis Entradas</Link></li>}
-          {/* Mueve el carrito AQUI, como un item de menú */}
-          <li>
-            <div className="navbar-cart-container"> {/* Mantén este wrapper para posicionar el contador */}
-              <Link to="/cart" className="navbar-menu-item"> {/* Aplica el estilo de item de menú al enlace */}
-                <img src={cartIcon} alt="Carrito de compras" className="navbar-cart" />
-                <span id="cart-count">{cartCount}</span> {/* Muestra el cartCount dinámico */}
-              </Link>
-            </div>
-          </li>
+          {isLoggedIn && (user?.role === 'admin' || user?.role === 'company') && (
+            <li><Link to="/create-event" className="navbar-menu-item">Crear Evento</Link></li>
+          )}
         </ul>
+
+        <div className="navbar-cart-container">
+          <Link to="/cart" className="navbar-menu-item">
+            <img src={cartIcon} alt="Carrito de compras" className="navbar-cart" />
+            {cartCount > 0 && (
+              <span className="cart-count">{cartCount}</span>
+            )}
+          </Link>
+        </div>
 
         <div className="navbar-auth-section">
           {isLoggedIn ? (
-            <>
-              <span className="navbar-username">Hola, {userName}</span>
-              {/* Botón para crear evento, ahora visible si está logueado (sin importar el rol) */}
-              {isLoggedIn && (
-                <Link to="/create-event" className="btn-primary create-event-btn">
-                  Crear Evento
-                </Link>
-              )}
-              <button onClick={handleLogoutClick} className="btn-logout">
+            <div className="navbar-user-section">
+              <span className="navbar-username">Hola, {user?.name}</span>
+              <button onClick={handleLogoutClick} className="navbar-logout-btn">
                 Cerrar Sesión
               </button>
-            </>
+            </div>
           ) : (
-            <>
-              <Link to="/login" className="btn-primary">
-                Iniciar Sesión
-              </Link>
-              <Link to="/register" className="btn-outline-primary">
-                Registrarse
-              </Link>
-            </>
+            <div className="navbar-auth-buttons">
+              <Link to="/login" className="navbar-login-btn">Iniciar Sesión</Link>
+              <Link to="/register" className="navbar-register-btn">Registrarse</Link>
+            </div>
           )}
         </div>
       </div>
 
+      {/* Modal de confirmación de logout */}
       {showLogoutConfirm && (
-        <div className="logout-confirm-overlay">
-          <div className="logout-confirm-modal">
-            <p className="logout-confirm-message">¿Estás seguro de que quieres cerrar sesión?</p>
-            <div className="logout-confirm-actions">
-              <button onClick={confirmLogout} className="btn-logout-confirm-yes">Sí, cerrar sesión</button>
-              <button onClick={cancelLogout} className="btn-logout-confirm-no">No, cancelar</button>
+        <div className="logout-modal-overlay" onClick={cancelLogout}>
+          <div className="logout-modal" onClick={e => e.stopPropagation()}>
+            <h3>¿Estás seguro de que quieres cerrar sesión?</h3>
+            <div className="logout-modal-buttons">
+              <button onClick={confirmLogout} className="logout-confirm-btn">
+                Sí, cerrar sesión
+              </button>
+              <button onClick={cancelLogout} className="logout-cancel-btn">
+                Cancelar
+              </button>
             </div>
           </div>
         </div>

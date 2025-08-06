@@ -1,12 +1,11 @@
 import type React from "react"
-import { useReducer, useEffect } from "react" // Importa useEffect
+import { useReducer, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
+import { useMessage } from '../context/MessageContext';
 import './Login.css' 
 
-// Definición de las props que el componente Login recibirá
 interface LoginProps {
-  onLoginSuccess: (userName: string) => void; // Función que se llamará al iniciar sesión con éxito
-  setAppMessage: (message: string | null) => void; // Nueva prop para limpiar mensajes de la aplicación
+  onLoginSuccess: (userName: string, role?: string) => void;
 }
 
 interface LoginState {
@@ -48,19 +47,20 @@ const loginReducer = (state: LoginState, action: LoginAction): LoginState => {
   }
 };
 
-const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
+const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [state, dispatch] = useReducer(loginReducer, {
     email: '',
     password: '',
     error: null
   });
   
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { clearMessages } = useMessage();
 
   // Limpia cualquier mensaje de la aplicación cuando el componente Login se monta
   useEffect(() => {
-    setAppMessage(null);
-  }, [setAppMessage]); // Se ejecuta una vez al montar, dependiendo de setAppMessage
+    clearMessages();
+  }, [clearMessages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,7 +80,6 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
       });
 
       if (!response.ok) {
-        // Si la respuesta no es 2xx, lanza error
         const errorData = await response.json();
         dispatch({ type: 'SET_ERROR', payload: { error: errorData.message || 'Usuario o contraseña incorrectos.' } });
         return;
@@ -89,8 +88,9 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
       const data = await response.json();
       console.log('Respuesta del backend:', data);
 
-       // Usar el nombre real si viene
-      
+      // Llamar a onLoginSuccess con el nombre y rol del usuario
+      onLoginSuccess(data.user?.name || data.user?.mail || 'Usuario', data.user?.role);
+
       if (data.user?.role === 'admin') {
         navigate('/admin');
       } else {

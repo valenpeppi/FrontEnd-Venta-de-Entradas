@@ -1,22 +1,23 @@
 import type React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useMessage } from '../context/MessageContext';
 import './LoginCompany.css'; 
 
 interface LoginCompanyProps {
   onLoginSuccess: (companyName: string) => void;
-  setAppMessage: (message: string | null) => void;
 }
 
-const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess, setAppMessage }) => {
+const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
   const [contact_email, setcontact_email] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { clearMessages } = useMessage();
 
   useEffect(() => {
-    setAppMessage(null); 
-  }, [setAppMessage]);
+    clearMessages();
+  }, [clearMessages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +93,7 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess, setAppMessa
         <div className="login-company-register-link">
           <p>¿No tienes cuenta de organizador? <Link to="/registercompany" className="login-company-register-link-btn">Regístrate aquí</Link></p>
         </div>
-        <button onClick={() => navigate(-1)} className="back-button">Volver</button> {/* Botón "Volver" añadido */}
+        <button onClick={() => navigate(-1)} className="back-button">Volver</button>
       </div>
     </div>
   );
