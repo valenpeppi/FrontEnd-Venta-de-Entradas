@@ -55,24 +55,19 @@
   text-align: center;
 }
 
-/* Contenedor de la cuadrícula de campos */
-.register-form-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* grid-cols-1 */
-  gap: 1rem 1.5rem; /* gap-x-6 gap-y-4 */
-  margin-bottom: 1.5rem; /* mb-6 */
+/* Formulario */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-/* Media query para dos columnas en pantallas medianas */
-@media (min-width: 768px) { /* md: */
-  .register-form-grid {
-    grid-template-columns: 1fr 1fr; /* md:grid-cols-2 */
-  }
-}
-
-/* Contenedor de cada campo */
-.register-field-col-span {
-  grid-column: span 1 / span 1; /* col-span-1 */
+/* Grupos de campos del formulario */
+.register-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 /* Etiqueta del campo */
@@ -101,7 +96,7 @@
 }
 
 /* Botón de enviar */
-.register-submit-btn {
+.register-button {
   width: 100%; /* w-full */
   background-color: #4f46e5; /* bg-indigo-600 */
   color: #ffffff; /* text-white */
@@ -115,28 +110,25 @@
   cursor: pointer;
 }
 
-.register-submit-btn:hover {
+.register-button:hover {
   background-color: #4338ca; /* hover:bg-indigo-700 */
 }
 
 /* Enlace de "Ya tienes una cuenta" */
-.register-login-link-container {
+.register-login-link {
   margin-top: 1.5rem; /* mt-6 */
   text-align: center;
-}
-
-.register-login-link-text {
   color: #4b5563; /* text-gray-600 */
 }
 
-.register-login-link {
+.register-link {
   color: #4f46e5; /* text-indigo-600 */
   font-weight: 600; /* font-semibold */
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.register-login-link:hover {
+.register-link:hover {
   text-decoration: underline;
 }
 
@@ -153,8 +145,7 @@
     margin-bottom: 1rem;
   }
 
-  .register-form-grid {
-    grid-template-columns: 1fr; /* Siempre una columna en móviles */
+  .register-form {
     gap: 0.8rem;
     margin-bottom: 1rem;
   }
@@ -168,17 +159,17 @@
     font-size: 0.9rem;
   }
 
-  .register-submit-btn {
+  .register-button {
     padding: 0.6rem 1.2rem; /* Reduce el padding del botón */
     font-size: 1rem;
   }
 
-  .register-login-link-container {
+  .register-login-link {
     margin-top: 1rem;
   }
 
-  .register-login-link-text,
-  .register-login-link {
+  .register-login-link,
+  .register-link {
     font-size: 0.9rem; /* Reduce el tamaño del texto del enlace */
   }
 }
@@ -202,7 +193,7 @@
     font-size: 0.85rem;
   }
 
-  .register-submit-btn {
+  .register-button {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
   }

@@ -9,6 +9,7 @@
   color: #1f2937;
   -webkit-font-smoothing: antialiased;
 }
+
 .login-card {
   background: #fff;
   border-radius: 1rem;
@@ -18,6 +19,7 @@
   max-width: 400px;
   animation: scaleIn 0.3s ease-out forwards;
 }
+
 .login-title {
   font-size: 1.875rem;
   font-weight: bold;
@@ -25,6 +27,7 @@
   margin-bottom: 1.5rem;
   text-align: center;
 }
+
 .login-error-message {
   padding: 0.75rem;
   border-radius: 0.375rem;
@@ -34,9 +37,11 @@
   color: #b91c1c;
   text-align: center;
 }
+
 .login-field {
   margin-bottom: 1rem;
 }
+
 .login-label {
   display: block;
   color: #374151;
@@ -44,6 +49,7 @@
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
+
 .login-input {
   width: 100%;
   padding: 0.75rem;
@@ -53,14 +59,17 @@
   font-size: 1rem;
   transition: border 0.2s, box-shadow 0.2s;
 }
+
 .login-input:focus {
   border-color: #6366f1;
   box-shadow: 0 0 0 2px #6366f1;
 }
+
 .login-field-password {
   margin-bottom: 1.5rem;
   position: relative;
 }
+
 .login-input-password {
   width: 100%;
   padding: 0.75rem;
@@ -71,10 +80,12 @@
   padding-right: 2.5rem;
   transition: border 0.2s, box-shadow 0.2s;
 }
+
 .login-input-password:focus {
   border-color: #6366f1;
   box-shadow: 0 0 0 2px #6366f1;
 }
+
 /* Estilos para el botón de toggle de contraseña */
 .login-password-toggle {
   position: absolute;
@@ -93,6 +104,7 @@
   height: 100%;
   padding: 0;
 }
+
 .login-password-toggle i {
   margin: 0;
   display: flex;
@@ -101,9 +113,11 @@
   width: 1.5em;
   height: 1.5em;
 }
+
 .login-password-toggle:hover {
   color: #111827;
 }
+
 .login-btn-submit {
   width: 100%;
   background: #4f46e5;
@@ -117,6 +131,7 @@
   border: none;
   font-size: 1.125rem;
 }
+
 .login-btn-submit:hover {
   background: #3730a3;
 }
@@ -125,94 +140,70 @@
 .login-register-link {
   margin-top: 1.5rem;
   text-align: center;
-}
-
-.login-register-link p {
   color: #4b5563;
   font-size: 1rem;
 }
 
-.login-register-link-btn {
+.login-link {
   color: #4f46e5;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.login-register-link-btn:hover {
+.login-link:hover {
   color: #3730a3;
   text-decoration: underline;
 }
-/* Estilos para el botón "Volver atrás" */
-.back-button {
-  background-color: #f3f4f6; /* Un gris suave */
-  color: #4b5563; /* Texto gris oscuro */
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid #d1d5db; /* Borde sutil */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-  outline: none;
-  cursor: pointer;
-  width: 100%; /* Ocupa todo el ancho */
-  margin-top: 1rem; /* Espacio superior */
-  text-align: center;
-}
 
-.back-button:hover {
-  background-color: #e5e7eb; /* Un gris ligeramente más oscuro al pasar el ratón */
-  color: #1f2937; /* Texto más oscuro */
-  border-color: #9ca3af;
-}
-
-/* Responsive adjustments for back-button */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .back-button {
-    padding: 0.6rem 1.2rem;
+  .login-card {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  .login-label {
     font-size: 1rem;
   }
-}
 
-@media (max-width: 480px) {
-  .back-button {
-    padding: 0.5rem 1rem;
+  .login-input,
+  .login-input-password {
+    padding: 0.6rem;
     font-size: 0.9rem;
   }
-}
-/* Estilos para el botón "Volver" */
-.back-button {
-  background-color: #f3f4f6; /* Un gris suave */
-  color: #4b5563; /* Texto gris oscuro */
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid #d1d5db; /* Borde sutil */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-  outline: none;
-  cursor: pointer;
-  width: 100%; /* Ocupa todo el ancho */
-  margin-top: 1rem; /* Espacio superior */
-  text-align: center;
-}
 
-.back-button:hover {
-  background-color: #e5e7eb; /* Un gris ligeramente más oscuro al pasar el ratón */
-  color: #1f2937; /* Texto más oscuro */
-  border-color: #9ca3af;
-}
-
-/* Responsive adjustments for back-button */
-@media (max-width: 768px) {
-  .back-button {
+  .login-btn-submit {
     padding: 0.6rem 1.2rem;
     font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .back-button {
+  .login-card {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .login-title {
+    font-size: 1.25rem;
+  }
+
+  .login-label {
+    font-size: 0.9rem;
+  }
+
+  .login-input,
+  .login-input-password {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .login-btn-submit {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
   }

@@ -86,7 +86,13 @@
   margin-bottom: 0; /* Elimina el margen inferior si está en una fila */
 }
 
-.submit-btn {
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.create-event-btn {
   background-color: #4f46e5;
   color: #ffffff;
   font-weight: 700;
@@ -97,12 +103,31 @@
   font-size: 1.125rem;
   border: none;
   cursor: pointer;
-  width: 100%;
-  margin-top: 1rem;
+  flex: 1;
 }
 
-.submit-btn:hover {
+.create-event-btn:hover {
   background-color: #4338ca;
+}
+
+.cancel-btn {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  outline: none;
+  cursor: pointer;
+  flex: 1;
+}
+
+.cancel-btn:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
+  border-color: #9ca3af;
 }
 
 /* Responsive adjustments */
@@ -141,7 +166,12 @@
     gap: 1rem;
   }
 
-  .submit-btn {
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .create-event-btn,
+  .cancel-btn {
     padding: 0.6rem 1.2rem;
     font-size: 1rem;
   }
@@ -177,82 +207,8 @@
     font-size: 0.85rem;
   }
 
-  .submit-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-}
-
-/* Estilos para el botón "Volver atrás" */
-.back-button {
-  background-color: #f3f4f6; /* Un gris suave */
-  color: #4b5563; /* Texto gris oscuro */
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid #d1d5db; /* Borde sutil */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-  outline: none;
-  cursor: pointer;
-  width: 100%; /* Ocupa todo el ancho */
-  margin-top: 1rem; /* Espacio superior */
-  text-align: center;
-}
-
-.back-button:hover {
-  background-color: #e5e7eb; /* Un gris ligeramente más oscuro al pasar el ratón */
-  color: #1f2937; /* Texto más oscuro */
-  border-color: #9ca3af;
-}
-
-/* Responsive adjustments for back-button */
-@media (max-width: 768px) {
-  .back-button {
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .back-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-}
-/* Estilos para el botón "Volver" */
-.back-button {
-  background-color: #f3f4f6; /* Un gris suave */
-  color: #4b5563; /* Texto gris oscuro */
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid #d1d5db; /* Borde sutil */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-  outline: none;
-  cursor: pointer;
-  width: 100%; /* Ocupa todo el ancho */
-  margin-top: 1rem; /* Espacio superior */
-  text-align: center;
-}
-
-.back-button:hover {
-  background-color: #e5e7eb; /* Un gris ligeramente más oscuro al pasar el ratón */
-  color: #1f2937; /* Texto más oscuro */
-  border-color: #9ca3af;
-}
-
-/* Responsive adjustments for back-button */
-@media (max-width: 768px) {
-  .back-button {
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .back-button {
+  .create-event-btn,
+  .cancel-btn {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
   }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Register.css'; // Importa el nuevo archivo CSS
 
@@ -7,42 +7,98 @@ interface RegisterProps {
   setAppMessage: (message: string | null) => void;
 }
 
+interface RegisterState {
+  dni: string;
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  birthDate: string;
+  error: string | null;
+  successMessage: string | null;
+}
+
+type RegisterAction =
+  | { type: 'SET_FIELD'; payload: { field: keyof Omit<RegisterState, 'error' | 'successMessage'>; value: string } }
+  | { type: 'SET_ERROR'; payload: { error: string | null } }
+  | { type: 'SET_SUCCESS'; payload: { message: string | null } }
+  | { type: 'RESET_FORM' };
+
+const registerReducer = (state: RegisterState, action: RegisterAction): RegisterState => {
+  switch (action.type) {
+    case 'SET_FIELD': {
+      return { ...state, [action.payload.field]: action.payload.value };
+    }
+    
+    case 'SET_ERROR': {
+      return { ...state, error: action.payload.error, successMessage: null };
+    }
+    
+    case 'SET_SUCCESS': {
+      return { ...state, successMessage: action.payload.message, error: null };
+    }
+    
+    case 'RESET_FORM': {
+      return {
+        dni: '',
+        fullName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        birthDate: '',
+        error: null,
+        successMessage: null
+      };
+    }
+    
+    default:
+      return state;
+  }
+};
+
 const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage }) => {
-  const [dni, setDni] = useState<string>('');
-  const [fullName, setFullName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [birthDate, setBirthDate] = useState<string>(''); // Para la fecha de nacimiento
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [state, dispatch] = useReducer(registerReducer, {
+    dni: '',
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    birthDate: '',
+    error: null,
+    successMessage: null
+  });
+  
   const navigate = useNavigate();
+
+  const handleFieldChange = (field: keyof Omit<RegisterState, 'error' | 'successMessage'>, value: string) => {
+    dispatch({ type: 'SET_FIELD', payload: { field, value } });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccessMessage(null);
+    dispatch({ type: 'SET_ERROR', payload: { error: null } });
+    dispatch({ type: 'SET_SUCCESS', payload: { message: null } });
 
     // Validaciones
-    if (!dni || !fullName || !email || !password || !confirmPassword || !birthDate) {
-      setError('Por favor, completa todos los campos.');
+    if (!state.dni || !state.fullName || !state.email || !state.password || !state.confirmPassword || !state.birthDate) {
+      dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, completa todos los campos.' } });
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden.');
+    if (state.password !== state.confirmPassword) {
+      dispatch({ type: 'SET_ERROR', payload: { error: 'Las contraseñas no coinciden.' } });
       return;
     }
 
     // Validación básica de formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('Por favor, introduce un email válido.');
+    if (!emailRegex.test(state.email)) {
+      dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, introduce un email válido.' } });
       return;
     }
 
     // Dividir fullName en name y surname
-    const nameParts = fullName.trim().split(' ');
+    const nameParts = state.fullName.trim().split(' ');
     let name = '';
     let surname = '';
 
@@ -50,7 +106,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
       name = nameParts[0];
       surname = nameParts.slice(1).join(' '); // El resto es el apellido
     } else {
-      name = fullName; // Si solo hay una palabra, se asume que es el nombre
+      name = state.fullName; // Si solo hay una palabra, se asume que es el nombre
       surname = ''; // El apellido queda vacío
     }
 
@@ -61,135 +117,125 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          dni,
+          dni: state.dni,
           name, // Enviamos el nombre separado
           surname, // Enviamos el apellido separado
-          mail: email, // El backend espera 'mail'
-          password,
-          birthDate,
+          mail: state.email, // El backend espera 'mail'
+          password: state.password,
+          birthDate: state.birthDate,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.message || 'Error al registrar el usuario.');
+        dispatch({ type: 'SET_ERROR', payload: { error: errorData.message || 'Error al registrar el usuario.' } });
         return;
       }
 
-      setSuccessMessage('¡Registro exitoso! Serás redirigido para iniciar sesión.');
+      dispatch({ type: 'SET_SUCCESS', payload: { message: '¡Registro exitoso! Serás redirigido para iniciar sesión.' } });
       setTimeout(() => {
         onRegisterSuccess();
         navigate('/login');
       }, 2000);
     } catch (err) {
-      setError('Error de red o del servidor.');
+      dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor.' } });
     }
   };
 
   return (
-    <div className="register-container"> {/* Clase CSS para el contenedor principal */}
-      <div className="register-card"> {/* Clase CSS para la tarjeta del formulario */}
-        <h2 className="register-title">Registrarse</h2> {/* Clase CSS para el título */}
-        {error && (
-          <div className="register-error-message"> {/* Clase CSS para mensajes de error */}
-            {error}
+    <div className="register-container">
+      <div className="register-card"> 
+        <h2 className="register-title">Registrarse</h2>
+        {state.error && (
+          <div className="register-error-message">
+            {state.error}
           </div>
         )}
-        {successMessage && (
-          <div className="register-success-message"> {/* Clase CSS para mensajes de éxito */}
-            {successMessage}
+        {state.successMessage && (
+          <div className="register-success-message"> 
+            {state.successMessage}
           </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="register-form-grid"> {/* Clase CSS para la cuadrícula de campos */}
-            {/* DNI */}
-            <div className="register-field-col-span"> {/* Clase CSS para el contenedor de cada campo */}
-              <label htmlFor="register-dni" className="register-label">DNI:</label> {/* Clase CSS para la etiqueta */}
-              <input
-                type="text"
-                id="register-dni"
-                className="register-input" /* Clase CSS para el input */
-                value={dni}
-                onChange={(e) => setDni(e.target.value)}
-                required
-              />
-            </div>
-            {/* Nombre y Apellido */}
-            <div className="register-field-col-span">
-              <label htmlFor="register-fullName" className="register-label">Nombre y Apellido:</label>
-              <input
-                type="text"
-                id="register-fullName"
-                className="register-input"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                required
-              />
-            </div>
-            {/* Email */}
-            <div className="register-field-col-span">
-              <label htmlFor="register-email" className="register-label">Email:</label>
-              <input
-                type="email"
-                id="register-email"
-                className="register-input"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            {/* Fecha de Nacimiento */}
-            <div className="register-field-col-span">
-              <label htmlFor="register-birthDate" className="register-label">Fecha de Nacimiento:</label>
-              <input
-                type="date"
-                id="register-birthDate"
-                className="register-input"
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
-                required
-              />
-            </div>
-            {/* Contraseña */}
-            <div className="register-field-col-span">
-              <label htmlFor="register-password" className="register-label">Contraseña:</label>
-              <input
-                type="password"
-                id="register-password"
-                className="register-input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {/* Confirmar Contraseña */}
-            <div className="register-field-col-span">
-              <label htmlFor="confirm-password" className="register-label">Confirmar Contraseña:</label>
-              <input
-                type="password"
-                id="confirm-password"
-                className="register-input"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="register-form"> 
+          <div className="register-form-group">
+            <label htmlFor="dni" className="register-label">DNI:</label>
+            <input
+              type="text"
+              id="dni"
+              value={state.dni}
+              onChange={(e) => handleFieldChange('dni', e.target.value)}
+              className="register-input"
+              placeholder="Ingresa tu DNI"
+            />
           </div>
-          <button
-            type="submit"
-            className="register-submit-btn" /* Clase CSS para el botón de enviar */
-          >
+
+          <div className="register-form-group">
+            <label htmlFor="fullName" className="register-label">Nombre completo:</label>
+            <input
+              type="text"
+              id="fullName"
+              value={state.fullName}
+              onChange={(e) => handleFieldChange('fullName', e.target.value)}
+              className="register-input"
+              placeholder="Ingresa tu nombre completo"
+            />
+          </div>
+
+          <div className="register-form-group">
+            <label htmlFor="email" className="register-label">Email:</label>
+            <input
+              type="email"
+              id="email"
+              value={state.email}
+              onChange={(e) => handleFieldChange('email', e.target.value)}
+              className="register-input"
+              placeholder="Ingresa tu email"
+            />
+          </div>
+
+          <div className="register-form-group">
+            <label htmlFor="birthDate" className="register-label">Fecha de nacimiento:</label>
+            <input
+              type="date"
+              id="birthDate"
+              value={state.birthDate}
+              onChange={(e) => handleFieldChange('birthDate', e.target.value)}
+              className="register-input"
+            />
+          </div>
+
+          <div className="register-form-group">
+            <label htmlFor="password" className="register-label">Contraseña:</label>
+            <input
+              type="password"
+              id="password"
+              value={state.password}
+              onChange={(e) => handleFieldChange('password', e.target.value)}
+              className="register-input"
+              placeholder="Ingresa tu contraseña"
+            />
+          </div>
+
+          <div className="register-form-group">
+            <label htmlFor="confirmPassword" className="register-label">Confirmar contraseña:</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={state.confirmPassword}
+              onChange={(e) => handleFieldChange('confirmPassword', e.target.value)}
+              className="register-input"
+              placeholder="Confirma tu contraseña"
+            />
+          </div>
+
+          <button type="submit" className="register-button"> {/* Clase CSS para el botón */}
             Registrarse
           </button>
-          <div className="register-login-link-container"> {/* Clase CSS para el contenedor del enlace */}
-            <p className="register-login-link-text"> {/* Clase CSS para el texto */}
-              ¿Ya tienes una cuenta?{' '}
-              <Link to="/login" className="register-login-link"> {/* Clase CSS para el enlace */}
-                Inicia sesión aquí
-              </Link>
-            </p>
-          </div>
         </form>
+
+        <div className="register-login-link"> {/* Clase CSS para el enlace de login */}
+          ¿Ya tienes una cuenta? <Link to="/login" className="register-link">Inicia sesión aquí</Link>
+        </div>
       </div>
     </div>
   );

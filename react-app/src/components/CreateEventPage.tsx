@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateEventPage.css'; // Importa el CSS para este componente
 
@@ -6,34 +6,85 @@ interface CreateEventPageProps {
   setAppMessage: (message: string | null) => void;
 }
 
+interface CreateEventState {
+  eventName: string;
+  description: string;
+  date: string;
+  time: string;
+  eventType: string;
+  place: string;
+  price: string;
+  error: string | null;
+}
+
+type CreateEventAction =
+  | { type: 'SET_FIELD'; payload: { field: keyof Omit<CreateEventState, 'error'>; value: string } }
+  | { type: 'SET_ERROR'; payload: { error: string | null } }
+  | { type: 'RESET_FORM' };
+
+const createEventReducer = (state: CreateEventState, action: CreateEventAction): CreateEventState => {
+  switch (action.type) {
+    case 'SET_FIELD': {
+      return { ...state, [action.payload.field]: action.payload.value };
+    }
+    
+    case 'SET_ERROR': {
+      return { ...state, error: action.payload.error };
+    }
+    
+    case 'RESET_FORM': {
+      return {
+        eventName: '',
+        description: '',
+        date: '',
+        time: '',
+        eventType: '',
+        place: '',
+        price: '',
+        error: null
+      };
+    }
+    
+    default:
+      return state;
+  }
+};
+
 const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
-  const [eventName, setEventName] = useState('');
-  const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [eventType, setEventType] = useState('');
-  const [place, setPlace] = useState('');
-  const [price, setPrice] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [state, dispatch] = useReducer(createEventReducer, {
+    eventName: '',
+    description: '',
+    date: '',
+    time: '',
+    eventType: '',
+    place: '',
+    price: '',
+    error: null
+  });
+  
   const navigate = useNavigate();
+
+  const handleFieldChange = (field: keyof Omit<CreateEventState, 'error'>, value: string) => {
+    dispatch({ type: 'SET_FIELD', payload: { field, value } });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    dispatch({ type: 'SET_ERROR', payload: { error: null } });
 
     // Validaciones básicas
-    if (!eventName || !description || !date || !time || !eventType || !place || !price) {
-      setError('Por favor, completa todos los campos.');
+    if (!state.eventName || !state.description || !state.date || !state.time || !state.eventType || !state.place || !state.price) {
+      dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, completa todos los campos.' } });
       return;
     }
 
     const eventData = {
-      name: eventName,
-      description,
-      date: `${date}T${time}:00`, // Combina fecha y hora para el formato datetime
-      eventType,
-      place,
-      price: parseFloat(price),
+      name: state.eventName,
+      description: state.description,
+      date: `${state.date}T${state.time}:00`, // Combina fecha y hora para el formato datetime
+      eventType: state.eventType,
+      place: state.place,
+      price: parseFloat(state.price),
       // Aquí podrías añadir un campo para el organizador si lo tienes en el backend
       // dniOrganiser: 'DNI_DEL_USUARIO_LOGUEADO',
     };
@@ -52,7 +103,7 @@ const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.message || 'Error al crear el evento.');
+        dispatch({ type: 'SET_ERROR', payload: { error: errorData.message || 'Error al crear el evento.' } });
         setAppMessage(`Error: ${errorData.message || 'No se pudo crear el evento.'}`);
         return;
       }
@@ -61,7 +112,7 @@ const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
       navigate('/'); // Redirigir a la página principal o a una página de confirmación
     } catch (err) {
       console.error('Error al crear evento:', err);
-      setError('Error de red o del servidor al crear el evento.');
+      dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor al crear el evento.' } });
       setAppMessage('Error de red o del servidor al crear el evento.');
     }
   };
@@ -70,15 +121,15 @@ const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
     <div className="create-event-container">
       <div className="create-event-card">
         <h1 className="create-event-title">Crear Nuevo Evento</h1>
-        {error && <div className="create-event-error">{error}</div>}
+        {state.error && <div className="create-event-error">{state.error}</div>}
         <form onSubmit={handleSubmit} className="create-event-form">
           <div className="form-group">
             <label htmlFor="eventName">Nombre del Evento</label>
             <input
               type="text"
               id="eventName"
-              value={eventName}
-              onChange={(e) => setEventName(e.target.value)}
+              value={state.eventName}
+              onChange={(e) => handleFieldChange('eventName', e.target.value)}
               required
             />
           </div>
@@ -87,8 +138,8 @@ const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
             <label htmlFor="description">Descripción</label>
             <textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={state.description}
+              onChange={(e) => handleFieldChange('description', e.target.value)}
               rows={3}
               required
             ></textarea>
@@ -100,72 +151,81 @@ const CreateEventPage: React.FC<CreateEventPageProps> = ({ setAppMessage }) => {
               <input
                 type="date"
                 id="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+                value={state.date}
+                onChange={(e) => handleFieldChange('date', e.target.value)}
                 required
               />
             </div>
+
             <div className="form-group">
               <label htmlFor="time">Hora</label>
               <input
                 type="time"
                 id="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
+                value={state.time}
+                onChange={(e) => handleFieldChange('time', e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="eventType">Tipo de Evento</label>
+              <select
+                id="eventType"
+                value={state.eventType}
+                onChange={(e) => handleFieldChange('eventType', e.target.value)}
+                required
+              >
+                <option value="">Selecciona un tipo</option>
+                <option value="concierto">Concierto</option>
+                <option value="teatro">Teatro</option>
+                <option value="deportivo">Deportivo</option>
+                <option value="conferencia">Conferencia</option>
+                <option value="exposicion">Exposición</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="place">Lugar</label>
+              <input
+                type="text"
+                id="place"
+                value={state.place}
+                onChange={(e) => handleFieldChange('place', e.target.value)}
                 required
               />
             </div>
           </div>
 
           <div className="form-group">
-            <label htmlFor="eventType">Tipo de Evento</label>
-            <select
-              id="eventType"
-              value={eventType}
-              onChange={(e) => setEventType(e.target.value)}
-              required
-            >
-              <option value="">Selecciona un tipo</option>
-              <option value="Concierto">Concierto</option>
-              <option value="Stand Up">Stand Up</option>
-              <option value="Jornada de Lectura">Jornada de Lectura</option>
-              <option value="Fiesta">Fiesta</option>
-              <option value="Evento Deportivo">Evento Deportivo</option>
-              <option value="Arte">Arte</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="place">Lugar</label>
-            <select
-              id="place"
-              value={place}
-              onChange={(e) => setPlace(e.target.value)}
-              required
-            >
-              <option value="">Selecciona un lugar</option>
-              <option value="Anfiteatro">Anfiteatro</option>
-              <option value="Estadio Gigante de Arroyito">Estadio Gigante de Arroyito</option>
-              <option value="Bioceres Arena">Bioceres Arena</option>
-              <option value="El Ateneo">El Ateneo</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="price">Precio</label>
+            <label htmlFor="price">Precio (ARS)</label>
             <input
               type="number"
               id="price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              value={state.price}
+              onChange={(e) => handleFieldChange('price', e.target.value)}
+              min="0"
               step="0.01"
               required
             />
           </div>
 
-          <button type="submit" className="submit-btn">Crear Evento</button>
+          <div className="form-actions">
+            <button type="submit" className="create-event-btn">
+              Crear Evento
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              className="cancel-btn"
+            >
+              Cancelar
+            </button>
+          </div>
         </form>
-        <button onClick={() => navigate(-1)} className="back-button">Volver</button>
       </div>
     </div>
   );

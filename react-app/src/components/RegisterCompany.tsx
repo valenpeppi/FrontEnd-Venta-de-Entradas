@@ -95,99 +95,95 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, setAppMessage })
             {successMessage}
           </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="register-form-grid">
-            <div className="register-field-col-span">
-              <label htmlFor="register-companyName" className="register-label">Nombre de la Empresa</label>
-              <input
-                type="text"
-                id="register-companyName"
-                className="register-input"
-                value={company_name}
-                onChange={(e) => setCompanyName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="register-field-col-span">
-              <label htmlFor="register-CUIL" className="register-label">CUIL</label>
-              <input
-                type="text"
-                id="register-CUIL"
-                className="register-input"
-                value={cuil}
-                onChange={(e) => setCuil(e.target.value)}
-                // cuil no es required según tu schema de DB
-              />
-            </div>
-            <div className="register-field-col-span">
-              <label htmlFor="register-email" className="register-label">Email de Contacto</label>
-              <input
-                type="email"
-                id="register-email"
-                className="register-input"
-                value={contactEmail}
-                onChange={(e) => setContactEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="register-field-col-span">
-              <label htmlFor="register-phone" className="register-label">Teléfono</label>
-              <input
-                type="text"
-                id="register-phone"
-                className="register-input"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-              />
-            </div>
-            <div className="register-field-col-span">
-              <label htmlFor="register-address" className="register-label">Dirección</label> {/* Corregido 'adress' a 'address' */}
-              <input
-                type="text"
-                id="register-address"
-                className="register-input"
-                value={address} // Corregido 'adress' a 'address'
-                onChange={(e) => setAddress(e.target.value)} // Corregido 'setAdress' a 'setAddress'
-                required
-              />
-            </div>
-            <div className="register-field-col-span">
-              <label htmlFor="register-password" className="register-label">Contraseña</label>
-              <input
-                type="password"
-                id="register-password"
-                className="register-input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="register-field-col-span">
-              <label htmlFor="confirm-password" className="register-label">Confirmar Contraseña</label>
-              <input
-                type="password"
-                id="confirm-password"
-                className="register-input"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="register-form">
+          <div className="register-form-group">
+            <label htmlFor="register-companyName" className="register-label">Nombre de la Empresa</label>
+            <input
+              type="text"
+              id="register-companyName"
+              className="register-input"
+              value={company_name}
+              onChange={(e) => setCompanyName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="register-form-group">
+            <label htmlFor="register-CUIL" className="register-label">CUIL</label>
+            <input
+              type="text"
+              id="register-CUIL"
+              className="register-input"
+              value={cuil}
+              onChange={(e) => setCuil(e.target.value)}
+              // cuil no es required según tu schema de DB
+            />
+          </div>
+          <div className="register-form-group">
+            <label htmlFor="register-email" className="register-label">Email de Contacto</label>
+            <input
+              type="email"
+              id="register-email"
+              className="register-input"
+              value={contactEmail}
+              onChange={(e) => setContactEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="register-form-group">
+            <label htmlFor="register-phone" className="register-label">Teléfono</label>
+            <input
+              type="text"
+              id="register-phone"
+              className="register-input"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+          </div>
+          <div className="register-form-group">
+            <label htmlFor="register-address" className="register-label">Dirección</label> {/* Corregido 'adress' a 'address' */}
+            <input
+              type="text"
+              id="register-address"
+              className="register-input"
+              value={address} // Corregido 'adress' a 'address'
+              onChange={(e) => setAddress(e.target.value)} // Corregido 'setAdress' a 'setAddress'
+              required
+            />
+          </div>
+          <div className="register-form-group">
+            <label htmlFor="register-password" className="register-label">Contraseña</label>
+            <input
+              type="password"
+              id="register-password"
+              className="register-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="register-form-group">
+            <label htmlFor="confirm-password" className="register-label">Confirmar Contraseña</label>
+            <input
+              type="password"
+              id="confirm-password"
+              className="register-input"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
           </div>
           <button
             type="submit"
-            className="register-submit-btn"
+            className="register-button"
           >
             Registrar Empresa
           </button>
-          <div className="register-login-link-container">
-            <p className="register-login-link-text">
-              ¿Ya tienes una cuenta de organizador?{' '}
-              <Link to="/logincompany" className="register-login-link">
-                Inicia sesión aquí
-              </Link>
-            </p>
+          <div className="register-login-link">
+            ¿Ya tienes una cuenta de organizador?{' '}
+            <Link to="/logincompany" className="register-link">
+              Inicia sesión aquí
+            </Link>
           </div>
         </form>
         <button onClick={() => navigate(-1)} className="back-button">Volver</button>

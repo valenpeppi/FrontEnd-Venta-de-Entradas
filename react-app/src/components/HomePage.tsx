@@ -22,7 +22,7 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
-  const { allTickets, setAllTickets } = useEvents();
+  const { allTickets, updateAvailableTickets } = useEvents();
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
@@ -76,13 +76,7 @@ const HomePage: React.FC<HomePageProps> = ({ setAppMessage }) => {
       return;
     }
     
-    setAllTickets((prevTickets: Ticket[]) =>
-      prevTickets.map((ticket: Ticket) =>
-        ticket.id === selectedTicket.id
-          ? { ...ticket, availableTickets: ticket.availableTickets - purchasedQuantity }
-          : ticket
-      )
-    );
+    updateAvailableTickets(selectedTicket.id, purchasedQuantity);
 
     if (setAppMessage) {
       setAppMessage(`¡Has agregado ${purchasedQuantity} entradas para ${selectedTicket.eventName} al carrito!`);

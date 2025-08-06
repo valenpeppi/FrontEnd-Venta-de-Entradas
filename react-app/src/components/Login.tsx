@@ -1,5 +1,5 @@
 import type React from "react"
-import { useState, useEffect } from "react" // Importa useEffect
+import { useReducer, useEffect } from "react" // Importa useEffect
 import { useNavigate, Link } from "react-router-dom"
 import './Login.css' 
 
@@ -9,10 +9,52 @@ interface LoginProps {
   setAppMessage: (message: string | null) => void; // Nueva prop para limpiar mensajes de la aplicación
 }
 
+interface LoginState {
+  email: string;
+  password: string;
+  error: string | null;
+}
+
+type LoginAction =
+  | { type: 'SET_EMAIL'; payload: { email: string } }
+  | { type: 'SET_PASSWORD'; payload: { password: string } }
+  | { type: 'SET_ERROR'; payload: { error: string | null } }
+  | { type: 'RESET_FORM' };
+
+const loginReducer = (state: LoginState, action: LoginAction): LoginState => {
+  switch (action.type) {
+    case 'SET_EMAIL': {
+      return { ...state, email: action.payload.email };
+    }
+    
+    case 'SET_PASSWORD': {
+      return { ...state, password: action.payload.password };
+    }
+    
+    case 'SET_ERROR': {
+      return { ...state, error: action.payload.error };
+    }
+    
+    case 'RESET_FORM': {
+      return {
+        email: '',
+        password: '',
+        error: null
+      };
+    }
+    
+    default:
+      return state;
+  }
+};
+
 const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [error, setError] = useState<string | null>(null)
+  const [state, dispatch] = useReducer(loginReducer, {
+    email: '',
+    password: '',
+    error: null
+  });
+  
   const navigate = useNavigate()
 
   // Limpia cualquier mensaje de la aplicación cuando el componente Login se monta
@@ -22,25 +64,25 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    dispatch({ type: 'SET_ERROR', payload: { error: null } });
 
     try {
-      console.log('Enviando login:', email, password);
+      console.log('Enviando login:', state.email, state.password);
       const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          mail: email, 
-          password,
+          mail: state.email, 
+          password: state.password,
         }),
       });
 
       if (!response.ok) {
         // Si la respuesta no es 2xx, lanza error
         const errorData = await response.json();
-        setError(errorData.message || 'Usuario o contraseña incorrectos.');
+        dispatch({ type: 'SET_ERROR', payload: { error: errorData.message || 'Usuario o contraseña incorrectos.' } });
         return;
       }
 
@@ -57,7 +99,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
 
     } catch (err) {
       console.error('Error en login:', err);
-      setError('Error de red o del servidor.');
+      dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor.' } });
     }
   };
 
@@ -65,7 +107,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
     <div className="login-root">
       <div className="login-card">
         <h2 className="login-title">Iniciar Sesión</h2>
-        {error && <div className="login-error-message">{error}</div>}
+        {state.error && <div className="login-error-message">{state.error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="login-field">
             <label htmlFor="email" className="login-label">
@@ -75,8 +117,8 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
               type="email"
               id="email"
               className="login-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={state.email}
+              onChange={(e) => dispatch({ type: 'SET_EMAIL', payload: { email: e.target.value } })}
               required
             />
           </div>
@@ -88,8 +130,8 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
               type="password"
               id="password"
               className="login-input-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={state.password}
+              onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: { password: e.target.value } })}
               required
             />
           </div>
@@ -101,12 +143,11 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, setAppMessage }) => {
           </button>
         </form>
         <div className="login-register-link">
-          <p>¿No tienes cuenta? <Link to="/register" className="login-register-link-btn">Regístrate aquí</Link></p>
+          ¿No tienes una cuenta? <Link to="/register" className="login-link">Regístrate aquí</Link>
         </div>
-        <button onClick={() => navigate(-1)} className="back-button">Volver</button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
