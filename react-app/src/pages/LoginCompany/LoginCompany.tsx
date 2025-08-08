@@ -25,14 +25,14 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/companylogin', {
+      const response = await axios.post('http://localhost:3000/api/auth/login-company', {
         contact_email,
         password,
       });
 
       const data = response.data;
-      onLoginSuccess(data.companyName || contact_email);
-      navigate('/admin');
+      onLoginSuccess(data.company_name || data.contact_email);
+      navigate('/create-event');
     } catch (err) {
       console.error('Error en login de organizador:', err);
       if (axios.isAxiosError(err) && err.response) {

@@ -77,10 +77,10 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       const data = response.data;
       console.log('Respuesta del backend:', data);
 
-      // Llamar a onLoginSuccess con el nombre y rol del usuario
+      const role= data.user?.role;
       onLoginSuccess(data.user?.name || data.user?.mail || 'Usuario', data.user?.role);
 
-      if (data.user?.role === 'admin') {
+      if (role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/');
