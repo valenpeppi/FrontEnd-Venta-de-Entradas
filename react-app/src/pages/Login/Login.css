@@ -156,6 +156,28 @@
   text-decoration: underline;
 }
 
+/* Botón gris para volver */
+.back-to-login-btn {
+  width: 100%;
+  background: #e5e7eb;
+  color: #374151;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+  border: none;
+  font-size: 1.125rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.back-to-login-btn:hover {
+  background: #d1d5db;
+  color: #111827;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .login-card {
@@ -207,4 +229,28 @@
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
   }
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 1rem;
+  text-align: center;
+  color: #4b5563;
+  font-size: 1rem;
+}
+
+.login-forgot-password-link {
+  display: block;
+  margin-top: 0.5rem;
+  text-align: center;
+  color: #4f46e5;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.login-forgot-password-link:hover {
+  color: #3730a3;
+  text-decoration: underline;
 }

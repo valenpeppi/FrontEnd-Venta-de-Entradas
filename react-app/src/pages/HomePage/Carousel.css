@@ -1,146 +1,154 @@
-/* Carrusel de eventos */
+/* === Carousel.css (completo) === */
+
+/* Reset útil para cajas */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .event-carousel {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: 1800px; 
-  margin: 0 auto;
-  padding: 2rem 0;
+  margin: 0, auto;
+  gap: 2rem;
+  width: 2200px; 
+  max-width: 100%; 
+  box-sizing: border-box;
+  padding: 0;
 }
 
+/* Botones de navegación - posicionados respecto al contenedor .event-carousel.
+   Evitamos unidades vw para que queden relativos al contenedor y no al viewport. */
 .carousel-navigation-btn {
   position: absolute;
-  top: 50%;
+  top: 50%; 
   transform: translateY(-50%);
-  padding: 0.75rem;
-  background: #e5e7eb;
-  color: #374151;
-  border-radius: 9999px;
-  box-shadow: 0 4px 16px 0 rgba(31, 41, 55, 0.12);
+  background: rgba(255, 255, 255, 0.95);
   border: none;
+  border-radius: 9999px;
+  padding: 0.8rem;
   cursor: pointer;
-  z-index: 10;
-  transition: background 0.2s;
-  outline: none;
+  z-index: 20;
+  box-shadow: 0 6px 20px rgba(31, 41, 55, 0.12);
+  transition: transform 0.14s ease, background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.carousel-navigation-btn:hover { transform: translateY(-50%) scale(1.03); }
+.carousel-navigation-btn:active { transform: translateY(-50%) scale(0.98); }
 
-.carousel-navigation-btn--prev {
-  left: 1rem;
-}
+/* distancia desde los bordes del contenedor */
+.carousel-navigation-btn--prev { left: 2px; }
+.carousel-navigation-btn--next { right: 2px; }
 
-.carousel-navigation-btn--next {
-  right: 1rem;
-}
+.carousel-navigation-icon { font-size: 1.6rem; pointer-events: none; }
 
-.carousel-navigation-btn:hover {
-  background: #d1d5db;
-}
-
-.carousel-navigation-icon {
-  font-size: 2rem;
-}
-
-/* Enlace de la tarjeta de evento */
+/* El enlace que envuelve la tarjeta se comporta como flex-item centrado */
 .event-card-link {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: stretch;
   text-decoration: none;
   color: inherit;
-  display: block;
-  width: 100%;
 }
 
-/* Tarjeta de evento */
+/* TARJETA: ocupa proporcionalmente mucho más ancho en escritorio pero se adapta */
 .event-card {
+  width: 1000px;         /* Aumenta el ancho de la tarjeta */
+  max-width: 900vw;      /* Se adapta en pantallas pequeñas */
   background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 24px 0 rgba(31, 41, 55, 0.12);
-  transition: box-shadow 0.3s;
-  padding: 1.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(31, 41, 55, 0.18);
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-  max-width: 2100px; 
-  max-height: 1900px;
-  margin: 0 auto;
+  align-items: center;
+  transition: box-shadow 0.2s;
 }
 
-.event-card:hover {
-  box-shadow: 0 8px 32px 0 rgba(31, 41, 55, 0.18);
-}
 
 .event-card-image {
   width: 100%;
-  height: 250px; /* Ligeramente más alta para mejor visualización */
+  height: 1050px;        
   object-fit: cover;
   border-radius: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  display: block;
+  flex-shrink: 0;
 }
 
+/* Contenido textual */
 .event-card-content {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  color: #111827;
 }
 
 .event-card-title {
-  font-size: 1.5rem;
+  font-size: 1.9rem;
   font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
+  color: #111827;
+  margin: 0 0 0.35rem 0;
 }
 
 .event-card-details {
   color: #6b7280;
-  margin-bottom: 0.25rem;
+  margin: 0.15rem 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  font-size: 1rem;
 }
 
 .event-card-icon {
   color: #4338ca;
   width: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Footer: precio y botón */
 .event-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #eef2ff;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .event-card-price {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 800;
   color: #059669;
 }
 
 .btn-purchase {
-  background: #4338ca;
+  background: #4f46e5;
   color: #fff;
   font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
-  transition: background 0.2s;
-  outline: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.6rem;
+  box-shadow: 0 8px 22px rgba(79,70,229,0.12);
+  transition: background 0.18s ease, transform 0.12s ease;
   border: none;
   cursor: pointer;
+  font-size: 1rem;
 }
+.btn-purchase:hover { background: #3730a3; transform: translateY(-1px); }
+.btn-purchase:disabled,
+.btn-purchase--disabled { background: #9ca3af; cursor: not-allowed; box-shadow: none; }
 
-.btn-purchase:hover {
-  background: #3730a3;
-}
-
-.btn-purchase--disabled,
-.btn-purchase:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-}
-
+/* Mensaje cuando no hay eventos */
 .event-carousel-empty {
   text-align: center;
   color: #6b7280;
@@ -148,85 +156,54 @@
   padding: 2rem;
 }
 
-/* Responsive adjustments */
+/* --- Layout hero (imagen a la izquierda, contenido a la derecha) en pantallas anchas --- */
+@media (min-width: 1200px) {
+  .event-card {
+    display: grid;
+    grid-template-columns: 55% 45%; /* imagen | contenido */
+    gap: 2rem;
+    align-items: start;
+    padding: 2.25rem;
+    width: clamp(900px, 80vw, 1400px); /* un poco más ancho en pantallas enormes */
+  }
+
+  .event-card-image {
+    width: 100%;
+    height: auto;      /* deja que la imagen ajuste su alto máximo */
+    max-height: 650px; /* evita que crezca demasiado */
+    border-radius: 0.75rem;
+    margin: 0;
+    object-fit: cover;
+  }
+
+  /* Ajustes de texto para distribuír mejor en grid */
+  .event-card-content { padding: 0.2rem 0; }
+  .event-card-footer { justify-content: flex-start; gap: 2rem; }
+}
+
+/* --- Ajustes para tablets / pantallas medianas --- */
+@media (max-width: 1199px) and (min-width: 769px) {
+  .event-card {
+    width: clamp(700px, 80vw, 1000px);
+    padding: 1.75rem;
+  }
+  .event-card-image { height: 380px; }
+  .carousel-navigation-btn--prev { left: 1rem; }
+  .carousel-navigation-btn--next { right: 1rem; }
+}
+
+/* --- Ajustes móviles --- */
 @media (max-width: 768px) {
-  .event-carousel {
-    padding: 1rem 0;
-    max-width: 100%; /* Ocupa todo el ancho disponible en pantallas medianas */
-  }
-
-  .carousel-navigation-btn {
-    padding: 0.5rem;
-    font-size: 1.5rem; /* Ajusta el tamaño del icono */
-  }
-
-  .carousel-navigation-btn--prev {
-    left: 0.5rem;
-  }
-
-  .carousel-navigation-btn--next {
-    right: 0.5rem;
-  }
-
-  .event-card {
-    padding: 1rem;
-    margin: 0 1rem; /* Añade un poco de margen para que no se pegue a los bordes */
-    max-width: 90%; /* Ajusta el ancho máximo para la tarjeta en móvil */
-  }
-
-  .event-card-image {
-    height: 180px; /* Reduce la altura de la imagen */
-  }
-
-  .event-card-title {
-    font-size: 1.3rem; /* Reduce el tamaño del título */
-  }
-
-  .event-card-details {
-    font-size: 0.9rem; /* Reduce el tamaño de los detalles */
-  }
-
-  .event-card-price {
-    font-size: 1.1rem; /* Reduce el tamaño del precio */
-  }
-
-  .btn-purchase {
-    padding: 0.4rem 0.8rem; /* Reduce el padding del botón */
-    font-size: 0.9rem;
-  }
+  .event-carousel { padding: 2rem 1rem; }
+  .event-card { width: 95%; padding: 1.25rem; border-radius: 0.75rem; }
+  .event-card-image { height: 260px; border-radius: 0.5rem; margin-bottom: 1rem; }
+  .event-card-title { font-size: 1.4rem; }
+  .event-card-details { font-size: 0.95rem; gap: 0.45rem; }
+  .event-card-footer { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 0.75rem; }
+  .carousel-navigation-btn { display: none; } /* opcional: ocultar arrows en móvil */
 }
 
-@media (max-width: 480px) {
-  .carousel-navigation-btn {
-    display: none; /* Oculta los botones de navegación en pantallas muy pequeñas */
-  }
 
-  .event-card {
-    margin: 0 0.5rem; /* Margen más pequeño */
-    max-width: 95%; /* Ocupa casi todo el ancho */
-  }
+.event-card-link:focus { outline: none; }
+.event-card:focus-within { box-shadow: 0 14px 48px rgba(31,41,55,0.14); }
 
-  .event-card-image {
-    height: 150px;
-  }
-
-  .event-card-title {
-    font-size: 1.2rem;
-  }
-
-  .event-card-details {
-    font-size: 0.85rem;
-    flex-direction: column; /* Apila los detalles */
-    align-items: flex-start;
-  }
-
-  .event-card-footer {
-    flex-direction: column; /* Apila el precio y el botón */
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .event-card-price {
-    margin-bottom: 0.5rem;
-  }
-}
