@@ -2,6 +2,7 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useMessage } from '../../context/MessageContext';
+import axios from 'axios';
 import './LoginCompany.css'; 
 
 interface LoginCompanyProps {
@@ -24,30 +25,22 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/companylogin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contact_email,
-          password,
-        }),
+      const response = await axios.post('http://localhost:3000/api/auth/companylogin', {
+        contact_email,
+        password,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || 'Email o contraseña de organizador incorrectos.');
-        return;
-      }
-
-      const data = await response.json();
-
+      const data = response.data;
       onLoginSuccess(data.companyName || contact_email);
       navigate('/admin');
     } catch (err) {
       console.error('Error en login de organizador:', err);
-      setError('Error de red o del servidor.');
+      if (axios.isAxiosError(err) && err.response) {
+        const errorMessage = err.response.data?.message || 'Email o contraseña de organizador incorrectos.';
+        setError(errorMessage);
+      } else {
+        setError('Error de red o del servidor.');
+      }
     }
   };
 

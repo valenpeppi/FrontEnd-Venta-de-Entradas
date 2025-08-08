@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMessage } from '../../context/MessageContext';
+import axios from 'axios';
 import './CreateEventPage.css';
 
 interface CreateEventPageProps {
@@ -100,24 +101,24 @@ const CreateEventPage: React.FC<CreateEventPageProps> = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/events', {
-        method: 'POST',
-        body: formData,
+      const response = await axios.post('http://localhost:3000/api/events', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        dispatch({ type: 'SET_ERROR', payload: { error: errorData.message || 'Error al crear el evento.' } });
-        setAppMessage(`Error: ${errorData.message || 'No se pudo crear el evento.'}`);
-        return;
-      }
 
       setAppMessage('¡Evento creado exitosamente!');
       navigate('/');
     } catch (err) {
       console.error('Error al crear evento:', err);
-      dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor al crear el evento.' } });
-      setAppMessage('Error de red o del servidor al crear el evento.');
+      if (axios.isAxiosError(err) && err.response) {
+        const errorMessage = err.response.data?.message || 'Error al crear el evento.';
+        dispatch({ type: 'SET_ERROR', payload: { error: errorMessage } });
+        setAppMessage(`Error: ${errorMessage}`);
+      } else {
+        dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor al crear el evento.' } });
+        setAppMessage('Error de red o del servidor al crear el evento.');
+      }
     }
   };
 

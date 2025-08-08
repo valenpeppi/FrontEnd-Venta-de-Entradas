@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './Register.css'; // Importa el nuevo archivo CSS
+import axios from 'axios'; // ✅ Se importa Axios
+import './Register.css';
 
 interface RegisterProps {
   onRegisterSuccess: () => void;
@@ -28,15 +29,12 @@ const registerReducer = (state: RegisterState, action: RegisterAction): Register
     case 'SET_FIELD': {
       return { ...state, [action.payload.field]: action.payload.value };
     }
-    
     case 'SET_ERROR': {
       return { ...state, error: action.payload.error, successMessage: null };
     }
-    
     case 'SET_SUCCESS': {
       return { ...state, successMessage: action.payload.message, error: null };
     }
-    
     case 'RESET_FORM': {
       return {
         dni: '',
@@ -49,7 +47,6 @@ const registerReducer = (state: RegisterState, action: RegisterAction): Register
         successMessage: null
       };
     }
-    
     default:
       return state;
   }
@@ -66,7 +63,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     error: null,
     successMessage: null
   });
-  
+
   const navigate = useNavigate();
 
   const handleFieldChange = (field: keyof Omit<RegisterState, 'error' | 'successMessage'>, value: string) => {
@@ -78,7 +75,6 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     dispatch({ type: 'SET_ERROR', payload: { error: null } });
     dispatch({ type: 'SET_SUCCESS', payload: { message: null } });
 
-    // Validaciones
     if (!state.dni || !state.fullName || !state.email || !state.password || !state.confirmPassword || !state.birthDate) {
       dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, completa todos los campos.' } });
       return;
@@ -89,73 +85,52 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
       return;
     }
 
-    // Validación básica de formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(state.email)) {
       dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, introduce un email válido.' } });
       return;
     }
 
-    // Dividir fullName en name y surname
     const nameParts = state.fullName.trim().split(' ');
     let name = '';
     let surname = '';
 
     if (nameParts.length > 1) {
       name = nameParts[0];
-      surname = nameParts.slice(1).join(' '); // El resto es el apellido
+      surname = nameParts.slice(1).join(' ');
     } else {
-      name = state.fullName; // Si solo hay una palabra, se asume que es el nombre
-      surname = ''; // El apellido queda vacío
+      name = state.fullName;
+      surname = '';
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dni: state.dni,
-          name, // Enviamos el nombre separado
-          surname, // Enviamos el apellido separado
-          mail: state.email, // El backend espera 'mail'
-          password: state.password,
-          birthDate: state.birthDate,
-        }),
+      const response = await axios.post('http://localhost:3000/api/auth/register', {
+        dni: state.dni,
+        name,
+        surname,
+        mail: state.email,
+        password: state.password,
+        birthDate: state.birthDate,
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        dispatch({ type: 'SET_ERROR', payload: { error: errorData.message || 'Error al registrar el usuario.' } });
-        return;
-      }
 
       dispatch({ type: 'SET_SUCCESS', payload: { message: '¡Registro exitoso! Serás redirigido para iniciar sesión.' } });
       setTimeout(() => {
         onRegisterSuccess();
         navigate('/login');
       }, 2000);
-    } catch (err) {
-      dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor.' } });
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.message || 'Error de red o del servidor.';
+      dispatch({ type: 'SET_ERROR', payload: { error: errorMsg } });
     }
   };
 
   return (
     <div className="register-container">
-      <div className="register-card"> 
+      <div className="register-card">
         <h2 className="register-title">Registrarse</h2>
-        {state.error && (
-          <div className="register-error-message">
-            {state.error}
-          </div>
-        )}
-        {state.successMessage && (
-          <div className="register-success-message"> 
-            {state.successMessage}
-          </div>
-        )}
-        <form onSubmit={handleSubmit} className="register-form"> 
+        {state.error && <div className="register-error-message">{state.error}</div>}
+        {state.successMessage && <div className="register-success-message">{state.successMessage}</div>}
+        <form onSubmit={handleSubmit} className="register-form">
           <div className="register-form-group">
             <label htmlFor="dni" className="register-label">DNI:</label>
             <input
@@ -227,12 +202,12 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
             />
           </div>
 
-          <button type="submit" className="register-button"> {/* Clase CSS para el botón */}
+          <button type="submit" className="register-button">
             Registrarse
           </button>
         </form>
 
-        <div className="register-login-link"> {/* Clase CSS para el enlace de login */}
+        <div className="register-login-link">
           ¿Ya tienes una cuenta? <Link to="/login" className="register-link">Inicia sesión aquí</Link>
         </div>
       </div>

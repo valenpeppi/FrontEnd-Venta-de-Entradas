@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import './UsersList.css';
 
 interface User {
@@ -17,14 +18,14 @@ const UsersList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/users');
-        if (!response.ok) {
-          throw new Error('Error al obtener usuarios');
-        }
-        const data = await response.json();
-        setUsers(data);
+        const response = await axios.get('http://localhost:3000/api/users');
+        setUsers(response.data);
       } catch (err) {
-        setError(err.message);
+        if (axios.isAxiosError(err)) {
+          setError(err.response?.data?.message || 'Error al obtener usuarios');
+        } else {
+          setError('Error al obtener usuarios');
+        }
       } finally {
         setLoading(false);
       }

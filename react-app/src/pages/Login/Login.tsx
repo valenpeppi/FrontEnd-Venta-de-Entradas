@@ -2,6 +2,7 @@ import type React from "react"
 import { useReducer, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useMessage } from '../../context/MessageContext';
+import axios from 'axios';
 import './Login.css' 
 
 interface LoginProps {
@@ -68,24 +69,12 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
     try {
       console.log('Enviando login:', state.email, state.password);
-      const response = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mail: state.email, 
-          password: state.password,
-        }),
+      const response = await axios.post('http://localhost:3000/api/auth/login', {
+        mail: state.email, 
+        password: state.password,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        dispatch({ type: 'SET_ERROR', payload: { error: errorData.message || 'Usuario o contraseña incorrectos.' } });
-        return;
-      }
-
-      const data = await response.json();
+      const data = response.data;
       console.log('Respuesta del backend:', data);
 
       // Llamar a onLoginSuccess con el nombre y rol del usuario
@@ -99,7 +88,12 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
     } catch (err) {
       console.error('Error en login:', err);
-      dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor.' } });
+      if (axios.isAxiosError(err) && err.response) {
+        const errorMessage = err.response.data?.message || 'Usuario o contraseña incorrectos.';
+        dispatch({ type: 'SET_ERROR', payload: { error: errorMessage } });
+      } else {
+        dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor.' } });
+      }
     }
   };
 

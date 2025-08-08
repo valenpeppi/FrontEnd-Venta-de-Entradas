@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useMessage } from '../../context/MessageContext';
+import axios from 'axios';
 import './RegisterCompany.css';
 
 interface RegisterProps {
@@ -48,26 +49,14 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register-company', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          company_name: company_name,
-          cuil: cuil,
-          contactEmail: contactEmail,
-          password: password,
-          phone: phone,
-          address: address,
-        }),
+      const response = await axios.post('http://localhost:3000/api/auth/register-company', {
+        company_name: company_name,
+        cuil: cuil,
+        contactEmail: contactEmail,
+        password: password,
+        phone: phone,
+        address: address,
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || 'Error al registrar la empresa.');
-        return;
-      }
 
       setSuccessMessage('¡Registro exitoso! Serás redirigido para iniciar sesión.');
       setTimeout(() => {
@@ -75,7 +64,12 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         navigate('/logincompany');
       }, 2000);
     } catch (err) {
-      setError('Error de red o del servidor.');
+      if (axios.isAxiosError(err) && err.response) {
+        const errorMessage = err.response.data?.message || 'Error al registrar la empresa.';
+        setError(errorMessage);
+      } else {
+        setError('Error de red o del servidor.');
+      }
     }
   };
 
