@@ -210,6 +210,15 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         <div className="register-login-link">
           ¿Ya tienes una cuenta? <Link to="/login" className="register-link">Inicia sesión aquí</Link>
         </div>
+        <div className="back">
+          <button
+            type="button"
+            className="back-to-login-btn"
+            onClick={() => navigate('/')}
+          >
+          Volver
+          </button>
+          </div>   
       </div>
     </div>
   );

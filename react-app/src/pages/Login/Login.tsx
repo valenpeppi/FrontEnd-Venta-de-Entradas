@@ -139,9 +139,22 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         <div className="login-register-link">
           ¿No tienes una cuenta? <Link to="/register" className="login-link">Regístrate aquí</Link>
         </div>
-      </div>
+        <div className="login-forgot-password-link">
+        <Link to="/forgot-password" className="login-link">¿Olvidaste tu contraseña?</Link>
+        </div>
+        <div className="back">
+          <button
+            type="button"
+            className="back-to-login-btn"
+            onClick={() => navigate('/')}
+          >
+          Volver
+          </button>
+          </div>          
+    </div>
     </div>
   );
 };
+
 
 export default Login;
