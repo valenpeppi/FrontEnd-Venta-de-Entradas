@@ -1,7 +1,7 @@
 import type React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useMessage } from '../context/MessageContext';
+import { useMessage } from '../../context/MessageContext';
 import './LoginCompany.css'; 
 
 interface LoginCompanyProps {

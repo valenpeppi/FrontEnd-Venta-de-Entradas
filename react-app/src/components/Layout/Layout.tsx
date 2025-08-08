@@ -2,8 +2,8 @@ import React from 'react';
 import type { ReactNode } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import MessageDisplay from './MessageDisplay';
-import { useMessage } from '../context/MessageContext';
+import MessageDisplay from '../MessageDisplay';
+import { useMessage } from '../../context/MessageContext';
 import './Layout.css';
 
 interface LayoutProps {

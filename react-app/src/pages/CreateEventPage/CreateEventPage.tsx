@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMessage } from '../context/MessageContext';
+import { useMessage } from '../../context/MessageContext';
 import './CreateEventPage.css';
 
 interface CreateEventPageProps {
@@ -16,23 +16,23 @@ interface CreateEventState {
   place: string;
   price: string;
   error: string | null;
+  image: File | null; // Nuevo campo para la imagen
 }
 
 type CreateEventAction =
-  | { type: 'SET_FIELD'; payload: { field: keyof Omit<CreateEventState, 'error'>; value: string } }
+  | { type: 'SET_FIELD'; payload: { field: keyof Omit<CreateEventState, 'error' | 'image'>; value: string } }
   | { type: 'SET_ERROR'; payload: { error: string | null } }
-  | { type: 'RESET_FORM' };
+  | { type: 'RESET_FORM' }
+  | { type: 'SET_IMAGE'; payload: { image: File | null } };
 
 const createEventReducer = (state: CreateEventState, action: CreateEventAction): CreateEventState => {
   switch (action.type) {
     case 'SET_FIELD': {
       return { ...state, [action.payload.field]: action.payload.value };
     }
-    
     case 'SET_ERROR': {
       return { ...state, error: action.payload.error };
     }
-    
     case 'RESET_FORM': {
       return {
         eventName: '',
@@ -42,10 +42,13 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
         eventType: '',
         place: '',
         price: '',
-        error: null
+        error: null,
+        image: null // Resetear imagen
       };
     }
-    
+    case 'SET_IMAGE': {
+      return { ...state, image: action.payload.image };
+    }
     default:
       return state;
   }
@@ -60,42 +63,46 @@ const CreateEventPage: React.FC<CreateEventPageProps> = () => {
     eventType: '',
     place: '',
     price: '',
-    error: null
+    error: null,
+    image: null
   });
   
   const navigate = useNavigate();
   const { setAppMessage } = useMessage();
 
-  const handleFieldChange = (field: keyof Omit<CreateEventState, 'error'>, value: string) => {
+  const handleFieldChange = (field: keyof Omit<CreateEventState, 'error' | 'image'>, value: string) => {
     dispatch({ type: 'SET_FIELD', payload: { field, value } });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    dispatch({ type: 'SET_IMAGE', payload: { image: file } });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch({ type: 'SET_ERROR', payload: { error: null } });
 
-    // Validaciones básicas
     if (!state.eventName || !state.description || !state.date || !state.time || !state.eventType || !state.place || !state.price) {
       dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, completa todos los campos.' } });
       return;
     }
 
-    const eventData = {
-      name: state.eventName,
-      description: state.description,
-      date: `${state.date}T${state.time}:00`,
-      eventType: state.eventType,
-      place: state.place,
-      price: parseFloat(state.price),
-    };
+    const formData = new FormData();
+    formData.append('name', state.eventName);
+    formData.append('description', state.description);
+    formData.append('date', `${state.date}T${state.time}:00`);
+    formData.append('eventType', state.eventType);
+    formData.append('place', state.place);
+    formData.append('price', state.price);
+    if (state.image) {
+      formData.append('image', state.image);
+    }
 
     try {
       const response = await fetch('http://localhost:3000/api/events', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(eventData),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -119,7 +126,7 @@ const CreateEventPage: React.FC<CreateEventPageProps> = () => {
       <div className="create-event-card">
         <h1 className="create-event-title">Crear Nuevo Evento</h1>
         {state.error && <div className="create-event-error">{state.error}</div>}
-        <form onSubmit={handleSubmit} className="create-event-form">
+        <form onSubmit={handleSubmit} className="create-event-form" encType="multipart/form-data">
           <div className="form-group">
             <label htmlFor="eventName">Nombre del Evento</label>
             <input
@@ -207,6 +214,16 @@ const CreateEventPage: React.FC<CreateEventPageProps> = () => {
               min="0"
               step="0.01"
               required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="image">Foto del Evento</label>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={handleImageChange}
             />
           </div>
 

@@ -1,7 +1,7 @@
 import type React from "react"
 import { useReducer, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { useMessage } from '../context/MessageContext';
+import { useMessage } from '../../context/MessageContext';
 import './Login.css' 
 
 interface LoginProps {

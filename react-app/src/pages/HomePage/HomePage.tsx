@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useEvents } from '../context/EventsContext';
-import { useCart } from '../context/CartContext';
-import { useMessage } from '../context/MessageContext';
+import { useEvents } from '../../context/EventsContext';
+import { useCart } from '../../context/CartContext';
+import { useMessage } from '../../context/MessageContext';
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import './HomePage.css';

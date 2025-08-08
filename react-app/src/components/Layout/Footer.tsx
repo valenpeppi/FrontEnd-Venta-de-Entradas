@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 import './Footer.css';
 
 // Importa las imágenes desde la carpeta assets
-import logoTicket from '../assets/ticket.png';
-import facebookIcon from '../assets/facebook.png';
-import twitterIcon from '../assets/x.png'; 
-import instagramIcon from '../assets/instagram.png';
-import visaIcon from '../assets/visa.png';
-import mastercardIcon from '../assets/mastercard.png';
-import paypalIcon from '../assets/paypal.png';
+import logoTicket from '../../assets/ticket.png';
+import facebookIcon from '../../assets/facebook.png';
+import twitterIcon from '../../assets/x.png'; 
+import instagramIcon from '../../assets/instagram.png';
+import visaIcon from '../../assets/visa.png';
+import mastercardIcon from '../../assets/mastercard.png';
+import paypalIcon from '../../assets/paypal.png';
 
-
+        
 const Footer: React.FC = () => {
   return (
     <footer className="footer">
