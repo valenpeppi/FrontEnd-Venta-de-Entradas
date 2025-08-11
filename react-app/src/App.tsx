@@ -15,6 +15,7 @@ import UsersList from './pages/UsersList/UsersList';
 import CreateEventPage from './pages/CreateEventPage/CreateEventPage';
 import LoginCompany from './pages/LoginCompany/LoginCompany';
 import RegisterCompany from './pages/RegisterCompany/RegisterCompany';
+import NewsLetter from './pages/NewsLetter/NewsLetter';
 import { useAuth } from './context/AuthContext';
 import { useMessage } from './context/MessageContext';
 import './App.css';
@@ -31,7 +32,7 @@ export interface Ticket {
 }
 
 const App: React.FC = () => {
-  const { isLoggedIn, user, login, logout } = useAuth();
+  const { isLoggedIn, user, login } = useAuth();
   const { setAppMessage } = useMessage();
   const navigate = useNavigate();
 
@@ -45,8 +46,6 @@ const App: React.FC = () => {
     login(loggedInUserName, role);
     setAppMessage(`¡Inicio de sesión exitoso como ${loggedInUserName}!`);
   };
-
-
 
   const handleRegisterSuccess = () => {
     setAppMessage('¡Registro exitoso! Por favor, inicia sesión.');
@@ -128,6 +127,11 @@ const App: React.FC = () => {
               <About />
             </Layout>
           }
+        />
+        {/* RUTA MODIFICADA PARA QUE SE MUESTRE SIN EL LAYOUT */}
+        <Route
+          path="/newsletter"
+          element={<NewsLetter />}
         />
         <Route
           path="/login"

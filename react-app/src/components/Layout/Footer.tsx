@@ -11,7 +11,6 @@ import visaIcon from '../../assets/visa.png';
 import mastercardIcon from '../../assets/mastercard.png';
 import paypalIcon from '../../assets/paypal.png';
 
-        
 const Footer: React.FC = () => {
   return (
     <footer className="footer">
@@ -61,35 +60,16 @@ const Footer: React.FC = () => {
               <li><Link to="/faq">Preguntas frecuentes</Link></li>
             </ul>
           </div>
-        </div>
 
-        {/* Nuevo contenedor para agrupar Newsletter y Organizadores */}
-        <div className="footer-newsletter-organizer-wrapper">
-          <div className="footer-newsletter">
-            <h4>Suscríbete a nuestro boletín</h4>
-            <p>Recibe ofertas exclusivas y novedades</p>
-            <form className="newsletter-form">
-              <input type="email" placeholder="Tu correo electrónico" required />
-              <button type="submit" className="btn-primary">Suscribirse</button>
-            </form>
-          </div>
-
-          {/* Sección para Organizadores, ahora dentro del nuevo wrapper */}
-          <div className="footer-links-column footer-organizer-section">
-            <h4>Organizadores</h4>
-            <p className="organizer-promo-text">
-              ¿Quieres ser organizador de eventos?{' '}
-              {/* El texto "¡Regístrate ya!" ahora es un botón/enlace con estilo de btn-outline-primary */}
-              <Link to="/registercompany" className="btn-organizer-register">
-                ¡Regístrate ya!
-              </Link>
-            </p>
-            <ul>
+          {/* COLUMNA REORGANIZADA */}
+          <div className="footer-links-column">
+            <h4>Únete</h4>
+            <ul className="footer-action-links">
               <li>
-                {/* El botón de Iniciar Sesión usa el estilo de btn-primary */}
-                <Link to="/logincompany" className="btn-organizer-login">
-                  Iniciar Sesión
-                </Link>
+                <Link to="/newsletter">Recibe ofertas exclusivas</Link>
+              </li>
+              <li>
+                <Link to="/registercompany">Sé un organizador</Link>
               </li>
             </ul>
           </div>

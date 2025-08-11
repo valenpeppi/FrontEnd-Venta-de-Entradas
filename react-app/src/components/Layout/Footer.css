@@ -1,7 +1,7 @@
 /* Footer.css */
 
 .footer {
-  background-color: #f8fafc; /* Color de fondo suave */
+  background-color: #f8fafc;
   padding: 3rem 0;
   font-family: 'Inter', sans-serif;
   color: #4b5563;
@@ -10,17 +10,17 @@
 
 .footer-container {
   display: flex;
-  flex-wrap: wrap; /* Permite que los elementos se envuelvan a la siguiente línea */
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-start; /* Alinea los elementos al inicio de la línea */
+  align-items: flex-start;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1.5rem; /* Padding horizontal para el contenido */
-  gap: 2rem; /* Espacio entre las columnas del footer */
+  padding: 0 1.5rem;
+  gap: 2rem;
 }
 
 .footer-brand-section {
-  flex: 1 1 250px; /* Crece y encoge, con un ancho base */
+  flex: 1 1 250px;
   min-width: 200px;
 }
 
@@ -64,12 +64,12 @@
 .footer-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem; /* Espacio entre las columnas de enlaces */
-  flex: 2 1 600px; /* Permite que las columnas de enlaces crezcan y acomoden la nueva */
+  gap: 2rem;
+  flex: 2 1 600px;
 }
 
 .footer-links-column {
-  flex: 1 1 150px; /* Cada columna de enlaces tiene un ancho base */
+  flex: 1 1 150px;
 }
 
 .footer-links-column h4 {
@@ -100,119 +100,20 @@
   color: #4f46e5;
 }
 
-/* Nuevo contenedor para agrupar Newsletter y Organizadores */
-.footer-newsletter-organizer-wrapper {
-  display: flex;
-  flex-wrap: wrap; /* Permite que se envuelvan en pantallas pequeñas */
-  gap: 2rem; /* Espacio entre newsletter y organizadores */
-  flex: 1 1 600px; /* Permite que ocupe el espacio restante */
-  align-items: flex-start; /* Alinea los elementos al inicio */
-}
+/* --- ESTILOS ELIMINADOS --- */
+/* Las clases .footer-newsletter-organizer-wrapper y .footer-link-style han sido eliminadas. */
 
-/* Estilos para la sección de Newsletter */
-.footer-newsletter {
-  flex: 1 1 300px; /* Ancho base para el newsletter */
-  margin-top: 0; 
-}
-
-.footer-newsletter h4 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 1rem;
-}
-
-.footer-newsletter p {
-  font-size: 0.95rem;
+/* Ajuste para los nuevos enlaces de acción */
+.footer-action-links li a {
   line-height: 1.5;
-  margin-bottom: 1rem;
-}
-
-.newsletter-form {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.newsletter-form input[type="email"] {
-  flex: 0.5; /* Reducido aún más para que ocupe menos espacio */
-  padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  outline: none;
-  font-size: 0.95rem;
-}
-
-.newsletter-form button {
-  background-color: #4f46e5;
-  color: #fff;
-  font-weight: 600;
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.newsletter-form button:hover {
-  background-color: #3730a3;
-}
-
-/* Estilos para la sección de Organizadores */
-.footer-organizer-section {
-  flex: 1 1 200px; /* Ajustado para que tenga un ancho base y crezca */
-  margin-top: 0; /* Elimina márgenes superiores no deseados */
-}
-
-.organizer-promo-text {
-  font-size: 0.95rem;
-  color: #6b7280;
-  margin-bottom: 1rem;
-  line-height: 1.4;
-}
-
-/* Nuevos estilos para el botón de Iniciar Sesión de Organizador */
-.btn-organizer-login {
-  background: transparent;
-  color: white;
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: 2px solid white;
-  text-decoration: none;
-  display: inline-block;
-  transition: all 0.2s;
-}
-
-.btn-organizer-login:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* Nuevo estilo para el botón de Registrarse de Organizador */
-.btn-organizer-register {
-  background-color: #10b981; /* Un verde vibrante */
-  color: #ffffff;
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s, box-shadow 0.2s;
-  text-decoration: none; /* Para enlaces */
-  display: inline-block; /* Para que padding y margin funcionen correctamente */
-  border: none;
-  cursor: pointer;
-}
-
-.btn-organizer-register:hover {
-  background-color: #059669; /* Un verde más oscuro al pasar el ratón */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 
 /* Footer Bottom */
 .footer-bottom {
-  background-color: #e2e8f0; /* Un gris más oscuro para el fondo del bottom */
+  background-color: #e2e8f0;
   padding: 1rem 0;
-  margin-top: 2rem; /* Espacio para separar del contenido superior */
+  margin-top: 2rem;
 }
 
 .footer-bottom-container {
@@ -230,7 +131,7 @@
 .footer-payment-methods {
   display: flex;
   gap: 0.75rem;
-  margin-top: 0.5rem; /* Espacio en móvil */
+  margin-top: 0.5rem;
 }
 
 .footer-payment-methods img {
@@ -248,27 +149,20 @@
   .footer-links {
     gap: 1.5rem;
   }
-
-  .footer-newsletter-organizer-wrapper {
-    flex-direction: column; /* Apila newsletter y organizadores en pantallas medianas */
-    gap: 1.5rem;
-  }
 }
 
 @media (max-width: 768px) {
   .footer-container {
-    flex-direction: column; /* Apila todas las secciones en móvil */
+    flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 0 1rem;
   }
 
-  .footer-brand-section,
-  .footer-newsletter,
-  .footer-newsletter-organizer-wrapper { /* También apila el wrapper */
-    flex: 1 1 100%; /* Ocupa todo el ancho */
+  .footer-brand-section {
+    flex: 1 1 100%;
     max-width: 100%;
-    margin-bottom: 1.5rem; /* Espacio entre secciones apiladas */
+    margin-bottom: 1.5rem;
   }
 
   .footer-brand {
@@ -276,19 +170,16 @@
   }
 
   .footer-links {
-    flex-direction: column; /* Apila las columnas de enlaces también */
+    flex-direction: column;
     gap: 1.5rem;
-    flex: 1 1 100%; /* Ocupa todo el ancho */
+    flex: 1 1 100%;
+    width: 100%;
+    align-items: center;
   }
 
   .footer-links-column {
     flex: 1 1 100%;
     max-width: 100%;
-  }
-
-  .newsletter-form {
-    flex-direction: column;
-    gap: 1rem;
   }
 
   .footer-bottom-container {
@@ -316,20 +207,11 @@
     height: 35px;
   }
 
-  .footer-links-column h4,
-  .footer-newsletter h4 {
+  .footer-links-column h4 {
     font-size: 1rem;
   }
-
-  .footer-links-column ul li a,
-  .newsletter-form p, /* Se refiere al p dentro de footer-newsletter */
-  .organizer-promo-text {
-    font-size: 0.9rem;
-  }
-
-  .newsletter-form input[type="email"],
-  .newsletter-form button {
-    padding: 0.6rem 0.8rem;
+  
+  .footer-links-column ul li a {
     font-size: 0.9rem;
   }
 }
