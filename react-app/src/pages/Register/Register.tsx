@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios'; // ✅ Se importa Axios
+import axios from 'axios';
+import ReCAPTCHA from 'react-google-recaptcha';
 import './Register.css';
 
 interface RegisterProps {
@@ -26,16 +27,13 @@ type RegisterAction =
 
 const registerReducer = (state: RegisterState, action: RegisterAction): RegisterState => {
   switch (action.type) {
-    case 'SET_FIELD': {
+    case 'SET_FIELD':
       return { ...state, [action.payload.field]: action.payload.value };
-    }
-    case 'SET_ERROR': {
+    case 'SET_ERROR':
       return { ...state, error: action.payload.error, successMessage: null };
-    }
-    case 'SET_SUCCESS': {
+    case 'SET_SUCCESS':
       return { ...state, successMessage: action.payload.message, error: null };
-    }
-    case 'RESET_FORM': {
+    case 'RESET_FORM':
       return {
         dni: '',
         fullName: '',
@@ -46,7 +44,6 @@ const registerReducer = (state: RegisterState, action: RegisterAction): Register
         error: null,
         successMessage: null
       };
-    }
     default:
       return state;
   }
@@ -63,7 +60,8 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     error: null,
     successMessage: null
   });
-
+  
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleFieldChange = (field: keyof Omit<RegisterState, 'error' | 'successMessage'>, value: string) => {
@@ -74,6 +72,11 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     e.preventDefault();
     dispatch({ type: 'SET_ERROR', payload: { error: null } });
     dispatch({ type: 'SET_SUCCESS', payload: { message: null } });
+
+    if (!captchaValue) {
+      dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, verifica que no eres un robot.' } });
+      return;
+    }
 
     if (!state.dni || !state.fullName || !state.email || !state.password || !state.confirmPassword || !state.birthDate) {
       dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, completa todos los campos.' } });
@@ -92,25 +95,18 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     }
 
     const nameParts = state.fullName.trim().split(' ');
-    let name = '';
-    let surname = '';
-
-    if (nameParts.length > 1) {
-      name = nameParts[0];
-      surname = nameParts.slice(1).join(' ');
-    } else {
-      name = state.fullName;
-      surname = '';
-    }
+    let name = nameParts.length > 1 ? nameParts[0] : state.fullName;
+    let surname = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
 
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/register', {
+      await axios.post('http://localhost:3000/api/auth/register', {
         dni: state.dni,
         name,
         surname,
         mail: state.email,
         password: state.password,
         birthDate: state.birthDate,
+        captchaToken: captchaValue,
       });
 
       dispatch({ type: 'SET_SUCCESS', payload: { message: '¡Registro exitoso! Serás redirigido para iniciar sesión.' } });
@@ -133,92 +129,42 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         <form onSubmit={handleSubmit} className="register-form">
           <div className="register-form-group">
             <label htmlFor="dni" className="register-label">DNI:</label>
-            <input
-              type="text"
-              id="dni"
-              value={state.dni}
-              onChange={(e) => handleFieldChange('dni', e.target.value)}
-              className="register-input"
-              placeholder="Ingresa tu DNI"
-            />
+            <input type="text" id="dni" value={state.dni} onChange={(e) => handleFieldChange('dni', e.target.value)} className="register-input" placeholder="Ingresa tu DNI" />
           </div>
-
           <div className="register-form-group">
             <label htmlFor="fullName" className="register-label">Nombre completo:</label>
-            <input
-              type="text"
-              id="fullName"
-              value={state.fullName}
-              onChange={(e) => handleFieldChange('fullName', e.target.value)}
-              className="register-input"
-              placeholder="Ingresa tu nombre completo"
-            />
+            <input type="text" id="fullName" value={state.fullName} onChange={(e) => handleFieldChange('fullName', e.target.value)} className="register-input" placeholder="Ingresa tu nombre completo" />
           </div>
-
           <div className="register-form-group">
             <label htmlFor="email" className="register-label">Email:</label>
-            <input
-              type="email"
-              id="email"
-              value={state.email}
-              onChange={(e) => handleFieldChange('email', e.target.value)}
-              className="register-input"
-              placeholder="Ingresa tu email"
-            />
+            <input type="email" id="email" value={state.email} onChange={(e) => handleFieldChange('email', e.target.value)} className="register-input" placeholder="Ingresa tu email" />
           </div>
-
           <div className="register-form-group">
             <label htmlFor="birthDate" className="register-label">Fecha de nacimiento:</label>
-            <input
-              type="date"
-              id="birthDate"
-              value={state.birthDate}
-              onChange={(e) => handleFieldChange('birthDate', e.target.value)}
-              className="register-input"
-            />
+            <input type="date" id="birthDate" value={state.birthDate} onChange={(e) => handleFieldChange('birthDate', e.target.value)} className="register-input" />
           </div>
-
           <div className="register-form-group">
             <label htmlFor="password" className="register-label">Contraseña:</label>
-            <input
-              type="password"
-              id="password"
-              value={state.password}
-              onChange={(e) => handleFieldChange('password', e.target.value)}
-              className="register-input"
-              placeholder="Ingresa tu contraseña"
-            />
+            <input type="password" id="password" value={state.password} onChange={(e) => handleFieldChange('password', e.target.value)} className="register-input" placeholder="Ingresa tu contraseña" />
           </div>
-
           <div className="register-form-group">
             <label htmlFor="confirmPassword" className="register-label">Confirmar contraseña:</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={state.confirmPassword}
-              onChange={(e) => handleFieldChange('confirmPassword', e.target.value)}
-              className="register-input"
-              placeholder="Confirma tu contraseña"
+            <input type="password" id="confirmPassword" value={state.confirmPassword} onChange={(e) => handleFieldChange('confirmPassword', e.target.value)} className="register-input" placeholder="Confirma tu contraseña" />
+          </div>
+          <div className="captcha-container">
+            <ReCAPTCHA
+              sitekey="6LfEeKIrAAAAAOtnJGyIq4LpZC2Zw1kIVr1BLOLa"
+              onChange={(value) => setCaptchaValue(value)}
             />
           </div>
-
-          <button type="submit" className="register-button">
-            Registrarse
-          </button>
+          <button type="submit" className="register-button">Registrarse</button>
         </form>
-
         <div className="register-login-link">
           ¿Ya tienes una cuenta? <Link to="/login" className="register-link">Inicia sesión aquí</Link>
         </div>
         <div className="back">
-          <button
-            type="button"
-            className="back-to-login-btn"
-            onClick={() => navigate('/')}
-          >
-          Volver
-          </button>
-          </div>   
+          <button type="button" className="back-to-login-btn" onClick={() => navigate('/')}>Volver</button>
+        </div>   
       </div>
     </div>
   );

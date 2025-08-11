@@ -105,14 +105,18 @@ const Navbar: React.FC = () => {
           )}
         </ul>
 
-        <div className="navbar-cart-container">
-          <Link to="/cart" className="navbar-menu-item">
-            <img src={cartIcon} alt="Carrito de compras" className="navbar-cart" />
-            {cartCount > 0 && (
-              <span className="cart-count">{cartCount}</span>
-            )}
-          </Link>
-        </div>
+        {/* --- MODIFICACIÓN AQUÍ --- */}
+        {/* El carrito solo se muestra si el usuario ha iniciado sesión */}
+        {isLoggedIn && (
+          <div className="navbar-cart-container">
+            <Link to="/cart" className="navbar-menu-item">
+              <img src={cartIcon} alt="Carrito de compras" className="navbar-cart" />
+              {cartCount > 0 && (
+                <span className="cart-count">{cartCount}</span>
+              )}
+            </Link>
+          </div>
+        )}
 
         <div className="navbar-auth-section">
           {isLoggedIn ? (
@@ -152,3 +156,4 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+  
