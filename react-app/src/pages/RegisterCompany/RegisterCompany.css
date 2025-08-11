@@ -114,6 +114,13 @@
   background-color: #4338ca;
 }
 
+/* Estilo para el contenedor del CAPTCHA */
+.captcha-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
 /* Enlace de "Ya tienes una cuenta" */
 .register-login-link {
   margin-top: 1.5rem;
@@ -135,16 +142,24 @@
 /* Estilos para el botón "Volver" */
 .back-button {
   display: inline-block;
+  width: 100%;
+  background: #e5e7eb;
+  color: #374151;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+  border: none;
+  font-size: 1.125rem;
   margin-top: 1rem;
-  text-align: center;
-  color: #4b5563;
-  font-size: 1rem;          
+  cursor: pointer;
 }
 
 .back-button:hover {
-  background-color: #e5e7eb;
+  background-color: #d1d5db;
   color: #1f2937;
-  border-color: #9ca3af;
 }
 
 /* Responsive adjustments */

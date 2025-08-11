@@ -114,6 +114,13 @@
   background-color: #4338ca; /* hover:bg-indigo-700 */
 }
 
+/* Estilo para el contenedor del CAPTCHA */
+.captcha-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
 /* Enlace de "Ya tienes una cuenta" */
 .register-login-link {
   margin-top: 1.5rem; /* mt-6 */
@@ -212,4 +219,4 @@
   font-size: 1.125rem;
   margin-top: 1rem;
   cursor: pointer;
-}         
+}
