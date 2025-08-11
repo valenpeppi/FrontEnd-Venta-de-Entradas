@@ -20,8 +20,10 @@ const CarritoPage = () => {
   const handleQuantityChange = (id: string, value: string) => {
     const newQuantity = parseInt(value);
     if (isNaN(newQuantity)) return;
-    const ok = updateItemQuantity(id, newQuantity);
-    if (!ok) {
+    
+    // La validación ahora está principalmente en el contexto, pero mantenemos el feedback
+    const wasUpdated = updateItemQuantity(id, newQuantity);
+    if (!wasUpdated) {
       setErrorMsg('Solo puedes tener entre 1 y 3 entradas por evento.');
     } else {
       setErrorMsg(null);
@@ -45,17 +47,20 @@ const CarritoPage = () => {
                 </div>
                 
                 <div className="item-quantity">
-                  <label>
+                  <label htmlFor={`quantity-select-${item.id}`} className="quantity-label">
                     Cantidad:
-                    <input
-                      type="number"
-                      min={1}
-                      max={3}
-                      value={item.quantity}
-                      onChange={e => handleQuantityChange(item.id, e.target.value)}
-                      className="cart-quantity-input"
-                    />
                   </label>
+                  {/* --- CAMBIO AQUÍ: Se reemplaza el input por un select --- */}
+                  <select
+                    id={`quantity-select-${item.id}`}
+                    value={item.quantity}
+                    onChange={e => handleQuantityChange(item.id, e.target.value)}
+                    className="cart-quantity-select"
+                  >
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
                 </div>
                 
                 <div className="item-subtotal">

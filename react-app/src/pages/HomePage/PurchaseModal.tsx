@@ -28,22 +28,22 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      setInternalQuantity(quantity);
+      // Al abrir, la cantidad inicial es 1, siempre que haya tickets.
+      const initialQuantity = selectedTicket && selectedTicket.availableTickets > 0 ? 1 : 0;
+      setInternalQuantity(initialQuantity);
+      onQuantityChange(initialQuantity);
       setLocalErrorMessage(null);
       isSubmitting.current = false;
-      console.log('PurchaseModal: Modal abierto, internalQuantity reseteado a prop quantity. isSubmitting reseteado a false.');
     }
-  }, [isOpen, quantity]);
+  }, [isOpen, selectedTicket]);
 
   const handleConfirm = () => {
     if (isSubmitting.current) {
-      console.log('PurchaseModal: Intento de doble clic detectado, ignorando.');
       return; 
     }
     isSubmitting.current = true;
     setLocalErrorMessage(null);
 
-    console.log('PurchaseModal: handleConfirm activado.');
     if (!selectedTicket) {
       setLocalErrorMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
       isSubmitting.current = false;
@@ -53,11 +53,6 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
     if (internalQuantity <= 0) {
       setLocalErrorMessage('La cantidad debe ser al menos 1.');
       isSubmitting.current = false;
-      return;
-    }
-
-    if (internalQuantity > 3) {
-      setLocalErrorMessage('No puedes comprar más de 3 entradas a la vez.');
       return;
     }
 
@@ -74,8 +69,11 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   if (!isOpen || !selectedTicket) {
     return null;
   }
-
-  console.log('PurchaseModal: Renderizando. internalQuantity actual:', internalQuantity);
+  
+  // --- MODIFICACIÓN AQUÍ ---
+  // El máximo de opciones es 3, pero limitado por las entradas disponibles.
+  const maxQuantity = Math.min(selectedTicket.availableTickets, 3);
+  const quantityOptions = Array.from({ length: maxQuantity }, (_, i) => i + 1);
 
   return (
     <div className="purchase-modal-overlay" onClick={onCloseModal}>
@@ -93,29 +91,32 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
           </p>
         </div>
         <div className="purchase-modal-quantity-section">
-          <label htmlFor="quantity" className="purchase-modal-quantity-label">Cantidad:</label>
-          <input
-            type="number"
-            id="quantity"
-            max={Math.min(selectedTicket.availableTickets, 3)} 
-            value={internalQuantity === 0 ? '' : internalQuantity}
+          <label htmlFor="quantity-select" className="purchase-modal-quantity-label">Cantidad:</label>
+          <select
+            id="quantity-select"
+            value={internalQuantity}
             onChange={(e) => {
-              const value = e.target.value;
-              const newValue = value === '' ? 0 : parseInt(value);
-              
-              if (isNaN(newValue) && value !== '') {
-                return;
-              }
-
-              const clampedValue = isNaN(newValue) ? 0 : Math.max(0, Math.min(selectedTicket.availableTickets, newValue));
-              
-              setInternalQuantity(clampedValue);
-              onQuantityChange(clampedValue);
+              const newQuantity = parseInt(e.target.value, 10);
+              setInternalQuantity(newQuantity);
+              onQuantityChange(newQuantity);
               setLocalErrorMessage(null);
-              console.log('PurchaseModal: Cantidad del input cambiada a:', clampedValue);
             }}
-            className="purchase-modal-quantity-input"
-          />
+            className="purchase-modal-quantity-select"
+            disabled={selectedTicket.availableTickets === 0}
+          >
+            {quantityOptions.length > 0 ? (
+              quantityOptions.map(num => (
+                <option 
+                  key={num} 
+                  value={num}
+                >
+                  {num}
+                </option>
+              ))
+            ) : (
+              <option disabled value={0}>Agotado</option>
+            )}
+          </select>
         </div>
         {(errorMessage || localErrorMessage) && (
           <div className="purchase-modal-error">
@@ -126,6 +127,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
           <button
             onClick={handleConfirm}
             className="btn-confirm"
+            disabled={selectedTicket.availableTickets === 0}
           >
             Agregar al Carrito
           </button>

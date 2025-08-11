@@ -20,10 +20,6 @@ const Navbar: React.FC = () => {
     const term = e.target.value;
     setSearchTerm(term);
     if (term.length > 2) {
-      // Aquí harías una llamada a tu API de búsqueda de eventos
-      // const response = await fetch(`/api/events/search?q=${term}`);
-      // const data = await response.json();
-      // setSearchResults(data);
       // Simulando resultados
       setSearchResults([
         { id: '1', name: 'Concierto de Verano' },
@@ -106,8 +102,8 @@ const Navbar: React.FC = () => {
         </ul>
 
         {/* --- MODIFICACIÓN AQUÍ --- */}
-        {/* El carrito solo se muestra si el usuario ha iniciado sesión */}
-        {isLoggedIn && (
+        {/* El carrito solo se muestra si el usuario ha iniciado sesión Y su rol es 'user' */}
+        {isLoggedIn && user?.role === 'user' && (
           <div className="navbar-cart-container">
             <Link to="/cart" className="navbar-menu-item">
               <img src={cartIcon} alt="Carrito de compras" className="navbar-cart" />
@@ -156,4 +152,3 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
-  
