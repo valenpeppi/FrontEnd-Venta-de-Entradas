@@ -97,11 +97,11 @@ const CreateEventPage: React.FC<CreateEventPageProps> = () => {
     formData.append('place', state.place);
     formData.append('price', state.price);
     if (state.image) {
-      formData.append('image', state.image);
+      formData.append('image', state.image); 
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/events', formData, {
+      const response = await axios.post('http://localhost:3000/api/events/createEvent', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -183,25 +183,32 @@ const CreateEventPage: React.FC<CreateEventPageProps> = () => {
                 onChange={(e) => handleFieldChange('eventType', e.target.value)}
                 required
               >
-                <option value="">Selecciona un tipo</option>
+                <option value="" disabled hidden>Selecciona un tipo de evento</option>
                 <option value="concierto">Concierto</option>
-                <option value="teatro">Teatro</option>
-                <option value="deportivo">Deportivo</option>
-                <option value="conferencia">Conferencia</option>
-                <option value="exposicion">Exposición</option>
-                <option value="otro">Otro</option>
+                <option value="teatro">Stand up</option>
+                <option value="deportivo">Jornada de lectura</option>
+                <option value="conferencia">Fiesta</option>
+                <option value="exposicion">Evento deportivo</option>
+                <option value="arte">Arte</option>
               </select>
+            </div>
             </div>
 
             <div className="form-group">
+              <div>
               <label htmlFor="place">Lugar</label>
-              <input
-                type="text"
+              <select
                 id="place"
                 value={state.place}
                 onChange={(e) => handleFieldChange('place', e.target.value)}
                 required
-              />
+              >
+                <option value="" disabled hidden>Selecciona un lugar</option>
+                <option value="concierto">Anfiteatro</option>
+                <option value="teatro">Estadio Gigante de Arroyito</option>
+                <option value="deportivo">Bioceres</option>
+                <option value="conferencia"> El Ateneo</option>
+              </select>
             </div>
           </div>
 

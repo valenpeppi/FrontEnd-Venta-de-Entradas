@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useEvents } from '../../context/EventsContext';
 import { useCart } from '../../context/CartContext';
 import { useMessage } from '../../context/MessageContext';
+import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import './HomePage.css';
@@ -78,6 +79,22 @@ const HomePage: React.FC = () => {
     handleCloseModal();
   };
 
+  // Obtener tipos únicos de eventos
+  const eventTypes = Array.from(new Set(allTickets.map(ticket => ticket.type)));
+  const [selectedType, setSelectedType] = useState<string>('Todos');
+
+  // Filtrar eventos según el tipo seleccionado
+  const filteredTickets = selectedType === 'Todos'
+    ? allTickets
+    : allTickets.filter(ticket => ticket.type === selectedType);
+
+  // Agrupar eventos por tipo
+  const eventsByType: { [key: string]: Ticket[] } = {};
+  filteredTickets.forEach(ticket => {
+    if (!eventsByType[ticket.type]) eventsByType[ticket.type] = [];
+    eventsByType[ticket.type].push(ticket);
+  });
+
   if (allTickets.length === 0) {
     return (
       <div className="loading-state">
@@ -97,6 +114,52 @@ const HomePage: React.FC = () => {
           onNextEvent={goToNextEvent}
           onBuyClick={handleBuyClick}
         />
+
+        <div className="event-type-filter-container event-type-filter-left">
+          <label htmlFor="event-type-select" className="event-type-filter-label">Filtrar por tipo:</label>
+          <select
+            id="event-type-select"
+            className="event-type-filter-select"
+            value={selectedType}
+            onChange={e => setSelectedType(e.target.value)}
+          >
+            <option value="Todos">Todos</option>
+            {eventTypes.map(type => (
+              <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
+            ))}
+          </select>
+        </div>
+
+        <h2 className="event-list-title">Eventos por tipo</h2>
+        <div className="event-list-by-type">
+          {Object.keys(eventsByType).length === 0 && (
+            <p style={{ textAlign: 'center', color: '#888' }}>No hay eventos para este tipo.</p>
+          )}
+          {Object.entries(eventsByType).map(([type, tickets]) => (
+            <div key={type} className="event-type-section">
+              <h2 className="event-type-title">{type.charAt(0).toUpperCase() + type.slice(1)}</h2>
+              <div className="event-type-gallery event-type-gallery">
+                {tickets.map(ticket => (
+                  <Link
+                    to={`/event/${ticket.id}`}
+                    key={ticket.id}
+                    className="event-card-link"
+                  >
+                    <div className="event-card">
+                      <img
+                        src={ticket.imageUrl}
+                        alt={ticket.eventName}
+                        className="event-card-img"
+                        onError={e => { e.currentTarget.src = '/public/ticket.png'; }}
+                      />
+                      <div className="event-card-title">{ticket.eventName}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </main>
 
       <PurchaseModal

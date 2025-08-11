@@ -29,6 +29,7 @@ export interface Ticket {
   availableTickets: number;
   imageUrl: string;
   time: string;
+  type: string; // Nuevo campo para el tipo de evento
 }
 
 const App: React.FC = () => {
