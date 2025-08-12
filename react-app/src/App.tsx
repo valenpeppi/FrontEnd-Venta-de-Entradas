@@ -1,24 +1,23 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import Layout from './components/Layout/Layout';
-import HomePage from './pages/HomePage/HomePage';
-import CarritoPage from './pages/Cart/CarritoPage';
-import Pay from './pages/Pay/Pay';
-import AdminHomePage from './pages/AdminHomePage/AdminHomePage';
-import MyTickets from './pages/myTickets/MyTickets';
-import Help from './pages/Help/Help';
-import EventDetailPage from './components/EventDetailPage';
-import About from './pages/About/About';
-import Login from './pages/Login/Login';
-import Register from './pages/Register/Register';
-import UsersList from './pages/UsersList/UsersList';
-import CreateEventPage from './pages/CreateEventPage/CreateEventPage';
-import LoginCompany from './pages/LoginCompany/LoginCompany';
-import RegisterCompany from './pages/RegisterCompany/RegisterCompany';
-import NewsLetter from './pages/NewsLetter/NewsLetter';
-import { useAuth } from './context/AuthContext';
-import { useMessage } from './context/MessageContext';
-import './App.css';
+import Layout from './shared/layout/Layout';
+import HomePage from './pages/userHomePage/UserHomePage';
+import CarritoPage from './pages/purchase/CarritoPage';
+import Pay from './pages/purchase/Pay';
+import AdminHomePage from './pages/adminHomePage/AdminHomePage';
+import MyTickets from './pages/purchase/MyTickets';
+import Help from './pages/support/Help';
+import EventDetailPage from './shared/EventDetailPage';
+import About from './pages/support/About';
+import Login from './pages/login/LoginUser';
+import Register from './pages/register/RegisterUser';
+import CreateEventPage from './pages/userHomePage/CreateEventPage';
+import LoginCompany from './pages/login/LoginCompany';
+import RegisterCompany from './pages/register/RegisterCompany';
+import NewsLetter from './pages/support/NewsLetter';
+import { useAuth } from './shared/context/AuthContext';
+import { useMessage } from './shared/context/MessageContext';
+import './shared/styles/App.css';
 
 export interface Ticket {
   id: string;
@@ -148,14 +147,6 @@ const App: React.FC = () => {
             <Register
               onRegisterSuccess={handleRegisterSuccess}
             />
-          }
-        />
-        <Route
-          path="/userslist"
-          element={
-            <Layout>
-              <UsersList />
-            </Layout>
           }
         />
         <Route

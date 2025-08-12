@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './AdminHomePage.css';
+import './styles/AdminHomePage.css';
 
 interface EventRequest {
   id: string;
