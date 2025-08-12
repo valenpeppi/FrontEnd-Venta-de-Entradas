@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Ticket } from '../../App';
 
-import '../styles/PurchaseModal.css';
+import './styles/PurchaseModal.css';
 
 export interface PurchaseModalProps {
   isOpen: boolean;

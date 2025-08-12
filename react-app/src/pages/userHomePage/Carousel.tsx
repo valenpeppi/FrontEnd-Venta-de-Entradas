@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import type { Ticket } from '../../App';
-import '../styles/Carousel.css';
+import './styles/Carousel.css';
 
 // Interfaz para las props del componente Carousel
 export interface CarouselProps {

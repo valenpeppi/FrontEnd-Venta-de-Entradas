@@ -3,7 +3,7 @@ import { useReducer, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
-import '../styles/Login.css' 
+import './styles/Login.css' 
 
 interface LoginProps {
   onLoginSuccess: (userName: string, role?: string) => void;

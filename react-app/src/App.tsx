@@ -11,8 +11,7 @@ import EventDetailPage from './shared/EventDetailPage';
 import About from './pages/support/About';
 import Login from './pages/login/LoginUser';
 import Register from './pages/register/RegisterUser';
-import UsersList from './pages/usersList/UsersList';
-import CreateEventPage from './pages/createEventPage/CreateEventPage';
+import CreateEventPage from './pages/userHomePage/CreateEventPage';
 import LoginCompany from './pages/login/LoginCompany';
 import RegisterCompany from './pages/register/RegisterCompany';
 import NewsLetter from './pages/support/NewsLetter';
@@ -148,14 +147,6 @@ const App: React.FC = () => {
             <Register
               onRegisterSuccess={handleRegisterSuccess}
             />
-          }
-        />
-        <Route
-          path="/userslist"
-          element={
-            <Layout>
-              <UsersList />
-            </Layout>
           }
         />
         <Route

@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import MessageDisplay from '../MessageDisplay';
 import { useMessage } from '../../shared/context/MessageContext';
-import '../styles/Layout.css';
+import './styles/Layout.css';
 
 interface LayoutProps {
   children: ReactNode;

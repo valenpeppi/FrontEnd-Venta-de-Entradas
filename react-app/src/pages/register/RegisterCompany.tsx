@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
-import '../styles/RegisterCompany.css';
+import './styles/RegisterCompany.css';
 
 interface RegisterProps {
   onRegisterSuccess: () => void;

@@ -5,7 +5,7 @@ import { useMessage } from '../../shared/context/MessageContext';
 import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
-import '../styles/HomePage.css';
+import './styles/HomePage.css';
 import type { Ticket } from '../../App';
 
 const HomePage: React.FC = () => {

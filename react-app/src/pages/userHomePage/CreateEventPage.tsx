@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
-import '../styles/CreateEventPage.css';
+import './styles/CreateEventPage.css';
 
 interface CreateEventPageProps {
   // Removed setAppMessage prop
