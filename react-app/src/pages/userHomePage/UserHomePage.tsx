@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useEvents } from '../../shared/context/EventsContext';
 import { useCart } from '../../shared/context/CartContext';
 import { useMessage } from '../../shared/context/MessageContext';
-import { Link } from 'react-router-dom';
+import { useAuth } from '../../shared/context/AuthContext'; // Importa el hook de autenticación
+import { Link, useNavigate } from 'react-router-dom'; // Importa useNavigate
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import './styles/UserHomePage.css';
@@ -17,6 +18,8 @@ const HomePage: React.FC = () => {
 
   const { addToCart } = useCart();
   const { setAppMessage } = useMessage();
+  const { isLoggedIn } = useAuth(); // Obtiene el estado de la sesión
+  const navigate = useNavigate(); // Hook para redirigir
 
   useEffect(() => {
     if (currentEventIndex >= allTickets.length && allTickets.length > 0) {
@@ -39,10 +42,17 @@ const HomePage: React.FC = () => {
   };
 
   const handleBuyClick = (ticket: Ticket) => {
-    setSelectedTicket(ticket);
-    setQuantity(1);
-    setShowPurchaseModal(true);
-    setAppMessage(null);
+    if (!isLoggedIn) {
+      // Si el usuario no ha iniciado sesión
+      setAppMessage('Inicia sesión para poder comprar una entrada', 'info');
+      navigate('/login'); // Redirige a la página de login
+    } else {
+      // Si el usuario ha iniciado sesión, abre el modal de compra
+      setSelectedTicket(ticket);
+      setQuantity(1);
+      setShowPurchaseModal(true);
+      setAppMessage(null);
+    }
   };
 
   const handleCloseModal = () => {
@@ -69,16 +79,14 @@ const HomePage: React.FC = () => {
     handleCloseModal();
   };
 
-  // Obtener tipos únicos de eventos
+  // (El resto del componente sigue igual)
   const eventTypes = Array.from(new Set(allTickets.map(ticket => ticket.type)));
   const [selectedType, setSelectedType] = useState<string>('Todos');
 
-  // Filtrar eventos según el tipo seleccionado
   const filteredTickets = selectedType === 'Todos'
     ? allTickets
     : allTickets.filter(ticket => ticket.type === selectedType);
 
-  // Agrupar eventos por tipo
   const eventsByType: { [key: string]: Ticket[] } = {};
   filteredTickets.forEach(ticket => {
     if (!eventsByType[ticket.type]) eventsByType[ticket.type] = [];

@@ -1,8 +1,9 @@
 import type React from "react"
-import { useReducer, useEffect } from "react"
+import { useReducer, useEffect } from "react" // Se añade useEffect
 import { useNavigate, Link } from "react-router-dom"
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
+import MessageDisplay from "../../shared/MessageDisplay"; // Se importa el display de mensajes
 import './styles/LoginUser.css' 
 
 interface LoginProps {
@@ -56,11 +57,15 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   });
   
   const navigate = useNavigate();
-  const { clearMessages } = useMessage();
+  const { messages, clearMessages } = useMessage(); // Se obtiene clearMessages
 
-  // Limpia cualquier mensaje de la aplicación cuando el componente Login se monta
+  // --- MODIFICACIÓN AQUÍ ---
+  // Este useEffect se ejecuta cuando el componente se "desmonta" (cuando sales de la página).
+  // Limpia cualquier mensaje que esté activo para que no reaparezca.
   useEffect(() => {
-    clearMessages();
+    return () => {
+      clearMessages();
+    };
   }, [clearMessages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,15 +73,12 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     dispatch({ type: 'SET_ERROR', payload: { error: null } });
 
     try {
-      console.log('Enviando login:', state.email, state.password);
       const response = await axios.post('http://localhost:3000/api/auth/login', {
         mail: state.email, 
         password: state.password,
       });
 
       const data = response.data;
-      console.log('Respuesta del backend:', data);
-
       const role= data.user?.role;
       onLoginSuccess(data.user?.name || data.user?.mail || 'Usuario', data.user?.role);
 
@@ -87,7 +89,6 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       }
 
     } catch (err) {
-      console.error('Error en login:', err);
       if (axios.isAxiosError(err) && err.response) {
         const errorMessage = err.response.data?.message || 'Usuario o contraseña incorrectos.';
         dispatch({ type: 'SET_ERROR', payload: { error: errorMessage } });
@@ -98,63 +99,72 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="login-root">
-      <div className="login-card">
-        <h2 className="login-title">Iniciar Sesión</h2>
-        {state.error && <div className="login-error-message">{state.error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="login-field">
-            <label htmlFor="email" className="login-label">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="login-input"
-              value={state.email}
-              onChange={(e) => dispatch({ type: 'SET_EMAIL', payload: { email: e.target.value } })}
-              required
-            />
+    <>
+      {/* Se renderizan los mensajes aquí para que sean visibles */}
+      {messages.map(message => (
+        <MessageDisplay 
+          key={message.id}
+          message={message.text} 
+          type={message.type} 
+        />
+      ))}
+      <div className="login-root">
+        <div className="login-card">
+          <h2 className="login-title">Iniciar Sesión</h2>
+          {state.error && <div className="login-error-message">{state.error}</div>}
+          <form onSubmit={handleSubmit}>
+            <div className="login-field">
+              <label htmlFor="email" className="login-label">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                className="login-input"
+                value={state.email}
+                onChange={(e) => dispatch({ type: 'SET_EMAIL', payload: { email: e.target.value } })}
+                required
+              />
+            </div>
+            <div className="login-field-password">
+              <label htmlFor="password" className="login-label">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                id="password"
+                className="login-input-password"
+                value={state.password}
+                onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: { password: e.target.value } })}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="login-btn-submit"
+            >
+              Iniciar Sesión
+            </button>
+          </form>
+          <div className="login-register-link">
+            ¿No tienes una cuenta? <Link to="/register" className="login-link">Regístrate aquí</Link>
           </div>
-          <div className="login-field-password">
-            <label htmlFor="password" className="login-label">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="login-input-password"
-              value={state.password}
-              onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: { password: e.target.value } })}
-              required
-            />
+          <div className="login-forgot-password-link">
+          <Link to="/forgot-password" className="login-link">¿Olvidaste tu contraseña?</Link>
           </div>
-          <button
-            type="submit"
-            className="login-btn-submit"
-          >
-            Iniciar Sesión
-          </button>
-        </form>
-        <div className="login-register-link">
-          ¿No tienes una cuenta? <Link to="/register" className="login-link">Regístrate aquí</Link>
-        </div>
-        <div className="login-forgot-password-link">
-        <Link to="/forgot-password" className="login-link">¿Olvidaste tu contraseña?</Link>
-        </div>
-        <div className="back">
-          <button
-            type="button"
-            className="back-to-login-btn"
-            onClick={() => navigate('/')}
-          >
-          Volver
-          </button>
-          </div>          
-    </div>
-    </div>
+          <div className="back">
+            <button
+              type="button"
+              className="back-to-login-btn"
+              onClick={() => navigate('/')}
+            >
+            Volver
+            </button>
+            </div>          
+      </div>
+      </div>
+    </>
   );
 };
-
 
 export default Login;

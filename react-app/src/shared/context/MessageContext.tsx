@@ -21,7 +21,7 @@ interface MessageContextType {
   addMessage: (text: string, type?: 'success' | 'error' | 'info') => void;
   removeMessage: (id: string) => void;
   clearMessages: () => void;
-  setAppMessage: (message: string | null) => void; // Para compatibilidad con el código existente
+  setAppMessage: (message: string | null, type?: 'success' | 'error' | 'info') => void; // Modificado para aceptar tipo
 }
 
 const MessageContext = createContext<MessageContextType | undefined>(undefined);
@@ -38,6 +38,10 @@ const messageReducer = (state: MessageState, action: MessageAction): MessageStat
         type: action.payload.type,
         id: Date.now().toString()
       };
+      // Evita mensajes duplicados
+      if (state.messages.some(msg => msg.text === newMessage.text)) {
+        return state;
+      }
       return {
         ...state,
         messages: [...state.messages, newMessage]
@@ -69,15 +73,13 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) =>
   });
 
   const addMessage = (text: string, type: 'success' | 'error' | 'info' = 'info') => {
+    const id = Date.now().toString();
     dispatch({ type: 'ADD_MESSAGE', payload: { text, type } });
     
-    // Auto-remove message after 5 seconds
+    // Auto-remove message after 3 seconds
     setTimeout(() => {
-      const messageId = state.messages[state.messages.length - 1]?.id;
-      if (messageId) {
-        removeMessage(messageId);
-      }
-    }, 5000);
+      dispatch({ type: 'REMOVE_MESSAGE', payload: { id } });
+    }, 3000);
   };
 
   const removeMessage = (id: string) => {
@@ -88,13 +90,14 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) =>
     dispatch({ type: 'CLEAR_MESSAGES' });
   };
 
-  // Función de compatibilidad con el código existente
-  const setAppMessage = (message: string | null) => {
+  // --- MODIFICACIÓN AQUÍ ---
+  const setAppMessage = (message: string | null, type?: 'success' | 'error' | 'info') => {
     if (message) {
-      const type = message.includes('exitoso') || message.includes('comprado') || message.includes('agregado') 
+      // Si se provee un tipo, se usa. Si no, se determina automáticamente.
+      const messageType = type || (message.includes('exitoso') || message.includes('agregado') 
         ? 'success' as const 
-        : 'error' as const;
-      addMessage(message, type);
+        : 'error' as const);
+      addMessage(message, messageType);
     }
   };
 
@@ -117,4 +120,4 @@ export const useMessage = () => {
     throw new Error('useMessage debe ser usado dentro de un MessageProvider');
   }
   return context;
-}; 
+};
