@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEvents } from '../shared/context/EventsContext';
 import { useCart } from '../shared/context/CartContext';
 import { useMessage } from '../shared/context/MessageContext';
-import PurchaseModal from '../pages/HomePage/PurchaseModal';
+import PurchaseModal from '../pages/userHomePage/PurchaseModal';
 import type { Ticket } from '../App';
 import './styles/EventDetailPage.css';
 
