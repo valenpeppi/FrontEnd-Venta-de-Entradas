@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import '../styles/Navbar.css';
+import './styles/Navbar.css';
 import logoTicket from '../../assets/ticket.png';
 import cartIcon from '../../assets/cart.png';
 import { useCart } from '../../shared/context/CartContext';

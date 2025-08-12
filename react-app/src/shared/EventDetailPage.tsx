@@ -6,6 +6,7 @@ import { useMessage } from '../shared/context/MessageContext';
 import PurchaseModal from '../pages/userHomePage/PurchaseModal';
 import type { Ticket } from '../App';
 import './styles/EventDetailPage.css';
+import "./layout/styles/Layout.css";
 
 interface EventDetailPageProps {
   // Removed setAppMessage prop

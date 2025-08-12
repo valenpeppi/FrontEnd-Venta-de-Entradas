@@ -2,7 +2,7 @@ import React, { useReducer, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
-import './styles/Register.css';
+import './styles/RegisterUser.css';
 
 interface RegisterProps {
   onRegisterSuccess: () => void;
