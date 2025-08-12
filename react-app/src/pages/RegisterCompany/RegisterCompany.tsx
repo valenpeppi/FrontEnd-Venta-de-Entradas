@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useMessage } from '../../context/MessageContext';
+import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
-import './RegisterCompany.css';
+import '../styles/RegisterCompany.css';
 
 interface RegisterProps {
   onRegisterSuccess: () => void;

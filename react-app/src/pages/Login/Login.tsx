@@ -1,9 +1,9 @@
 import type React from "react"
 import { useReducer, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { useMessage } from '../../context/MessageContext';
+import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
-import './Login.css' 
+import '../styles/Login.css' 
 
 interface LoginProps {
   onLoginSuccess: (userName: string, role?: string) => void;

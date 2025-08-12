@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import Layout from './components/Layout/Layout';
+import Layout from './component/Layout/Layout';
 import HomePage from './pages/HomePage/HomePage';
 import CarritoPage from './pages/Cart/CarritoPage';
 import Pay from './pages/Pay/Pay';
 import AdminHomePage from './pages/AdminHomePage/AdminHomePage';
 import MyTickets from './pages/myTickets/MyTickets';
 import Help from './pages/Help/Help';
-import EventDetailPage from './components/EventDetailPage';
-import About from './pages/About/About';
+import EventDetailPage from './component/EventDetailPage';
+import About from './pages/About';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import UsersList from './pages/UsersList/UsersList';
@@ -16,9 +16,9 @@ import CreateEventPage from './pages/CreateEventPage/CreateEventPage';
 import LoginCompany from './pages/LoginCompany/LoginCompany';
 import RegisterCompany from './pages/RegisterCompany/RegisterCompany';
 import NewsLetter from './pages/NewsLetter/NewsLetter';
-import { useAuth } from './context/AuthContext';
-import { useMessage } from './context/MessageContext';
-import './App.css';
+import { useAuth } from './shared/context/AuthContext';
+import { useMessage } from './shared/context/MessageContext';
+import './shared/styles/App.css';
 
 export interface Ticket {
   id: string;

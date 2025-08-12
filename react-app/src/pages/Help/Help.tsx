@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import './Help.css'; 
+import '../styles/Help.css'; 
 
 const Help: React.FC = () => {
   const navigate = useNavigate();

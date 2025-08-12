@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
-import './NewsLetter.css';
+import '../styles/NewsLetter.css';
 
 const NewsLetter: React.FC = () => {
   const [name, setName] = useState('');

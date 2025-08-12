@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Pay.css';
+import '../styles/Pay.css';
 
 const Pay: React.FC = () => {
   const navigate = useNavigate();

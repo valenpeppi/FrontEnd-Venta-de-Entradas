@@ -1,8 +1,8 @@
 import React, { useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMessage } from '../../context/MessageContext';
+import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
-import './CreateEventPage.css';
+import '../styles/CreateEventPage.css';
 
 interface CreateEventPageProps {
   // Removed setAppMessage prop
@@ -101,7 +101,7 @@ const CreateEventPage: React.FC<CreateEventPageProps> = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/events/createEvent', formData, {
+      await axios.post('http://localhost:3000/api/events/createEvent', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

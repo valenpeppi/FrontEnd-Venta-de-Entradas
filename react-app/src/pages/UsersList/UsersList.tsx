@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import './UsersList.css';
+import '../styles/UsersList.css';
 
 interface User {
   dni: number;

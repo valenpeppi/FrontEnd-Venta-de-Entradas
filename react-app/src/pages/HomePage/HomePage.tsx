@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useEvents } from '../../context/EventsContext';
-import { useCart } from '../../context/CartContext';
-import { useMessage } from '../../context/MessageContext';
+import { useEvents } from '../../shared/context/EventsContext';
+import { useCart } from '../../shared/context/CartContext';
+import { useMessage } from '../../shared/context/MessageContext';
 import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
-import './HomePage.css';
-
-export interface Ticket {
-  id: string;
-  eventName: string;
-  date: string;
-  location: string;
-  price: number;
-  availableTickets: number;
-  imageUrl: string;
-  time: string;
-}
+import '../styles/HomePage.css';
+import type { Ticket } from '../../App';
 
 const HomePage: React.FC = () => {
   const { allTickets, updateAvailableTickets } = useEvents();
