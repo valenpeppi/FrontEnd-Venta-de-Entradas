@@ -99,7 +99,7 @@ const CreateEventPage: React.FC = () => {
       return;
     }
 
-    const datetime = `${state.date}T${state.time}:00`;
+     const datetime = new Date(`${state.date}T${state.time}:00`).toISOString();
 
     const formData = new FormData();
     formData.append('name', state.eventName);
@@ -122,7 +122,7 @@ const CreateEventPage: React.FC = () => {
           'Authorization': `Bearer ${token}`
         },
       });
-
+      
       setAppMessage('¡Evento creado exitosamente!', 'success');
       dispatch({ type: 'RESET_FORM' });
       navigate('/');
