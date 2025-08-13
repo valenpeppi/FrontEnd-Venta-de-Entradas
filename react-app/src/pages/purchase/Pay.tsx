@@ -43,8 +43,8 @@ const Pay: React.FC = () => {
         </>
       ) : (
         <div className="pay-summary-section">
-          <p style={{ textAlign: 'center' }}>Tu carrito está vacío.</p>
-          <div className="pay-actions" style={{ marginTop: '1rem' }}>
+          <p className="pay-cart-empty">Tu carrito está vacío.</p>
+          <div className="pay-actions pay-actions-margin">
              <button onClick={() => navigate('/')} className="btn-back">
               Ir a la tienda
             </button>

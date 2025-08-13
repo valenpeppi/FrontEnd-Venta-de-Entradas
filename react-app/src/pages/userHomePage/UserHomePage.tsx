@@ -123,7 +123,7 @@ const HomePage: React.FC = () => {
         <h2 className="event-list-title">Eventos por tipo</h2>
         <div className="event-list-by-type">
           {Object.keys(eventsByType).length === 0 && (
-            <p style={{ textAlign: 'center', color: '#888' }}>No hay eventos para este tipo.</p>
+            <p className="event-type-empty">No hay eventos para este tipo.</p>
           )}
           {Object.entries(eventsByType).map(([type, tickets]) => (
             <div key={type} className="event-type-section">
