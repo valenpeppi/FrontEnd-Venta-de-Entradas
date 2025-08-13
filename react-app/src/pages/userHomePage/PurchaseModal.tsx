@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../shared/context/AuthContext';
+import { useMessage } from '../../shared/context/MessageContext';
 import type { Ticket } from '../../App';
-
 import './styles/PurchaseModal.css';
 
 export interface PurchaseModalProps {
@@ -25,39 +27,43 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   const [internalQuantity, setInternalQuantity] = useState<number>(quantity);
   const [localErrorMessage, setLocalErrorMessage] = useState<string | null>(null);
   const isSubmitting = useRef(false); 
+  const { isLoggedIn } = useAuth();
+  const { setAppMessage } = useMessage();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
-      // Al abrir, la cantidad inicial es 1, siempre que haya tickets.
       const initialQuantity = selectedTicket && selectedTicket.availableTickets > 0 ? 1 : 0;
       setInternalQuantity(initialQuantity);
       onQuantityChange(initialQuantity);
       setLocalErrorMessage(null);
       isSubmitting.current = false;
     }
-  }, [isOpen, selectedTicket]);
+  }, [isOpen, selectedTicket, onQuantityChange]);
 
   const handleConfirm = () => {
-    if (isSubmitting.current) {
-      return; 
-    }
-    isSubmitting.current = true;
-    setLocalErrorMessage(null);
-
-    if (!selectedTicket) {
-      setLocalErrorMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
-      isSubmitting.current = false;
+    if (isSubmitting.current) return;
+    
+    // --- MODIFICACIÓN AQUÍ ---
+    // Se añade la comprobación de seguridad
+    if (!isLoggedIn) {
+      setAppMessage('Inicia sesión para poder comprar una entrada', 'info');
+      navigate('/login');
+      onCloseModal();
       return;
     }
 
-    if (internalQuantity <= 0) {
+    isSubmitting.current = true;
+    setLocalErrorMessage(null);
+
+    if (!selectedTicket || internalQuantity <= 0) {
       setLocalErrorMessage('La cantidad debe ser al menos 1.');
       isSubmitting.current = false;
       return;
     }
 
     if (selectedTicket.availableTickets < internalQuantity) {
-      setLocalErrorMessage('No hay suficientes entradas disponibles para tu solicitud.');
+      setLocalErrorMessage('No hay suficientes entradas disponibles.');
       isSubmitting.current = false;
       return;
     }
@@ -70,8 +76,6 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
     return null;
   }
   
-  // --- MODIFICACIÓN AQUÍ ---
-  // El máximo de opciones es 3, pero limitado por las entradas disponibles.
   const maxQuantity = Math.min(selectedTicket.availableTickets, 3);
   const quantityOptions = Array.from({ length: maxQuantity }, (_, i) => i + 1);
 
