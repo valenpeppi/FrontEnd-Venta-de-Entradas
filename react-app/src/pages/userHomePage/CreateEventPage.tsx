@@ -64,15 +64,16 @@ const CreateEventPage: React.FC = () => {
   const { setAppMessage } = useMessage();
 
   useEffect(() => {
-    (async () => {
+    const fetchEventTypes = async () => {
       try {
         const { data } = await axios.get<EventType[]>('http://localhost:3000/api/events/types');
         setTypes(data);
       } catch (e) {
-        console.error(e);
-        setAppMessage('No se pudieron cargar los tipos de evento.');
+        console.error("Error al cargar los tipos de evento:", e);
+        setAppMessage('No se pudieron cargar los tipos de evento.', 'error');
       }
-    })();
+    };
+    fetchEventTypes();
   }, [setAppMessage]);
 
   const handleFieldChange = (field: keyof CreateEventState, value: string) => {
@@ -105,14 +106,24 @@ const CreateEventPage: React.FC = () => {
     formData.append('description', state.description);
     formData.append('date', datetime);
     formData.append('idEventType', state.idEventType);
-    formData.append('image', state.image);
+    formData.append('image', state.image as Blob);
 
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setAppMessage('No estás autenticado. Por favor, inicia sesión de nuevo.', 'error');
+        navigate('/logincompany');
+        return;
+      }
+
       await axios.post('http://localhost:3000/api/events/createEvent', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+        },
       });
 
-      setAppMessage('¡Evento creado exitosamente!');
+      setAppMessage('¡Evento creado exitosamente!', 'success');
       dispatch({ type: 'RESET_FORM' });
       navigate('/');
     } catch (err) {
@@ -120,10 +131,10 @@ const CreateEventPage: React.FC = () => {
       if (axios.isAxiosError(err) && err.response) {
         const errorMessage = (err.response.data as any)?.message || 'Error al crear el evento.';
         dispatch({ type: 'SET_ERROR', payload: { error: errorMessage } });
-        setAppMessage(`Error: ${errorMessage}`);
+        setAppMessage(`Error: ${errorMessage}`, 'error');
       } else {
         dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor.' } });
-        setAppMessage('Error de red o del servidor.');
+        setAppMessage('Error de red o del servidor.', 'error');
       }
     }
   };
