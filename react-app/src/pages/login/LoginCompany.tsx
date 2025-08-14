@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
-import './styles/LoginCompany.css'; 
+import styles from './styles/LoginCompany.module.css'; 
 
 interface LoginCompanyProps {
   onLoginSuccess: (companyName: string) => void;
@@ -45,32 +45,32 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="login-company-root">
-      <div className="login-company-card">
-        <h2 className="login-company-title">Iniciar Sesión como Organizador</h2>
-        {error && <div className="login-company-error-message">{error}</div>}
+    <div className={styles.loginCompanyRoot}>
+      <div className={styles.loginCompanyCard}>
+        <h2 className={styles.loginCompanyTitle}>Iniciar Sesión como Organizador</h2>
+        {error && <div className={styles.loginCompanyErrorMessage}>{error}</div>}
         <form onSubmit={handleSubmit}>
-          <div className="login-company-field">
-            <label htmlFor="email" className="login-company-label">
+          <div className={styles.loginCompanyField}>
+            <label htmlFor="email" className={styles.loginCompanyLabel}>
               Email
             </label>
             <input
               type="email"
               id="email"
-              className="login-company-input"
+              className={styles.loginCompanyInput}
               value={contact_email}
               onChange={(e) => setcontact_email(e.target.value)}
               required
             />
           </div>
-          <div className="login-company-field-password">
-            <label htmlFor="password" className="login-company-label">
+          <div className={styles.loginCompanyFieldPassword}>
+            <label htmlFor="password" className={styles.loginCompanyLabel}>
               Contraseña
             </label>
             <input
               type="password"
               id="password"
-              className="login-company-input-password"
+              className={styles.loginCompanyInputPassword}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -78,15 +78,15 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
           </div>
           <button
             type="submit"
-            className="login-company-btn-submit"
+            className={styles.loginCompanyBtnSubmit}
           >
             Iniciar Sesión
           </button>
         </form>
-        <div className="login-company-register-link">
-          <p>¿No tienes cuenta de organizador? <Link to="/registercompany" className="login-company-register-link-btn">Regístrate aquí</Link></p>
+        <div className={styles.loginCompanyRegisterLink}>
+          <p>¿No tienes cuenta de organizador? <Link to="/registercompany" className={styles.loginCompanyRegisterLinkBtn}>Regístrate aquí</Link></p>
         </div>
-        <button onClick={() => navigate(-1)} className="back-button">Volver</button>
+        <button onClick={() => navigate(-1)} className={styles.backButton}>Volver</button>
       </div>
     </div>
   );

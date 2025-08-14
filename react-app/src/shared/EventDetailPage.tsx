@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEvents } from '../shared/context/EventsContext';
-import { useCart } from '../shared/context/CartContext';
-import { useMessage } from '../shared/context/MessageContext';
+import { useEvents } from './context/EventsContext';
+import { useCart } from './context/CartContext';
+import { useMessage } from './context/MessageContext';
 import PurchaseModal from '../pages/userHomePage/PurchaseModal';
 import type { Ticket } from '../App';
-import './styles/EventDetailPage.css';
-import "./layout/styles/Layout.css";
+import styles from './styles/EventDetailPage.module.css';
 
-interface EventDetailPageProps {
-  // Removed setAppMessage prop
-}
-
-const EventDetailPage: React.FC<EventDetailPageProps> = () => {
+const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { allTickets, updateAvailableTickets } = useEvents();
   const [event, setEvent] = useState<Ticket | undefined>(undefined);
@@ -46,7 +41,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = () => {
 
   const handleCloseModal = () => {
     setShowPurchaseModal(false);
-    setEvent(undefined);
   };
 
   const handleConfirmPurchase = (purchasedQuantity: number) => {
@@ -69,53 +63,53 @@ const EventDetailPage: React.FC<EventDetailPageProps> = () => {
 
   if (!event) {
     return (
-      <div className="loading-state">
-        <p className="loading-state-text">Cargando evento...</p>
+      <div className={styles.loadingState}>
+        <p className={styles.loadingStateText}>Cargando evento...</p>
       </div>
     );
   }
 
   return (
-    <div className="event-detail-container">
-      <div className="event-detail-card">
-        <div className="event-image-container">
-          <img src={event.imageUrl} alt={event.eventName} className="event-image" />
+    <div className={styles.eventDetailContainer}>
+      <div className={styles.eventDetailCard}>
+        <div className={styles.eventImageContainer}>
+          <img src={event.imageUrl} alt={event.eventName} className={styles.eventImage} />
         </div>
         
-        <div className="event-info">
-          <h1 className="event-title">{event.eventName}</h1>
+        <div className={styles.eventInfo}>
+          <h1 className={styles.eventTitle}>{event.eventName}</h1>
           
-          <div className="event-details">
-            <div className="event-detail-item">
-              <span className="detail-label">Fecha:</span>
-              <span className="detail-value">{event.date}</span>
+          <div className={styles.eventDetails}>
+            <div className={styles.eventDetailItem}>
+              <span className={styles.detailLabel}>Fecha:</span>
+              <span className={styles.detailValue}>{event.date}</span>
             </div>
             
-            <div className="event-detail-item">
-              <span className="detail-label">Hora:</span>
-              <span className="detail-value">{event.time}</span>
+            <div className={styles.eventDetailItem}>
+              <span className={styles.detailLabel}>Hora:</span>
+              <span className={styles.detailValue}>{event.time}</span>
             </div>
             
-            <div className="event-detail-item">
-              <span className="detail-label">Ubicación:</span>
-              <span className="detail-value">{event.location}</span>
+            <div className={styles.eventDetailItem}>
+              <span className={styles.detailLabel}>Ubicación:</span>
+              <span className={styles.detailValue}>{event.location}</span>
             </div>
             
-            <div className="event-detail-item">
-              <span className="detail-label">Precio:</span>
-              <span className="detail-value price">${event.price.toFixed(2)}</span>
+            <div className={styles.eventDetailItem}>
+              <span className={styles.detailLabel}>Precio:</span>
+              <span className={`${styles.detailValue} ${styles.price}`}>${event.price.toFixed(2)}</span>
             </div>
             
-            <div className="event-detail-item">
-              <span className="detail-label">Entradas disponibles:</span>
-              <span className="detail-value">{event.availableTickets}</span>
+            <div className={styles.eventDetailItem}>
+              <span className={styles.detailLabel}>Entradas disponibles:</span>
+              <span className={styles.detailValue}>{event.availableTickets}</span>
             </div>
           </div>
           
-          <div className="event-actions">
+          <div className={styles.eventActions}>
             <button 
               onClick={handleBuyClick}
-              className="buy-button"
+              className={styles.buyButton}
               disabled={event.availableTickets === 0}
             >
               {event.availableTickets === 0 ? 'Agotado' : 'Comprar Entradas'}
@@ -123,7 +117,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = () => {
             
             <button 
               onClick={() => navigate('/')}
-              className="back-button"
+              className={styles.backButton}
             >
               Volver a Eventos
             </button>

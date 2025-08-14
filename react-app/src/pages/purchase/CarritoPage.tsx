@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../shared/context/CartContext';
-import './styles/CarritoPage.css';
+import styles from './styles/CarritoPage.module.css';
 
 const CarritoPage = () => {
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const CarritoPage = () => {
     const newQuantity = parseInt(value);
     if (isNaN(newQuantity)) return;
     
-    // La validación ahora está principalmente en el contexto, pero mantenemos el feedback
     const wasUpdated = updateItemQuantity(id, newQuantity);
     if (!wasUpdated) {
       setErrorMsg('Solo puedes tener entre 1 y 3 entradas por evento.');
@@ -31,31 +30,30 @@ const CarritoPage = () => {
   };
 
   return (
-    <div className="cart-container">
-      <h2 className="cart-title">Carrito de compras</h2>
-      {errorMsg && <div className="cart-error-message">{errorMsg}</div>}
+    <div className={styles.cartContainer}>
+      <h2 className={styles.cartTitle}>Carrito de compras</h2>
+      {errorMsg && <div className={styles.cartErrorMessage}>{errorMsg}</div>}
       {cartItems.length > 0 ? (
         <>
-          <div className="cart-items-container">
+          <div className={styles.cartItemsContainer}>
             {cartItems.map((item) => (
-              <div key={item.id} className="cart-item">
-                <div className="item-info">
-                  <h3 className="item-name">{item.eventName}</h3>
-                  {item.date && <p className="item-date">{item.date}</p>}
-                  {item.location && <p className="item-location">{item.location}</p>}
-                  <p className="item-price">Precio unitario: ${item.price.toFixed(2)}</p>
+              <div key={item.id} className={styles.cartItem}>
+                <div className={styles.itemInfo}>
+                  <h3 className={styles.itemName}>{item.eventName}</h3>
+                  {item.date && <p className={styles.itemDate}>{item.date}</p>}
+                  {item.location && <p className={styles.itemLocation}>{item.location}</p>}
+                  <p className={styles.itemPrice}>Precio unitario: ${item.price.toFixed(2)}</p>
                 </div>
                 
-                <div className="item-quantity">
-                  <label htmlFor={`quantity-select-${item.id}`} className="quantity-label">
+                <div className={styles.itemQuantity}>
+                  <label htmlFor={`quantity-select-${item.id}`} className={styles.quantityLabel}>
                     Cantidad:
                   </label>
-                  {/* --- CAMBIO AQUÍ: Se reemplaza el input por un select --- */}
                   <select
                     id={`quantity-select-${item.id}`}
                     value={item.quantity}
                     onChange={e => handleQuantityChange(item.id, e.target.value)}
-                    className="cart-quantity-select"
+                    className={styles.cartQuantitySelect}
                   >
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -63,13 +61,13 @@ const CarritoPage = () => {
                   </select>
                 </div>
                 
-                <div className="item-subtotal">
+                <div className={styles.itemSubtotal}>
                   <p>Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
                 </div>
                 
                 <button 
                   onClick={() => removeItem(item.id)}
-                  className="item-remove-btn"
+                  className={styles.itemRemoveBtn}
                 >
                   Eliminar
                 </button>
@@ -77,25 +75,25 @@ const CarritoPage = () => {
             ))}
           </div>
           
-          <div className="cart-summary">
-            <div className="total-section">
+          <div className={styles.cartSummary}>
+            <div className={styles.totalSection}>
               <h3>Total: ${calculateTotal().toFixed(2)}</h3>
             </div>
             
-            <div className="action-buttons">
-              <button onClick={() => navigate('/')} className="continue-btn">
+            <div className={styles.actionButtons}>
+              <button onClick={() => navigate('/')} className={styles.continueBtn}>
                 Seguir comprando
               </button>
-              <button onClick={() => navigate('/pay')} className="checkout-btn">
+              <button onClick={() => navigate('/pay')} className={styles.checkoutBtn}>
                 Proceder al pago
               </button>
             </div>
           </div>
         </>
       ) : (
-        <div className="empty-cart">
+        <div className={styles.emptyCart}>
           <p>No hay entradas en tu carrito</p>
-          <button onClick={() => navigate('/')} className="continue-btn">
+          <button onClick={() => navigate('/')} className={styles.continueBtn}>
             Ver eventos disponibles
           </button>
         </div>

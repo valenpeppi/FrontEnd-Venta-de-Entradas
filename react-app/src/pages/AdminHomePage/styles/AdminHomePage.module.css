@@ -1,5 +1,5 @@
 /* Estilos generales para el contenedor principal */
-.admin-home-container {
+.adminHomeContainer {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -12,7 +12,7 @@
 }
 
 /* Estilos para el título */
-.admin-home-container h1 {
+.adminHomeContainer h1 {
   text-align: center;
   margin-bottom: 30px;
   color: #2c3e50; /* Un color de texto oscuro y profesional */
@@ -23,7 +23,7 @@
 }
 
 /* Mensaje de no solicitudes */
-.admin-home-container p {
+.adminHomeContainer p {
   text-align: center;
   color: #7f8c8d;
   font-size: 1.2em;
@@ -31,7 +31,7 @@
 }
 
 /* Contenedor de las tarjetas de eventos */
-.admin-home-container > div:not(:first-child) { /* Selecciona los divs que contienen las tarjetas de eventos */
+.adminHomeContainer > div:not(:first-child) { /* Selecciona los divs que contienen las tarjetas de eventos */
   display: flex;
   flex-wrap: wrap; /* Permite que las tarjetas se envuelvan a la siguiente línea */
   gap: 25px; /* Espacio entre las tarjetas */
@@ -40,7 +40,7 @@
 }
 
 /* Estilos para cada tarjeta de evento */
-.event-card {
+.eventCard {
   background-color: #ffffff;
   border-radius: 15px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
@@ -54,13 +54,13 @@
   border: 1px solid #e0e0e0;
 }
 
-.event-card:hover {
+.eventCard:hover {
   transform: translateY(-8px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
 }
 
 /* Título del evento dentro de la tarjeta */
-.event-title {
+.eventTitle {
   font-size: 1.8em;
   font-weight: 600;
   color: #34495e;
@@ -69,19 +69,19 @@
 }
 
 /* Información del evento (solicitante, fecha) */
-.event-info {
+.eventInfo {
   font-size: 1.1em;
   color: #555;
   margin-bottom: 8px;
   line-height: 1.5;
 }
 
-.event-info b {
+.eventInfo b {
   color: #2c3e50;
 }
 
 /* Estado del evento */
-.event-status {
+.eventStatus {
   font-size: 1.15em;
   font-weight: 600;
   padding: 8px 12px;
@@ -92,33 +92,33 @@
   text-transform: uppercase;
 }
 
-.event-status.pendiente {
+.pendiente {
   background-color: #fcf8e3;
   color: #8a6d3b;
   border: 1px solid #faebcc;
 }
 
-.event-status.aceptado {
+.aceptado {
   background-color: #dff0d8;
   color: #3c763d;
   border: 1px solid #d6e9c6;
 }
 
-.event-status.rechazado {
+.rechazado {
   background-color: #f2dede;
   color: #a94442;
   border: 1px solid #ebccd1;
 }
 
 /* Acciones (botones) */
-.event-actions {
+.eventActions {
   display: flex;
   gap: 15px;
   margin-top: 20px;
   justify-content: center;
 }
 
-.event-actions button {
+.eventActions button {
   padding: 12px 25px;
   border: none;
   border-radius: 8px;
@@ -129,22 +129,22 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.event-actions button:first-child { /* Botón Aceptar */
+.eventActions button:first-child { /* Botón Aceptar */
   background-color: #28a745; /* Verde */
   color: white;
 }
 
-.event-actions button:first-child:hover {
+.eventActions button:first-child:hover {
   background-color: #218838;
   transform: translateY(-2px);
 }
 
-.event-actions button:last-child { /* Botón Rechazar */
+.eventActions button:last-child { /* Botón Rechazar */
   background-color: #dc3545; /* Rojo */
   color: white;
 }
 
-.event-actions button:last-child:hover {
+.eventActions button:last-child:hover {
   background-color: #c82333;
   transform: translateY(-2px);
 }
@@ -153,50 +153,50 @@
 
 /* Para tablets y pantallas medianas (min-width: 768px) */
 @media (min-width: 768px) {
-  .admin-home-container h1 {
+  .adminHomeContainer h1 {
     font-size: 3.2em;
   }
 
-  .event-card {
+  .eventCard {
     width: calc(50% - 25px); /* Dos tarjetas por fila con espacio */
   }
 }
 
 /* Para desktops y pantallas grandes (min-width: 1024px) */
 @media (min-width: 1024px) {
-  .admin-home-container h1 {
+  .adminHomeContainer h1 {
     font-size: 3.5em;
   }
 
-  .event-card {
+  .eventCard {
     width: calc(33.333% - 25px); /* Tres tarjetas por fila con espacio */
   }
 }
 
 /* Ajustes para pantallas muy pequeñas (ej. iPhone 5/SE) */
 @media (max-width: 375px) {
-  .admin-home-container {
+  .adminHomeContainer {
     padding: 15px;
   }
 
-  .admin-home-container h1 {
+  .adminHomeContainer h1 {
     font-size: 2em;
     margin-bottom: 20px;
   }
 
-  .event-card {
+  .eventCard {
     padding: 20px;
   }
 
-  .event-title {
+  .eventTitle {
     font-size: 1.5em;
   }
 
-  .event-info, .event-status {
+  .eventInfo, .eventStatus {
     font-size: 1em;
   }
 
-  .event-actions button {
+  .eventActions button {
     padding: 10px 20px;
     font-size: 1em;
   }

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useEvents } from '../../shared/context/EventsContext';
 import { useCart } from '../../shared/context/CartContext';
 import { useMessage } from '../../shared/context/MessageContext';
-import { useAuth } from '../../shared/context/AuthContext'; // Importa el hook de autenticación
-import { Link, useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useAuth } from '../../shared/context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
-import './styles/UserHomePage.css';
+import styles from './styles/UserHomePage.module.css';
 import type { Ticket } from '../../App';
 
 const HomePage: React.FC = () => {
@@ -18,8 +18,8 @@ const HomePage: React.FC = () => {
 
   const { addToCart } = useCart();
   const { setAppMessage } = useMessage();
-  const { isLoggedIn } = useAuth(); // Obtiene el estado de la sesión
-  const navigate = useNavigate(); // Hook para redirigir
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (currentEventIndex >= allTickets.length && allTickets.length > 0) {
@@ -43,11 +43,9 @@ const HomePage: React.FC = () => {
 
   const handleBuyClick = (ticket: Ticket) => {
     if (!isLoggedIn) {
-      // Si el usuario no ha iniciado sesión
       setAppMessage('Inicia sesión para poder comprar una entrada', 'info');
-      navigate('/login'); // Redirige a la página de login
+      navigate('/login');
     } else {
-      // Si el usuario ha iniciado sesión, abre el modal de compra
       setSelectedTicket(ticket);
       setQuantity(1);
       setShowPurchaseModal(true);
@@ -79,7 +77,6 @@ const HomePage: React.FC = () => {
     handleCloseModal();
   };
 
-  // (El resto del componente sigue igual)
   const eventTypes = Array.from(new Set(allTickets.map(ticket => ticket.type)));
   const [selectedType, setSelectedType] = useState<string>('Todos');
 
@@ -95,16 +92,16 @@ const HomePage: React.FC = () => {
 
   if (allTickets.length === 0) {
     return (
-      <div className="loading-state">
-        <p className="loading-state-text">Cargando eventos...</p>
+      <div className={styles.loadingState}>
+        <p className={styles.loadingStateText}>Cargando eventos...</p>
       </div>
     );
   }
 
   return (
-    <div className="homepage">
-      <main className="homepage-main">
-        <h1 className="homepage-title">Eventos destacados</h1>
+    <div className={styles.homepage}>
+      <main className={styles.homepageMain}>
+        <h1 className={styles.homepageTitle}>Eventos destacados</h1>
         <Carousel
           tickets={allTickets}
           currentEventIndex={currentEventIndex}
@@ -113,11 +110,11 @@ const HomePage: React.FC = () => {
           onBuyClick={handleBuyClick}
         />
 
-        <div className="event-type-filter-container event-type-filter-left">
-          <label htmlFor="event-type-select" className="event-type-filter-label">Filtrar por tipo:</label>
+        <div className={styles.eventTypeFilterContainer}>
+          <label htmlFor="event-type-select" className={styles.eventTypeFilterLabel}>Filtrar por tipo:</label>
           <select
             id="event-type-select"
-            className="event-type-filter-select"
+            className={styles.eventTypeFilterSelect}
             value={selectedType}
             onChange={e => setSelectedType(e.target.value)}
           >
@@ -128,34 +125,38 @@ const HomePage: React.FC = () => {
           </select>
         </div>
 
-        <h2 className="event-list-title">Eventos por tipo</h2>
-        <div className="event-list-by-type">
+        <h2 className={styles.eventListTitle}>Eventos por tipo</h2>
+        
+        {/* Cambio de estructura aquí */}
+        <div className={styles.eventGrid}>
           {Object.keys(eventsByType).length === 0 && (
-            <p className="event-type-empty">No hay eventos para este tipo.</p>
+            <p className={styles.eventTypeEmpty}>No hay eventos para este tipo.</p>
           )}
           {Object.entries(eventsByType).map(([type, tickets]) => (
-            <div key={type} className="event-type-section">
-              <h2 className="event-type-title">{type.charAt(0).toUpperCase() + type.slice(1)}</h2>
-              <div className="event-type-gallery event-type-gallery">
+            <React.Fragment key={type}>
+              <div className={styles.eventTypeHeader}>
+                <h2 className={styles.eventTypeTitle}>{type.charAt(0).toUpperCase() + type.slice(1)}</h2>
+              </div>
+              <div className={styles.eventTypeGallery}>
                 {tickets.map(ticket => (
                   <Link
                     to={`/event/${ticket.id}`}
                     key={ticket.id}
-                    className="event-card-link"
+                    className={styles.eventCardLink}
                   >
-                    <div className="event-card">
+                    <div className={styles.eventCard}>
                       <img
                         src={ticket.imageUrl}
                         alt={ticket.eventName}
-                        className="event-card-img"
+                        className={styles.eventCardImg}
                         onError={e => { e.currentTarget.src = '/public/ticket.png'; }}
                       />
-                      <div className="event-card-title">{ticket.eventName}</div>
+                      <div className={styles.eventCardTitle}>{ticket.eventName}</div>
                     </div>
                   </Link>
                 ))}
               </div>
-            </div>
+            </React.Fragment>
           ))}
         </div>
       </main>

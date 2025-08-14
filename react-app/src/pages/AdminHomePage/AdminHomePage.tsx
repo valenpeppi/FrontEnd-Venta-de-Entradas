@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import './styles/AdminHomePage.css';
+// Import updated styles
+import styles from './styles/AdminHomePage.module.css';
 
 interface EventRequest {
   id: string;
@@ -31,18 +32,19 @@ const AdminHomePage: React.FC = () => {
   };
 
   return (
-    <div className="admin-home-container">
+    <div className={styles.adminHomeContainer}>
       <h1>Solicitudes de Eventos</h1>
       {requests.length === 0 ? (
         <p>No hay solicitudes pendientes.</p>
       ) : (
         requests.map(req => (
-          <div className="event-card" key={req.id}>
-            <div className="event-title">{req.eventName}</div>
-            <div className="event-info">Solicitante: <b>{req.requester}</b></div>
-            <div className="event-info">Fecha: {req.date}</div>
-            <div className={`event-status ${req.status}`}>Estado: {req.status}</div>
-            <div className="event-actions">
+          <div className={styles.eventCard} key={req.id}>
+            <div className={styles.eventTitle}>{req.eventName}</div>
+            <div className={styles.eventInfo}>Solicitante: <b>{req.requester}</b></div>
+            <div className={styles.eventInfo}>Fecha: {req.date}</div>
+            {/* Use object property access for dynamic class names */}
+            <div className={`${styles.eventStatus} ${styles[req.status]}`}>Estado: {req.status}</div>
+            <div className={styles.eventActions}>
               {req.status === 'pendiente' && (
                 <>
                   <button onClick={() => handleDecision(req.id, 'aceptado')}>Aceptar</button>

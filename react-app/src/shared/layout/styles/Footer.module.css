@@ -1,5 +1,3 @@
-/* Footer.css */
-
 .footer {
   background-color: #f8fafc;
   padding: 3rem 0;
@@ -8,7 +6,7 @@
   border-top: 1px solid #e5e7eb;
 }
 
-.footer-container {
+.footerContainer {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -19,12 +17,12 @@
   gap: 2rem;
 }
 
-.footer-brand-section {
+.footerBrandSection {
   flex: 1 1 250px;
   min-width: 200px;
 }
 
-.footer-brand {
+.footerBrand {
   display: flex;
   align-items: center;
   font-size: 1.8rem;
@@ -34,89 +32,83 @@
   margin-bottom: 1rem;
 }
 
-.footer-logo {
+.footerLogo {
   width: 40px;
   height: 40px;
   margin-right: 0.75rem;
 }
 
-.footer-slogan {
+.footerSlogan {
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 1.5rem;
 }
 
-.footer-social {
+.footerSocial {
   display: flex;
   gap: 1rem;
 }
 
-.footer-social img {
+.footerSocial img {
   width: 28px;
   height: 28px;
   transition: transform 0.2s;
 }
 
-.footer-social img:hover {
+.footerSocial img:hover {
   transform: translateY(-3px);
 }
 
-.footer-links {
+.footerLinks {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
   flex: 2 1 600px;
 }
 
-.footer-links-column {
+.footerLinksColumn {
   flex: 1 1 150px;
 }
 
-.footer-links-column h4 {
+.footerLinksColumn h4 {
   font-size: 1.1rem;
   font-weight: 700;
   color: #1f2937;
   margin-bottom: 1rem;
 }
 
-.footer-links-column ul {
+.footerLinksColumn ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.footer-links-column ul li {
+.footerLinksColumn ul li {
   margin-bottom: 0.75rem;
 }
 
-.footer-links-column ul li a {
+.footerLinksColumn ul li a {
   color: #6b7280;
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.2s;
 }
 
-.footer-links-column ul li a:hover {
+.footerLinksColumn ul li a:hover {
   color: #4f46e5;
 }
 
-/* --- ESTILOS ELIMINADOS --- */
-/* Las clases .footer-newsletter-organizer-wrapper y .footer-link-style han sido eliminadas. */
-
-/* Ajuste para los nuevos enlaces de acción */
-.footer-action-links li a {
+.footerActionLinks li a {
   line-height: 1.5;
 }
 
-
-/* Footer Bottom */
-.footer-bottom {
+.footerBottom {
   background-color: #e2e8f0;
   padding: 1rem 0;
   margin-top: 2rem;
 }
 
-.footer-bottom-container {
+.footerBottomContainer {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
@@ -128,48 +120,47 @@
   color: #6b7280;
 }
 
-.footer-payment-methods {
+.footerPaymentMethods {
   display: flex;
   gap: 0.75rem;
   margin-top: 0.5rem;
 }
 
-.footer-payment-methods img {
+.footerPaymentMethods img {
   height: 24px;
   opacity: 0.8;
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
-  .footer-container {
+  .footerContainer {
     padding: 0 1rem;
     gap: 1.5rem;
   }
 
-  .footer-links {
+  .footerLinks {
     gap: 1.5rem;
   }
 }
 
 @media (max-width: 768px) {
-  .footer-container {
+  .footerContainer {
     flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 0 1rem;
   }
 
-  .footer-brand-section {
+  .footerBrandSection {
     flex: 1 1 100%;
     max-width: 100%;
     margin-bottom: 1.5rem;
   }
 
-  .footer-brand {
+  .footerBrand {
     justify-content: center;
   }
 
-  .footer-links {
+  .footerLinks {
     flex-direction: column;
     gap: 1.5rem;
     flex: 1 1 100%;
@@ -177,18 +168,18 @@
     align-items: center;
   }
 
-  .footer-links-column {
+  .footerLinksColumn {
     flex: 1 1 100%;
     max-width: 100%;
   }
 
-  .footer-bottom-container {
+  .footerBottomContainer {
     flex-direction: column;
     text-align: center;
     gap: 0.5rem;
   }
 
-  .footer-payment-methods {
+  .footerPaymentMethods {
     margin-top: 1rem;
   }
 }
@@ -198,20 +189,20 @@
     padding: 2rem 0;
   }
 
-  .footer-brand {
+  .footerBrand {
     font-size: 1.6rem;
   }
 
-  .footer-logo {
+  .footerLogo {
     width: 35px;
     height: 35px;
   }
 
-  .footer-links-column h4 {
+  .footerLinksColumn h4 {
     font-size: 1rem;
   }
   
-  .footer-links-column ul li a {
+  .footerLinksColumn ul li a {
     font-size: 0.9rem;
   }
 }

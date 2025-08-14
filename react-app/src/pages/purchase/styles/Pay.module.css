@@ -1,5 +1,4 @@
-/* Pay.css */
-.pay-container {
+.payContainer {
   max-width: 800px;
   margin: 40px auto;
   padding: 30px;
@@ -10,7 +9,7 @@
   color: #1f2937;
 }
 
-.pay-title {
+.payTitle {
   font-size: 2.2rem;
   font-weight: 700;
   color: #3730a3;
@@ -18,20 +17,20 @@
   text-align: center;
 }
 
-.pay-summary-section {
+.paySummarySection {
   margin-bottom: 30px;
   border-bottom: 1px solid #e5e7eb;
   padding-bottom: 20px;
 }
 
-.pay-summary-section h2 {
+.paySummarySection h2 {
   font-size: 1.6rem;
   font-weight: 600;
   color: #1f2937;
   margin-bottom: 15px;
 }
 
-.pay-summary-item {
+.paySummaryItem {
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
@@ -39,7 +38,7 @@
   color: #4b5563;
 }
 
-.pay-summary-total {
+.paySummaryTotal {
   font-size: 1.4rem;
   font-weight: 700;
   color: #059669;
@@ -47,7 +46,7 @@
   margin-top: 15px;
 }
 
-.pay-wallet-container {
+.payWalletContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,12 +54,12 @@
   margin-bottom: 30px;
 }
 
-.loading-text {
+.loadingText {
   color: #4b5563;
   font-size: 1.1rem;
 }
 
-.pay-error-message {
+.payErrorMessage {
   background-color: #fee2e2;
   color: #b91c1c;
   padding: 0.75rem;
@@ -70,13 +69,13 @@
   border: 1px solid #ef4444;
 }
 
-.pay-actions {
+.payActions {
   display: flex;
   justify-content: center;
   gap: 15px;
 }
 
-.btn-back {
+.btnBack {
   padding: 12px 25px;
   border: none;
   border-radius: 8px;
@@ -88,42 +87,41 @@
   color: white;
 }
 
-.btn-back:hover {
+.btnBack:hover {
   background-color: #5a6268;
   transform: translateY(-2px);
 }
 
-.pay-cart-empty {
+.payCartEmpty {
   text-align: center;
 }
 
-.pay-actions-margin {
+.payActionsMargin {
   margin-top: 1rem;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
-  .pay-container {
+  .payContainer {
     margin: 20px auto;
     padding: 20px;
   }
-  .pay-title {
+  .payTitle {
     font-size: 1.8rem;
   }
-  .pay-summary-section h2 {
+  .paySummarySection h2 {
     font-size: 1.4rem;
   }
-  .pay-summary-item {
+  .paySummaryItem {
     font-size: 1rem;
   }
-  .pay-summary-total {
+  .paySummaryTotal {
     font-size: 1.2rem;
   }
-  .pay-actions {
+  .payActions {
     flex-direction: column;
     align-items: stretch;
   }
-  .btn-back {
+  .btnBack {
     width: 100%;
   }
 }

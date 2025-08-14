@@ -1,25 +1,24 @@
-/* Estilos generales para la página de creación de eventos */
-.create-event-container {
+.createEventContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 10rem); /* Ajusta para el navbar y footer */
+  min-height: calc(100vh - 10rem);
   padding: 2rem;
   background: linear-gradient(to bottom right, #eff6ff, #c7d2fe);
   font-family: 'Inter', sans-serif;
   color: #1f2937;
 }
 
-.create-event-card {
+.createEventCard {
   background-color: #ffffff;
   border-radius: 1rem;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   padding: 2.5rem;
   width: 100%;
-  max-width: 600px; /* Ancho máximo para el formulario */
+  max-width: 600px;
 }
 
-.create-event-title {
+.createEventTitle {
   font-size: 2rem;
   font-weight: 700;
   color: #3730a3;
@@ -27,7 +26,7 @@
   text-align: center;
 }
 
-.create-event-error {
+.createEventError {
   background-color: #fee2e2;
   color: #b91c1c;
   padding: 0.75rem;
@@ -38,17 +37,17 @@
   border: 1px solid #ef4444;
 }
 
-.create-event-form {
+.createEventForm {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
 }
 
-.form-group {
+.formGroup {
   margin-bottom: 0.5rem;
 }
 
-.form-group label {
+.formGroup label {
   display: block;
   font-size: 1rem;
   font-weight: 600;
@@ -56,9 +55,9 @@
   margin-bottom: 0.5rem;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.formGroup input,
+.formGroup textarea,
+.formGroup select {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #d1d5db;
@@ -66,33 +65,33 @@
   font-size: 1rem;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
-  box-sizing: border-box; /* Asegura que padding no aumente el ancho */
+  box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
   border-color: #6366f1;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
 
-.form-row {
+.formRow {
   display: flex;
   gap: 1.5rem;
 }
 
-.form-row .form-group {
-  flex: 1; /* Distribuye el espacio equitativamente */
-  margin-bottom: 0; /* Elimina el margen inferior si está en una fila */
+.formRow .formGroup {
+  flex: 1;
+  margin-bottom: 0;
 }
 
-.form-actions {
+.formActions {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.create-event-btn {
+.createEventBtn {
   background-color: #4f46e5;
   color: #ffffff;
   font-weight: 700;
@@ -106,11 +105,11 @@
   flex: 1;
 }
 
-.create-event-btn:hover {
+.createEventBtn:hover {
   background-color: #4338ca;
 }
 
-.cancel-btn {
+.cancelBtn {
   background-color: #f3f4f6;
   color: #4b5563;
   font-weight: 600;
@@ -124,91 +123,90 @@
   flex: 1;
 }
 
-.cancel-btn:hover {
+.cancelBtn:hover {
   background-color: #e5e7eb;
   color: #1f2937;
   border-color: #9ca3af;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
-  .create-event-container {
+  .createEventContainer {
     padding: 1.5rem;
   }
 
-  .create-event-card {
+  .createEventCard {
     padding: 2rem 1.5rem;
     border-radius: 0.75rem;
   }
 
-  .create-event-title {
+  .createEventTitle {
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
   }
 
-  .create-event-form {
+  .createEventForm {
     gap: 1rem;
   }
 
-  .form-group label {
+  .formGroup label {
     font-size: 0.95rem;
   }
 
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
+  .formGroup input,
+  .formGroup textarea,
+  .formGroup select {
     padding: 0.6rem;
     font-size: 0.9rem;
   }
 
-  .form-row {
-    flex-direction: column; /* Apila los campos en filas */
+  .formRow {
+    flex-direction: column;
     gap: 1rem;
   }
 
-  .form-actions {
+  .formActions {
     flex-direction: column;
   }
 
-  .create-event-btn,
-  .cancel-btn {
+  .createEventBtn,
+  .cancelBtn {
     padding: 0.6rem 1.2rem;
     font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .create-event-container {
+  .createEventContainer {
     padding: 1rem;
   }
 
-  .create-event-card {
+  .createEventCard {
     padding: 1.5rem 1rem;
     border-radius: 0.5rem;
   }
 
-  .create-event-title {
+  .createEventTitle {
     font-size: 1.5rem;
     margin-bottom: 1rem;
   }
 
-  .create-event-form {
+  .createEventForm {
     gap: 0.8rem;
   }
 
-  .form-group label {
+  .formGroup label {
     font-size: 0.85rem;
   }
 
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
+  .formGroup input,
+  .formGroup textarea,
+  .formGroup select {
     padding: 0.5rem;
     font-size: 0.85rem;
   }
 
-  .create-event-btn,
-  .cancel-btn {
+  .createEventBtn,
+  .cancelBtn {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
   }

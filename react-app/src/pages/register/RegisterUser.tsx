@@ -2,7 +2,7 @@ import React, { useReducer, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
-import './styles/RegisterUser.css';
+import styles from './styles/RegisterUser.module.css';
 
 interface RegisterProps {
   onRegisterSuccess: () => void;
@@ -121,49 +121,49 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card">
-        <h2 className="register-title">Registrarse</h2>
-        {state.error && <div className="register-error-message">{state.error}</div>}
-        {state.successMessage && <div className="register-success-message">{state.successMessage}</div>}
-        <form onSubmit={handleSubmit} className="register-form">
-          <div className="register-form-group">
-            <label htmlFor="dni" className="register-label">DNI:</label>
-            <input type="text" id="dni" value={state.dni} onChange={(e) => handleFieldChange('dni', e.target.value)} className="register-input" placeholder="Ingresa tu DNI" />
+    <div className={styles.registerContainer}>
+      <div className={styles.registerCard}>
+        <h2 className={styles.registerTitle}>Registrarse</h2>
+        {state.error && <div className={styles.registerErrorMessage}>{state.error}</div>}
+        {state.successMessage && <div className={styles.registerSuccessMessage}>{state.successMessage}</div>}
+        <form onSubmit={handleSubmit} className={styles.registerForm}>
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="dni" className={styles.registerLabel}>DNI:</label>
+            <input type="text" id="dni" value={state.dni} onChange={(e) => handleFieldChange('dni', e.target.value)} className={styles.registerInput} placeholder="Ingresa tu DNI" />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="fullName" className="register-label">Nombre completo:</label>
-            <input type="text" id="fullName" value={state.fullName} onChange={(e) => handleFieldChange('fullName', e.target.value)} className="register-input" placeholder="Ingresa tu nombre completo" />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="fullName" className={styles.registerLabel}>Nombre completo:</label>
+            <input type="text" id="fullName" value={state.fullName} onChange={(e) => handleFieldChange('fullName', e.target.value)} className={styles.registerInput} placeholder="Ingresa tu nombre completo" />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="email" className="register-label">Email:</label>
-            <input type="email" id="email" value={state.email} onChange={(e) => handleFieldChange('email', e.target.value)} className="register-input" placeholder="Ingresa tu email" />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="email" className={styles.registerLabel}>Email:</label>
+            <input type="email" id="email" value={state.email} onChange={(e) => handleFieldChange('email', e.target.value)} className={styles.registerInput} placeholder="Ingresa tu email" />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="birthDate" className="register-label">Fecha de nacimiento:</label>
-            <input type="date" id="birthDate" value={state.birthDate} onChange={(e) => handleFieldChange('birthDate', e.target.value)} className="register-input" />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="birthDate" className={styles.registerLabel}>Fecha de nacimiento:</label>
+            <input type="date" id="birthDate" value={state.birthDate} onChange={(e) => handleFieldChange('birthDate', e.target.value)} className={styles.registerInput} />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="password" className="register-label">Contraseña:</label>
-            <input type="password" id="password" value={state.password} onChange={(e) => handleFieldChange('password', e.target.value)} className="register-input" placeholder="Ingresa tu contraseña" />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="password" className={styles.registerLabel}>Contraseña:</label>
+            <input type="password" id="password" value={state.password} onChange={(e) => handleFieldChange('password', e.target.value)} className={styles.registerInput} placeholder="Ingresa tu contraseña" />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="confirmPassword" className="register-label">Confirmar contraseña:</label>
-            <input type="password" id="confirmPassword" value={state.confirmPassword} onChange={(e) => handleFieldChange('confirmPassword', e.target.value)} className="register-input" placeholder="Confirma tu contraseña" />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="confirmPassword" className={styles.registerLabel}>Confirmar contraseña:</label>
+            <input type="password" id="confirmPassword" value={state.confirmPassword} onChange={(e) => handleFieldChange('confirmPassword', e.target.value)} className={styles.registerInput} placeholder="Confirma tu contraseña" />
           </div>
-          <div className="captcha-container">
+          <div className={styles.captchaContainer}>
             <ReCAPTCHA
               sitekey="6LfEeKIrAAAAAOtnJGyIq4LpZC2Zw1kIVr1BLOLa"
               onChange={(value) => setCaptchaValue(value)}
             />
           </div>
-          <button type="submit" className="register-button">Registrarse</button>
+          <button type="submit" className={styles.registerButton}>Registrarse</button>
         </form>
-        <div className="register-login-link">
-          ¿Ya tienes una cuenta? <Link to="/login" className="register-link">Inicia sesión aquí</Link>
+        <div className={styles.registerLoginLink}>
+          ¿Ya tienes una cuenta? <Link to="/login" className={styles.registerLink}>Inicia sesión aquí</Link>
         </div>
-        <div className="back">
-          <button type="button" className="back-to-login-btn" onClick={() => navigate('/')}>Volver</button>
+        <div className={styles.back}>
+          <button type="button" className={styles.backToLoginBtn} onClick={() => navigate('/')}>Volver</button>
         </div>   
       </div>
     </div>

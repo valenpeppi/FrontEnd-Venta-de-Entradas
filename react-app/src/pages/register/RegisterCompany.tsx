@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
-import './styles/RegisterCompany.css';
+import styles from './styles/RegisterCompany.module.css';
 
 interface RegisterProps {
   onRegisterSuccess: () => void;
@@ -80,59 +80,59 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card">
-        <h2 className="register-title">Registrar Empresa</h2>
-        {error && <div className="register-error-message">{error}</div>}
-        {successMessage && <div className="register-success-message">{successMessage}</div>}
-        <form onSubmit={handleSubmit} className="register-form">
-          <div className="register-form-group">
-            <label htmlFor="register-companyName" className="register-label">Nombre de la Empresa</label>
-            <input type="text" id="register-companyName" className="register-input" value={company_name} onChange={(e) => setCompanyName(e.target.value)} required />
+    <div className={styles.registerContainer}>
+      <div className={styles.registerCard}>
+        <h2 className={styles.registerTitle}>Registrar Empresa</h2>
+        {error && <div className={styles.registerErrorMessage}>{error}</div>}
+        {successMessage && <div className={styles.registerSuccessMessage}>{successMessage}</div>}
+        <form onSubmit={handleSubmit} className={styles.registerForm}>
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="register-companyName" className={styles.registerLabel}>Nombre de la Empresa</label>
+            <input type="text" id="register-companyName" className={styles.registerInput} value={company_name} onChange={(e) => setCompanyName(e.target.value)} required />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="register-CUIL" className="register-label">CUIL</label>
-            <input type="text" id="register-CUIL" className="register-input" value={cuil} onChange={(e) => setCuil(e.target.value)} />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="register-CUIL" className={styles.registerLabel}>CUIL</label>
+            <input type="text" id="register-CUIL" className={styles.registerInput} value={cuil} onChange={(e) => setCuil(e.target.value)} />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="register-email" className="register-label">Email de Contacto</label>
-            <input type="email" id="register-email" className="register-input" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} required />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="register-email" className={styles.registerLabel}>Email de Contacto</label>
+            <input type="email" id="register-email" className={styles.registerInput} value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} required />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="register-phone" className="register-label">Teléfono</label>
-            <input type="text" id="register-phone" className="register-input" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="register-phone" className={styles.registerLabel}>Teléfono</label>
+            <input type="text" id="register-phone" className={styles.registerInput} value={phone} onChange={(e) => setPhone(e.target.value)} required />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="register-address" className="register-label">Dirección</label>
-            <input type="text" id="register-address" className="register-input" value={address} onChange={(e) => setAddress(e.target.value)} required />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="register-address" className={styles.registerLabel}>Dirección</label>
+            <input type="text" id="register-address" className={styles.registerInput} value={address} onChange={(e) => setAddress(e.target.value)} required />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="register-password" className="register-label">Contraseña</label>
-            <input type="password" id="register-password" className="register-input" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="register-password" className={styles.registerLabel}>Contraseña</label>
+            <input type="password" id="register-password" className={styles.registerInput} value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
-          <div className="register-form-group">
-            <label htmlFor="confirm-password" className="register-label">Confirmar Contraseña</label>
-            <input type="password" id="confirm-password" className="register-input" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+          <div className={styles.registerFormGroup}>
+            <label htmlFor="confirm-password" className={styles.registerLabel}>Confirmar Contraseña</label>
+            <input type="password" id="confirm-password" className={styles.registerInput} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
           </div>
 
-          <div className="captcha-container">
+          <div className={styles.captchaContainer}>
             <ReCAPTCHA
               sitekey="6LfEeKIrAAAAAOtnJGyIq4LpZC2Zw1kIVr1BLOLa"
               onChange={(value) => setCaptchaValue(value)}
             />
           </div>
 
-          <button type="submit" className="register-button">
+          <button type="submit" className={styles.registerButton}>
             Registrar Empresa
           </button>
-          <div className="register-login-link">
+          <div className={styles.registerLoginLink}>
             ¿Ya tienes una cuenta de organizador?{' '}
-            <Link to="/logincompany" className="register-link">
+            <Link to="/logincompany" className={styles.registerLink}>
               Inicia sesión aquí
             </Link>
           </div>
         </form>
-        <button onClick={() => navigate(-1)} className="back-button">Volver</button>
+        <button onClick={() => navigate(-1)} className={styles.backButton}>Volver</button>
       </div>
     </div>
   );

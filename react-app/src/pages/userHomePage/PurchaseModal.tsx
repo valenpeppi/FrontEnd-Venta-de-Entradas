@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext';
 import { useMessage } from '../../shared/context/MessageContext';
 import type { Ticket } from '../../App';
-import './styles/PurchaseModal.css';
+import styles from './styles/PurchaseModal.module.css';
 
 export interface PurchaseModalProps {
   isOpen: boolean;
@@ -44,8 +44,6 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   const handleConfirm = () => {
     if (isSubmitting.current) return;
     
-    // --- MODIFICACIÓN AQUÍ ---
-    // Se añade la comprobación de seguridad
     if (!isLoggedIn) {
       setAppMessage('Inicia sesión para poder comprar una entrada', 'info');
       navigate('/login');
@@ -80,22 +78,22 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
   const quantityOptions = Array.from({ length: maxQuantity }, (_, i) => i + 1);
 
   return (
-    <div className="purchase-modal-overlay" onClick={onCloseModal}>
-      <div className="purchase-modal" onClick={e => e.stopPropagation()}>
-        <h3 className="purchase-modal-header">Agregar Entradas al Carrito</h3>
-        <div className="purchase-modal-info">
-          <p className="purchase-modal-info-item">
-            Evento: <span className="purchase-modal-info-value">{selectedTicket.eventName}</span>
+    <div className={styles.purchaseModalOverlay} onClick={onCloseModal}>
+      <div className={styles.purchaseModal} onClick={e => e.stopPropagation()}>
+        <h3 className={styles.purchaseModalHeader}>Agregar Entradas al Carrito</h3>
+        <div className={styles.purchaseModalInfo}>
+          <p className={styles.purchaseModalInfoItem}>
+            Evento: <span className={styles.purchaseModalInfoValue}>{selectedTicket.eventName}</span>
           </p>
-          <p className="purchase-modal-info-item">
-            Precio por entrada: <span className="purchase-modal-info-value">${selectedTicket.price.toFixed(2)}</span>
+          <p className={styles.purchaseModalInfoItem}>
+            Precio por entrada: <span className={styles.purchaseModalInfoValue}>${selectedTicket.price.toFixed(2)}</span>
           </p>
-          <p className="purchase-modal-info-item">
-            Entradas disponibles: <span className="purchase-modal-info-value">{selectedTicket.availableTickets}</span>
+          <p className={styles.purchaseModalInfoItem}>
+            Entradas disponibles: <span className={styles.purchaseModalInfoValue}>{selectedTicket.availableTickets}</span>
           </p>
         </div>
-        <div className="purchase-modal-quantity-section">
-          <label htmlFor="quantity-select" className="purchase-modal-quantity-label">Cantidad:</label>
+        <div className={styles.purchaseModalQuantitySection}>
+          <label htmlFor="quantity-select" className={styles.purchaseModalQuantityLabel}>Cantidad:</label>
           <select
             id="quantity-select"
             value={internalQuantity}
@@ -105,7 +103,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
               onQuantityChange(newQuantity);
               setLocalErrorMessage(null);
             }}
-            className="purchase-modal-quantity-select"
+            className={styles.purchaseModalQuantitySelect}
             disabled={selectedTicket.availableTickets === 0}
           >
             {quantityOptions.length > 0 ? (
@@ -123,21 +121,21 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
           </select>
         </div>
         {(errorMessage || localErrorMessage) && (
-          <div className="purchase-modal-error">
+          <div className={styles.purchaseModalError}>
             {errorMessage || localErrorMessage}
           </div>
         )}
-        <div className="purchase-modal-actions">
+        <div className={styles.purchaseModalActions}>
           <button
             onClick={handleConfirm}
-            className="btn-confirm"
+            className={styles.btnConfirm}
             disabled={selectedTicket.availableTickets === 0}
           >
             Agregar al Carrito
           </button>
           <button
             onClick={onCloseModal}
-            className="btn-cancel"
+            className={styles.btnCancel}
           >
             Cancelar
           </button>

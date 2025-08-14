@@ -1,5 +1,4 @@
-/* Estilos para la página de Newsletter, basados en Login.css */
-.newsletter-root {
+.newsletterRoot {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -10,7 +9,7 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.newsletter-card {
+.newsletterCard {
   background: #fff;
   border-radius: 1rem;
   box-shadow: 0 8px 32px 0 rgba(31, 41, 55, 0.18);
@@ -18,11 +17,9 @@
   width: 100%;
   max-width: 450px;
   text-align: center;
-  /* Animación añadida */
   animation: scaleIn 0.3s ease-out forwards;
 }
 
-/* Definición de la animación */
 @keyframes scaleIn {
   from {
     transform: scale(0.95);
@@ -34,26 +31,26 @@
   }
 }
 
-.newsletter-title {
+.newsletterTitle {
   font-size: 1.875rem;
   font-weight: bold;
   color: #3730a3;
   margin-bottom: 0.75rem;
 }
 
-.newsletter-subtitle {
+.newsletterSubtitle {
   font-size: 1rem;
   color: #6b7280;
   margin-bottom: 2rem;
   line-height: 1.6;
 }
 
-.newsletter-field {
+.newsletterField {
   margin-bottom: 1.5rem;
   text-align: left;
 }
 
-.newsletter-label {
+.newsletterLabel {
   display: block;
   color: #374151;
   font-size: 1rem;
@@ -61,7 +58,7 @@
   margin-bottom: 0.5rem;
 }
 
-.newsletter-input {
+.newsletterInput {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 1px solid #d1d5db;
@@ -71,12 +68,12 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.newsletter-input:focus {
+.newsletterInput:focus {
   border-color: #6366f1;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
 }
 
-.newsletter-btn-submit {
+.newsletterBtnSubmit {
   width: 100%;
   background: #4f46e5;
   color: #fff;
@@ -91,12 +88,11 @@
   cursor: pointer;
 }
 
-.newsletter-btn-submit:hover {
+.newsletterBtnSubmit:hover {
   background: #3730a3;
 }
 
-/* Botón gris para volver */
-.back-btn {
+.backBtn {
   width: 100%;
   background: #e5e7eb;
   color: #374151;
@@ -112,18 +108,17 @@
   cursor: pointer;
 }
 
-.back-btn:hover {
+.backBtn:hover {
   background: #d1d5db;
   color: #111827;
 }
 
-/* Responsive adjustments */
 @media (max-width: 480px) {
-  .newsletter-card {
+  .newsletterCard {
     padding: 1.5rem;
     margin: 1rem;
   }
-  .newsletter-title {
+  .newsletterTitle {
     font-size: 1.5rem;
   }
 }

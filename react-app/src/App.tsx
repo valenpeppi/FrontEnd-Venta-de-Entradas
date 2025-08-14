@@ -4,7 +4,7 @@ import Layout from './shared/layout/Layout';
 import HomePage from './pages/userHomePage/UserHomePage';
 import CarritoPage from './pages/purchase/CarritoPage';
 import Pay from './pages/purchase/Pay';
-import AdminHomePage from './pages/adminHomePage/AdminHomePage';
+import AdminHomePage from './pages/AdminHomePage/AdminHomePage';
 import MyTickets from './pages/purchase/MyTickets';
 import Help from './pages/support/Help';
 import EventDetailPage from './shared/EventDetailPage';
@@ -17,7 +17,7 @@ import RegisterCompany from './pages/register/RegisterCompany';
 import NewsLetter from './pages/support/NewsLetter';
 import { useAuth } from './shared/context/AuthContext';
 import { useMessage } from './shared/context/MessageContext';
-import './shared/styles/App.css';
+import styles from './shared/styles/App.module.css';
 
 export interface Ticket {
   id: string;
@@ -28,7 +28,7 @@ export interface Ticket {
   availableTickets: number;
   imageUrl: string;
   time: string;
-  type: string; // Nuevo campo para el tipo de evento
+  type: string;
 }
 
 const App: React.FC = () => {
@@ -62,7 +62,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="app-root">
+    <div className={styles.appRoot}>
       <Routes>
         <Route
           path="/"
@@ -128,7 +128,6 @@ const App: React.FC = () => {
             </Layout>
           }
         />
-        {/* RUTA MODIFICADA PARA QUE SE MUESTRE SIN EL LAYOUT */}
         <Route
           path="/newsletter"
           element={<NewsLetter />}

@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
-import './styles/CreateEventPage.css';
+import styles from './styles/CreateEventPage.module.css';
 
 interface EventType {
   idType: number;
@@ -140,13 +140,13 @@ const CreateEventPage: React.FC = () => {
   };
 
   return (
-    <div className="create-event-container">
-      <div className="create-event-card">
-        <h1 className="create-event-title">Crear Nuevo Evento</h1>
-        {state.error && <div className="create-event-error">{state.error}</div>}
+    <div className={styles.createEventContainer}>
+      <div className={styles.createEventCard}>
+        <h1 className={styles.createEventTitle}>Crear Nuevo Evento</h1>
+        {state.error && <div className={styles.createEventError}>{state.error}</div>}
 
-        <form onSubmit={handleSubmit} className="create-event-form" encType="multipart/form-data">
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className={styles.createEventForm} encType="multipart/form-data">
+          <div className={styles.formGroup}>
             <label htmlFor="eventName">Nombre del Evento</label>
             <input
               type="text"
@@ -158,7 +158,7 @@ const CreateEventPage: React.FC = () => {
             />
           </div>
 
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="description">Descripción</label>
             <textarea
               id="description"
@@ -170,8 +170,8 @@ const CreateEventPage: React.FC = () => {
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
               <label htmlFor="date">Fecha</label>
               <input
                 type="date"
@@ -182,7 +182,7 @@ const CreateEventPage: React.FC = () => {
               />
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="time">Hora</label>
               <input
                 type="time"
@@ -194,7 +194,7 @@ const CreateEventPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="idEventType">Tipo de Evento</label>
             <select
               id="idEventType"
@@ -209,7 +209,7 @@ const CreateEventPage: React.FC = () => {
             </select>
           </div>
 
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="image">Foto del Evento</label>
             <input
               type="file"
@@ -220,9 +220,9 @@ const CreateEventPage: React.FC = () => {
             />
           </div>
 
-          <div className="form-actions">
-            <button type="submit" className="create-event-btn">Crear Evento</button>
-            <button type="button" onClick={() => navigate('/')} className="cancel-btn">Cancelar</button>
+          <div className={styles.formActions}>
+            <button type="submit" className={styles.createEventBtn}>Crear Evento</button>
+            <button type="button" onClick={() => navigate('/')} className={styles.cancelBtn}>Cancelar</button>
           </div>
         </form>
       </div>

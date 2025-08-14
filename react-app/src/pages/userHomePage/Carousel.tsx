@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import type { Ticket } from '../../App';
-import './styles/Carousel.css';
+import styles from './styles/Carousel.module.css';
 
-// Interfaz para las props del componente Carousel
 export interface CarouselProps {
   tickets: Ticket[];
   currentEventIndex: number;
@@ -21,8 +20,8 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   if (tickets.length === 0) {
     return (
-      <div className="event-carousel">
-        <p className="event-carousel-empty">No hay eventos disponibles.</p>
+      <div className={styles.eventCarousel}>
+        <p className={styles.eventCarouselEmpty}>No hay eventos disponibles.</p>
       </div>
     );
   }
@@ -30,62 +29,65 @@ const Carousel: React.FC<CarouselProps> = ({
   const currentEvent = tickets[currentEventIndex];
 
   return (
-    <div className="event-carousel">
+    <div className={styles.eventCarousel}>
       <button
         onClick={onPreviousEvent}
-        className="carousel-navigation-btn carousel-navigation-btn--prev"
+        className={`${styles.carouselNavigationBtn} ${styles.carouselNavigationBtnPrev}`}
         title="Evento anterior"
         aria-label="Evento anterior"
       >
-        <i className="fas fa-chevron-left carousel-navigation-icon"></i>
+        <i className={`fas fa-chevron-left ${styles.carouselNavigationIcon}`}></i>
       </button>
       
       {currentEvent ? (
-        <Link to={`/event/${currentEvent.id}`} className="event-card-link">
-          <div className="event-card">
+        <Link to={`/event/${currentEvent.id}`} className={styles.eventCardLink}>
+          <div className={styles.eventCard}>
             <img
               src={currentEvent.imageUrl}
               alt={currentEvent.eventName}
-              className="event-card-image"
+              className={styles.eventCardImage}
               onError={e => { e.currentTarget.src = '/public/ticket.png'; }}
             />
-            <div className="event-card-content">
-              <h3 className="event-card-title">{currentEvent.eventName}</h3>
-              <p className="event-card-details">
-                <i className="fas fa-calendar-alt event-card-icon"></i>
-                {currentEvent.date}
-              </p>
-              <p className="event-card-details">
-                <i className="fas fa-map-marker-alt event-card-icon"></i>
-                {currentEvent.location}
-              </p>
-            </div>
-            <div className="event-card-footer">
-              <span className="event-card-price">${currentEvent.price.toFixed(2)}</span>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  onBuyClick(currentEvent);
-                }}
-                className={`btn-purchase${currentEvent.availableTickets > 0 ? '' : ' btn-purchase--disabled'}`}
-                disabled={currentEvent.availableTickets === 0}
-              >
-                {currentEvent.availableTickets > 0 ? 'Comprar' : 'Agotado'}
-              </button>
+            {/* Contenedor agregado para agrupar el texto y el footer */}
+            <div className={styles.eventCardDetailsWrapper}>
+              <div className={styles.eventCardContent}>
+                <h3 className={styles.eventCardTitle}>{currentEvent.eventName}</h3>
+                <p className={styles.eventCardDetails}>
+                  <i className={`fas fa-calendar-alt ${styles.eventCardIcon}`}></i>
+                  {currentEvent.date}
+                </p>
+                <p className={styles.eventCardDetails}>
+                  <i className={`fas fa-map-marker-alt ${styles.eventCardIcon}`}></i>
+                  {currentEvent.location}
+                </p>
+              </div>
+              <div className={styles.eventCardFooter}>
+                <span className={styles.eventCardPrice}>${currentEvent.price.toFixed(2)}</span>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onBuyClick(currentEvent);
+                  }}
+                  className={`${styles.btnPurchase} ${currentEvent.availableTickets > 0 ? '' : styles.btnPurchaseDisabled}`}
+                  disabled={currentEvent.availableTickets === 0}
+                >
+                  {currentEvent.availableTickets > 0 ? 'Comprar' : 'Agotado'}
+                </button>
+              </div>
             </div>
           </div>
         </Link>
       ) : (
-        <p className="event-carousel-empty">No hay eventos disponibles.</p>
+        <p className={styles.eventCarouselEmpty}>No hay eventos disponibles.</p>
       )}
       
       <button
         onClick={onNextEvent}
-        className="carousel-navigation-btn carousel-navigation-btn--next"
+        className={`${styles.carouselNavigationBtn} ${styles.carouselNavigationBtnNext}`}
         title="Siguiente evento"
         aria-label="Siguiente evento"
       >
-        <i className="fas fa-chevron-right carousel-navigation-icon"></i>
+        <i className={`fas fa-chevron-right ${styles.carouselNavigationIcon}`}></i>
       </button>
     </div>
   );

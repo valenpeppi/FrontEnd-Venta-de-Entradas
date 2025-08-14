@@ -1,6 +1,4 @@
-/* About.css */
-
-.about-container {
+.aboutContainer {
   max-width: 600px;
   margin: 48px auto;
   background: #fff;
@@ -12,7 +10,7 @@
   align-items: center;
 }
 
-.about-title {
+.aboutTitle {
   font-size: 2.5rem;
   font-weight: 800;
   color: #4f46e5;
@@ -20,7 +18,7 @@
   text-align: center;
 }
 
-.about-description {
+.aboutDescription {
   font-size: 1.15rem;
   color: #374151;
   margin-bottom: 2.2rem;
@@ -28,7 +26,7 @@
   line-height: 1.7;
 }
 
-.about-contact-section {
+.aboutContactSection {
   width: 100%;
   background: #f3f4f6;
   border-radius: 10px;
@@ -36,7 +34,7 @@
   box-shadow: 0 2px 8px rgba(67, 56, 202, 0.05);
 }
 
-.about-contact-title {
+.aboutContactTitle {
   font-size: 1.3rem;
   font-weight: 700;
   color: #3730a3;
@@ -44,7 +42,7 @@
   text-align: center;
 }
 
-.about-contact-list {
+.aboutContactList {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -54,64 +52,63 @@
   align-items: center;
 }
 
-.about-contact-link {
+.aboutContactLink {
   color: #4f46e5;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
 }
 
-.about-contact-link:hover {
+.aboutContactLink:hover {
   color: #22c55e;
   text-decoration: underline;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
-  .about-container {
+  .aboutContainer {
     margin: 20px auto;
     padding: 1.5rem 1rem;
     border-radius: 12px;
   }
 
-  .about-title {
+  .aboutTitle {
     font-size: 2rem;
     margin-bottom: 1rem;
   }
 
-  .about-description {
+  .aboutDescription {
     font-size: 1rem;
     margin-bottom: 1.5rem;
   }
 
-  .about-contact-section {
+  .aboutContactSection {
     padding: 1rem 0.8rem;
   }
 
-  .about-contact-title {
+  .aboutContactTitle {
     font-size: 1.1rem;
   }
 
-  .about-contact-list {
+  .aboutContactList {
     gap: 0.5rem;
   }
 
-  .about-contact-link {
+  .aboutContactLink {
     font-size: 0.95rem;
   }
 }
 
 @media (max-width: 480px) {
-  .about-container {
+  .aboutContainer {
     margin: 15px;
     padding: 1rem;
   }
 
-  .about-title {
+  .aboutTitle {
     font-size: 1.8rem;
   }
 
-  .about-description {
+  .aboutDescription {
     font-size: 0.9rem;
   }
 }

@@ -1,0 +1,153 @@
+.eventCarousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  gap: 1rem;
+  width: 100%; 
+  max-width: 500px; /* Reducido para que sea más compacto */
+  box-sizing: border-box;
+  padding: 0 2.5rem; /* Espacio para los botones de navegación */
+}
+
+.carouselNavigationBtn {
+  position: absolute;
+  top: 50%; 
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 9999px;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  z-index: 20;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.14s ease, background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carouselNavigationBtn:hover { transform: translateY(-50%) scale(1.05); }
+.carouselNavigationBtn:active { transform: translateY(-50%) scale(0.98); }
+
+.carouselNavigationBtnPrev { left: -0.5rem; } /* Ajustado para estar más cerca */
+.carouselNavigationBtnNext { right: -0.5rem; }
+
+.carouselNavigationIcon { font-size: 1.2rem; pointer-events: none; color: #333; }
+
+.eventCardLink {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: stretch;
+  text-decoration: none;
+  color: inherit;
+}
+
+.eventCard {
+  width: 100%;
+  max-width: 320px; /* Ancho de la tarjeta como en la imagen */
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.1);
+  padding: 1rem; /* Padding reducido */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.2s;
+}
+
+.eventCardImage {
+  width: 100%;
+  height: 220px; /* Altura ajustada para la proporción */
+  object-fit: cover;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.eventCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #111827;
+  width: 100%;
+  text-align: center; /* Centrar el texto */
+}
+
+.eventCardTitle {
+  font-size: 1.5rem; /* Tamaño de fuente ajustado */
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.eventCardDetails {
+  color: #6b7280;
+  margin: 0.1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrar detalles */
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.eventCardIcon {
+  color: #4338ca;
+  width: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eventCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eef2ff;
+  gap: 1rem;
+  width: 100%;
+}
+
+.eventCardPrice {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+.btnPurchase {
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 15px rgba(79,70,229,0.15);
+  transition: background 0.18s ease, transform 0.12s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.btnPurchase:hover { background: #3730a3; transform: translateY(-1px); }
+.btnPurchase:disabled,
+.btnPurchaseDisabled { background: #9ca3af; cursor: not-allowed; box-shadow: none; }
+
+.eventCarouselEmpty {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.125rem;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .eventCarousel { padding: 0 0.5rem; }
+  .carouselNavigationBtn { display: none; }
+  .eventCard { padding: 0.75rem; }
+  .eventCardImage { height: 200px; }
+  .eventCardTitle { font-size: 1.3rem; }
+}
+
+.eventCardLink:focus { outline: none; }
+.eventCard:focus-within { box-shadow: 0 10px 35px rgba(0,0,0,0.12); }

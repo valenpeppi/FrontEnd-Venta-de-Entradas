@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import MessageDisplay from '../MessageDisplay';
 import { useMessage } from '../../shared/context/MessageContext';
-import './styles/Layout.css';
+import styles from './styles/Layout.module.css';
 
 interface LayoutProps {
   children: ReactNode;
@@ -14,10 +14,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { messages } = useMessage();
 
   return (
-    <div className="layout-container">
+    <div className={styles.layoutContainer}>
       <Navbar />
       
-      {/* Renderizar todos los mensajes */}
       {messages.map(message => (
         <MessageDisplay 
           key={message.id}
@@ -26,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
       ))}
 
-      <main className="layout-main-content">
+      <main className={styles.layoutMainContent}>
         {children}
       </main>
 

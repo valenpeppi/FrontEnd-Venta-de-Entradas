@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './styles/Navbar.css';
+import styles from './styles/Navbar.module.css';
 import logoTicket from '../../assets/ticket.png';
 import cartIcon from '../../assets/cart.png';
 import { useCart } from '../../shared/context/CartContext';
@@ -15,12 +15,10 @@ const Navbar: React.FC = () => {
   const { cartCount } = useCart();
   const { isLoggedIn, user, logout } = useAuth();
 
-  // Función de búsqueda simulada (reemplazar con tu lógica de backend)
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
     setSearchTerm(term);
     if (term.length > 2) {
-      // Simulando resultados
       setSearchResults([
         { id: '1', name: 'Concierto de Verano' },
         { id: '2', name: 'Festival de Jazz' },
@@ -54,93 +52,90 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <Link to="/" className="navbar-brand">
-          <img src={logoTicket} alt="TicketApp Logo" className="image1" />
+    <nav className={styles.navbar}>
+      <div className={styles.navbarContainer}>
+        <Link to="/" className={styles.navbarBrand}>
+          <img src={logoTicket} alt="TicketApp Logo" className={styles.image1} />
           TicketApp
         </Link>
 
-        <div className="navbar-search">
+        <div className={styles.navbarSearch}>
           <input
             type="text"
             placeholder="Buscar eventos..."
-            className="navbar-search-input"
+            className={styles.navbarSearchInput}
             value={searchTerm}
             onChange={handleSearch}
             onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
             onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
           />
-          <i className="fas fa-search search-icon"></i>
+          <i className={`fas fa-search ${styles.searchIcon}`}></i>
           {showDropdown && (
-            <div className="search-dropdown-container">
-              <ul className="search-dropdown-list">
+            <div className={styles.searchDropdownContainer}>
+              <ul className={styles.searchDropdownList}>
                 {searchResults.length > 0 ? (
                   searchResults.map(result => (
                     <li
                       key={result.id}
-                      className="search-dropdown-item"
+                      className={styles.searchDropdownItem}
                       onMouseDown={() => handleSearchItemClick(result.id)}
                     >
                       {result.name}
                     </li>
                   ))
                 ) : (
-                  <li className="search-dropdown-item no-results">No hay resultados</li>
+                  <li className={`${styles.searchDropdownItem} ${styles.noResults}`}>No hay resultados</li>
                 )}
               </ul>
             </div>
           )}
         </div>
 
-        <ul className="navbar-menu">
-          <li><Link to="/help" className="navbar-menu-item">Ayuda</Link></li>
-          {isLoggedIn && <li><Link to="/myTickets" className="navbar-menu-item">Mis Entradas</Link></li>}
+        <ul className={styles.navbarMenu}>
+          <li><Link to="/help" className={styles.navbarMenuItem}>Ayuda</Link></li>
+          {isLoggedIn && <li><Link to="/myTickets" className={styles.navbarMenuItem}>Mis Entradas</Link></li>}
           {isLoggedIn && (user?.role === 'admin' || user?.role === 'company') && (
-            <li><Link to="/create-event" className="navbar-menu-item">Crear Evento</Link></li>
+            <li><Link to="/create-event" className={styles.navbarMenuItem}>Crear Evento</Link></li>
           )}
         </ul>
 
-        {/* --- MODIFICACIÓN AQUÍ --- */}
-        {/* El carrito solo se muestra si el usuario ha iniciado sesión Y su rol es 'user' */}
         {isLoggedIn && user?.role === 'user' && (
-          <div className="navbar-cart-container">
-            <Link to="/cart" className="navbar-menu-item">
-              <img src={cartIcon} alt="Carrito de compras" className="navbar-cart" />
+          <div className={styles.navbarCartContainer}>
+            <Link to="/cart" className={styles.navbarMenuItem}>
+              <img src={cartIcon} alt="Carrito de compras" className={styles.navbarCart} />
               {cartCount > 0 && (
-                <span className="cart-count">{cartCount}</span>
+                <span className={styles.cartCount}>{cartCount}</span>
               )}
             </Link>
           </div>
         )}
 
-        <div className="navbar-auth-section">
+        <div className={styles.navbarAuthSection}>
           {isLoggedIn ? (
-            <div className="navbar-user-section">
-              <span className="navbar-username">Hola, {user?.name}</span>
-              <button onClick={handleLogoutClick} className="navbar-logout-btn">
+            <div className={styles.navbarUserSection}>
+              <span className={styles.navbarUsername}>Hola, {user?.name}</span>
+              <button onClick={handleLogoutClick} className={styles.navbarLogoutBtn}>
                 Cerrar Sesión
               </button>
             </div>
           ) : (
-            <div className="navbar-auth-buttons">
-              <Link to="/login" className="navbar-login-btn">Iniciar Sesión</Link>
-              <Link to="/register" className="navbar-register-btn">Registrarse</Link>
+            <div className={styles.navbarAuthButtons}>
+              <Link to="/login" className={styles.navbarLoginBtn}>Iniciar Sesión</Link>
+              <Link to="/register" className={styles.navbarRegisterBtn}>Registrarse</Link>
             </div>
           )}
         </div>
       </div>
 
-      {/* Modal de confirmación de logout */}
       {showLogoutConfirm && (
-        <div className="logout-modal-overlay" onClick={cancelLogout}>
-          <div className="logout-modal" onClick={e => e.stopPropagation()}>
+        <div className={styles.logoutModalOverlay} onClick={cancelLogout}>
+          <div className={styles.logoutModal} onClick={e => e.stopPropagation()}>
             <h3>¿Estás seguro de que quieres cerrar sesión?</h3>
-            <div className="logout-modal-buttons">
-              <button onClick={confirmLogout} className="logout-confirm-btn">
+            <div className={styles.logoutModalButtons}>
+              <button onClick={confirmLogout} className={styles.logoutConfirmBtn}>
                 Sí, cerrar sesión
               </button>
-              <button onClick={cancelLogout} className="logout-cancel-btn">
+              <button onClick={cancelLogout} className={styles.logoutCancelBtn}>
                 Cancelar
               </button>
             </div>
