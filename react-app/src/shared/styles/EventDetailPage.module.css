@@ -7,6 +7,18 @@
   background: linear-gradient(to bottom right, #eff6ff, #c7d2fe);
   font-family: 'Inter', sans-serif;
   color: #1f2937;
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .loadingState {

@@ -16,6 +16,18 @@
   padding: 2.5rem;
   width: 100%;
   max-width: 600px;
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .createEventTitle {

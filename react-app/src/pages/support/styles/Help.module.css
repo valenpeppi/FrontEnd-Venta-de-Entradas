@@ -1,17 +1,21 @@
-.helpPage {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #f9fafb;
-  font-family: 'Inter', sans-serif;
-}
-
 .helpContainer {
   flex: 1;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
   width: 100%;
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .helpHero {

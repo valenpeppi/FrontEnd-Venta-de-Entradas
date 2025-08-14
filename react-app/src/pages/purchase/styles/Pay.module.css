@@ -7,6 +7,18 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   font-family: 'Inter', sans-serif;
   color: #1f2937;
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .payTitle {

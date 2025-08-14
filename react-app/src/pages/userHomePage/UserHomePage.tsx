@@ -127,37 +127,36 @@ const HomePage: React.FC = () => {
 
         <h2 className={styles.eventListTitle}>Eventos por tipo</h2>
         
-        {/* Cambio de estructura aquí */}
-        <div className={styles.eventGrid}>
-          {Object.keys(eventsByType).length === 0 && (
+        {/* Estructura corregida: Agrupando título y galería */}
+        <div className={styles.eventListContainer}>
+          {Object.keys(eventsByType).length === 0 ? (
             <p className={styles.eventTypeEmpty}>No hay eventos para este tipo.</p>
-          )}
-          {Object.entries(eventsByType).map(([type, tickets]) => (
-            <React.Fragment key={type}>
-              <div className={styles.eventTypeHeader}>
+          ) : (
+            Object.entries(eventsByType).map(([type, tickets]) => (
+              <div key={type} className={styles.eventTypeSection}>
                 <h2 className={styles.eventTypeTitle}>{type.charAt(0).toUpperCase() + type.slice(1)}</h2>
+                <div className={styles.eventTypeGallery}>
+                  {tickets.map(ticket => (
+                    <Link
+                      to={`/event/${ticket.id}`}
+                      key={ticket.id}
+                      className={styles.eventCardLink}
+                    >
+                      <div className={styles.eventCard}>
+                        <img
+                          src={ticket.imageUrl}
+                          alt={ticket.eventName}
+                          className={styles.eventCardImg}
+                          onError={e => { e.currentTarget.src = '/public/ticket.png'; }}
+                        />
+                        <div className={styles.eventCardTitle}>{ticket.eventName}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div className={styles.eventTypeGallery}>
-                {tickets.map(ticket => (
-                  <Link
-                    to={`/event/${ticket.id}`}
-                    key={ticket.id}
-                    className={styles.eventCardLink}
-                  >
-                    <div className={styles.eventCard}>
-                      <img
-                        src={ticket.imageUrl}
-                        alt={ticket.eventName}
-                        className={styles.eventCardImg}
-                        onError={e => { e.currentTarget.src = '/public/ticket.png'; }}
-                      />
-                      <div className={styles.eventCardTitle}>{ticket.eventName}</div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </React.Fragment>
-          ))}
+            ))
+          )}
         </div>
       </main>
 

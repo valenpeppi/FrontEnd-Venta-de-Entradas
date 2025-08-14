@@ -18,6 +18,18 @@
   max-width: 500px;
   width: 90%;
   box-shadow: 0 20px 40px 0 rgba(31, 41, 55, 0.2);
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .purchaseModalHeader {

@@ -3,6 +3,18 @@
   font-family: 'Inter', sans-serif;
   color: #1f2937;
   padding: 2rem 0;
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .homepageMain {
@@ -22,7 +34,7 @@
 .eventListTitle {
     font-size: 1.8rem;
     margin-top: 3rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .eventTypeFilterContainer {
@@ -43,33 +55,32 @@
   min-width: 120px;
 }
 
-.eventGrid {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 2rem 1.5rem;
-  align-items: start;
+.eventListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
 }
 
-.eventTypeHeader {
-  grid-column: 1 / 2;
-  position: sticky;
-  top: 120px;
+.eventTypeSection {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
 }
 
 .eventTypeTitle {
+  flex-basis: 150px;
+  flex-shrink: 0;
   font-size: 1.5rem;
   font-weight: 700;
   color: #1e293b;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  text-align: center;
-  white-space: nowrap;
+  text-align: right;
+  padding-right: 1rem;
 }
 
 .eventTypeGallery {
-  grid-column: 2 / 3;
+  flex-grow: 1;
   display: flex;
-  flex-wrap: wrap; /* Añadido para que las tarjetas se envuelvan */
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
@@ -127,23 +138,22 @@
 }
 
 .eventTypeEmpty {
-  grid-column: 1 / 3;
+  width: 100%;
   text-align: center;
   color: #888;
   padding: 2rem;
 }
 
 @media (max-width: 768px) {
-  .eventGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .eventTypeSection {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
-  .eventTypeHeader {
-    position: static;
-    writing-mode: horizontal-tb;
-    transform: none;
-    text-align: left;
-    margin-bottom: -0.5rem;
+  .eventTypeTitle {
+    text-align: center;
+    padding-right: 0;
+    width: 100%;
   }
   .eventTypeGallery {
     justify-content: center;

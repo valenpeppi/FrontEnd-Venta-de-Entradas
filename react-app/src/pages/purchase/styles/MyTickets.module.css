@@ -6,6 +6,18 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   max-width: 800px;
   margin: 2rem auto;
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .myTicketsContainer h1 {
@@ -21,7 +33,6 @@
   text-align: center;
 }
 
-/* Estilos de botones genéricos que podrías mover a un CSS global si quieres */
 .btn {
   display: inline-block;
   padding: 0.75rem 1.5rem;

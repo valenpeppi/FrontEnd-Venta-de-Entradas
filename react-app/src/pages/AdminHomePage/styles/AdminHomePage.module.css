@@ -1,52 +1,50 @@
-/* Estilos generales para el contenedor principal */
 .adminHomeContainer {
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
-  font-family: 'Inter', sans-serif; /* Usar Inter como fuente principal */
-  background-color: #f4f7f6; /* Un fondo suave */
+  margin: 40px auto;
+  font-family: 'Inter', sans-serif;
+  background-color: #f4f7f6;
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  margin-top: 40px;
-  margin-bottom: 40px;
+  animation: scaleIn 0.4s ease-out forwards;
 }
 
-/* Estilos para el título */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .adminHomeContainer h1 {
   text-align: center;
   margin-bottom: 30px;
-  color: #2c3e50; /* Un color de texto oscuro y profesional */
-  font-size: 2.8em; /* Tamaño de fuente más grande */
-  font-weight: 700; /* Negrita */
+  color: #2c3e50;
+  font-size: 2.8em;
+  font-weight: 700;
   letter-spacing: -0.5px;
   padding-top: 20px;
 }
 
-/* Mensaje de no solicitudes */
-.adminHomeContainer p {
-  text-align: center;
-  color: #7f8c8d;
-  font-size: 1.2em;
-  padding: 20px;
-}
-
-/* Contenedor de las tarjetas de eventos */
-.adminHomeContainer > div:not(:first-child) { /* Selecciona los divs que contienen las tarjetas de eventos */
+.requestsContainer {
   display: flex;
-  flex-wrap: wrap; /* Permite que las tarjetas se envuelvan a la siguiente línea */
-  gap: 25px; /* Espacio entre las tarjetas */
-  justify-content: center; /* Centra las tarjetas horizontalmente */
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
   padding: 10px;
 }
 
-/* Estilos para cada tarjeta de evento */
 .eventCard {
   background-color: #ffffff;
   border-radius: 15px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
   padding: 25px;
-  width: 100%; /* Por defecto ocupa todo el ancho en móviles */
-  max-width: 380px; /* Ancho máximo para tarjetas individuales */
+  width: 100%;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -59,7 +57,6 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
 }
 
-/* Título del evento dentro de la tarjeta */
 .eventTitle {
   font-size: 1.8em;
   font-weight: 600;
@@ -68,7 +65,6 @@
   text-align: center;
 }
 
-/* Información del evento (solicitante, fecha) */
 .eventInfo {
   font-size: 1.1em;
   color: #555;
@@ -80,7 +76,6 @@
   color: #2c3e50;
 }
 
-/* Estado del evento */
 .eventStatus {
   font-size: 1.15em;
   font-weight: 600;
@@ -110,7 +105,6 @@
   border: 1px solid #ebccd1;
 }
 
-/* Acciones (botones) */
 .eventActions {
   display: flex;
   gap: 15px;
@@ -129,8 +123,8 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.eventActions button:first-child { /* Botón Aceptar */
-  background-color: #28a745; /* Verde */
+.eventActions button:first-child {
+  background-color: #28a745;
   color: white;
 }
 
@@ -139,8 +133,8 @@
   transform: translateY(-2px);
 }
 
-.eventActions button:last-child { /* Botón Rechazar */
-  background-color: #dc3545; /* Rojo */
+.eventActions button:last-child {
+  background-color: #dc3545;
   color: white;
 }
 
@@ -149,55 +143,14 @@
   transform: translateY(-2px);
 }
 
-/* Media Queries para responsividad */
-
-/* Para tablets y pantallas medianas (min-width: 768px) */
 @media (min-width: 768px) {
   .adminHomeContainer h1 {
     font-size: 3.2em;
   }
-
-  .eventCard {
-    width: calc(50% - 25px); /* Dos tarjetas por fila con espacio */
-  }
 }
 
-/* Para desktops y pantallas grandes (min-width: 1024px) */
 @media (min-width: 1024px) {
   .adminHomeContainer h1 {
     font-size: 3.5em;
-  }
-
-  .eventCard {
-    width: calc(33.333% - 25px); /* Tres tarjetas por fila con espacio */
-  }
-}
-
-/* Ajustes para pantallas muy pequeñas (ej. iPhone 5/SE) */
-@media (max-width: 375px) {
-  .adminHomeContainer {
-    padding: 15px;
-  }
-
-  .adminHomeContainer h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-
-  .eventCard {
-    padding: 20px;
-  }
-
-  .eventTitle {
-    font-size: 1.5em;
-  }
-
-  .eventInfo, .eventStatus {
-    font-size: 1em;
-  }
-
-  .eventActions button {
-    padding: 10px 20px;
-    font-size: 1em;
   }
 }
