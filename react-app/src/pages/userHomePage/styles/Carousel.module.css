@@ -6,9 +6,9 @@
   margin: 0 auto;
   gap: 1rem;
   width: 100%; 
-  max-width: 500px; /* Reducido para que sea más compacto */
+  max-width: 1100px; /* Aumentado para un carrusel más ancho */
   box-sizing: border-box;
-  padding: 0 2.5rem; /* Espacio para los botones de navegación */
+  padding: 0 3.5rem; /* Espacio para los botones de navegación */
 }
 
 .carouselNavigationBtn {
@@ -18,8 +18,8 @@
   background: rgba(255, 255, 255, 0.95);
   border: none;
   border-radius: 9999px;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3rem;
+  height: 3rem;
   cursor: pointer;
   z-index: 20;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -31,10 +31,10 @@
 .carouselNavigationBtn:hover { transform: translateY(-50%) scale(1.05); }
 .carouselNavigationBtn:active { transform: translateY(-50%) scale(0.98); }
 
-.carouselNavigationBtnPrev { left: -0.5rem; } /* Ajustado para estar más cerca */
-.carouselNavigationBtnNext { right: -0.5rem; }
+.carouselNavigationBtnPrev { left: 0; }
+.carouselNavigationBtnNext { right: 0; }
 
-.carouselNavigationIcon { font-size: 1.2rem; pointer-events: none; color: #333; }
+.carouselNavigationIcon { font-size: 1.5rem; pointer-events: none; color: #333; }
 
 .eventCardLink {
   display: flex;
@@ -47,11 +47,10 @@
 
 .eventCard {
   width: 100%;
-  max-width: 320px; /* Ancho de la tarjeta como en la imagen */
   background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.1);
-  padding: 1rem; /* Padding reducido */
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.12);
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,60 +59,55 @@
 
 .eventCardImage {
   width: 100%;
-  height: 220px; /* Altura ajustada para la proporción */
+  height: 550px; /* Altura aumentada significativamente para hacerlo más largo */
   object-fit: cover;
   border-radius: 0.75rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   display: block;
 }
 
 .eventCardContent {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
   color: #111827;
   width: 100%;
-  text-align: center; /* Centrar el texto */
 }
 
 .eventCardTitle {
-  font-size: 1.5rem; /* Tamaño de fuente ajustado */
+  font-size: 2.2rem; /* Título más grande */
   font-weight: 700;
   color: #111827;
-  margin: 0;
+  margin: 0 0 0.5rem 0;
 }
 
 .eventCardDetails {
   color: #6b7280;
-  margin: 0.1rem 0;
+  margin: 0.15rem 0;
   display: flex;
   align-items: center;
-  justify-content: center; /* Centrar detalles */
-  gap: 0.5rem;
-  font-size: 0.9rem;
+  gap: 0.6rem;
+  font-size: 1.15rem;
 }
 
 .eventCardIcon {
   color: #4338ca;
-  width: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  width: 1.1rem;
 }
 
 .eventCardFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
   border-top: 1px solid #eef2ff;
   gap: 1rem;
   width: 100%;
 }
 
 .eventCardPrice {
-  font-size: 1.25rem;
+  font-size: 1.6rem;
   font-weight: 800;
   color: #059669;
 }
@@ -122,15 +116,15 @@
   background: #4f46e5;
   color: #fff;
   font-weight: 600;
-  padding: 0.6rem 1.1rem;
-  border-radius: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.6rem;
   box-shadow: 0 4px 15px rgba(79,70,229,0.15);
   transition: background 0.18s ease, transform 0.12s ease;
   border: none;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
 }
-.btnPurchase:hover { background: #3730a3; transform: translateY(-1px); }
+.btnPurchase:hover { background: #3730a3; transform: translateY(-2px); }
 .btnPurchase:disabled,
 .btnPurchaseDisabled { background: #9ca3af; cursor: not-allowed; box-shadow: none; }
 
@@ -141,12 +135,29 @@
   padding: 2rem;
 }
 
-@media (max-width: 768px) {
+/* --- Media Query para pantallas más grandes --- */
+@media (min-width: 768px) {
+  .eventCard {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2.5rem; /* Más espacio entre imagen y texto */
+  }
+  .eventCardImage {
+    width: 55%; /* La imagen ocupa un poco más */
+    height: auto;
+    max-height: 450px; /* Altura máxima para el modo horizontal */
+    margin-bottom: 0;
+  }
+  .eventCardContent {
+    width: 45%;
+  }
+}
+
+@media (max-width: 480px) {
   .eventCarousel { padding: 0 0.5rem; }
   .carouselNavigationBtn { display: none; }
-  .eventCard { padding: 0.75rem; }
-  .eventCardImage { height: 200px; }
-  .eventCardTitle { font-size: 1.3rem; }
+  .eventCardImage { height: 350px; }
+  .eventCardTitle { font-size: 1.8rem; }
 }
 
 .eventCardLink:focus { outline: none; }

@@ -1,4 +1,4 @@
-.notificationMessage {
+.messageContainer {
   position: fixed;
   top: 20px;
   left: 50%;
@@ -15,30 +15,30 @@
   white-space: nowrap;
 }
 
-.notificationMessageSuccess {
+.messageContainerSuccess {
   background-color: rgba(45, 206, 137, 0.9);
 }
 
-.notificationMessageError {
+.messageContainerError {
   background-color: rgba(239, 68, 68, 0.9);
 }
 
-.notificationMessageInfo {
+.messageContainerInfo {
   background-color: rgba(59, 130, 246, 0.9);
 }
 
-.notificationMessageVisible {
+.messageVisible {
   opacity: 1;
   visibility: visible;
 }
 
-.notificationMessageHidden {
+.messageHidden {
   opacity: 0;
   visibility: hidden;
 }
 
 @media (max-width: 768px) {
-  .notificationMessage {
+  .messageContainer {
     width: 90%;
     max-width: none;
     left: 5%;
@@ -50,7 +50,7 @@
 }
 
 @media (max-width: 480px) {
-  .notificationMessage {
+  .messageContainer {
     top: 10px;
     padding: 0.6rem 0.8rem;
     font-size: 0.8rem;
