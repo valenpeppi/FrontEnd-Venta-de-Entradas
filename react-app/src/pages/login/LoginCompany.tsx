@@ -31,7 +31,7 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
       });
 
       const data = response.data;
-      onLoginSuccess(data.company_name || data.contact_email);
+      onLoginSuccess(data.companyName || data.contact_email);
       navigate('/create-event');
     } catch (err) {
       console.error('Error en login de organizador:', err);

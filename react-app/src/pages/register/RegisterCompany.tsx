@@ -10,7 +10,7 @@ interface RegisterProps {
 }
 
 const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
-  const [company_name, setCompanyName] = useState<string>('');
+  const [companyName, setCompanyName] = useState<string>('');
   const [cuil, setCuil] = useState<string>('');
   const [contactEmail, setContactEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -37,7 +37,7 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
       return;
     }
 
-    if (!company_name || !contactEmail || !password || !confirmPassword || !phone || !address) {
+    if (!companyName || !contactEmail || !password || !confirmPassword || !phone || !address) {
       setError('Por favor, completa todos los campos obligatorios.');
       return;
     }
@@ -55,7 +55,7 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
 
     try {
       await axios.post('http://localhost:3000/api/auth/register-company', {
-        company_name,
+        companyName,
         cuil,
         contactEmail,
         password,
@@ -88,7 +88,7 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         <form onSubmit={handleSubmit} className={styles.registerForm}>
           <div className={styles.registerFormGroup}>
             <label htmlFor="register-companyName" className={styles.registerLabel}>Nombre de la Empresa</label>
-            <input type="text" id="register-companyName" className={styles.registerInput} value={company_name} onChange={(e) => setCompanyName(e.target.value)} required />
+            <input type="text" id="register-companyName" className={styles.registerInput} value={companyName} onChange={(e) => setCompanyName(e.target.value)} required />
           </div>
           <div className={styles.registerFormGroup}>
             <label htmlFor="register-CUIL" className={styles.registerLabel}>CUIL</label>
