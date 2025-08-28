@@ -105,7 +105,7 @@ const CreateEventPage: React.FC = () => {
     formData.append('name', state.eventName);
     formData.append('description', state.description);
     formData.append('date', datetime);
-    formData.append('idEventType', state.idEventType);
+    formData.append('idEventType', Number(state.idEventType).toString());
     formData.append('image', state.image as Blob);
 
     try {
@@ -125,7 +125,7 @@ const CreateEventPage: React.FC = () => {
       
       setAppMessage('¡Evento creado exitosamente!', 'success');
       dispatch({ type: 'RESET_FORM' });
-      navigate('/');
+      navigate('/userHomePage');
     } catch (err) {
       console.error('Error al crear evento:', err);
       if (axios.isAxiosError(err) && err.response) {
