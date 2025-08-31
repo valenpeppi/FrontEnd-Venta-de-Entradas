@@ -10,7 +10,7 @@ interface LoginCompanyProps {
 }
 
 const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
-  const [contact_email, setcontact_email] = useState<string>("");
+  const [contactEmail, setContactEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -26,12 +26,12 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
 
     try {
       const response = await axios.post('http://localhost:3000/api/auth/login-company', {
-        contact_email,
+        contactEmail,
         password,
       });
 
       const data = response.data;
-      onLoginSuccess(data.companyName || data.contact_email);
+      onLoginSuccess(data.companyName || data.contactEmail);
       navigate('/create-event');
     } catch (err) {
       console.error('Error en login de organizador:', err);
@@ -58,8 +58,8 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
               type="email"
               id="email"
               className={styles.loginCompanyInput}
-              value={contact_email}
-              onChange={(e) => setcontact_email(e.target.value)}
+              value={contactEmail}
+              onChange={(e) => setContactEmail(e.target.value)}
               required
             />
           </div>
