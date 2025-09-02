@@ -1,33 +1,49 @@
-// AdminHomePage.tsx
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import styles from "./styles/AdminHomePage.module.css";
 
 type PendingEvent = {
-  id: number | string;
+  idEvent: number | string;
   name: string;
   description?: string;
   date?: string;
-  imageUrl?: string;
-  typeId?: number;
-  status?: string;
-  createdAt?: string;
+  image?: string;
+  idEventType?: number;
+  state?: string; // 'PENDING' | 'APPROVED' | 'REJECTED'
+  idOrganiser?: string;
 };
+
+const BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:3000";
 
 export default function AdminHomePage() {
   const [events, setEvents] = useState<PendingEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [q, setQ] = useState("");
+
+  const filtered = useMemo(() => {
+    const v = q.trim().toLowerCase();
+    if (!v) return events;
+    return events.filter((e) =>
+      [e.name, e.description].some((t) => (t || "").toLowerCase().includes(v))
+    );
+  }, [q, events]);
 
   useEffect(() => {
     const fetchPending = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:3000/api/events/pending', {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${BASE_URL}/api/events/pending`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setEvents(res.data?.data ?? []);
       } catch (e: any) {
-        setError(e?.response?.data?.message || 'No se pudieron obtener los eventos pendientes');
+        setError(
+          e?.response?.data?.message ||
+            "No se pudieron obtener los eventos pendientes"
+        );
       } finally {
         setLoading(false);
       }
@@ -35,40 +51,133 @@ export default function AdminHomePage() {
     fetchPending();
   }, []);
 
-  if (loading) return <div>Cargando eventos pendientes…</div>;
-  if (error) return <div style={{ color: 'crimson' }}>{error}</div>;
-  if (!events.length) return <div>No hay eventos pendientes.</div>;
+  const act = async (id: number | string, action: "approve" | "reject") => {
+    const token = localStorage.getItem("token");
+    
+    const prev = events;
+    setEvents((list) => list.filter((e) => e.idEvent !== id));
+
+    try {
+      await axios.patch(
+        `${BASE_URL}/api/events/${id}/${action}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (e: any) {
+      // revertir si hubo error
+      setEvents(prev);
+      alert(
+        e?.response?.data?.message ||
+          `No se pudo ${action === "approve" ? "aprobar" : "rechazar"}`
+      );
+    }
+  };
+
+  if (loading)
+    return (
+      <div className={styles.adminContainer}>
+        <div className={styles.adminStatus}>Cargando eventos pendientes…</div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className={styles.adminContainer}>
+        <div className={`${styles.adminStatus} ${styles.error}`}>{error}</div>
+      </div>
+    );
 
   return (
-    <div style={{ maxWidth: 900, margin: '24px auto', padding: '0 16px' }}>
-      <h1>Eventos pendientes</h1>
-      <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: 12 }}>
-        {events.map(ev => (
-          <li key={ev.id} style={{ border: '1px solid #e5e7eb', borderRadius: 12, padding: 16 }}>
-            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-              {ev.imageUrl ? (
+    <div className={styles.adminContainer}>
+      <header className={styles.adminHeader}>
+        <h1>Eventos pendientes</h1>
+        <div className={styles.adminTools}>
+          <input
+            className={styles.adminSearch}
+            placeholder="Buscar por nombre o descripción…"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
+          <span className={styles.adminCounter}>
+            {filtered.length} resultado(s)
+          </span>
+        </div>
+      </header>
+
+      {filtered.length === 0 ? (
+        <div className={styles.adminStatus}>No hay eventos pendientes.</div>
+      ) : (
+        <ul className={styles.masonry}>
+          {filtered.map((ev) => (
+            <li key={ev.idEvent} className={styles.card}>
+              <div className={styles.mediaWrap}>
+                {ev.image ? (
                 <img
-                  src={`http://localhost:3000/${ev.imageUrl}`}
+                  src={`${BASE_URL}/${ev.image}`} // 👈 ahora sale del backend
                   alt={ev.name}
-                  style={{ width: 96, height: 96, objectFit: 'cover', borderRadius: 8 }}
+                  className={styles.media}
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                 />
-              ) : (
-                <div style={{ width: 96, height: 96, background: '#f3f4f6', borderRadius: 8 }} />
-              )}
-              <div style={{ flex: 1 }}>
-                <h3 style={{ margin: '0 0 6px' }}>{ev.name}</h3>
-                {ev.description && (
-                  <p style={{ margin: 0, color: '#6b7280' }}>{ev.description}</p>
+                ) : (
+                  <div className={styles.mediaPlaceholder} />
                 )}
-                <div style={{ marginTop: 8, fontSize: 14, color: '#374151' }}>
-                  {ev.date && <>Fecha: {new Date(ev.date).toLocaleString()}</>}
-                  {ev.status && <span style={{ marginLeft: 12 }}>Estado: {ev.status}</span>}
+                <div className={styles.badges}>
+                  <span className={`${styles.badge} ${styles.badgePending}`}>
+                    {ev.state || "PENDING"}
+                  </span>
                 </div>
               </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+
+              <div className={styles.body}>
+                <h3 className={styles.title} title={ev.name}>
+                  {ev.name}
+                </h3>
+                {ev.description && (
+                  <p className={styles.desc} title={ev.description}>
+                    {ev.description}
+                  </p>
+                )}
+                <div className={styles.meta}>
+                  {ev.date && (
+                    <span>
+                      Fecha:{" "}
+                      {new Date(ev.date).toLocaleString(undefined, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </span>
+                  )}
+                  {ev.idOrganiser && (
+                    <span>
+                      Creado:{" "}
+                      {new Date(ev.idOrganiser).toLocaleDateString(undefined, {
+                        dateStyle: "medium",
+                      })}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.actions}>
+                <button
+                  className={`${styles.btn} ${styles.btnReject}`}
+                  onClick={() => act(ev.idEvent, "reject")}
+                  title="Rechazar evento"
+                >
+                  Rechazar
+                </button>
+                <button
+                  className={`${styles.btn} ${styles.btnApprove}`}
+                  onClick={() => act(ev.idEvent, "approve")}
+                  title="Aprobar evento"
+                >
+                  Aprobar
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
