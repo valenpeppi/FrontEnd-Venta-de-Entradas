@@ -9,6 +9,11 @@ interface EventType {
   name: string;
 }
 
+interface Place {
+  idPlace: number;
+  name: string;
+}
+
 interface CreateEventState {
   eventName: string;
   description: string;
@@ -17,6 +22,7 @@ interface CreateEventState {
   idEventType: string;
   error: string | null;
   image: File | null;
+  idPlace: string;
 }
 
 type CreateEventAction =
@@ -40,6 +46,7 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
         idEventType: '',
         error: null,
         image: null,
+        idPlace: '',
       };
     case 'SET_IMAGE':
       return { ...state, image: action.payload.image };
@@ -57,8 +64,11 @@ const CreateEventPage: React.FC = () => {
     idEventType: '',
     error: null,
     image: null,
+    idPlace: '',
   });
 
+
+  const [places, setPlaces] = useState<Place[]>([]);
   const [types, setTypes] = useState<EventType[]>([]);
   const navigate = useNavigate();
   const { setAppMessage } = useMessage();
@@ -76,6 +86,19 @@ const CreateEventPage: React.FC = () => {
     fetchEventTypes();
   }, [setAppMessage]);
 
+    useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        const { data } = await axios.get<Place[]>('http://localhost:3000/api/places/getPlaces');
+        setPlaces(data);
+      } catch (e) {
+        console.error("Error al cargar los lugares:", e);
+        setAppMessage('No se pudieron cargar los lugares.', 'error');
+      }
+    };
+    fetchPlaces();
+  }, [setAppMessage]);
+
   const handleFieldChange = (field: keyof CreateEventState, value: string) => {
     dispatch({ type: 'SET_FIELD', payload: { field, value } });
   };
@@ -89,7 +112,7 @@ const CreateEventPage: React.FC = () => {
     e.preventDefault();
     dispatch({ type: 'SET_ERROR', payload: { error: null } });
 
-    if (!state.eventName || !state.description || !state.date || !state.time || !state.idEventType) {
+    if (!state.eventName || !state.description || !state.date || !state.time || !state.idEventType || !state.idPlace) {
       dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, completá todos los campos.' } });
       return;
     }
@@ -107,6 +130,7 @@ const CreateEventPage: React.FC = () => {
     formData.append('date', datetime);
     formData.append('idEventType', Number(state.idEventType).toString());
     formData.append('image', state.image as Blob);
+    formData.append('idPlace', Number(state.idPlace).toString());
 
     try {
       const token = localStorage.getItem('token');
@@ -118,14 +142,13 @@ const CreateEventPage: React.FC = () => {
 
       await axios.post('http://localhost:3000/api/events/createEvent', formData, {
         headers: { 
-          'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`
         },
       });
       
       setAppMessage('¡Evento creado exitosamente!', 'success');
       dispatch({ type: 'RESET_FORM' });
-      navigate('/userHomePage');
+      navigate('/');
     } catch (err) {
       console.error('Error al crear evento:', err);
       if (axios.isAxiosError(err) && err.response) {
@@ -169,7 +192,20 @@ const CreateEventPage: React.FC = () => {
               maxLength={60}
             />
           </div>
-
+            <div className={styles.formGroup}>
+            <label htmlFor="idEventType">Lugar del evento</label>
+            <select
+              id="idEventType"
+              value={state.idPlace}
+              onChange={(e) => handleFieldChange('idPlace', e.target.value)}
+              required
+            >
+              <option value="" disabled hidden>Seleccioná un lugar</option>
+              {places.map((p) => (
+                <option key={p.idPlace} value={p.idPlace}>{p.name}</option>
+              ))}
+            </select>
+          </div>
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label htmlFor="date">Fecha</label>
