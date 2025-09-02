@@ -118,14 +118,13 @@ const CreateEventPage: React.FC = () => {
 
       await axios.post('http://localhost:3000/api/events/createEvent', formData, {
         headers: { 
-          'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`
         },
       });
       
       setAppMessage('¡Evento creado exitosamente!', 'success');
       dispatch({ type: 'RESET_FORM' });
-      navigate('/userHomePage');
+      navigate('/');
     } catch (err) {
       console.error('Error al crear evento:', err);
       if (axios.isAxiosError(err) && err.response) {

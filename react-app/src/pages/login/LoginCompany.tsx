@@ -31,6 +31,9 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
       });
 
       const data = response.data;
+    if (data?.token) {
+      localStorage.setItem('token', data.token);
+      }
       onLoginSuccess(data.companyName || data.contactEmail);
       navigate('/create-event');
     } catch (err) {
