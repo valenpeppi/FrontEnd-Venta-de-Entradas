@@ -4,6 +4,9 @@ import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
 import styles from './styles/CreateEventPage.module.css';
 
+const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+
+
 interface EventType {
   idType: number;
   name: string;
@@ -140,10 +143,8 @@ const CreateEventPage: React.FC = () => {
         return;
       }
 
-      await axios.post('http://localhost:3000/api/events/createEvent', formData, {
-        headers: { 
-          'Authorization': `Bearer ${token}`
-        },
+      await axios.post(`${BASE_URL}/api/events/createEvent`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       
       setAppMessage('¡Evento creado exitosamente!', 'success');
@@ -247,7 +248,7 @@ const CreateEventPage: React.FC = () => {
 
           <div className={styles.formGroup}>
             <label htmlFor="image">Foto del Evento</label>
-            <input
+            <input className={styles.fileInputButton}
               type="file"
               id="image"
               accept="image/*"

@@ -46,20 +46,25 @@ const Carousel: React.FC<CarouselProps> = ({
               src={currentEvent.imageUrl}
               alt={currentEvent.eventName}
               className={styles.eventCardImage}
-              onError={e => { e.currentTarget.src = '/public/ticket.png'; }}
+              onError={e => { e.currentTarget.src = '/ticket.png'; }}
             />
-            {/* Contenedor agregado para agrupar el texto y el footer */}
             <div className={styles.eventCardDetailsWrapper}>
               <div className={styles.eventCardContent}>
                 <h3 className={styles.eventCardTitle}>{currentEvent.eventName}</h3>
-                <p className={styles.eventCardDetails}>
-                  <i className={`fas fa-calendar-alt ${styles.eventCardIcon}`}></i>
-                  {currentEvent.date}
-                </p>
-                <p className={styles.eventCardDetails}>
-                  <i className={`fas fa-map-marker-alt ${styles.eventCardIcon}`}></i>
-                  {currentEvent.location}
-                </p>
+                
+                <div className={styles.eventCardMeta}>
+                  <div className={styles.eventCardDetailItem}>
+                    <i className={`fas fa-calendar-alt ${styles.eventCardIcon}`}></i>
+                    <span className={styles.eventCardText}>{currentEvent.date}</span>
+                  </div>
+                  <div className={styles.eventCardDetailItem}>
+                    <i className={`fas fa-map-marker-alt ${styles.eventCardIcon}`}></i>
+                    <span className={styles.eventCardText}>{currentEvent.location}</span>
+                  </div>
+                </div>
+
+
+
               </div>
               <div className={styles.eventCardFooter}>
                 <span className={styles.eventCardPrice}>${currentEvent.price.toFixed(2)}</span>

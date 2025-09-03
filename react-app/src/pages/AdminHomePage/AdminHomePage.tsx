@@ -113,7 +113,7 @@ export default function AdminHomePage() {
               <div className={styles.mediaWrap}>
                 {ev.image ? (
                 <img
-                  src={`${BASE_URL}/${ev.image}`} // 👈 ahora sale del backend
+                  src={`${BASE_URL}${ev.image}`}
                   alt={ev.name}
                   className={styles.media}
                   onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
