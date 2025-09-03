@@ -18,6 +18,7 @@ import NewsLetter from './pages/support/NewsLetter';
 import { useAuth, type User } from './shared/context/AuthContext';
 import { useMessage } from './shared/context/MessageContext';
 import styles from './shared/styles/App.module.css';
+import FeatureEventsPage from './pages/adminHomePage/FeatureEventsPage';
 
 export interface Ticket {
   id: string;
@@ -30,6 +31,7 @@ export interface Ticket {
   time: string;
   type: string;
   featured: boolean;
+  agotado?: boolean;
 }
 
 const App: React.FC = () => {
@@ -96,6 +98,14 @@ const App: React.FC = () => {
           element={
             <Layout>
               <AdminHomePage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/feature-events"
+          element={
+            <Layout>
+              <FeatureEventsPage />
             </Layout>
           }
         />

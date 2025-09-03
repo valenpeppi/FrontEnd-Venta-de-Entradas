@@ -51,6 +51,8 @@ const Navbar: React.FC = () => {
     setShowLogoutConfirm(false);
   };
 
+  const isAdmin = user?.role === 'admin';
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
@@ -59,43 +61,51 @@ const Navbar: React.FC = () => {
           TicketApp
         </Link>
 
-        <div className={styles.navbarSearch}>
-          <input
-            type="text"
-            placeholder="Buscar eventos..."
-            className={styles.navbarSearchInput}
-            value={searchTerm}
-            onChange={handleSearch}
-            onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
-          />
-          <i className={`fas fa-search ${styles.searchIcon}`}></i>
-          {showDropdown && (
-            <div className={styles.searchDropdownContainer}>
-              <ul className={styles.searchDropdownList}>
-                {searchResults.length > 0 ? (
-                  searchResults.map(result => (
-                    <li
-                      key={result.id}
-                      className={styles.searchDropdownItem}
-                      onMouseDown={() => handleSearchItemClick(result.id)}
-                    >
-                      {result.name}
-                    </li>
-                  ))
-                ) : (
-                  <li className={`${styles.searchDropdownItem} ${styles.noResults}`}>No hay resultados</li>
-                )}
-              </ul>
-            </div>
-          )}
-        </div>
+        {!isAdmin && (
+          <div className={styles.navbarSearch}>
+            <input
+              type="text"
+              placeholder="Buscar eventos..."
+              className={styles.navbarSearchInput}
+              value={searchTerm}
+              onChange={handleSearch}
+              onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
+              onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
+            />
+            <i className={`fas fa-search ${styles.searchIcon}`}></i>
+            {showDropdown && (
+              <div className={styles.searchDropdownContainer}>
+                <ul className={styles.searchDropdownList}>
+                  {searchResults.length > 0 ? (
+                    searchResults.map(result => (
+                      <li
+                        key={result.id}
+                        className={styles.searchDropdownItem}
+                        onMouseDown={() => handleSearchItemClick(result.id)}
+                      >
+                        {result.name}
+                      </li>
+                    ))
+                  ) : (
+                    <li className={`${styles.searchDropdownItem} ${styles.noResults}`}>No hay resultados</li>
+                  )}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
 
         <ul className={styles.navbarMenu}>
-          <li><Link to="/help" className={styles.navbarMenuItem}>Ayuda</Link></li>
-          {isLoggedIn && <li><Link to="/myTickets" className={styles.navbarMenuItem}>Mis Entradas</Link></li>}
-          {isLoggedIn && (user?.role === 'admin' || user?.role === 'company') && (
+          {!isAdmin && <li><Link to="/help" className={styles.navbarMenuItem}>Ayuda</Link></li>}
+          {isLoggedIn && user?.role === 'user' && <li><Link to="/myTickets" className={styles.navbarMenuItem}>Mis Entradas</Link></li>}
+          {isLoggedIn && user?.role === 'company' && (
             <li><Link to="/create-event" className={styles.navbarMenuItem}>Crear Evento</Link></li>
+          )}
+          {isAdmin && (
+            <>
+              <li><Link to="/admin" className={styles.navbarMenuItem}>Aprobar Eventos</Link></li>
+              <li><Link to="/feature-events" className={styles.navbarMenuItem}>Destacar Eventos</Link></li>
+            </>
           )}
         </ul>
 
@@ -147,3 +157,4 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+

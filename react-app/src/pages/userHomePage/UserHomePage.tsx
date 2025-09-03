@@ -144,12 +144,16 @@ const HomePage: React.FC = () => {
                       <div className={styles.eventCard}>
                         <img
                           src={ticket.imageUrl}
-                          alt={ticket.eventName}
+                          alt={(ticket as any).eventName}
                           className={styles.eventCardImg}
-                          onError={e => { e.currentTarget.src = '/public/ticket.png'; }}
+                          onError={e => { e.currentTarget.src = '/ticket.png'; }}
                         />
-                        <div className={styles.eventCardTitle}>{ticket.eventName}</div>
+                        <div className={styles.eventCardTitle}>{(ticket as any).eventName}</div>
+                        {ticket.agotado && (
+                          <div className={styles.eventCardSoldOut}>Agotado</div>
+                        )}
                       </div>
+
                     </Link>
                   ))}
                 </div>
