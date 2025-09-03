@@ -26,10 +26,12 @@ interface CreateEventState {
   error: string | null;
   image: File | null;
   idPlace: string;
+  occupiedDates: string[]; // Nuevo campo para fechas ocupadas
 }
 
 type CreateEventAction =
-  | { type: 'SET_FIELD'; payload: { field: keyof CreateEventState; value: string } }
+  | { type: 'SET_FIELD'; payload: { field: keyof Omit<CreateEventState, 'occupiedDates'>; value: string } }
+  | { type: 'SET_OCCUPIED_DATES'; payload: { dates: string[] } } // Nueva acción
   | { type: 'SET_ERROR'; payload: { error: string | null } }
   | { type: 'RESET_FORM' }
   | { type: 'SET_IMAGE'; payload: { image: File | null } };
@@ -40,6 +42,8 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
       return { ...state, [action.payload.field]: action.payload.value };
     case 'SET_ERROR':
       return { ...state, error: action.payload.error };
+    case 'SET_OCCUPIED_DATES':
+      return { ...state, occupiedDates: action.payload.dates };
     case 'RESET_FORM':
       return {
         eventName: '',
@@ -50,6 +54,7 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
         error: null,
         image: null,
         idPlace: '',
+        occupiedDates: [],
       };
     case 'SET_IMAGE':
       return { ...state, image: action.payload.image };
@@ -68,6 +73,7 @@ const CreateEventPage: React.FC = () => {
     error: null,
     image: null,
     idPlace: '',
+    occupiedDates: [],
   });
 
 
@@ -79,7 +85,7 @@ const CreateEventPage: React.FC = () => {
   useEffect(() => {
     const fetchEventTypes = async () => {
       try {
-        const { data } = await axios.get<EventType[]>('http://localhost:3000/api/events/types');
+        const { data } = await axios.get<EventType[]>(`${BASE_URL}/api/events/types`);
         setTypes(data);
       } catch (e) {
         console.error("Error al cargar los tipos de evento:", e);
@@ -92,7 +98,7 @@ const CreateEventPage: React.FC = () => {
     useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        const { data } = await axios.get<Place[]>('http://localhost:3000/api/places/getPlaces');
+        const { data } = await axios.get<Place[]>(`${BASE_URL}/api/places/getPlaces`);
         setPlaces(data);
       } catch (e) {
         console.error("Error al cargar los lugares:", e);
@@ -102,7 +108,23 @@ const CreateEventPage: React.FC = () => {
     fetchPlaces();
   }, [setAppMessage]);
 
-  const handleFieldChange = (field: keyof CreateEventState, value: string) => {
+  useEffect(() => {
+    if (state.idPlace) {
+      const fetchOccupiedDates = async () => {
+        try {
+          const { data } = await axios.get<{ data: string[] }>(`${BASE_URL}/api/events/available-dates/${state.idPlace}`);
+          dispatch({ type: 'SET_OCCUPIED_DATES', payload: { dates: data.data } });
+        } catch (e) {
+          console.error("Error al cargar las fechas ocupadas:", e);
+          setAppMessage('No se pudieron cargar las fechas del lugar.', 'error');
+        }
+      };
+      fetchOccupiedDates();
+    }
+  }, [state.idPlace, setAppMessage]);
+
+
+  const handleFieldChange = (field: keyof Omit<CreateEventState, 'occupiedDates'>, value: string) => {
     dispatch({ type: 'SET_FIELD', payload: { field, value } });
   };
 
@@ -214,8 +236,17 @@ const CreateEventPage: React.FC = () => {
                 type="date"
                 id="date"
                 value={state.date}
-                onChange={(e) => handleFieldChange('date', e.target.value)}
+                onChange={(e) => {
+                  if (state.occupiedDates.includes(e.target.value)) {
+                    handleFieldChange('date', '');
+                    setAppMessage('Esa fecha no está disponible', 'error');
+                  } else {
+                    handleFieldChange('date', e.target.value);
+                  }
+                }}
                 required
+                disabled={!state.idPlace}
+                min={new Date().toISOString().split("T")[0]}
               />
             </div>
 
