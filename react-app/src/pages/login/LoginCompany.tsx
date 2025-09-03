@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
-import styles from './styles/LoginCompany.module.css'; 
+import styles from './styles/LoginCompany.module.css';
 
 interface LoginCompanyProps {
-  onLoginSuccess: (companyName: string) => void;
+  onLoginSuccess: (company: { companyName: string }, token: string) => void;
 }
 
 const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
@@ -31,11 +31,8 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
       });
 
       const data = response.data;
-    if (data?.token) {
-      localStorage.setItem('token', data.token);
-      }
-      onLoginSuccess(data.companyName || data.contactEmail);
-      navigate('/create-event');
+      onLoginSuccess(data.company, data.token);
+
     } catch (err) {
       console.error('Error en login de organizador:', err);
       if (axios.isAxiosError(err) && err.response) {
@@ -96,3 +93,4 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
 };
 
 export default LoginCompany;
+

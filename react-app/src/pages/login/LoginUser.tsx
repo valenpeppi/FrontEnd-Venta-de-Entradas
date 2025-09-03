@@ -1,13 +1,13 @@
 import type React from "react"
-import { useReducer, useEffect } from "react" 
+import { useReducer, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
 import MessageDisplay from "../../shared/MessageDisplay";
-import styles from './styles/LoginUser.module.css' 
+import styles from './styles/LoginUser.module.css'
 
 interface LoginProps {
-  onLoginSuccess: (userName: string, role?: string) => void;
+  onLoginSuccess: (user: { name: string, role?: string }, token: string) => void;
 }
 
 interface LoginState {
@@ -27,15 +27,15 @@ const loginReducer = (state: LoginState, action: LoginAction): LoginState => {
     case 'SET_EMAIL': {
       return { ...state, email: action.payload.email };
     }
-    
+
     case 'SET_PASSWORD': {
       return { ...state, password: action.payload.password };
     }
-    
+
     case 'SET_ERROR': {
       return { ...state, error: action.payload.error };
     }
-    
+
     case 'RESET_FORM': {
       return {
         email: '',
@@ -43,7 +43,7 @@ const loginReducer = (state: LoginState, action: LoginAction): LoginState => {
         error: null
       };
     }
-    
+
     default:
       return state;
   }
@@ -55,9 +55,9 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     password: '',
     error: null
   });
-  
+
   const navigate = useNavigate();
-  const { messages, clearMessages } = useMessage(); 
+  const { messages, clearMessages } = useMessage();
 
   useEffect(() => {
     return () => {
@@ -71,15 +71,14 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
     try {
       const response = await axios.post('http://localhost:3000/api/auth/login', {
-        mail: state.email, 
+        mail: state.email,
         password: state.password,
       });
 
       const data = response.data;
-      const role= data.user?.role;
-      onLoginSuccess(data.user?.name || data.user?.mail || 'Usuario', data.user?.role);
+      onLoginSuccess(data.user, data.token);
 
-      if (role === 'admin') {
+      if (data.user?.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/');
@@ -98,10 +97,10 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   return (
     <>
       {messages.map(message => (
-        <MessageDisplay 
+        <MessageDisplay
           key={message.id}
-          message={message.text} 
-          type={message.type} 
+          message={message.text}
+          type={message.type}
         />
       ))}
       <div className={styles.loginRoot}>
@@ -156,7 +155,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             >
             Volver
             </button>
-            </div>          
+            </div>
       </div>
       </div>
     </>
@@ -164,3 +163,4 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 };
 
 export default Login;
+

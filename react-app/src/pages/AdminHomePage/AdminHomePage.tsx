@@ -137,31 +137,6 @@ export default function AdminHomePage() {
                     {ev.description}
                   </p>
                 )}
-                <div className={styles.meta}>
-                  {ev.date && (
-                    <span>
-                      Fecha:{" "}
-                      {new Date(ev.date).toLocaleDateString('es-ES', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                        timeZone: 'UTC',
-                      })} a las {new Date(ev.date).toLocaleTimeString('es-ES', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          timeZone: 'UTC'
-                      })} hs
-                    </span>
-                  )}
-                  {ev.idOrganiser && (
-                    <span>
-                      Creado:{" "}
-                      {new Date(ev.idOrganiser).toLocaleDateString(undefined, {
-                        dateStyle: "medium",
-                      })}
-                    </span>
-                  )}
-                </div>
               </div>
 
               <div className={styles.actions}>
@@ -182,7 +157,7 @@ export default function AdminHomePage() {
               </div>
             </li>
           ))}
-        </ul>
+        </ul> 
       )}
     </div>
   );

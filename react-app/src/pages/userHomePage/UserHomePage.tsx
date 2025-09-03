@@ -10,7 +10,7 @@ import styles from './styles/UserHomePage.module.css';
 import type { Ticket } from '../../App';
 
 const HomePage: React.FC = () => {
-  const { allTickets, updateAvailableTickets } = useEvents();
+  const { featuredTickets, approvedTickets, updateAvailableTickets } = useEvents();
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
@@ -22,22 +22,22 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (currentEventIndex >= allTickets.length && allTickets.length > 0) {
+    if (currentEventIndex >= featuredTickets.length && featuredTickets.length > 0) {
       setCurrentEventIndex(0);
-    } else if (allTickets.length === 0) {
+    } else if (featuredTickets.length === 0) {
       setCurrentEventIndex(0);
     }
-  }, [allTickets, currentEventIndex]);
+  }, [featuredTickets, currentEventIndex]);
 
   const goToPreviousEvent = () => {
     setCurrentEventIndex(prevIndex =>
-      prevIndex === 0 ? allTickets.length - 1 : prevIndex - 1
+      prevIndex === 0 ? featuredTickets.length - 1 : prevIndex - 1
     );
   };
 
   const goToNextEvent = () => {
     setCurrentEventIndex(prevIndex =>
-      prevIndex === allTickets.length - 1 ? 0 : prevIndex + 1
+      prevIndex === featuredTickets.length - 1 ? 0 : prevIndex + 1
     );
   };
 
@@ -77,12 +77,12 @@ const HomePage: React.FC = () => {
     handleCloseModal();
   };
 
-  const eventTypes = Array.from(new Set(allTickets.map(ticket => ticket.type)));
+  const eventTypes = Array.from(new Set(approvedTickets.map(ticket => ticket.type)));
   const [selectedType, setSelectedType] = useState<string>('Todos');
 
   const filteredTickets = selectedType === 'Todos'
-    ? allTickets
-    : allTickets.filter(ticket => ticket.type === selectedType);
+    ? approvedTickets
+    : approvedTickets.filter(ticket => ticket.type === selectedType);
 
   const eventsByType: { [key: string]: Ticket[] } = {};
   filteredTickets.forEach(ticket => {
@@ -90,7 +90,7 @@ const HomePage: React.FC = () => {
     eventsByType[ticket.type].push(ticket);
   });
 
-  if (allTickets.length === 0) {
+  if (approvedTickets.length === 0) {
     return (
       <div className={styles.loadingState}>
         <p className={styles.loadingStateText}>Cargando eventos...</p>
@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
       <main className={styles.homepageMain}>
         <h1 className={styles.homepageTitle}>Eventos destacados</h1>
         <Carousel
-          tickets={allTickets}
+          tickets={featuredTickets}
           currentEventIndex={currentEventIndex}
           onPreviousEvent={goToPreviousEvent}
           onNextEvent={goToNextEvent}
@@ -125,9 +125,8 @@ const HomePage: React.FC = () => {
           </select>
         </div>
 
-        <h2 className={styles.eventListTitle}>Eventos por tipo</h2>
+        <h2 className={styles.eventListTitle}>Todos los Eventos</h2>
         
-        {/* Estructura corregida: Agrupando título y galería */}
         <div className={styles.eventListContainer}>
           {Object.keys(eventsByType).length === 0 ? (
             <p className={styles.eventTypeEmpty}>No hay eventos para este tipo.</p>

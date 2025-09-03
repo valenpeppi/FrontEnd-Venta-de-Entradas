@@ -15,7 +15,7 @@ import CreateEventPage from './pages/companyHomePage/CreateEventPage';
 import LoginCompany from './pages/login/LoginCompany';
 import RegisterCompany from './pages/register/RegisterCompany';
 import NewsLetter from './pages/support/NewsLetter';
-import { useAuth } from './shared/context/AuthContext';
+import { useAuth, type User } from './shared/context/AuthContext';
 import { useMessage } from './shared/context/MessageContext';
 import styles from './shared/styles/App.module.css';
 
@@ -29,6 +29,7 @@ export interface Ticket {
   imageUrl: string;
   time: string;
   type: string;
+  featured: boolean;
 }
 
 const App: React.FC = () => {
@@ -37,24 +38,26 @@ const App: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoggedIn && user?.role === 'admin') {
-      navigate('/admin');
-    }
+    // No redirigir aquí para permitir que el admin navegue a otras páginas.
   }, [isLoggedIn, user?.role, navigate]);
 
-  const handleLoginSuccess = (loggedInUserName: string, role?: string) => {
-    login(loggedInUserName, role);
-    setAppMessage(`¡Inicio de sesión exitoso como ${loggedInUserName}!`);
+  const handleLoginSuccess = (user: { name: string, role?: string }, token: string) => {
+    const userToLogin: User = {
+      name: user.name,
+      role: user.role || null
+    };
+    login(userToLogin, token);
+    setAppMessage(`¡Inicio de sesión exitoso como ${user.name}!`);
   };
 
   const handleRegisterSuccess = () => {
     setAppMessage('¡Registro exitoso! Por favor, inicia sesión.');
   };
 
-  const handleCompanyLoginSuccess = (companyName: string) => {
-    login(companyName, 'company');
-    setAppMessage(`¡Inicio de sesión exitoso como organizador ${companyName}!`);
-    navigate('/admin');
+  const handleCompanyLoginSuccess = (company: { companyName: string }, token: string) => {
+    login({ name: company.companyName, role: 'company' }, token);
+    setAppMessage(`¡Inicio de sesión exitoso como organizador ${company.companyName}!`);
+    navigate('/create-event');
   };
 
   const handleCompanyRegisterSuccess = () => {
@@ -181,3 +184,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
