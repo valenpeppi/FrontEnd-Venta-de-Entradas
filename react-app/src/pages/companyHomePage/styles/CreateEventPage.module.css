@@ -141,6 +141,19 @@
   border-color: #9ca3af;
 }
 
+.fileInputButton {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: #555;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
 @media (max-width: 768px) {
   .createEventContainer {
     padding: 1.5rem;

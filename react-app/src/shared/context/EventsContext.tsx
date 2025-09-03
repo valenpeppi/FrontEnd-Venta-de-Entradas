@@ -1,15 +1,9 @@
 import React, { createContext, useReducer, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
 import type { Ticket } from '../../App';
-import mirandaImg from "../../assets/miranda.jpg";
-import nickyImg from "../../assets/nicky.jpg";
-import superOttoImg from "../../assets/superotto.jpg";
-import losMidachiImg from "../../assets/losmidachi.jpg";
-import exposicionArteImg from "../../assets/exposicionarte.jpg";
+import axios from 'axios';
 
-interface EventsState {
-  allTickets: Ticket[];
-}
+interface EventsState { allTickets: Ticket[]; }
 
 type EventsAction =
   | { type: 'SET_TICKETS'; payload: { tickets: Ticket[] } }
@@ -29,102 +23,86 @@ interface EventsContextType {
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
-interface EventsProviderProps {
-  children: ReactNode;
-}
+interface EventsProviderProps { children: ReactNode; }
 
 const eventsReducer = (state: EventsState, action: EventsAction): EventsState => {
   switch (action.type) {
-    case 'SET_TICKETS': {
-      return { ...state, allTickets: action.payload.tickets };
-    }
-    
+    case 'SET_TICKETS': return { ...state, allTickets: action.payload.tickets };
     case 'UPDATE_TICKET': {
       const { ticket } = action.payload;
-      return {
-        ...state,
-        allTickets: state.allTickets.map(t => 
-          t.id === ticket.id ? ticket : t
-        )
-      };
+      return { ...state, allTickets: state.allTickets.map(t => t.id === ticket.id ? ticket : t) };
     }
-    
-    case 'ADD_TICKET': {
-      const { ticket } = action.payload;
-      return {
-        ...state,
-        allTickets: [...state.allTickets, ticket]
-      };
-    }
-    
-    case 'REMOVE_TICKET': {
-      const { id } = action.payload;
-      return {
-        ...state,
-        allTickets: state.allTickets.filter(t => t.id !== id)
-      };
-    }
-    
+    case 'ADD_TICKET': return { ...state, allTickets: [...state.allTickets, action.payload.ticket] };
+    case 'REMOVE_TICKET': return { ...state, allTickets: state.allTickets.filter(t => t.id !== action.payload.id) };
     case 'UPDATE_AVAILABLE_TICKETS': {
       const { id, quantity } = action.payload;
       return {
         ...state,
-        allTickets: state.allTickets.map(ticket =>
-          ticket.id === id
-            ? { ...ticket, availableTickets: ticket.availableTickets - quantity }
-            : ticket
+        allTickets: state.allTickets.map(t =>
+          t.id === id ? { ...t, availableTickets: t.availableTickets - quantity } : t
         )
       };
     }
-    
-    default:
-      return state;
+    default: return state;
   }
 };
 
 export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(eventsReducer, { allTickets: [] });
+  const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
   useEffect(() => {
-    const dummyTickets: Ticket[] = [
-      { id: '1', eventName: 'Miranda', date: '2025-07-20', location: 'Estadio Metropolitano', price: 10000.00, availableTickets: 2000, imageUrl: mirandaImg, time: '20:00 hs', type: 'pop' },
-      { id: '2', eventName: 'Nicky Nicole', date: '2025-08-10', location: 'Bioceres Arena', price: 6000.00, availableTickets: 6000, imageUrl: nickyImg, time: '21:30 hs', type: 'trap' },
-      { id: '3', eventName: 'Super Otto', date: '2025-09-01', location: 'Complejo Forest', price: 7000.00, availableTickets: 900, imageUrl: superOttoImg, time: '23:00 hs', type: 'infantil' },
-      { id: '4', eventName: 'Los Midachi', date: '2025-09-15', location: 'Teatro Opera', price: 4500.00, availableTickets: 100, imageUrl: losMidachiImg, time: '22:00 hs', type: 'humor' },
-      { id: '5', eventName: 'Exposición de Arte Contemporaneo', date: '2025-10-05', location: 'Centro Cultural Roberto Fontanarrosa', price: 2500.00, availableTickets: 150, imageUrl: exposicionArteImg, time: '18:00 hs', type: 'arte' },
-    ];
-    dispatch({ type: 'SET_TICKETS', payload: { tickets: dummyTickets } });
-    console.log('EventsContext: Tickets cargados:', dummyTickets);
-  }, []);
+    let alive = true;
+    (async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/api/events/featured`);
+        console.log('EventsContext: /featured =>', res.data);
+        const events = (res.data?.data ?? []) as Array<any>;
 
-  const setAllTickets = (tickets: Ticket[]) => {
-    dispatch({ type: 'SET_TICKETS', payload: { tickets } });
-  };
+        const tickets: Ticket[] = events.map(ev => {
+          // calcular precio mínimo de todos los sectores
+          let minPrice = 0;
+          if (ev.eventSectors?.length > 0) {
+            const allPrices = ev.eventSectors.flatMap((s: any) => s.prices.map((p: any) => p.price));
+            if (allPrices.length) {
+              minPrice = Math.min(...allPrices);
+            }
+          }
 
-  const updateTicket = (ticket: Ticket) => {
-    dispatch({ type: 'UPDATE_TICKET', payload: { ticket } });
-  };
+          return {
+            id: String(ev.idEvent),
+            eventName: ev.name,
+            date: new Date(ev.date).toISOString().slice(0, 10),
+            time: new Date(ev.date).toTimeString().slice(0, 5) + ' hs',
+            location: ev.place?.name || 'Sin lugar',
+            price: minPrice,
+            availableTickets: ev.availableSeats ?? 0,            
+            type: ev.eventType?.name || 'General',
+            imageUrl: ev.image ? `${BASE_URL}${ev.image}` : '/ticket.png',
+          };
+        });
 
-  const addTicket = (ticket: Ticket) => {
-    dispatch({ type: 'ADD_TICKET', payload: { ticket } });
-  };
+        if (alive) {
+          dispatch({ type: 'SET_TICKETS', payload: { tickets } });
+          console.log('EventsContext: tickets seteados =>', tickets);
+        }
+      } catch (err) {
+        console.error('EventsContext: error cargando /featured', err);
+      }
+    })();
+    return () => { alive = false; };
+  }, [BASE_URL]);
 
-  const removeTicket = (id: string) => {
-    dispatch({ type: 'REMOVE_TICKET', payload: { id } });
-  };
-
-  const updateAvailableTickets = (id: string, quantity: number) => {
+  const setAllTickets = (tickets: Ticket[]) => dispatch({ type: 'SET_TICKETS', payload: { tickets } });
+  const updateTicket = (ticket: Ticket) => dispatch({ type: 'UPDATE_TICKET', payload: { ticket } });
+  const addTicket = (ticket: Ticket) => dispatch({ type: 'ADD_TICKET', payload: { ticket } });
+  const removeTicket = (id: string) => dispatch({ type: 'REMOVE_TICKET', payload: { id } });
+  const updateAvailableTickets = (id: string, quantity: number) =>
     dispatch({ type: 'UPDATE_AVAILABLE_TICKETS', payload: { id, quantity } });
-  };
 
   return (
-    <EventsContext.Provider value={{ 
-      allTickets: state.allTickets, 
-      setAllTickets, 
-      updateTicket, 
-      addTicket, 
-      removeTicket, 
-      updateAvailableTickets 
+    <EventsContext.Provider value={{
+      allTickets: state.allTickets, setAllTickets, updateTicket, addTicket, removeTicket, updateAvailableTickets
     }}>
       {children}
     </EventsContext.Provider>
@@ -132,9 +110,7 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
 };
 
 export const useEvents = () => {
-  const context = useContext(EventsContext);
-  if (context === undefined) {
-    throw new Error('useEvents debe ser usado dentro de un EventsProvider');
-  }
-  return context;
+  const ctx = useContext(EventsContext);
+  if (!ctx) throw new Error('useEvents debe ser usado dentro de un EventsProvider');
+  return ctx;
 };
