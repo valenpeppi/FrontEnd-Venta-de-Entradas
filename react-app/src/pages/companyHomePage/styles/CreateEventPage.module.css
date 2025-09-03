@@ -154,6 +154,64 @@
     transition: all 0.3s ease;
 }
 
+.occupiedDatesContainer {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background-color: #fef2f2; 
+  border: 1px solid #fecaca; 
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  color: #991b1b; 
+}
+
+.occupiedDatesContainer strong {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.occupiedDatesContainer ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.occupiedDatesContainer li {
+  background-color: #fee2e2;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.sectorsContainer {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #f9fafb;
+}
+
+.sectorsContainer h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  color: #374151;
+  text-align: center;
+}
+
+.priceInput {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+.priceInput::-webkit-outer-spin-button,
+.priceInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
 @media (max-width: 768px) {
   .createEventContainer {
     padding: 1.5rem;
@@ -236,3 +294,4 @@
     font-size: 0.9rem;
   }
 }
+

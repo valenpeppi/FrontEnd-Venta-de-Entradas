@@ -6,7 +6,6 @@ import styles from './styles/CreateEventPage.module.css';
 
 const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
-
 interface EventType {
   idType: number;
   name: string;
@@ -14,6 +13,11 @@ interface EventType {
 
 interface Place {
   idPlace: number;
+  name: string;
+}
+
+interface Sector {
+  idSector: number;
   name: string;
 }
 
@@ -26,12 +30,13 @@ interface CreateEventState {
   error: string | null;
   image: File | null;
   idPlace: string;
-  occupiedDates: string[]; // Nuevo campo para fechas ocupadas
+  occupiedDates: string[];
+  sectorPrices: { [key: string]: string };
 }
 
 type CreateEventAction =
-  | { type: 'SET_FIELD'; payload: { field: keyof Omit<CreateEventState, 'occupiedDates'>; value: string } }
-  | { type: 'SET_OCCUPIED_DATES'; payload: { dates: string[] } } // Nueva acción
+  | { type: 'SET_FIELD'; payload: { field: keyof CreateEventState; value: any } }
+  | { type: 'SET_OCCUPIED_DATES'; payload: { dates: string[] } }
   | { type: 'SET_ERROR'; payload: { error: string | null } }
   | { type: 'RESET_FORM' }
   | { type: 'SET_IMAGE'; payload: { image: File | null } };
@@ -55,6 +60,7 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
         image: null,
         idPlace: '',
         occupiedDates: [],
+        sectorPrices: {},
       };
     case 'SET_IMAGE':
       return { ...state, image: action.payload.image };
@@ -74,58 +80,66 @@ const CreateEventPage: React.FC = () => {
     image: null,
     idPlace: '',
     occupiedDates: [],
+    sectorPrices: {},
   });
 
-
   const [places, setPlaces] = useState<Place[]>([]);
+  const [sectors, setSectors] = useState<Sector[]>([]);
   const [types, setTypes] = useState<EventType[]>([]);
   const navigate = useNavigate();
   const { setAppMessage } = useMessage();
 
   useEffect(() => {
-    const fetchEventTypes = async () => {
+    const fetchInitialData = async () => {
       try {
-        const { data } = await axios.get<EventType[]>(`${BASE_URL}/api/events/types`);
-        setTypes(data);
+        const [typesRes, placesRes] = await Promise.all([
+          axios.get<EventType[]>(`${BASE_URL}/api/catalog/event-types`),
+          axios.get<Place[]>(`${BASE_URL}/api/catalog/places`),
+        ]);
+        setTypes(typesRes.data);
+        setPlaces(placesRes.data);
       } catch (e) {
-        console.error("Error al cargar los tipos de evento:", e);
-        setAppMessage('No se pudieron cargar los tipos de evento.', 'error');
+        console.error("Error al cargar datos iniciales:", e);
+        setAppMessage('No se pudieron cargar los datos para crear el evento.', 'error');
       }
     };
-    fetchEventTypes();
-  }, [setAppMessage]);
-
-    useEffect(() => {
-    const fetchPlaces = async () => {
-      try {
-        const { data } = await axios.get<Place[]>(`${BASE_URL}/api/places/getPlaces`);
-        setPlaces(data);
-      } catch (e) {
-        console.error("Error al cargar los lugares:", e);
-        setAppMessage('No se pudieron cargar los lugares.', 'error');
-      }
-    };
-    fetchPlaces();
+    fetchInitialData();
   }, [setAppMessage]);
 
   useEffect(() => {
-    if (state.idPlace) {
-      const fetchOccupiedDates = async () => {
+    const fetchSectorsAndDates = async () => {
+      if (state.idPlace) {
         try {
-          const { data } = await axios.get<{ data: string[] }>(`${BASE_URL}/api/events/available-dates/${state.idPlace}`);
-          dispatch({ type: 'SET_OCCUPIED_DATES', payload: { dates: data.data } });
+          const [sectorsRes, datesRes] = await Promise.all([
+             axios.get<Sector[]>(`${BASE_URL}/api/catalog/places/${state.idPlace}/sectors`),
+             axios.get<{ data: string[] }>(`${BASE_URL}/api/events/available-dates/${state.idPlace}`)
+          ]);
+          setSectors(sectorsRes.data);
+          dispatch({ type: 'SET_OCCUPIED_DATES', payload: { dates: datesRes.data.data } });
+          dispatch({ type: 'SET_FIELD', payload: { field: 'sectorPrices', value: {} } });
         } catch (e) {
-          console.error("Error al cargar las fechas ocupadas:", e);
-          setAppMessage('No se pudieron cargar las fechas del lugar.', 'error');
+          console.error("Error al cargar sectores o fechas:", e);
+          setAppMessage('No se pudieron cargar los detalles del lugar.', 'error');
         }
-      };
-      fetchOccupiedDates();
-    }
+      } else {
+        setSectors([]);
+      }
+    };
+    fetchSectorsAndDates();
   }, [state.idPlace, setAppMessage]);
 
-
-  const handleFieldChange = (field: keyof Omit<CreateEventState, 'occupiedDates'>, value: string) => {
+  const handleFieldChange = (field: keyof CreateEventState, value: any) => {
     dispatch({ type: 'SET_FIELD', payload: { field, value } });
+  };
+  
+  const handlePriceChange = (sectorId: number, price: string) => {
+    dispatch({
+      type: 'SET_FIELD',
+      payload: {
+        field: 'sectorPrices',
+        value: { ...state.sectorPrices, [sectorId]: price }
+      }
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,21 +155,34 @@ const CreateEventPage: React.FC = () => {
       dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, completá todos los campos.' } });
       return;
     }
+    
+    const sectorsWithPrices = sectors.map(sector => ({
+      idSector: sector.idSector,
+      price: parseFloat(state.sectorPrices[sector.idSector] || '0')
+    }));
+
+    for (const item of sectorsWithPrices) {
+      if (isNaN(item.price) || item.price <= 0) {
+        dispatch({ type: 'SET_ERROR', payload: { error: `El precio para el sector "${sectors.find(s=>s.idSector === item.idSector)?.name}" no es válido.` } });
+        return;
+      }
+    }
 
     if (!state.image) {
       dispatch({ type: 'SET_ERROR', payload: { error: 'La imagen es obligatoria.' } });
       return;
     }
 
-     const datetime = new Date(`${state.date}T${state.time}:00`).toISOString();
+    const datetime = new Date(`${state.date}T${state.time}:00`).toISOString();
 
     const formData = new FormData();
     formData.append('name', state.eventName);
     formData.append('description', state.description);
     formData.append('date', datetime);
-    formData.append('idEventType', Number(state.idEventType).toString());
-    formData.append('image', state.image as Blob);
-    formData.append('idPlace', Number(state.idPlace).toString());
+    formData.append('idEventType', state.idEventType);
+    formData.append('idPlace', state.idPlace);
+    formData.append('sectors', JSON.stringify(sectorsWithPrices));
+    formData.append('image', state.image);
 
     try {
       const token = localStorage.getItem('token');
@@ -195,35 +222,28 @@ const CreateEventPage: React.FC = () => {
           <div className={styles.formGroup}>
             <label htmlFor="eventName">Nombre del Evento</label>
             <input
-              type="text"
-              id="eventName"
-              value={state.eventName}
+              type="text" id="eventName" value={state.eventName}
               onChange={(e) => handleFieldChange('eventName', e.target.value)}
-              required
-              maxLength={45}
+              required maxLength={45}
             />
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="description">Descripción</label>
             <textarea
-              id="description"
-              value={state.description}
+              id="description" value={state.description}
               onChange={(e) => handleFieldChange('description', e.target.value)}
-              rows={3}
-              required
-              maxLength={60}
+              rows={3} required maxLength={255}
             />
           </div>
             <div className={styles.formGroup}>
-            <label htmlFor="idEventType">Lugar del evento</label>
+            <label htmlFor="idPlace">Lugar del evento</label>
             <select
-              id="idEventType"
-              value={state.idPlace}
+              id="idPlace" value={state.idPlace}
               onChange={(e) => handleFieldChange('idPlace', e.target.value)}
               required
             >
-              <option value="" disabled hidden>Seleccioná un lugar</option>
+              <option value="" disabled>Seleccioná un lugar</option>
               {places.map((p) => (
                 <option key={p.idPlace} value={p.idPlace}>{p.name}</option>
               ))}
@@ -233,9 +253,7 @@ const CreateEventPage: React.FC = () => {
             <div className={styles.formGroup}>
               <label htmlFor="date">Fecha</label>
               <input
-                type="date"
-                id="date"
-                value={state.date}
+                type="date" id="date" value={state.date}
                 onChange={(e) => {
                   if (state.occupiedDates.includes(e.target.value)) {
                     handleFieldChange('date', '');
@@ -244,47 +262,64 @@ const CreateEventPage: React.FC = () => {
                     handleFieldChange('date', e.target.value);
                   }
                 }}
-                required
-                disabled={!state.idPlace}
+                required disabled={!state.idPlace}
                 min={new Date().toISOString().split("T")[0]}
               />
+              {state.idPlace && state.occupiedDates.length > 0 && (
+                <div className={styles.occupiedDatesContainer}>
+                  <strong>Fechas no disponibles:</strong>
+                  <ul>
+                    {state.occupiedDates.map(date => (
+                      <li key={date}>{new Date(date + 'T00:00:00').toLocaleDateString()}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             <div className={styles.formGroup}>
               <label htmlFor="time">Hora</label>
-              <input
-                type="time"
-                id="time"
-                value={state.time}
-                onChange={(e) => handleFieldChange('time', e.target.value)}
-                required
-              />
+              <input type="time" id="time" value={state.time} onChange={(e) => handleFieldChange('time', e.target.value)} required />
             </div>
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="idEventType">Tipo de Evento</label>
             <select
-              id="idEventType"
-              value={state.idEventType}
-              onChange={(e) => handleFieldChange('idEventType', e.target.value)}
-              required
+              id="idEventType" value={state.idEventType}
+              onChange={(e) => handleFieldChange('idEventType', e.target.value)} required
             >
-              <option value="" disabled hidden>Seleccioná un tipo</option>
+              <option value="" disabled>Seleccioná un tipo</option>
               {types.map((t) => (
                 <option key={t.idType} value={t.idType}>{t.name}</option>
               ))}
             </select>
           </div>
 
+          {sectors.length > 0 && (
+            <div className={styles.sectorsContainer}>
+              <h3>Precios por Sector</h3>
+              {sectors.map(sector => (
+                <div className={styles.formGroup} key={sector.idSector}>
+                  <label htmlFor={`price-${sector.idSector}`}>{sector.name}</label>
+                  <input
+                    type="number"
+                    id={`price-${sector.idSector}`}
+                    className={styles.priceInput}
+                    value={state.sectorPrices[sector.idSector] || ''}
+                    onChange={(e) => handlePriceChange(sector.idSector, e.target.value)}
+                    placeholder="Ej: 150.00"
+                    required min="0" step="0.01"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className={styles.formGroup}>
             <label htmlFor="image">Foto del Evento</label>
             <input className={styles.fileInputButton}
-              type="file"
-              id="image"
-              accept="image/*"
-              onChange={handleImageChange}
-              required
+              type="file" id="image" accept="image/*" onChange={handleImageChange} required
             />
           </div>
 
@@ -299,3 +334,4 @@ const CreateEventPage: React.FC = () => {
 };
 
 export default CreateEventPage;
+

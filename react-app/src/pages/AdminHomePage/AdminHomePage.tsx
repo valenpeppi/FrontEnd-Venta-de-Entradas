@@ -141,10 +141,16 @@ export default function AdminHomePage() {
                   {ev.date && (
                     <span>
                       Fecha:{" "}
-                      {new Date(ev.date).toLocaleString(undefined, {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })}
+                      {new Date(ev.date).toLocaleDateString('es-ES', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        timeZone: 'UTC',
+                      })} a las {new Date(ev.date).toLocaleTimeString('es-ES', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          timeZone: 'UTC'
+                      })} hs
                     </span>
                   )}
                   {ev.idOrganiser && (

@@ -68,12 +68,22 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
               minPrice = Math.min(...allPrices);
             }
           }
+          const eventDate = new Date(ev.date);
 
           return {
             id: String(ev.idEvent),
             eventName: ev.name,
-            date: new Date(ev.date).toISOString().slice(0, 10),
-            time: new Date(ev.date).toTimeString().slice(0, 5) + ' hs',
+            date: eventDate.toLocaleDateString('es-ES', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              timeZone: 'UTC',
+            }),
+            time: eventDate.toLocaleTimeString('es-ES', {
+              hour: '2-digit',
+              minute: '2-digit',
+              timeZone: 'UTC',
+            }) + ' hs',
             location: ev.place?.name || 'Sin lugar',
             price: minPrice,
             availableTickets: ev.availableSeats ?? 0,            
