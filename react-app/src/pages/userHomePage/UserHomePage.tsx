@@ -5,7 +5,6 @@ import { useMessage } from '../../shared/context/MessageContext';
 import { useAuth } from '../../shared/context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Carousel from './Carousel';
-import PurchaseModal from './PurchaseModal';
 import styles from './styles/UserHomePage.module.css';
 import globalStyles from '../../shared/styles/GlobalStyles.module.css';
 import type { Ticket } from '../../App';
@@ -23,24 +22,36 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (currentEventIndex >= featuredTickets.length && featuredTickets.length > 0) {
-      setCurrentEventIndex(0);
-    } else if (featuredTickets.length === 0) {
+    if (featuredTickets.length > 0 && currentEventIndex >= featuredTickets.length) {
       setCurrentEventIndex(0);
     }
   }, [featuredTickets, currentEventIndex]);
 
+  // Auto-rotación del carousel
+  useEffect(() => {
+    if (featuredTickets.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentEventIndex(prevIndex =>
+        prevIndex === featuredTickets.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 10000); 
+    return () => clearInterval(interval);
+  }, [featuredTickets]);
+
   const goToPreviousEvent = () => {
+    if (featuredTickets.length === 0) return;
     setCurrentEventIndex(prevIndex =>
       prevIndex === 0 ? featuredTickets.length - 1 : prevIndex - 1
     );
   };
 
   const goToNextEvent = () => {
+    if (featuredTickets.length === 0) return;
     setCurrentEventIndex(prevIndex =>
       prevIndex === featuredTickets.length - 1 ? 0 : prevIndex + 1
     );
   };
+
 
   const handleBuyClick = (ticket: Ticket) => {
     if (!isLoggedIn) {
@@ -98,6 +109,10 @@ const HomePage: React.FC = () => {
       </div>
     );
   }
+
+  console.log("🚀 featuredTickets:", featuredTickets);
+  console.log("🎯 currentEventIndex:", currentEventIndex);
+
 
   return (
     <div className={styles.homepage}>
@@ -173,17 +188,9 @@ const HomePage: React.FC = () => {
           )}
         </div>
       </main>
-
-      <PurchaseModal
-        isOpen={showPurchaseModal}
-        selectedTicket={selectedTicket}
-        quantity={quantity}
-        onQuantityChange={setQuantity}
-        onConfirmPurchase={handleConfirmPurchase}
-        onCloseModal={handleCloseModal}
-        errorMessage={null}
-      />
     </div>
+
+
   );
 };
 

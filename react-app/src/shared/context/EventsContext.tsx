@@ -70,7 +70,9 @@ const mapApiEventToTicket = (ev: any, BASE_URL: string): Ticket => {
         price: minPrice,
         availableTickets: ev.availableSeats ?? 0,
         type: ev.eventType?.name || 'General',
-        imageUrl: ev.image ? `${BASE_URL}${ev.image}` : '/ticket.png',
+        imageUrl: ev.image
+          ? `${import.meta.env.VITE_API_BASE}${ev.image}`
+          : "/ticket.png",
         featured: ev.featured,
     };
 };

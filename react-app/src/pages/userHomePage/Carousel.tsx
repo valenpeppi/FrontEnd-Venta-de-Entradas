@@ -2,6 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import type { Ticket } from '../../App';
 import styles from './styles/Carousel.module.css';
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
+
 
 export interface CarouselProps {
   tickets: Ticket[];
@@ -40,7 +44,7 @@ const Carousel: React.FC<CarouselProps> = ({
       </button>
       
       {currentEvent ? (
-        <Link to={`/event/${currentEvent.id}`} className={styles.eventCardLink}>
+        <Link to={`/event/${currentEvent.id}`} key={currentEvent.id} className={styles.eventCardLink}>
           <div className={styles.eventCard}>
             <img
               src={currentEvent.imageUrl}
@@ -71,13 +75,14 @@ const Carousel: React.FC<CarouselProps> = ({
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    onBuyClick(currentEvent);
+                    navigate(`/event/${currentEvent.id}`); // 👈 redirigir a EventDetail
                   }}
                   className={`${styles.btnPurchase} ${currentEvent.availableTickets > 0 ? '' : styles.btnPurchaseDisabled}`}
                   disabled={currentEvent.availableTickets === 0}
                 >
                   {currentEvent.availableTickets > 0 ? 'Comprar' : 'Agotado'}
                 </button>
+
               </div>
             </div>
           </div>

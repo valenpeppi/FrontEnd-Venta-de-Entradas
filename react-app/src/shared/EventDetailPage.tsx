@@ -1,139 +1,226 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEvents } from './context/EventsContext';
+import axios from 'axios';
 import { useCart } from './context/CartContext';
 import { useMessage } from './context/MessageContext';
-import PurchaseModal from '../pages/userHomePage/PurchaseModal';
-import type { Ticket } from '../App';
 import styles from './styles/EventDetailPage.module.css';
+
+interface Sector {
+  idEvent: number;
+  idSector: number;
+  name: string;
+  price: number;
+  availableTickets: number;
+  selected?: number;
+}
+
+interface EventSummary {
+  id: number;
+  eventName: string;
+  imageUrl: string;
+  type: string;
+  date: string;
+  placeType: string;
+  placeName: string; 
+  availableTickets: number;
+  agotado: boolean;
+}
+
+const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
 const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { allTickets, updateAvailableTickets } = useEvents();
-  const [event, setEvent] = useState<Ticket | undefined>(undefined);
-  const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
-  const [quantity, setQuantity] = useState<number>(1);
-  const [modalErrorMessage, setModalErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { setAppMessage } = useMessage();
 
+  const [summary, setSummary] = useState<EventSummary | null>(null);
+  const [sectors, setSectors] = useState<Sector[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (id && allTickets.length > 0) {
-      const foundEvent = allTickets.find(ticket => ticket.id === id);
-      if (foundEvent) {
-        setEvent(foundEvent);
-      } else {
-        setAppMessage('Evento no encontrado.');
+    const fetchData = async () => {
+      try {
+        const [summaryRes, sectorsRes] = await Promise.all([
+          axios.get(`${BASE_URL}/api/events/events/${id}`),
+          axios.get(`${BASE_URL}/api/events/events/${id}/sectors`)
+        ]);
+        setSummary(summaryRes.data);
+        setSectors(
+          sectorsRes.data.map((s: Sector) => ({
+            ...s,
+            selected: 0
+          }))
+        );
+      } catch (e) {
+        console.error('Error al cargar detalle del evento', e);
+        setAppMessage('No se pudo cargar el evento', 'error');
         navigate('/');
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [id, allTickets, navigate, setAppMessage]);
+    };
+    fetchData();
+  }, [id, navigate, setAppMessage]);
 
-  const handleBuyClick = () => {
-    if (event) {
-      setQuantity(1);
-      setModalErrorMessage(null);
-      setShowPurchaseModal(true);
-      setAppMessage(null);
-    }
-  };
+  if (loading) return <p>Cargando evento...</p>;
+  if (!summary) return <p>Evento no encontrado</p>;
 
-  const handleCloseModal = () => {
-    setShowPurchaseModal(false);
-  };
-
-  const handleConfirmPurchase = (purchasedQuantity: number) => {
-    if (!event) {
-      setAppMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
-      handleCloseModal();
+  const handleAddToCart = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setAppMessage('Debes iniciar sesión para comprar entradas', 'error');
+      navigate('/login');
       return;
     }
 
-    const wasAdded = addToCart(event, purchasedQuantity);
-    if (!wasAdded) {
-      setModalErrorMessage('No puedes tener más de 3 entradas para este evento en tu carrito.');
-      return;
-    }
-
-    updateAvailableTickets(event.id, purchasedQuantity);
-    setAppMessage(`¡Has agregado ${purchasedQuantity} entradas para ${event.eventName} al carrito!`);
-    handleCloseModal();
-  };
-
-  if (!event) {
-    return (
-      <div className={styles.loadingState}>
-        <p className={styles.loadingStateText}>Cargando evento...</p>
-      </div>
+    const selectedSectors = sectors.filter((s) => s.selected && s.selected > 0);
+    const totalSelected = selectedSectors.reduce(
+      (sum, s) => sum + (s.selected || 0),
+      0
     );
-  }
+
+    if (totalSelected === 0) {
+      setAppMessage('Debes seleccionar al menos una entrada', 'error');
+      return;
+    }
+
+    if (totalSelected > 3) {
+      setAppMessage('Solo puedes comprar hasta 3 entradas en total', 'error');
+      return;
+    }
+
+    selectedSectors.forEach((sec) => {
+    addToCart(
+      {
+        id: `${summary.id}-${sec.idSector}`,
+        eventName: summary.eventName,
+        date: summary.date,
+        location: summary.placeType,
+        sectorName: sec.name,            
+        price: sec.price,
+        availableTickets: sec.availableTickets,
+        imageUrl: summary.imageUrl,
+        type: summary.type,
+        featured: false,
+        time: new Date(summary.date).toLocaleTimeString("es-AR", {
+          hour: "2-digit",
+          minute: "2-digit"
+        }) + " hs"
+      },
+      sec.selected || 0
+    );
+
+    });
+
+    setAppMessage(
+      `Has agregado ${totalSelected} entradas para ${summary.eventName}`,
+      'success'
+    );
+    navigate('/cart');
+  };
 
   return (
     <div className={styles.eventDetailContainer}>
       <div className={styles.eventDetailCard}>
         <div className={styles.eventImageContainer}>
-          <img src={event.imageUrl} alt={event.eventName} className={styles.eventImage} />
+          <img
+            src={summary.imageUrl}
+            alt={summary.eventName}
+            className={styles.eventImage}
+            onError={(e) => {
+              e.currentTarget.src = '/ticket.png';
+            }}
+          />
         </div>
-        
+
         <div className={styles.eventInfo}>
-          <h1 className={styles.eventTitle}>{event.eventName}</h1>
-          
-          <div className={styles.eventDetails}>
-            <div className={styles.eventDetailItem}>
-              <span className={styles.detailLabel}>Fecha:</span>
-              <span className={styles.detailValue}>{event.date}</span>
-            </div>
-            
-            <div className={styles.eventDetailItem}>
-              <span className={styles.detailLabel}>Hora:</span>
-              <span className={styles.detailValue}>{event.time}</span>
-            </div>
-            
-            <div className={styles.eventDetailItem}>
-              <span className={styles.detailLabel}>Ubicación:</span>
-              <span className={styles.detailValue}>{event.location}</span>
-            </div>
-            
-            <div className={styles.eventDetailItem}>
-              <span className={styles.detailLabel}>Precio:</span>
-              <span className={`${styles.detailValue} ${styles.price}`}>${event.price.toFixed(2)}</span>
-            </div>
-            
-            <div className={styles.eventDetailItem}>
-              <span className={styles.detailLabel}>Entradas disponibles:</span>
-              <span className={styles.detailValue}>{event.availableTickets}</span>
-            </div>
-          </div>
-          
-          <div className={styles.eventActions}>
-            <button 
-              onClick={handleBuyClick}
-              className={styles.buyButton}
-              disabled={event.availableTickets === 0}
-            >
-              {event.availableTickets === 0 ? 'Agotado' : 'Comprar Entradas'}
-            </button>
-            
-            <button 
-              onClick={() => navigate('/')}
-              className={styles.backButton}
-            >
-              Volver a Eventos
-            </button>
-          </div>
+          <h1 className={styles.eventTitle}>{summary.eventName}</h1>
+          <p>
+            <strong>Fecha:</strong>{' '}
+            {new Date(summary.date).toLocaleDateString('es-AR', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </p>
+          <p>
+            <strong>Tipo:</strong> {summary.type}
+          </p>
+          <p>
+            <strong>Lugar:</strong>{' '}
+            {summary.placeType.toLowerCase() === 'hybrid'
+              ? 'Híbrido'
+              : summary.placeType}
+          </p>
+          <p><strong>Estadio:</strong> {summary.placeName}</p>
+          <p>
+            <strong>Entradas disponibles:</strong> {summary.availableTickets}
+          </p>
         </div>
       </div>
 
-      <PurchaseModal
-        isOpen={showPurchaseModal}
-        selectedTicket={event}
-        quantity={quantity}
-        onQuantityChange={setQuantity}
-        onConfirmPurchase={handleConfirmPurchase}
-        onCloseModal={handleCloseModal}
-        errorMessage={modalErrorMessage}
-      />
+      <h2 className={styles.sectionTitle}>Sectores disponibles</h2>
+      <div className={styles.sectorList}>
+        {sectors.map((sec) => (
+          <div key={sec.idSector} className={styles.sectorCard}>
+            <div className={styles.sectorInfo}>
+              <h3 className={styles.sectorName}>{sec.name}</h3>
+              <p>
+                <span className={styles.detailLabel}>Precio:</span> ${sec.price}
+              </p>
+              <p>
+                <span className={styles.detailLabel}>
+                  Entradas disponibles:
+                </span>{' '}
+                {sec.availableTickets}
+              </p>
+            </div>
+
+            <div className={styles.sectorInput}>
+              <label htmlFor={`sector-${sec.idSector}`}>Cantidad</label>
+              <input
+                id={`sector-${sec.idSector}`}
+                type="number"
+                min={0}
+                max={Math.min(3, sec.availableTickets)}
+                value={sec.selected || 0}
+                onChange={(e) => {
+                  const qty = parseInt(e.target.value) || 0;
+
+                  const totalSelected =
+                    sectors.reduce((sum, s) => sum + (s.selected || 0), 0) -
+                    (sec.selected || 0) +
+                    qty;
+
+                  if (totalSelected > 3) {
+                    setAppMessage(
+                      'Solo puedes comprar hasta 3 entradas en total',
+                      'error'
+                    );
+                    return;
+                  }
+
+                  setSectors((prev) =>
+                    prev.map((s) =>
+                      s.idSector === sec.idSector ? { ...s, selected: qty } : s
+                    )
+                  );
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className={styles.actions}>
+        <button onClick={handleAddToCart} className={styles.btnConfirm}>
+          Agregar al Carrito
+        </button>
+      </div>
     </div>
   );
 };

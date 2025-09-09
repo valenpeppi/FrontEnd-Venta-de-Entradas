@@ -42,6 +42,7 @@ const CarritoPage = () => {
                   <h3 className={styles.itemName}>{item.eventName}</h3>
                   {item.date && <p className={styles.itemDate}>{item.date}</p>}
                   {item.location && <p className={styles.itemLocation}>{item.location}</p>}
+                  {item.sectorName && <p className={styles.itemSector}><strong>Sector:</strong> {item.sectorName}</p>}
                   <p className={styles.itemPrice}>Precio unitario: ${item.price.toFixed(2)}</p>
                 </div>
                 

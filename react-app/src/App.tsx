@@ -21,11 +21,14 @@ import styles from './shared/styles/App.module.css';
 import globalStyles from './shared/styles/GlobalStyles.module.css';
 import FeatureEventsPage from './pages/adminHomePage/FeatureEventsPage';
 
+
+/// La definicion de ticket no iria en cartContext????
 export interface Ticket {
   id: string;
   eventName: string;
   date: string;
   location: string;
+  sectorName?: string; 
   price: number;
   availableTickets: number;
   imageUrl: string;
