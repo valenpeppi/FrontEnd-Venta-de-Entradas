@@ -11,7 +11,7 @@ interface CartState {
 }
 
 type CartAction =
-  | { type: 'ADD_TO_CART'; payload: { ticket: Ticket; quantity: number } }
+  | { type: 'ADD_TO_CART'; payload: { ticket: Omit<CartItem, 'quantity'>; quantity: number } }
   | { type: 'REMOVE_ITEM'; payload: { id: string } }
   | { type: 'CLEAR_CART' }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
@@ -20,7 +20,7 @@ type CartAction =
 interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
-  addToCart: (ticket: Ticket, quantity: number) => boolean;
+  addToCart: (ticket: Omit<CartItem, 'quantity'>, quantity: number) => boolean;
   removeItem: (id: string) => void;
   clearCart: () => void;
   updateItemQuantity: (id: string, newQuantity: number) => boolean;
@@ -37,10 +37,16 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     case 'ADD_TO_CART': {
       const { ticket, quantity } = action.payload;
       const existingItemIndex = state.cartItems.findIndex(item => item.id === ticket.id);
-      const currentQuantity = existingItemIndex > -1 ? state.cartItems[existingItemIndex].quantity : 0;
       
-      if (currentQuantity + quantity > 3) {
-        // No se puede agregar más de 3 entradas en total para este evento
+      let totalInCartForEvent = state.cartItems
+        .filter(item => item.eventId === ticket.eventId)
+        .reduce((sum, item) => sum + item.quantity, 0);
+
+      if (existingItemIndex > -1) {
+        totalInCartForEvent -= state.cartItems[existingItemIndex].quantity;
+      }
+
+      if (totalInCartForEvent + quantity > 6) {
         return state;
       }
       
@@ -67,14 +73,23 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     
     case 'UPDATE_QUANTITY': {
       const { id, quantity } = action.payload;
-      if (quantity < 1 || quantity > 3) return state;
+      const itemToUpdate = state.cartItems.find(item => item.id === id);
+      if (!itemToUpdate) return state;
+
+      const totalInCartForEvent = state.cartItems
+        .filter(item => item.eventId === itemToUpdate.eventId && item.id !== id)
+        .reduce((sum, item) => sum + item.quantity, 0);
       
-      const idx = state.cartItems.findIndex(item => item.id === id);
-      if (idx === -1) return state;
-      
-      const updatedItems = [...state.cartItems];
-      updatedItems[idx] = { ...updatedItems[idx], quantity };
-      return { ...state, cartItems: updatedItems };
+      if (totalInCartForEvent + quantity > 6) {
+          return state; 
+      }
+
+      return {
+        ...state,
+        cartItems: state.cartItems.map(item =>
+          item.id === id ? { ...item, quantity } : item
+        ),
+      };
     }
     
     case 'LOAD_CART': {
@@ -90,24 +105,30 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, { cartItems: [] });
 
   useEffect(() => {
-    localStorage.removeItem('ticket-cart');
+    try {
+      const storedCart = localStorage.getItem('ticket-cart');
+      if (storedCart) {
+        dispatch({ type: 'LOAD_CART', payload: { items: JSON.parse(storedCart) } });
+      }
+    } catch (error) {
+      console.error("CartContext: Error al cargar el carrito de localStorage:", error);
+    }
   }, []);
 
   useEffect(() => {
     try {
       localStorage.setItem('ticket-cart', JSON.stringify(state.cartItems));
-      console.log('CartContext: Carrito guardado en localStorage:', state.cartItems);
     } catch (error) {
       console.error("CartContext: Error al guardar el carrito en localStorage:", error);
     }
   }, [state.cartItems]);
 
-  const addToCart = (ticket: Ticket, quantity: number): boolean => {
-    console.log(`CartContext: addToCart llamado para ticket ID: ${ticket.id}, cantidad: ${quantity}`);
-    const existingItem = state.cartItems.find(item => item.id === ticket.id);
-    const currentQuantity = existingItem ? existingItem.quantity : 0;
-    
-    if (currentQuantity + quantity > 3) {
+  const addToCart = (ticket: Omit<CartItem, 'quantity'>, quantity: number): boolean => {
+    const totalInCartForEvent = state.cartItems
+      .filter(item => item.eventId === ticket.eventId)
+      .reduce((sum, item) => sum + item.quantity, 0);
+
+    if (totalInCartForEvent + quantity > 6) {
       return false;
     }
     
@@ -116,23 +137,30 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const removeItem = (id: string) => {
-    console.log(`CartContext: removeItem llamado para ticket ID: ${id}`);
     dispatch({ type: 'REMOVE_ITEM', payload: { id } });
   };
 
   const clearCart = () => {
-    console.log('CartContext: Vaciando carrito.');
     dispatch({ type: 'CLEAR_CART' });
   };
 
   const updateItemQuantity = (id: string, newQuantity: number): boolean => {
-    if (newQuantity < 1 || newQuantity > 3) return false;
+     const itemToUpdate = state.cartItems.find(item => item.id === id);
+    if (!itemToUpdate) return false;
+
+    const totalInCartForEvent = state.cartItems
+      .filter(item => item.eventId === itemToUpdate.eventId && item.id !== id)
+      .reduce((sum, item) => sum + item.quantity, 0);
+      
+    if (totalInCartForEvent + newQuantity > 6) {
+      return false;
+    }
+
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity: newQuantity } });
     return true;
   };
 
   const cartCount = state.cartItems.reduce((total, item) => total + item.quantity, 0);
-  console.log('CartContext: cartCount actual:', cartCount);
 
   return (
     <CartContext.Provider value={{ 
@@ -148,7 +176,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   );
 };
 
-// Asegúrate de que esta exportación esté presente y correcta
 export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
@@ -156,3 +183,4 @@ export const useCart = () => {
   }
   return context;
 };
+

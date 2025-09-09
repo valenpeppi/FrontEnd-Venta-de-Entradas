@@ -45,7 +45,7 @@ const eventsReducer = (state: EventsState, action: EventsAction): EventsState =>
   }
 };
 
-const mapApiEventToTicket = (ev: any, BASE_URL: string): Ticket => {
+const mapApiEventToTicket = (ev: any): Ticket => {
     let minPrice = 0;
     if (ev.eventSectors?.length > 0) {
         minPrice = Math.min(...ev.eventSectors.map((s: any) => parseFloat(s.price)));
@@ -54,6 +54,7 @@ const mapApiEventToTicket = (ev: any, BASE_URL: string): Ticket => {
 
     return {
         id: String(ev.idEvent),
+        eventId: String(ev.idEvent),
         eventName: ev.name,
         date: eventDate.toLocaleDateString('es-ES', {
             day: 'numeric',
@@ -91,10 +92,10 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
         ]);
 
         if (alive) {
-          const featuredTickets = (featuredRes.data?.data ?? []).map((ev: any) => mapApiEventToTicket(ev, BASE_URL));
+          const featuredTickets = (featuredRes.data?.data ?? []).map((ev: any) => mapApiEventToTicket(ev));
           dispatch({ type: 'SET_FEATURED_TICKETS', payload: { tickets: featuredTickets } });
 
-          const approvedTickets = (approvedRes.data?.data ?? []).map((ev: any) => mapApiEventToTicket(ev, BASE_URL));
+          const approvedTickets = (approvedRes.data?.data ?? []).map((ev: any) => mapApiEventToTicket(ev));
           dispatch({ type: 'SET_APPROVED_TICKETS', payload: { tickets: approvedTickets } });
         }
       } catch (err) {
@@ -120,3 +121,4 @@ export const useEvents = () => {
   if (!ctx) throw new Error('useEvents debe ser usado dentro de un EventsProvider');
   return ctx;
 };
+

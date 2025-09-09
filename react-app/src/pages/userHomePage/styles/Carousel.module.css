@@ -1,3 +1,14 @@
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(50px); /* Aumentado para un movimiento más notorio */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .eventCarousel {
   position: relative;
   display: flex;
@@ -9,6 +20,7 @@
   max-width: 1100px; 
   box-sizing: border-box;
   padding: 0 3.5rem; 
+  overflow: hidden; /* Oculta el contenido que se sale durante la animación */
 }
 
 .carouselNavigationBtn {
@@ -43,6 +55,7 @@
   align-items: stretch;
   text-decoration: none;
   color: inherit;
+  animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* Duración y suavizado ajustados */
 }
 
 .eventCard {
@@ -148,17 +161,16 @@
   padding: 2rem;
 }
 
-/* --- Media Query para pantallas más grandes --- */
 @media (min-width: 768px) {
   .eventCard {
     flex-direction: row;
     align-items: flex-start;
-    gap: 2.5rem; /* Más espacio entre imagen y texto */
+    gap: 2.5rem; 
   }
   .eventCardImage {
-    width: 55%; /* La imagen ocupa un poco más */
+    width: 55%; 
     height: auto;
-    max-height: 450px; /* Altura máxima para el modo horizontal */
+    max-height: 450px; 
     margin-bottom: 0;
   }
   .eventCardContent {
@@ -175,3 +187,4 @@
 
 .eventCardLink:focus { outline: none; }
 .eventCard:focus-within { box-shadow: 0 10px 35px rgba(0,0,0,0.12); }
+
