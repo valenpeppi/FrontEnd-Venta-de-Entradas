@@ -91,25 +91,26 @@ const EventDetailPage: React.FC = () => {
     }
 
     selectedSectors.forEach((sec) => {
-      addToCart(
-        {
-          id: `${summary.id}-${sec.idSector}`,
-          eventName: summary.eventName,
-          date: summary.date,
-          location: summary.placeType,
-          price: sec.price,
-          availableTickets: sec.availableTickets,
-          imageUrl: summary.imageUrl,
-          type: summary.type,
-          featured: false,
-          time:
-            new Date(summary.date).toLocaleTimeString('es-AR', {
-              hour: '2-digit',
-              minute: '2-digit'
-            }) + ' hs'
-        },
-        sec.selected || 0
-      );
+    addToCart(
+      {
+        id: `${summary.id}-${sec.idSector}`,
+        eventName: summary.eventName,
+        date: summary.date,
+        location: summary.placeType,
+        sectorName: sec.name,            
+        price: sec.price,
+        availableTickets: sec.availableTickets,
+        imageUrl: summary.imageUrl,
+        type: summary.type,
+        featured: false,
+        time: new Date(summary.date).toLocaleTimeString("es-AR", {
+          hour: "2-digit",
+          minute: "2-digit"
+        }) + " hs"
+      },
+      sec.selected || 0
+    );
+
     });
 
     setAppMessage(
