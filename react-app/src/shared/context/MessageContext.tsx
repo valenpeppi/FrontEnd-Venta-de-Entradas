@@ -12,7 +12,7 @@ interface MessageState {
 }
 
 type MessageAction =
-  | { type: 'ADD_MESSAGE'; payload: { text: string; type: 'success' | 'error' | 'info' } }
+  | { type: 'ADD_MESSAGE'; payload: { text: string; type: 'success' | 'error' | 'info'; id: string } }
   | { type: 'REMOVE_MESSAGE'; payload: { id: string } }
   | { type: 'CLEAR_MESSAGES' };
 
@@ -21,7 +21,7 @@ interface MessageContextType {
   addMessage: (text: string, type?: 'success' | 'error' | 'info') => void;
   removeMessage: (id: string) => void;
   clearMessages: () => void;
-  setAppMessage: (message: string | null, type?: 'success' | 'error' | 'info') => void; // Modificado para aceptar tipo
+  setAppMessage: (message: string | null, type?: 'success' | 'error' | 'info') => void;
 }
 
 const MessageContext = createContext<MessageContextType | undefined>(undefined);
@@ -36,9 +36,8 @@ const messageReducer = (state: MessageState, action: MessageAction): MessageStat
       const newMessage: Message = {
         text: action.payload.text,
         type: action.payload.type,
-        id: Date.now().toString()
+        id: action.payload.id
       };
-      // Evita mensajes duplicados
       if (state.messages.some(msg => msg.text === newMessage.text)) {
         return state;
       }
@@ -74,9 +73,8 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) =>
 
   const addMessage = (text: string, type: 'success' | 'error' | 'info' = 'info') => {
     const id = Date.now().toString();
-    dispatch({ type: 'ADD_MESSAGE', payload: { text, type } });
+    dispatch({ type: 'ADD_MESSAGE', payload: { text, type, id } });
     
-    // Auto-remove message after 3 seconds
     setTimeout(() => {
       dispatch({ type: 'REMOVE_MESSAGE', payload: { id } });
     }, 3000);
@@ -90,14 +88,10 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) =>
     dispatch({ type: 'CLEAR_MESSAGES' });
   };
 
-  // --- MODIFICACIÓN AQUÍ ---
-  const setAppMessage = (message: string | null, type?: 'success' | 'error' | 'info') => {
+  const setAppMessage = (message: string | null, type: 'success' | 'error' | 'info' = 'info') => {
+    clearMessages();
     if (message) {
-      // Si se provee un tipo, se usa. Si no, se determina automáticamente.
-      const messageType = type || (message.includes('exitoso') || message.includes('agregado') 
-        ? 'success' as const 
-        : 'error' as const);
-      addMessage(message, messageType);
+      addMessage(message, type);
     }
   };
 

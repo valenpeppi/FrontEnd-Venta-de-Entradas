@@ -68,6 +68,7 @@ const mapApiEventToTicket = (ev: any): Ticket => {
             timeZone: 'UTC',
         }) + ' hs',
         location: ev.place?.name || 'Sin lugar',
+        placeName: ev.place?.name || 'Lugar no especificado',
         price: minPrice,
         availableTickets: ev.availableSeats ?? 0,
         type: ev.eventType?.name || 'General',

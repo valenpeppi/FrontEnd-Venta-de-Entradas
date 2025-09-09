@@ -1,0 +1,61 @@
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
+import { useMessage } from './context/MessageContext';
+
+interface AuthRouteProps {
+  children: React.ReactElement;
+  allowedRoles?: string[];
+  guestOnly?: boolean;
+}
+
+const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly }) => {
+  const { isLoggedIn, user } = useAuth();
+  const { setAppMessage } = useMessage();
+  const location = useLocation();
+
+  // Componente auxiliar para manejar el mensaje y la redirección
+  const RedirectWithMessage: React.FC<{ to: string; message: string; type: 'info' | 'error' }> = ({ to, message, type }) => {
+    // Usamos un efecto para que el mensaje se establezca solo una vez
+    React.useEffect(() => {
+      setAppMessage(message, type);
+    }, [message, type, setAppMessage]);
+    return <Navigate to={to} state={{ from: location }} replace />;
+  };
+
+  // --- Lógica para rutas de solo invitados (guestOnly) ---
+  if (guestOnly) {
+    if (isLoggedIn) {
+      const redirectTo = user?.role === 'admin' ? '/admin' : (user?.role === 'company' ? '/create-event' : '/');
+      return <RedirectWithMessage to={redirectTo} message="Ya has iniciado sesión." type="info" />;
+    }
+    return children;
+  }
+
+  // --- Lógica para rutas protegidas por rol (allowedRoles) ---
+  if (allowedRoles) {
+    if (!isLoggedIn) {
+      return <RedirectWithMessage to="/login" message="Debes iniciar sesión para acceder a esta página." type="error" />;
+    }
+
+    if (!user?.role || !allowedRoles.includes(user.role)) {
+      let roleMessage = 'No tienes permiso para acceder a esta página.';
+      if (allowedRoles.includes('admin')) {
+        roleMessage = 'Acceso denegado. Se requiere rol de Administrador.';
+      } else if (allowedRoles.includes('company')) {
+        roleMessage = 'Acceso denegado. Debes ser un Organizador.';
+      } else if (allowedRoles.includes('user')) {
+        roleMessage = 'Acceso denegado. Debes ser un usuario registrado.';
+      }
+      return <RedirectWithMessage to="/" message={roleMessage} type="error" />;
+    }
+    
+    return children;
+  }
+
+  // Si no es ni guestOnly ni tiene allowedRoles, es una ruta pública
+  return children;
+};
+
+export default AuthRoute;
+

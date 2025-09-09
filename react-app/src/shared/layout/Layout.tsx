@@ -17,13 +17,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className={styles.layoutContainer}>
       <Navbar />
       
-      {messages.map(message => (
-        <MessageDisplay 
-          key={message.id}
-          message={message.text} 
-          type={message.type} 
-        />
-      ))}
+      <div className={styles.messageListContainer}>
+        {messages.map(message => (
+          <MessageDisplay 
+            key={message.id}
+            message={message.text} 
+            type={message.type} 
+          />
+        ))}
+      </div>
 
       <main className={styles.layoutMainContent}>
         {children}
