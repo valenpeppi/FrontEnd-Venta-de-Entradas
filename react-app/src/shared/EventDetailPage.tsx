@@ -5,21 +5,14 @@ import { useCart } from './context/CartContext';
 import { useMessage } from './context/MessageContext';
 import styles from './styles/EventDetailPage.module.css';
 
-interface Seat {
-  idSeat: number;
-  state: string; 
-}
-
 interface Sector {
   idEvent: number;
   idSector: number;
   name: string;
   price: number;
   availableTickets: number;
-  seats?: Seat[];
-  selected?: number; 
+  selected?: number;
 }
-
 
 interface EventSummary {
   id: number;
@@ -28,6 +21,7 @@ interface EventSummary {
   type: string;
   date: string;
   placeType: string;
+  placeName: string; 
   availableTickets: number;
   agotado: boolean;
 }
@@ -42,7 +36,6 @@ const EventDetailPage: React.FC = () => {
 
   const [summary, setSummary] = useState<EventSummary | null>(null);
   const [sectors, setSectors] = useState<Sector[]>([]);
-  const [selectedSeats, setSelectedSeats] = useState<{ sectorId: number; seatId: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -53,7 +46,12 @@ const EventDetailPage: React.FC = () => {
           axios.get(`${BASE_URL}/api/events/events/${id}/sectors`)
         ]);
         setSummary(summaryRes.data);
-        setSectors(sectorsRes.data.map((s: Sector) => ({ ...s, selected: 0 })));
+        setSectors(
+          sectorsRes.data.map((s: Sector) => ({
+            ...s,
+            selected: 0
+          }))
+        );
       } catch (e) {
         console.error('Error al cargar detalle del evento', e);
         setAppMessage('No se pudo cargar el evento', 'error');
@@ -68,47 +66,56 @@ const EventDetailPage: React.FC = () => {
   if (loading) return <p>Cargando evento...</p>;
   if (!summary) return <p>Evento no encontrado</p>;
 
-  const toggleSeatSelection = (sectorId: number, seatId: number, state: string) => {
-    if (state !== 'available') return;
-
-    const exists = selectedSeats.find(s => s.sectorId === sectorId && s.seatId === seatId);
-
-    if (exists) {
-      setSelectedSeats(selectedSeats.filter(s => !(s.sectorId === sectorId && s.seatId === seatId)));
-    } else {
-      if (selectedSeats.length >= 3) {
-        setAppMessage('Solo puedes seleccionar hasta 3 entradas por evento', 'error');
-        return;
-      }
-      setSelectedSeats([...selectedSeats, { sectorId, seatId }]);
-    }
-  };
-
   const handleAddToCart = () => {
-    if (selectedSeats.length === 0) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setAppMessage('Debes iniciar sesión para comprar entradas', 'error');
+      navigate('/login');
+      return;
+    }
+
+    const selectedSectors = sectors.filter((s) => s.selected && s.selected > 0);
+    const totalSelected = selectedSectors.reduce(
+      (sum, s) => sum + (s.selected || 0),
+      0
+    );
+
+    if (totalSelected === 0) {
       setAppMessage('Debes seleccionar al menos una entrada', 'error');
       return;
     }
 
-    selectedSeats.forEach(sel => {
-      const sector = sectors.find(s => s.idSector === sel.sectorId);
-      if (sector) {
-        addToCart({
-          id: `${summary.id}-${sector.idSector}-${sel.seatId}`,
+    if (totalSelected > 3) {
+      setAppMessage('Solo puedes comprar hasta 3 entradas en total', 'error');
+      return;
+    }
+
+    selectedSectors.forEach((sec) => {
+      addToCart(
+        {
+          id: `${summary.id}-${sec.idSector}`,
           eventName: summary.eventName,
           date: summary.date,
           location: summary.placeType,
-          price: sector.price,
-          availableTickets: sector.availableTickets,
+          price: sec.price,
+          availableTickets: sec.availableTickets,
           imageUrl: summary.imageUrl,
           type: summary.type,
           featured: false,
-          time: new Date(summary.date).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) + ' hs'
-        }, 1);
-      }
+          time:
+            new Date(summary.date).toLocaleTimeString('es-AR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            }) + ' hs'
+        },
+        sec.selected || 0
+      );
     });
 
-    setAppMessage(`Has agregado ${selectedSeats.length} entradas para ${summary.eventName}`, 'success');
+    setAppMessage(
+      `Has agregado ${totalSelected} entradas para ${summary.eventName}`,
+      'success'
+    );
     navigate('/cart');
   };
 
@@ -120,18 +127,38 @@ const EventDetailPage: React.FC = () => {
             src={summary.imageUrl}
             alt={summary.eventName}
             className={styles.eventImage}
-            onError={(e) => { e.currentTarget.src = "/ticket.png"; }}
+            onError={(e) => {
+              e.currentTarget.src = '/ticket.png';
+            }}
           />
         </div>
 
         <div className={styles.eventInfo}>
           <h1 className={styles.eventTitle}>{summary.eventName}</h1>
-          <div className={styles.eventDetails}>
-            <p><span className={styles.detailLabel}>Fecha:</span> {summary.date}</p>
-            <p><span className={styles.detailLabel}>Tipo:</span> {summary.type}</p>
-            <p><strong>Lugar:</strong> {summary.placeType.toLowerCase() === "hybrid" ? "Híbrido" : summary.placeType}</p>
-            <p><span className={styles.detailLabel}>Entradas disponibles:</span> {summary.availableTickets}</p>
-          </div>
+          <p>
+            <strong>Fecha:</strong>{' '}
+            {new Date(summary.date).toLocaleDateString('es-AR', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </p>
+          <p>
+            <strong>Tipo:</strong> {summary.type}
+          </p>
+          <p>
+            <strong>Lugar:</strong>{' '}
+            {summary.placeType.toLowerCase() === 'hybrid'
+              ? 'Híbrido'
+              : summary.placeType}
+          </p>
+          <p><strong>Estadio:</strong> {summary.placeName}</p>
+          <p>
+            <strong>Entradas disponibles:</strong> {summary.availableTickets}
+          </p>
         </div>
       </div>
 
@@ -141,11 +168,17 @@ const EventDetailPage: React.FC = () => {
           <div key={sec.idSector} className={styles.sectorCard}>
             <div className={styles.sectorInfo}>
               <h3 className={styles.sectorName}>{sec.name}</h3>
-              <p><span className={styles.detailLabel}>Precio:</span> ${sec.price}</p>
-              <p><span className={styles.detailLabel}>Entradas disponibles:</span> {sec.availableTickets}</p>
+              <p>
+                <span className={styles.detailLabel}>Precio:</span> ${sec.price}
+              </p>
+              <p>
+                <span className={styles.detailLabel}>
+                  Entradas disponibles:
+                </span>{' '}
+                {sec.availableTickets}
+              </p>
             </div>
 
-            {/* Input de cantidad */}
             <div className={styles.sectorInput}>
               <label htmlFor={`sector-${sec.idSector}`}>Cantidad</label>
               <input
@@ -157,13 +190,16 @@ const EventDetailPage: React.FC = () => {
                 onChange={(e) => {
                   const qty = parseInt(e.target.value) || 0;
 
-                  const totalSelected = sectors.reduce(
-                    (sum, s) => sum + (s.selected || 0),
-                    0
-                  ) - (sec.selected || 0) + qty;
+                  const totalSelected =
+                    sectors.reduce((sum, s) => sum + (s.selected || 0), 0) -
+                    (sec.selected || 0) +
+                    qty;
 
                   if (totalSelected > 3) {
-                    setAppMessage("Solo puedes comprar hasta 3 entradas en total", "error");
+                    setAppMessage(
+                      'Solo puedes comprar hasta 3 entradas en total',
+                      'error'
+                    );
                     return;
                   }
 
@@ -174,12 +210,10 @@ const EventDetailPage: React.FC = () => {
                   );
                 }}
               />
-
             </div>
           </div>
         ))}
       </div>
-
 
       <div className={styles.actions}>
         <button onClick={handleAddToCart} className={styles.btnConfirm}>
@@ -188,7 +222,6 @@ const EventDetailPage: React.FC = () => {
       </div>
     </div>
   );
-
 };
 
 export default EventDetailPage;

@@ -5,7 +5,6 @@ import { useMessage } from '../../shared/context/MessageContext';
 import { useAuth } from '../../shared/context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Carousel from './Carousel';
-import PurchaseModal from './PurchaseModal';
 import styles from './styles/UserHomePage.module.css';
 import globalStyles from '../../shared/styles/GlobalStyles.module.css';
 import type { Ticket } from '../../App';
@@ -189,16 +188,6 @@ const HomePage: React.FC = () => {
           )}
         </div>
       </main>
-
-      <PurchaseModal
-        isOpen={showPurchaseModal}
-        selectedTicket={selectedTicket}
-        quantity={quantity}
-        onQuantityChange={setQuantity}
-        onConfirmPurchase={handleConfirmPurchase}
-        onCloseModal={handleCloseModal}
-        errorMessage={null}
-      />
     </div>
 
 
