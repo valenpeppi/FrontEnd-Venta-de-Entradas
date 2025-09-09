@@ -4,7 +4,8 @@ import { useNavigate, Link } from "react-router-dom"
 import { useMessage } from '../../shared/context/MessageContext';
 import axios from 'axios';
 import MessageDisplay from "../../shared/MessageDisplay";
-import styles from './styles/LoginUser.module.css'
+import styles from './styles/LoginUser.module.css';
+import globalStyles from '../../shared/styles/GlobalStyles.module.css';
 
 interface LoginProps {
   onLoginSuccess: (user: { name: string, role?: string }, token: string) => void;
@@ -136,7 +137,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             </div>
             <button
               type="submit"
-              className={styles.loginBtnSubmit}
+              className={`${styles.loginBtnSubmit} ${globalStyles.glowBtnInverse}`}
             >
               Iniciar Sesión
             </button>
@@ -150,7 +151,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           <div className={styles.back}>
             <button
               type="button"
-              className={styles.backToLoginBtn}
+              className={`${styles.backToLoginBtn} ${globalStyles.littleGlowBtn}`}
               onClick={() => navigate('/')}
             >
             Volver

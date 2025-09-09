@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* Variables de color globales */
+:root {
+  --primary-blue: #4f46e5; 
+  --dark-blue: #3730a3;
+  --danger-red: #dc2626;
+  --background-gray: #f8fafc;
+  --text-dark: #1f2937; 
+  --text-light: #6b7280;
+  --white: #ffffff;
+  --border-light: #e5e7eb;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+}
+
 /* Reset básico y estilos globales */
 body {
   margin: 0;

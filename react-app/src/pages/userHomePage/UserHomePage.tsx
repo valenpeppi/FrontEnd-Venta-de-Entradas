@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Carousel from './Carousel';
 import PurchaseModal from './PurchaseModal';
 import styles from './styles/UserHomePage.module.css';
+import globalStyles from '../../shared/styles/GlobalStyles.module.css';
 import type { Ticket } from '../../App';
 
 const HomePage: React.FC = () => {
@@ -123,6 +124,16 @@ const HomePage: React.FC = () => {
               <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
             ))}
           </select>
+        </div>
+
+        {/* Botones de ejemplo con estilos glow */}
+        <div className={globalStyles.heroButtons}>
+          <button className={globalStyles.glowBtn} onClick={() => navigate('/cart')}>
+            Ver Carrito
+          </button>
+          <button className={globalStyles.glowBtnInverse} onClick={() => navigate('/myTickets')}>
+            Mis Entradas
+          </button>
         </div>
 
         <h2 className={styles.eventListTitle}>Todos los Eventos</h2>

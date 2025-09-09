@@ -18,6 +18,7 @@ import NewsLetter from './pages/support/NewsLetter';
 import { useAuth, type User } from './shared/context/AuthContext';
 import { useMessage } from './shared/context/MessageContext';
 import styles from './shared/styles/App.module.css';
+import globalStyles from './shared/styles/GlobalStyles.module.css';
 import FeatureEventsPage from './pages/adminHomePage/FeatureEventsPage';
 
 export interface Ticket {
@@ -67,7 +68,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={styles.appRoot}>
+    <div className={`${styles.appRoot} ${globalStyles.appRoot}`}>
       <Routes>
         <Route
           path="/"
