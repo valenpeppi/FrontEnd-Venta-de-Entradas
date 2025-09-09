@@ -10,20 +10,24 @@ interface AuthRouteProps {
 }
 
 const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly }) => {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, isLoading } = useAuth();
   const { setAppMessage } = useMessage();
   const location = useLocation();
 
-  // Componente auxiliar para manejar el mensaje y la redirección
+  
+  if (isLoading) {
+    return null; 
+  }
+
+
   const RedirectWithMessage: React.FC<{ to: string; message: string; type: 'info' | 'error' }> = ({ to, message, type }) => {
-    // Usamos un efecto para que el mensaje se establezca solo una vez
     React.useEffect(() => {
       setAppMessage(message, type);
     }, [message, type, setAppMessage]);
     return <Navigate to={to} state={{ from: location }} replace />;
   };
 
-  // --- Lógica para rutas de solo invitados (guestOnly) ---
+  // Lógica para rutas de solo invitados (guestOnly)
   if (guestOnly) {
     if (isLoggedIn) {
       const redirectTo = user?.role === 'admin' ? '/admin' : (user?.role === 'company' ? '/create-event' : '/');
@@ -32,7 +36,7 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
     return children;
   }
 
-  // --- Lógica para rutas protegidas por rol (allowedRoles) ---
+  // Lógica para rutas protegidas por rol (allowedRoles)
   if (allowedRoles) {
     if (!isLoggedIn) {
       return <RedirectWithMessage to="/login" message="Debes iniciar sesión para acceder a esta página." type="error" />;
@@ -58,4 +62,3 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
 };
 
 export default AuthRoute;
-
