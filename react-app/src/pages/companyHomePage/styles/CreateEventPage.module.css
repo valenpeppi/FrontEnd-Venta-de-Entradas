@@ -141,18 +141,33 @@
   border-color: #9ca3af;
 }
 
-.fileInputButton {
-    display: block;
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    color: #555;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.fileInputContainer {
+  border: 2px dashed #d1d5db;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
 }
+
+.fileInputContainer:hover {
+  background-color: #f9fafb;
+  border-color: #6366f1;
+}
+
+.fileInputButton {
+  display: none;
+}
+
+.fileInputText {
+  color: #6b7280;
+}
+
+.fileInputText strong {
+  color: #4f46e5;
+  font-weight: 600;
+}
+
 
 .occupiedDatesContainer {
   margin-top: 0.75rem;
@@ -294,4 +309,3 @@
     font-size: 0.9rem;
   }
 }
-

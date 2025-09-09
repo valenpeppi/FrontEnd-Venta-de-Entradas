@@ -1,11 +1,7 @@
 .myTicketsContainer {
-  padding: 2rem;
-  background-color: #f9f9f9;
-  border: 1px solid #eee;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
+  max-width: 900px;
   margin: 2rem auto;
+  padding: 2rem;
   animation: scaleIn 0.4s ease-out forwards;
 }
 
@@ -20,17 +16,107 @@
   }
 }
 
-.myTicketsContainer h1 {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
+.myTicketsTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #3730a3;
   text-align: center;
-  color: #333;
+  margin-bottom: 2.5rem;
 }
 
-.myTicketsContainer p {
+.ticketsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.ticketCard {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.ticketCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.ticketHeader {
+  background-color: #4f46e5;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px 12px 0 0;
+}
+
+.ticketEventName {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.ticketDate {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.ticketBody {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  gap: 1.5rem;
+}
+
+.ticketInfo {
   font-size: 1.1rem;
-  color: #666;
+  line-height: 1.6;
+}
+
+.ticketInfo p {
+  margin: 0.3rem 0;
+}
+
+.ticketQRCode img {
+  border-radius: 8px;
+  max-width: 120px;
+}
+
+.ticketFooter {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  text-align: right;
+}
+
+.ticketActionButton {
+  background-color: transparent;
+  color: #4f46e5;
+  border: 2px solid #4f46e5;
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ticketActionButton:hover {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.noTickets {
   text-align: center;
+  padding: 3rem 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 12px;
+}
+
+.noTickets p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #6b7280;
 }
 
 .btn {
@@ -41,7 +127,6 @@
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
-  margin-top: 1rem;
 }
 
 .btnPrimary {
@@ -54,37 +139,17 @@
   background-color: #4338ca;
 }
 
-
-@media (max-width: 768px) {
-  .myTicketsContainer {
-    padding: 1.5rem;
-    margin: 1.5rem auto;
-    border-radius: 0.4rem;
+@media (max-width: 600px) {
+  .ticketBody {
+    flex-direction: column;
+    text-align: center;
   }
 
-  .myTicketsContainer h1 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+  .ticketQRCode {
+    margin-top: 1rem;
   }
-
-  .myTicketsContainer p {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .myTicketsContainer {
-    padding: 1rem;
-    margin: 1rem auto;
-    border-radius: 0.3rem;
-  }
-
-  .myTicketsContainer h1 {
-    font-size: 1.3rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .myTicketsContainer p {
-    font-size: 0.9rem;
+  
+  .ticketFooter {
+    text-align: center;
   }
 }

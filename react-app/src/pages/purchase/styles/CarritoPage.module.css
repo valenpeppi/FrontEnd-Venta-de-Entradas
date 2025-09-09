@@ -51,7 +51,7 @@
 .itemInfo {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px; /* Aumentamos el espacio entre líneas */
 }
 
 .itemName {
@@ -61,11 +61,18 @@
   font-weight: 600;
 }
 
-.itemDate, .itemLocation {
+.itemDate, .itemLocation, .itemSector {
   margin: 0;
   color: #666;
-  font-size: 0.9rem;
+  font-size: 0.95rem; /* Hacemos la fuente un poco más grande */
+  line-height: 1.5; /* Mejoramos la legibilidad */
 }
+
+.itemDate strong, .itemLocation strong, .itemSector strong {
+    font-weight: 600;
+    color: #333;
+}
+
 
 .itemPrice {
   margin: 5px 0 0;

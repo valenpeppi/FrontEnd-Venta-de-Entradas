@@ -318,9 +318,19 @@ const CreateEventPage: React.FC = () => {
 
           <div className={styles.formGroup}>
             <label htmlFor="image">Foto del Evento</label>
-            <input className={styles.fileInputButton}
-              type="file" id="image" accept="image/*" onChange={handleImageChange} required
-            />
+            <label htmlFor="image-upload" className={styles.fileInputContainer}>
+              <input 
+                id="image-upload" 
+                className={styles.fileInputButton}
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageChange} 
+                required 
+              />
+              <span className={styles.fileInputText}>
+                {state.image ? state.image.name : <span><strong>Haz clic para subir</strong> o arrastra una imagen</span>}
+              </span>
+            </label>
           </div>
 
           <div className={styles.formActions}>
@@ -334,4 +344,3 @@ const CreateEventPage: React.FC = () => {
 };
 
 export default CreateEventPage;
-

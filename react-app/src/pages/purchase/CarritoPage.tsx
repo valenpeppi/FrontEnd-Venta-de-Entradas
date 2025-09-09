@@ -12,14 +12,13 @@ const CarritoPage = () => {
     console.log('CarritoPage: Renderizando. Items en el carrito:', cartItems);
   }, [cartItems]);
 
-  const formatDateTime = (dateString: string) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
       return dateString;
     }
     return new Intl.DateTimeFormat('es-AR', {
       dateStyle: 'full',
-      timeStyle: 'short',
       timeZone: 'UTC' 
     }).format(date);
   };
@@ -51,7 +50,8 @@ const CarritoPage = () => {
               <div key={item.id} className={styles.cartItem}>
                 <div className={styles.itemInfo}>
                   <h3 className={styles.itemName}>{item.eventName}</h3>
-                  {item.date && <p className={styles.itemDate}>{formatDateTime(item.date)}</p>}
+                  {item.date && <p className={styles.itemDate}>{formatDate(item.date)}</p>}
+                  {item.time && <p className={styles.itemDate}><strong>Hora:</strong> {item.time}</p>}
                   {item.placeName && <p className={styles.itemLocation}><strong>Lugar:</strong> {item.placeName}</p>}
                   {item.sectorName && <p className={styles.itemSector}><strong>Sector:</strong> {item.sectorName}</p>}
                   <p className={styles.itemPrice}>Precio unitario: ${item.price.toFixed(2)}</p>
@@ -115,4 +115,3 @@ const CarritoPage = () => {
 };
 
 export default CarritoPage;
-
