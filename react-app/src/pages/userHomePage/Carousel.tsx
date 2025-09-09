@@ -1,18 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { Ticket } from '../../App';
 import styles from './styles/Carousel.module.css';
-import { useNavigate } from "react-router-dom";
-
-const navigate = useNavigate();
-
 
 export interface CarouselProps {
   tickets: Ticket[];
   currentEventIndex: number;
   onPreviousEvent: () => void;
   onNextEvent: () => void;
-  onBuyClick: (ticket: Ticket) => void;
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -20,8 +15,9 @@ const Carousel: React.FC<CarouselProps> = ({
   currentEventIndex,
   onPreviousEvent,
   onNextEvent,
-  onBuyClick
 }) => {
+  const navigate = useNavigate();
+
   if (tickets.length === 0) {
     return (
       <div className={styles.eventCarousel}>
@@ -66,23 +62,19 @@ const Carousel: React.FC<CarouselProps> = ({
                     <span className={styles.eventCardText}>{currentEvent.location}</span>
                   </div>
                 </div>
-
-
-
               </div>
               <div className={styles.eventCardFooter}>
                 <span className={styles.eventCardPrice}>${currentEvent.price.toFixed(2)}</span>
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate(`/event/${currentEvent.id}`); // 👈 redirigir a EventDetail
+                    navigate(`/event/${currentEvent.id}`);
                   }}
                   className={`${styles.btnPurchase} ${currentEvent.availableTickets > 0 ? '' : styles.btnPurchaseDisabled}`}
                   disabled={currentEvent.availableTickets === 0}
                 >
                   {currentEvent.availableTickets > 0 ? 'Comprar' : 'Agotado'}
                 </button>
-
               </div>
             </div>
           </div>
@@ -104,3 +96,4 @@ const Carousel: React.FC<CarouselProps> = ({
 };
 
 export default Carousel;
+

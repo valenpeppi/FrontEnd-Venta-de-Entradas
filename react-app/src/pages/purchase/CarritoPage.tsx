@@ -23,11 +23,32 @@ const CarritoPage = () => {
     
     const wasUpdated = updateItemQuantity(id, newQuantity);
     if (!wasUpdated) {
-      setErrorMsg('Solo puedes tener entre 1 y 3 entradas por evento.');
+      setErrorMsg('Solo puedes tener entre 1 y 6 entradas por evento.');
     } else {
       setErrorMsg(null);
     }
   };
+
+  const formatPlaceType = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'hybrid':
+        return 'Híbrido';
+      case 'nonenumerated':
+        return 'Único';
+      case 'enumerated':
+        return 'Enumerado';
+      default:
+        return type;
+    }
+  }
+
+  const formatEventDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    };
+    return new Date(dateString).toLocaleString('es-ES', options);
+  }
 
   return (
     <div className={styles.cartContainer}>
@@ -40,8 +61,8 @@ const CarritoPage = () => {
               <div key={item.id} className={styles.cartItem}>
                 <div className={styles.itemInfo}>
                   <h3 className={styles.itemName}>{item.eventName}</h3>
-                  {item.date && <p className={styles.itemDate}>{item.date}</p>}
-                  {item.location && <p className={styles.itemLocation}>{item.location}</p>}
+                  {item.date && <p className={styles.itemDate}>{formatEventDate(item.date)}</p>}
+                  {item.location && <p className={styles.itemLocation}>Tipo: {formatPlaceType(item.location)}</p>}
                   {item.sectorName && <p className={styles.itemSector}><strong>Sector:</strong> {item.sectorName}</p>}
                   <p className={styles.itemPrice}>Precio unitario: ${item.price.toFixed(2)}</p>
                 </div>
@@ -59,6 +80,9 @@ const CarritoPage = () => {
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
                   </select>
                 </div>
                 
@@ -104,3 +128,4 @@ const CarritoPage = () => {
 };
 
 export default CarritoPage;
+

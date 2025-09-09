@@ -1,42 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useEvents } from '../../shared/context/EventsContext';
-import { useCart } from '../../shared/context/CartContext';
-import { useMessage } from '../../shared/context/MessageContext';
-import { useAuth } from '../../shared/context/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import styles from './styles/UserHomePage.module.css';
-import globalStyles from '../../shared/styles/GlobalStyles.module.css';
 import type { Ticket } from '../../App';
 
 const HomePage: React.FC = () => {
-  const { featuredTickets, approvedTickets, updateAvailableTickets } = useEvents();
-  const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
-  const [quantity, setQuantity] = useState<number>(1);
+  const { featuredTickets, approvedTickets } = useEvents();
   const [currentEventIndex, setCurrentEventIndex] = useState<number>(0);
-
-  const { addToCart } = useCart();
-  const { setAppMessage } = useMessage();
-  const { isLoggedIn } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (featuredTickets.length > 0 && currentEventIndex >= featuredTickets.length) {
       setCurrentEventIndex(0);
     }
   }, [featuredTickets, currentEventIndex]);
-
-  // Auto-rotación del carousel
-  useEffect(() => {
-    if (featuredTickets.length === 0) return;
-    const interval = setInterval(() => {
-      setCurrentEventIndex(prevIndex =>
-        prevIndex === featuredTickets.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 10000); 
-    return () => clearInterval(interval);
-  }, [featuredTickets]);
 
   const goToPreviousEvent = () => {
     if (featuredTickets.length === 0) return;
@@ -50,43 +27,6 @@ const HomePage: React.FC = () => {
     setCurrentEventIndex(prevIndex =>
       prevIndex === featuredTickets.length - 1 ? 0 : prevIndex + 1
     );
-  };
-
-
-  const handleBuyClick = (ticket: Ticket) => {
-    if (!isLoggedIn) {
-      setAppMessage('Inicia sesión para poder comprar una entrada', 'info');
-      navigate('/login');
-    } else {
-      setSelectedTicket(ticket);
-      setQuantity(1);
-      setShowPurchaseModal(true);
-      setAppMessage(null);
-    }
-  };
-
-  const handleCloseModal = () => {
-    setShowPurchaseModal(false);
-    setSelectedTicket(null);
-  };
-
-  const handleConfirmPurchase = (purchasedQuantity: number) => {
-    if (!selectedTicket) {
-      setAppMessage('Ha ocurrido un error. Por favor, intente de nuevo.');
-      handleCloseModal();
-      return;
-    }
-
-    const wasAdded = addToCart(selectedTicket, purchasedQuantity);
-    if (!wasAdded) {
-      setAppMessage('No puedes tener más de 3 entradas para este evento en tu carrito.');
-      return;
-    }
-    
-    updateAvailableTickets(selectedTicket.id, purchasedQuantity);
-
-    setAppMessage(`¡Has agregado ${purchasedQuantity} entradas para ${selectedTicket.eventName} al carrito!`);
-    handleCloseModal();
   };
 
   const eventTypes = Array.from(new Set(approvedTickets.map(ticket => ticket.type)));
@@ -110,10 +50,6 @@ const HomePage: React.FC = () => {
     );
   }
 
-  console.log("🚀 featuredTickets:", featuredTickets);
-  console.log("🎯 currentEventIndex:", currentEventIndex);
-
-
   return (
     <div className={styles.homepage}>
       <main className={styles.homepageMain}>
@@ -123,7 +59,6 @@ const HomePage: React.FC = () => {
           currentEventIndex={currentEventIndex}
           onPreviousEvent={goToPreviousEvent}
           onNextEvent={goToNextEvent}
-          onBuyClick={handleBuyClick}
         />
 
         <div className={styles.eventTypeFilterContainer}>
@@ -139,16 +74,6 @@ const HomePage: React.FC = () => {
               <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
             ))}
           </select>
-        </div>
-
-        {/* Botones de ejemplo con estilos glow */}
-        <div className={globalStyles.heroButtons}>
-          <button className={globalStyles.glowBtn} onClick={() => navigate('/cart')}>
-            Ver Carrito
-          </button>
-          <button className={globalStyles.glowBtnInverse} onClick={() => navigate('/myTickets')}>
-            Mis Entradas
-          </button>
         </div>
 
         <h2 className={styles.eventListTitle}>Todos los Eventos</h2>
@@ -179,7 +104,6 @@ const HomePage: React.FC = () => {
                           <div className={styles.eventCardSoldOut}>Agotado</div>
                         )}
                       </div>
-
                     </Link>
                   ))}
                 </div>
@@ -189,9 +113,8 @@ const HomePage: React.FC = () => {
         </div>
       </main>
     </div>
-
-
   );
 };
 
 export default HomePage;
+
