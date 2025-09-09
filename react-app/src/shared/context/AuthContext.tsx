@@ -9,9 +9,11 @@ export interface User {
 interface AuthState {
   isLoggedIn: boolean;
   user: User | null;
+  isLoading: boolean;
 }
 
 type AuthAction =
+  | { type: 'INITIALIZE'; payload: { user: User | null } }
   | { type: 'LOGIN'; payload: { user: User } }
   | { type: 'LOGOUT' }
   | { type: 'UPDATE_USER'; payload: { name: string; role?: string } };
@@ -19,6 +21,7 @@ type AuthAction =
 interface AuthContextType {
   isLoggedIn: boolean;
   user: User | null;
+  isLoading: boolean;
   login: (user: User, token: string) => void;
   logout: () => void;
   updateUser: (name: string, role?: string) => void;
@@ -32,28 +35,38 @@ interface AuthProviderProps {
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
-    case 'LOGIN': {
-      return {
-        isLoggedIn: true,
-        user: action.payload.user
-      };
-    }
-    case 'LOGOUT': {
-      return {
-        isLoggedIn: false,
-        user: null
-      };
-    }
-    case 'UPDATE_USER': {
+    case 'INITIALIZE':
       return {
         ...state,
-        user: state.user ? {
-          ...state.user,
-          name: action.payload.name,
-          role: action.payload.role || state.user.role
-        } : null
+        isLoggedIn: !!action.payload.user,
+        user: action.payload.user,
+        isLoading: false,
       };
-    }
+    case 'LOGIN':
+      return {
+        ...state,
+        isLoggedIn: true,
+        user: action.payload.user,
+        isLoading: false,
+      };
+    case 'LOGOUT':
+      return {
+        ...state,
+        isLoggedIn: false,
+        user: null,
+        isLoading: false,
+      };
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        user: state.user
+          ? {
+              ...state.user,
+              name: action.payload.name,
+              role: action.payload.role || state.user.role,
+            }
+          : null,
+      };
     default:
       return state;
   }
@@ -62,21 +75,23 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, {
     isLoggedIn: false,
-    user: null
+    user: null,
+    isLoading: true,
   });
 
   useEffect(() => {
+    let user: User | null = null;
     const token = localStorage.getItem('token');
     const userString = localStorage.getItem('user');
     if (token && userString) {
       try {
-        const user = JSON.parse(userString);
-        dispatch({ type: 'LOGIN', payload: { user } });
+        user = JSON.parse(userString);
       } catch (e) {
         console.error("Error al parsear datos de usuario desde localStorage", e);
         localStorage.clear();
       }
     }
+    dispatch({ type: 'INITIALIZE', payload: { user } });
   }, []);
 
   const login = (user: User, token: string) => {
@@ -96,13 +111,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{
-      isLoggedIn: state.isLoggedIn,
-      user: state.user,
-      login,
-      logout,
-      updateUser
-    }}>
+    <AuthContext.Provider
+      value={{
+        ...state,
+        login,
+        logout,
+        updateUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -115,4 +131,3 @@ export const useAuth = () => {
   }
   return context;
 };
-

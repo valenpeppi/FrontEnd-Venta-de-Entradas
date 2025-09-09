@@ -1,9 +1,21 @@
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .eventDetailContainer {
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
   font-family: 'Inter', sans-serif;
   color: #1f2937;
+  animation: scaleIn 0.4s ease-out forwards;
 }
 
 /* Cabecera */
