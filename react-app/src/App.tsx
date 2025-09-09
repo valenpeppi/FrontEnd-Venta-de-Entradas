@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Layout from './shared/layout/Layout';
 import HomePage from './pages/userHomePage/UserHomePage';
@@ -20,15 +20,15 @@ import { useMessage } from './shared/context/MessageContext';
 import styles from './shared/styles/App.module.css';
 import globalStyles from './shared/styles/GlobalStyles.module.css';
 import FeatureEventsPage from './pages/AdminHomePage/FeatureEventsPage';
+import AuthRoute from './shared/AuthRoute';
 
-
-/// La definicion de ticket no iria en cartContext????
 export interface Ticket {
   id: string;
   eventId: string;
   eventName: string;
   date: string;
   location: string;
+  placeName: string;
   sectorName?: string; 
   price: number;
   availableTickets: number;
@@ -40,13 +40,9 @@ export interface Ticket {
 }
 
 const App: React.FC = () => {
-  const { isLoggedIn, user, login } = useAuth();
+  const { login } = useAuth();
   const { setAppMessage } = useMessage();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // No redirigir aquí para permitir que el admin navegue a otras páginas.
-  }, [isLoggedIn, user?.role, navigate]);
 
   const handleLoginSuccess = (user: { name: string, role?: string }, token: string) => {
     const userToLogin: User = {
@@ -55,6 +51,12 @@ const App: React.FC = () => {
     };
     login(userToLogin, token);
     setAppMessage(`¡Inicio de sesión exitoso como ${user.name}!`);
+
+    if (user.role === 'admin') {
+      navigate('/admin');
+    } else {
+      navigate('/');
+    }
   };
 
   const handleRegisterSuccess = () => {
@@ -74,122 +76,30 @@ const App: React.FC = () => {
   return (
     <div className={`${styles.appRoot} ${globalStyles.appRoot}`}>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <HomePage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <Layout>
-              <CarritoPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/pay"
-          element={
-            <Layout>
-              <Pay />
-            </Layout>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <Layout>
-              <AdminHomePage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/feature-events"
-          element={
-            <Layout>
-              <FeatureEventsPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/myTickets"
-          element={
-            <Layout>
-              <MyTickets />
-            </Layout>
-          }
-        />
-        <Route
-          path="/help"
-          element={
-            <Layout>
-              <Help />
-            </Layout>
-          }
-        />
-        <Route
-          path="/event/:id"
-          element={
-            <Layout>
-              <EventDetailPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <Layout>
-              <About />
-            </Layout>
-          }
-        />
-        <Route
-          path="/newsletter"
-          element={<NewsLetter />}
-        />
-        <Route
-          path="/login"
-          element={
-            <Login
-              onLoginSuccess={handleLoginSuccess}
-            />
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <Register
-              onRegisterSuccess={handleRegisterSuccess}
-            />
-          }
-        />
-        <Route
-          path="/create-event"
-          element={
-            <Layout>
-              <CreateEventPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/logincompany"
-          element={
-            <LoginCompany
-              onLoginSuccess={handleCompanyLoginSuccess}
-            />
-          }
-        />
-        <Route
-          path="/registercompany"
-          element={
-            <RegisterCompany
-              onRegisterSuccess={handleCompanyRegisterSuccess}
-            />
-          }
-        />
+        {/* Rutas Públicas */}
+        <Route path="/" element={<Layout><HomePage /></Layout>} />
+        <Route path="/help" element={<Layout><Help /></Layout>} />
+        <Route path="/event/:id" element={<Layout><EventDetailPage /></Layout>} />
+        <Route path="/about" element={<Layout><About /></Layout>} />
+        <Route path="/newsletter" element={<NewsLetter />} />
+
+        {/* Rutas para Invitados (no logueados) */}
+        <Route path="/login" element={<AuthRoute guestOnly><Login onLoginSuccess={handleLoginSuccess} /></AuthRoute>} />
+        <Route path="/register" element={<AuthRoute guestOnly><Register onRegisterSuccess={handleRegisterSuccess} /></AuthRoute>} />
+        <Route path="/logincompany" element={<AuthRoute guestOnly><LoginCompany onLoginSuccess={handleCompanyLoginSuccess} /></AuthRoute>} />
+        <Route path="/registercompany" element={<AuthRoute guestOnly><RegisterCompany onRegisterSuccess={handleCompanyRegisterSuccess} /></AuthRoute>} />
+
+        {/* Rutas Protegidas para Usuarios */}
+        <Route path="/cart" element={<AuthRoute allowedRoles={['user']}><Layout><CarritoPage /></Layout></AuthRoute>} />
+        <Route path="/pay" element={<AuthRoute allowedRoles={['user']}><Layout><Pay /></Layout></AuthRoute>} />
+        <Route path="/myTickets" element={<AuthRoute allowedRoles={['user']}><Layout><MyTickets /></Layout></AuthRoute>} />
+
+        {/* Rutas Protegidas para Administradores */}
+        <Route path="/admin" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminHomePage /></Layout></AuthRoute>} />
+        <Route path="/feature-events" element={<AuthRoute allowedRoles={['admin']}><Layout><FeatureEventsPage /></Layout></AuthRoute>} />
+
+        {/* Rutas Protegidas para Empresas */}
+        <Route path="/create-event" element={<AuthRoute allowedRoles={['company']}><Layout><CreateEventPage /></Layout></AuthRoute>} />
       </Routes>
 
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />

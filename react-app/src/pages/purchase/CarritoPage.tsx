@@ -12,43 +12,33 @@ const CarritoPage = () => {
     console.log('CarritoPage: Renderizando. Items en el carrito:', cartItems);
   }, [cartItems]);
 
+  const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return dateString;
+    }
+    return new Intl.DateTimeFormat('es-AR', {
+      dateStyle: 'full',
+      timeStyle: 'short',
+      timeZone: 'UTC' 
+    }).format(date);
+  };
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
   const handleQuantityChange = (id: string, value: string) => {
-    const newQuantity = parseInt(value);
+    const newQuantity = parseInt(value, 10);
     if (isNaN(newQuantity)) return;
     
     const wasUpdated = updateItemQuantity(id, newQuantity);
     if (!wasUpdated) {
-      setErrorMsg('Solo puedes tener entre 1 y 6 entradas por evento.');
+      setErrorMsg('Solo puedes tener hasta 6 entradas por evento en tu carrito.');
     } else {
       setErrorMsg(null);
     }
   };
-
-  const formatPlaceType = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'hybrid':
-        return 'Híbrido';
-      case 'nonenumerated':
-        return 'Único';
-      case 'enumerated':
-        return 'Enumerado';
-      default:
-        return type;
-    }
-  }
-
-  const formatEventDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-      hour: '2-digit', minute: '2-digit', hour12: false
-    };
-    return new Date(dateString).toLocaleString('es-ES', options);
-  }
 
   return (
     <div className={styles.cartContainer}>
@@ -61,8 +51,8 @@ const CarritoPage = () => {
               <div key={item.id} className={styles.cartItem}>
                 <div className={styles.itemInfo}>
                   <h3 className={styles.itemName}>{item.eventName}</h3>
-                  {item.date && <p className={styles.itemDate}>{formatEventDate(item.date)}</p>}
-                  {item.location && <p className={styles.itemLocation}>Tipo: {formatPlaceType(item.location)}</p>}
+                  {item.date && <p className={styles.itemDate}>{formatDateTime(item.date)}</p>}
+                  {item.placeName && <p className={styles.itemLocation}><strong>Lugar:</strong> {item.placeName}</p>}
                   {item.sectorName && <p className={styles.itemSector}><strong>Sector:</strong> {item.sectorName}</p>}
                   <p className={styles.itemPrice}>Precio unitario: ${item.price.toFixed(2)}</p>
                 </div>
@@ -77,12 +67,9 @@ const CarritoPage = () => {
                     onChange={e => handleQuantityChange(item.id, e.target.value)}
                     className={styles.cartQuantitySelect}
                   >
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
+                    {[...Array(7).keys()].slice(1).map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
                   </select>
                 </div>
                 

@@ -21,7 +21,7 @@ interface EventSummary {
   type: string;
   date: string;
   placeType: string;
-  placeName: string; 
+  placeName: string;
   availableTickets: number;
   agotado: boolean;
   price?: number;
@@ -114,6 +114,7 @@ const EventDetailPage: React.FC = () => {
             eventName: summary.eventName,
             date: summary.date,
             location: formatPlaceType(summary.placeType),
+            placeName: summary.placeName,
             sectorName: 'Entrada General',
             price: summary.price || 0,
             availableTickets: summary.availableTickets,
@@ -141,6 +142,7 @@ const EventDetailPage: React.FC = () => {
           eventName: summary.eventName,
           date: summary.date,
           location: formatPlaceType(summary.placeType),
+          placeName: summary.placeName,
           sectorName: sec.name,
           price: sec.price,
           availableTickets: sec.availableTickets,
