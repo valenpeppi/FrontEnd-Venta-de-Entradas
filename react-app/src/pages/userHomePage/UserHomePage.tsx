@@ -23,24 +23,36 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (currentEventIndex >= featuredTickets.length && featuredTickets.length > 0) {
-      setCurrentEventIndex(0);
-    } else if (featuredTickets.length === 0) {
+    if (featuredTickets.length > 0 && currentEventIndex >= featuredTickets.length) {
       setCurrentEventIndex(0);
     }
   }, [featuredTickets, currentEventIndex]);
 
+  // Auto-rotación del carousel
+  useEffect(() => {
+    if (featuredTickets.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentEventIndex(prevIndex =>
+        prevIndex === featuredTickets.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 10000); 
+    return () => clearInterval(interval);
+  }, [featuredTickets]);
+
   const goToPreviousEvent = () => {
+    if (featuredTickets.length === 0) return;
     setCurrentEventIndex(prevIndex =>
       prevIndex === 0 ? featuredTickets.length - 1 : prevIndex - 1
     );
   };
 
   const goToNextEvent = () => {
+    if (featuredTickets.length === 0) return;
     setCurrentEventIndex(prevIndex =>
       prevIndex === featuredTickets.length - 1 ? 0 : prevIndex + 1
     );
   };
+
 
   const handleBuyClick = (ticket: Ticket) => {
     if (!isLoggedIn) {
@@ -98,6 +110,10 @@ const HomePage: React.FC = () => {
       </div>
     );
   }
+
+  console.log("🚀 featuredTickets:", featuredTickets);
+  console.log("🎯 currentEventIndex:", currentEventIndex);
+
 
   return (
     <div className={styles.homepage}>
@@ -184,6 +200,8 @@ const HomePage: React.FC = () => {
         errorMessage={null}
       />
     </div>
+
+
   );
 };
 

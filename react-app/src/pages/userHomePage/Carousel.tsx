@@ -40,7 +40,7 @@ const Carousel: React.FC<CarouselProps> = ({
       </button>
       
       {currentEvent ? (
-        <Link to={`/event/${currentEvent.id}`} className={styles.eventCardLink}>
+        <Link to={`/event/${currentEvent.id}`} key={currentEvent.id} className={styles.eventCardLink}>
           <div className={styles.eventCard}>
             <img
               src={currentEvent.imageUrl}
