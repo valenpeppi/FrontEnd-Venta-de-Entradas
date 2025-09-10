@@ -22,6 +22,7 @@ import globalStyles from './shared/styles/GlobalStyles.module.css';
 import FeatureEventsPage from './pages/adminHomePage/FeatureEventsPage';
 import AuthRoute from './shared/AuthRoute';
 
+
 export interface Ticket {
   id: string;
   eventId: string;
