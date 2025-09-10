@@ -46,37 +46,38 @@ const eventsReducer = (state: EventsState, action: EventsAction): EventsState =>
 };
 
 const mapApiEventToTicket = (ev: any): Ticket => {
-    let minPrice = 0;
-    if (ev.eventSectors?.length > 0) {
-        minPrice = Math.min(...ev.eventSectors.map((s: any) => parseFloat(s.price)));
-    }
-    const eventDate = new Date(ev.date);
+  let minPrice = ev.minPrice ?? ev.price ?? 0;
+  if (!minPrice && ev.eventSectors?.length > 0) {
+    minPrice = Math.min(...ev.eventSectors.map((s: any) => parseFloat(s.price)));
+  }
 
-    return {
-        id: String(ev.idEvent),
-        eventId: String(ev.idEvent),
-        eventName: ev.name,
-        date: eventDate.toLocaleDateString('es-ES', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            timeZone: 'UTC',
-        }),
-        time: eventDate.toLocaleTimeString('es-ES', {
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZone: 'UTC',
-        }) + ' hs',
-        location: ev.place?.name || 'Sin lugar',
-        placeName: ev.place?.name || 'Lugar no especificado',
-        price: minPrice,
-        availableTickets: ev.availableSeats ?? 0,
-        type: ev.eventType?.name || 'General',
-        imageUrl: ev.image
-          ? `${import.meta.env.VITE_API_BASE}${ev.image}`
-          : "/ticket.png",
-        featured: ev.featured,
-    };
+  const eventDate = new Date(ev.date);
+
+  return {
+    id: String(ev.idEvent ?? ev.id),
+    eventId: String(ev.idEvent ?? ev.id),
+    eventName: ev.eventName ?? ev.name,
+    date: eventDate.toLocaleDateString("es-ES", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }),
+    time:
+      eventDate.toLocaleTimeString("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC",
+      }) + " hs",
+    location: ev.place?.name || ev.placeName || "Sin lugar",
+    placeName: ev.place?.name || ev.placeName || "Lugar no especificado",
+    price: minPrice,
+    availableTickets: ev.availableSeats ?? ev.availableTickets ?? 0,
+    type: ev.eventType?.name || ev.type || "General",
+    imageUrl: ev.imageUrl || "/ticket.png",
+    featured: ev.featured ?? false,
+    agotado: ev.agotado ?? false,
+  };
 };
 
 export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
@@ -122,4 +123,3 @@ export const useEvents = () => {
   if (!ctx) throw new Error('useEvents debe ser usado dentro de un EventsProvider');
   return ctx;
 };
-

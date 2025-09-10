@@ -40,7 +40,6 @@ const Carousel: React.FC<CarouselProps> = ({
       </button>
       
       {currentEvent ? (
-        <Link to={`/event/${currentEvent.id}`} key={currentEvent.id} className={styles.eventCardLink}>
           <div className={styles.eventCard}>
             <img
               src={currentEvent.imageUrl}
@@ -64,7 +63,8 @@ const Carousel: React.FC<CarouselProps> = ({
                 </div>
               </div>
               <div className={styles.eventCardFooter}>
-                <span className={styles.eventCardPrice}>${currentEvent.price.toFixed(2)}</span>
+                <span className={styles.eventCardPrice}>Desde ${currentEvent.price.toFixed(2)}</span>
+                <br></br>
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -78,7 +78,6 @@ const Carousel: React.FC<CarouselProps> = ({
               </div>
             </div>
           </div>
-        </Link>
       ) : (
         <p className={styles.eventCarouselEmpty}>No hay eventos disponibles.</p>
       )}

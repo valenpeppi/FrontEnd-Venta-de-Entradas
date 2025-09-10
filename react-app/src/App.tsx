@@ -4,10 +4,10 @@ import Layout from './shared/layout/Layout';
 import HomePage from './pages/userHomePage/UserHomePage';
 import CarritoPage from './pages/purchase/CarritoPage';
 import Pay from './pages/purchase/Pay';
-import AdminHomePage from './pages/AdminHomePage/AdminHomePage';
+import AdminHomePage from './pages/adminHomePage/AdminHomePage';
 import MyTickets from './pages/purchase/MyTickets';
 import Help from './pages/support/Help';
-import EventDetailPage from './shared/EventDetailPage';
+import EventDetailPage from './pages/userHomePage/EventDetailPage';
 import About from './pages/support/About';
 import Login from './pages/login/LoginUser';
 import Register from './pages/register/RegisterUser';
@@ -19,7 +19,7 @@ import { useAuth, type User } from './shared/context/AuthContext';
 import { useMessage } from './shared/context/MessageContext';
 import styles from './shared/styles/App.module.css';
 import globalStyles from './shared/styles/GlobalStyles.module.css';
-import FeatureEventsPage from './pages/AdminHomePage/FeatureEventsPage';
+import FeatureEventsPage from './pages/adminHomePage/FeatureEventsPage';
 import AuthRoute from './shared/AuthRoute';
 
 export interface Ticket {

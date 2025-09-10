@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useCart } from './context/CartContext';
-import { useMessage } from './context/MessageContext';
+import { useCart } from '../../shared/context/CartContext';
+import { useMessage } from '../../shared/context/MessageContext';
 import styles from './styles/EventDetailPage.module.css';
 
 interface Sector {
@@ -40,7 +40,6 @@ const EventDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [generalQuantity, setGeneralQuantity] = useState(0);
 
-
   const formatPlaceType = (placeType: string) => {
     switch (placeType.toLowerCase()) {
       case 'hybrid':
@@ -62,18 +61,21 @@ const EventDetailPage: React.FC = () => {
           axios.get(`${BASE_URL}/api/events/events/${id}/sectors`)
         ]);
 
-        const summaryData = {
-          ...summaryRes.data,
-          imageUrl: summaryRes.data.imageUrl
-            ? `${BASE_URL}${summaryRes.data.imageUrl}`
-            : '/ticket.png'
-        };
+        const summaryData = summaryRes.data?.data; // 👈 ahora siempre en .data
+        if (!summaryData) {
+          setAppMessage('No se encontró el evento', 'error');
+          navigate('/');
+          return;
+        }
 
-        setSummary(summaryData);
+        setSummary({
+          ...summaryData,
+          imageUrl: summaryData.imageUrl || "/ticket.png"
+        });
 
         if (summaryData.placeType.toLowerCase() !== 'nonenumerated') {
           setSectors(
-            sectorsRes.data.map((s: Sector) => ({
+            (sectorsRes.data?.data ?? []).map((s: Sector) => ({
               ...s,
               selected: 0
             }))
@@ -203,7 +205,6 @@ const EventDetailPage: React.FC = () => {
     );
   };
   
-
   const handleGeneralQuantityChange = (newQuantity: number) => {
     if (newQuantity > 6) {
       setAppMessage('No puedes seleccionar más de 6 entradas.', 'error');
@@ -331,4 +332,3 @@ const EventDetailPage: React.FC = () => {
 };
 
 export default EventDetailPage;
-
