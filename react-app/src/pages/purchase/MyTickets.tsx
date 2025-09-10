@@ -7,62 +7,89 @@ import html2canvas from 'html2canvas';
 
 const MyTickets: React.FC = () => {
   const navigate = useNavigate();
-  // Usamos el hook para obtener los items del carrito
+
   const { cartItems } = useCart();
 
   const formatDate = (isoDate: string) => {
     const date = new Date(isoDate);
     if (isNaN(date.getTime())) {
-      return isoDate; // Fallback por si la fecha no es válida
+      return isoDate; 
     }
     // Formato de fecha larga
     return new Intl.DateTimeFormat('es-AR', {
       dateStyle: 'full',
-      timeZone: 'UTC' // Asumimos que las fechas de la API vienen en UTC
+      timeZone: 'UTC' 
     }).format(date);
   };
 
   const handleDownloadPDF = (ticket: CartItem) => {
     const ticketElement = document.getElementById(`ticket-${ticket.id}`);
     if (ticketElement) {
-        // Ocultar el botón de descarga para que no aparezca en el PDF
-        const button = ticketElement.querySelector(`.${styles.ticketActionButton}`) as HTMLElement | null;
-        if (button) {
-            button.style.display = 'none';
-        }
 
-        html2canvas(ticketElement, { scale: 2 }) // Aumentamos la escala para mejor calidad
-            .then(canvas => {
-                // Volvemos a mostrar el botón después de la captura
-                if (button) {
-                    button.style.display = 'block';
-                }
+      const button = ticketElement.querySelector(`.${styles.ticketActionButton}`) as HTMLElement | null;
+      if (button) {
+        button.style.display = 'none';
+      }
 
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF({
-                    orientation: 'portrait', // O 'landscape'
-                    unit: 'px',
-                    // Usamos el tamaño del canvas para el formato del PDF
-                    format: [canvas.width, canvas.height]
-                });
-                
-                pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-                pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}.pdf`);
-            })
-            .catch(err => {
-                console.error("Error al generar el PDF:", err);
-                 // Asegurarse de que el botón se muestre de nuevo si hay un error
-                if (button) {
-                    button.style.display = 'block';
-                }
-            });
+      html2canvas(ticketElement, { scale: 2 }) 
+        .then(canvas => {
+          if (button) {
+            button.style.display = 'block';
+          }
+
+          const imgData = canvas.toDataURL('image/png');
+          const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'px',
+            format: 'a4' // tamaño estandarizado
+          });
+
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          let y = 40;
+
+          pdf.setFontSize(18);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text('Entrada de Evento', pageWidth / 2, y, { align: 'center' });
+
+          y += 30;
+
+          pdf.setFontSize(12);
+          pdf.setFont('helvetica', 'normal');
+          pdf.text(`Evento: ${ticket.eventName}`, 40, y);
+          y += 20;
+          pdf.text(`Fecha: ${ticket.date}`, 40, y);
+          y += 20;
+          pdf.text(`Lugar: ${ticket.placeName}`, 40, y);
+          y += 20;
+          pdf.text(`Sector: ${ticket.sectorName || 'General'}`, 40, y);
+          y += 20;
+          pdf.text(`Hora: ${ticket.time}`, 40, y);
+          y += 20;
+          pdf.text(`Cantidad: ${ticket.quantity}`, 40, y);
+
+          y += 30;
+
+          // 🖼 Insertar la captura del ticket como referencia visual
+          const imgWidth = pageWidth - 80;
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          pdf.addImage(imgData, 'PNG', 40, y, imgWidth, imgHeight);
+
+          pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}.pdf`);
+        })
+        .catch(err => {
+          console.error("Error al generar el PDF:", err);
+          if (button) {
+            button.style.display = 'block';
+          }
+        });
     }
   };
+
 
   return (
     <div className={styles.myTicketsContainer}>
       {/* Nota: Este título es temporal para indicar que muestra datos del carrito */}
-      <h1 className={styles.myTicketsTitle}>Mis Entradas (Temporalmente desde Carrito)</h1>
+      <h1 className={styles.myTicketsTitle}>Mis Entradas</h1>
 
       {cartItems.length > 0 ? (
         <div className={styles.ticketsGrid}>
