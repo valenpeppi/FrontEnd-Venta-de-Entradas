@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useCart } from '../../shared/context/CartContext';
 import { useMessage } from '../../shared/context/MessageContext';
 import styles from './styles/EventDetailPage.module.css';
+import SeatSelector from '../../components/SeatSelector';
+import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
 
 interface Sector {
   idEvent: number;
@@ -12,6 +14,7 @@ interface Sector {
   price: number;
   availableTickets: number;
   selected?: number;
+  enumerated?: boolean;
 }
 
 interface EventSummary {
@@ -39,6 +42,20 @@ const EventDetailPage: React.FC = () => {
   const [sectors, setSectors] = useState<Sector[]>([]);
   const [loading, setLoading] = useState(true);
   const [generalQuantity, setGeneralQuantity] = useState(0);
+  const [selectedSector, setSelectedSector] = useState<number | null>(null);
+  const [seats, setSeats] = useState<{ id: number; label?: string }[]>([]);
+  const [selectedSeatsMap, setSelectedSeatsMap] = useState<Record<number, number[]>>({});
+
+  const stadiumImages: Record<string, string> = {
+    'Estadio Gigante de Arroyito': estadioArroyito
+  };
+
+  const sectorAreas: Record<number, React.CSSProperties> = {
+    1: { top: '15%', left: '5%', width: '20%', height: '60%', background: 'rgba(0,0,255,0.3)' },
+    2: { top: '15%', left: '75%', width: '20%', height: '60%', background: 'rgba(255,0,0,0.3)' },
+    3: { top: '80%', left: '10%', width: '80%', height: '15%', background: 'rgba(255,255,0,0.3)' },
+    4: { top: '15%', left: '25%', width: '50%', height: '60%', background: 'rgba(0,128,0,0.3)' }
+  };
 
   const formatPlaceType = (placeType: string) => {
     switch (placeType.toLowerCase()) {
@@ -77,7 +94,8 @@ const EventDetailPage: React.FC = () => {
           setSectors(
             (sectorsRes.data?.data ?? []).map((s: Sector) => ({
               ...s,
-              selected: 0
+              selected: 0,
+              enumerated: !['campo', 'popular'].includes(s.name.toLowerCase())
             }))
           );
         }
@@ -92,6 +110,28 @@ const EventDetailPage: React.FC = () => {
     fetchData();
   }, [id, navigate, setAppMessage]);
 
+  useEffect(() => {
+    if (selectedSector !== null) {
+      const sec = sectors.find(s => s.idSector === selectedSector);
+      if (sec && sec.enumerated && summary) {
+        axios
+          .get(`${BASE_URL}/api/events/events/${summary.id}/sectors/${selectedSector}/seats`)
+          .then(res => {
+            const seatData = res.data?.data ?? [];
+            setSeats(
+              seatData.map((st: any) => ({
+                id: st.id || st.idSeat || st.number,
+                label: st.label || st.number?.toString() || String(st.id)
+              }))
+            );
+          })
+          .catch(err => console.error('Error al cargar asientos', err));
+      } else {
+        setSeats([]);
+      }
+    }
+  }, [selectedSector, sectors, summary]);
+
   if (loading) return <p>Cargando evento...</p>;
   if (!summary) return <p>Evento no encontrado</p>;
 
@@ -104,8 +144,9 @@ const EventDetailPage: React.FC = () => {
     }
   
     let totalSelected = 0;
-    let itemsToAdd = [];
-  
+    let itemsToAdd: any[] = [];
+    const stadiumImage = stadiumImages[summary.placeName] || summary.imageUrl;
+
     if (summary.placeType.toLowerCase() === 'nonenumerated') {
       totalSelected = generalQuantity;
       if (totalSelected > 0) {
@@ -120,7 +161,7 @@ const EventDetailPage: React.FC = () => {
             sectorName: 'Entrada General',
             price: summary.price || 0,
             availableTickets: summary.availableTickets,
-            imageUrl: summary.imageUrl,
+            imageUrl: stadiumImage,
             type: summary.type,
             featured: false,
             time: new Date(summary.date).toLocaleTimeString('es-AR', {
@@ -132,32 +173,59 @@ const EventDetailPage: React.FC = () => {
         });
       }
     } else {
-      const selectedSectors = sectors.filter((s) => s.selected && s.selected > 0);
-      totalSelected = selectedSectors.reduce(
-        (sum, s) => sum + (s.selected || 0),
-        0
-      );
-      itemsToAdd = selectedSectors.map(sec => ({
-        ticket: {
-          id: `${summary.id}-${sec.idSector}`,
-          eventId: String(summary.id),
-          eventName: summary.eventName,
-          date: summary.date,
-          location: formatPlaceType(summary.placeType),
-          placeName: summary.placeName,
-          sectorName: sec.name,
-          price: sec.price,
-          availableTickets: sec.availableTickets,
-          imageUrl: summary.imageUrl,
-          type: summary.type,
-          featured: false,
-          time: new Date(summary.date).toLocaleTimeString("es-AR", {
-            hour: "2-digit",
-            minute: "2-digit"
-          }) + " hs"
-        },
-        quantity: sec.selected || 0
-      }));
+      const nonEnum = sectors.filter(s => !s.enumerated && s.selected && s.selected > 0);
+      const enumSectors = sectors.filter(s => s.enumerated && selectedSeatsMap[s.idSector]?.length);
+
+      totalSelected =
+        nonEnum.reduce((sum, s) => sum + (s.selected || 0), 0) +
+        enumSectors.reduce((sum, s) => sum + selectedSeatsMap[s.idSector].length, 0);
+
+      itemsToAdd = [
+        ...nonEnum.map(sec => ({
+          ticket: {
+            id: `${summary.id}-${sec.idSector}`,
+            eventId: String(summary.id),
+            eventName: summary.eventName,
+            date: summary.date,
+            location: formatPlaceType(summary.placeType),
+            placeName: summary.placeName,
+            sectorName: sec.name,
+            price: sec.price,
+            availableTickets: sec.availableTickets,
+            imageUrl: stadiumImage,
+            type: summary.type,
+            featured: false,
+            time: new Date(summary.date).toLocaleTimeString('es-AR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            }) + ' hs'
+          },
+          quantity: sec.selected || 0
+        })),
+        ...enumSectors.flatMap(sec =>
+          selectedSeatsMap[sec.idSector].map(seatId => ({
+            ticket: {
+              id: `${summary.id}-${sec.idSector}-${seatId}`,
+              eventId: String(summary.id),
+              eventName: summary.eventName,
+              date: summary.date,
+              location: formatPlaceType(summary.placeType),
+              placeName: summary.placeName,
+              sectorName: `${sec.name} Asiento ${seatId}`,
+              price: sec.price,
+              availableTickets: sec.availableTickets,
+              imageUrl: stadiumImage,
+              type: summary.type,
+              featured: false,
+              time: new Date(summary.date).toLocaleTimeString('es-AR', {
+                hour: '2-digit',
+                minute: '2-digit'
+              }) + ' hs'
+            },
+            quantity: 1
+          }))
+        )
+      ];
     }
   
     if (totalSelected === 0) {
@@ -190,17 +258,27 @@ const EventDetailPage: React.FC = () => {
   };
   
   const handleSectorQuantityChange = (sectorId: number, newQuantity: number) => {
-    const currentTotal = sectors.reduce((sum, s) => sum + (s.selected || 0), 0);
+    const currentTotal =
+      sectors.reduce((sum, s) => sum + (s.selected || 0), 0);
     const sectorCurrentQuantity = sectors.find(s => s.idSector === sectorId)?.selected || 0;
-    
+
     if (currentTotal - sectorCurrentQuantity + newQuantity > 6) {
       setAppMessage('No puedes seleccionar más de 6 entradas en total para este evento.', 'error');
       return;
     }
-    
+
     setSectors(prev =>
       prev.map(s =>
         s.idSector === sectorId ? { ...s, selected: newQuantity } : s
+      )
+    );
+  };
+
+  const handleSeatsChange = (sectorId: number, seatsSel: number[]) => {
+    setSelectedSeatsMap(prev => ({ ...prev, [sectorId]: seatsSel }));
+    setSectors(prev =>
+      prev.map(s =>
+        s.idSector === sectorId ? { ...s, selected: seatsSel.length } : s
       )
     );
   };
@@ -215,17 +293,27 @@ const EventDetailPage: React.FC = () => {
 
   return (
     <div className={styles.eventDetailContainer}>
-      <div className={styles.eventDetailCard}>
-        <div className={styles.eventImageContainer}>
-          <img
-            src={summary.imageUrl}
-            alt={summary.eventName}
-            className={styles.eventImage}
-            onError={(e) => {
-              e.currentTarget.src = '/ticket.png';
-            }}
-          />
-        </div>
+        <div className={styles.eventDetailCard}>
+          <div className={styles.eventImageContainer}>
+            <img
+              src={stadiumImages[summary.placeName] || summary.imageUrl}
+              alt={summary.eventName}
+              className={styles.eventImage}
+              onError={(e) => {
+                e.currentTarget.src = '/ticket.png';
+              }}
+            />
+            {summary.placeType.toLowerCase() !== 'nonenumerated' && (
+              sectors.map(sec => (
+                <div
+                  key={sec.idSector}
+                  className={`${styles.sectorArea} ${selectedSector === sec.idSector ? styles.activeSector : ''}`}
+                  style={sectorAreas[sec.idSector]}
+                  onClick={() => setSelectedSector(sec.idSector)}
+                />
+              ))
+            )}
+          </div>
 
         <div className={styles.eventInfo}>
           <h1 className={styles.eventTitle}>{summary.eventName}</h1>
@@ -290,7 +378,10 @@ const EventDetailPage: React.FC = () => {
       ) : (
         <div className={styles.sectorList}>
           {sectors.map((sec) => (
-            <div key={sec.idSector} className={styles.sectorCard}>
+            <div
+              key={sec.idSector}
+              className={`${styles.sectorCard} ${selectedSector === sec.idSector ? styles.activeCard : ''}`}
+            >
               <div className={styles.sectorInfo}>
                 <h3 className={styles.sectorName}>{sec.name}</h3>
                 <p>
@@ -304,19 +395,31 @@ const EventDetailPage: React.FC = () => {
                 </p>
               </div>
 
-              <div className={styles.sectorInput}>
-                <label htmlFor={`sector-${sec.idSector}`}>Cantidad</label>
-                <select
-                  id={`sector-${sec.idSector}`}
-                  value={sec.selected || 0}
-                  onChange={(e) => handleSectorQuantityChange(sec.idSector, parseInt(e.target.value))}
-                  className={styles.quantitySelect}
-                >
-                  {[...Array(Math.min(6, sec.availableTickets) + 1).keys()].map(n => (
-                    <option key={n} value={n}>{n}</option>
-                  ))}
-                </select>
-              </div>
+              {sec.enumerated ? (
+                selectedSector === sec.idSector ? (
+                  <SeatSelector
+                    seats={seats}
+                    selectedSeats={selectedSeatsMap[sec.idSector] || []}
+                    onChange={(sel) => handleSeatsChange(sec.idSector, sel)}
+                  />
+                ) : (
+                  <p className={styles.selectPrompt}>Seleccione el sector en el plano</p>
+                )
+              ) : (
+                <div className={styles.sectorInput}>
+                  <label htmlFor={`sector-${sec.idSector}`}>Cantidad</label>
+                  <select
+                    id={`sector-${sec.idSector}`}
+                    value={sec.selected || 0}
+                    onChange={(e) => handleSectorQuantityChange(sec.idSector, parseInt(e.target.value))}
+                    className={styles.quantitySelect}
+                  >
+                    {[...Array(Math.min(6, sec.availableTickets) + 1).keys()].map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           ))}
         </div>

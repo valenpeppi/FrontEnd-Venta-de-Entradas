@@ -33,6 +33,7 @@
   width: 100%;
   height: 300px;
   overflow: hidden;
+  position: relative;
 }
 
 .eventImage {
@@ -159,6 +160,27 @@
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+}
+
+.sectorArea {
+  position: absolute;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.activeSector {
+  border-color: #10b981;
+}
+
+.activeCard {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px #10b981;
+}
+
+.selectPrompt {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
 }
 
 .sectorInput label {
