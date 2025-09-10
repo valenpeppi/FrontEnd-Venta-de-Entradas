@@ -1,6 +1,23 @@
 import React, { createContext, useReducer, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
-import type { Ticket } from '../../App';
+
+
+export interface Ticket {
+  id: string;
+  eventId: string;
+  eventName: string;
+  date: string;
+  location: string;
+  placeName: string;
+  sectorName?: string; 
+  price: number;
+  availableTickets: number;
+  imageUrl: string;
+  time: string;
+  type: string;
+  featured: boolean;
+  agotado?: boolean;
+}
 
 export interface CartItem extends Ticket {
   quantity: number;

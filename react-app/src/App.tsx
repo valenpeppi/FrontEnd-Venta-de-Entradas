@@ -23,23 +23,6 @@ import FeatureEventsPage from './pages/adminHomePage/FeatureEventsPage';
 import AuthRoute from './shared/AuthRoute';
 
 
-export interface Ticket {
-  id: string;
-  eventId: string;
-  eventName: string;
-  date: string;
-  location: string;
-  placeName: string;
-  sectorName?: string; 
-  price: number;
-  availableTickets: number;
-  imageUrl: string;
-  time: string;
-  type: string;
-  featured: boolean;
-  agotado?: boolean;
-}
-
 const App: React.FC = () => {
   const { login } = useAuth();
   const { setAppMessage } = useMessage();

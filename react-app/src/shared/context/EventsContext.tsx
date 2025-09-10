@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
-import type { Ticket } from '../../App';
+import type { Ticket } from './CartContext';
 import axios from 'axios';
 
 interface EventsState {

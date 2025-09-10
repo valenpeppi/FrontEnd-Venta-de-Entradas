@@ -3,7 +3,7 @@ import { useEvents } from '../../shared/context/EventsContext';
 import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import styles from './styles/UserHomePage.module.css';
-import type { Ticket } from '../../App';
+import type { Ticket } from '../../shared/context/CartContext';
 
 const HomePage: React.FC = () => {
   const { featuredTickets, approvedTickets } = useEvents();

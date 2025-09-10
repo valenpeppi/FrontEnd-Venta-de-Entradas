@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import type { Ticket } from '../../App';
+import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/Carousel.module.css';
 
 export interface CarouselProps {
