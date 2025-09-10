@@ -31,15 +31,18 @@
 
 .eventImageContainer {
   width: 100%;
-  height: 300px;
+  max-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
+  background: #e5e7eb;
 }
 
 .eventImage {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: #e5e7eb;
+  height: auto;
+  object-fit: contain;
 }
 
 .eventInfo {
@@ -142,7 +145,7 @@
   }
 
   .eventImageContainer {
-    height: 200px;
+    max-height: 200px;
   }
 
   .eventTitle {

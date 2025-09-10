@@ -29,6 +29,12 @@ interface EventSummary {
 
 const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
+// Mapeo entre nombres de estadios y la ruta de la imagen de su plano
+const STADIUM_IMAGE_MAP: Record<string, string> = {
+  'Estadio Monumental': '/stadiums/monumental.png',
+  'La Bombonera': '/stadiums/bombonera.png'
+};
+
 const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -94,6 +100,9 @@ const EventDetailPage: React.FC = () => {
 
   if (loading) return <p>Cargando evento...</p>;
   if (!summary) return <p>Evento no encontrado</p>;
+
+  const stadiumImage =
+    STADIUM_IMAGE_MAP[summary.placeName] || summary.imageUrl;
 
   const handleAddToCart = () => {
     const token = localStorage.getItem('token');
@@ -218,7 +227,7 @@ const EventDetailPage: React.FC = () => {
       <div className={styles.eventDetailCard}>
         <div className={styles.eventImageContainer}>
           <img
-            src={summary.imageUrl}
+            src={stadiumImage}
             alt={summary.eventName}
             className={styles.eventImage}
             onError={(e) => {
