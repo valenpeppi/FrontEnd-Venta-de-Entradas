@@ -145,7 +145,7 @@ const EventDetailPage: React.FC = () => {
   
     let totalSelected = 0;
     let itemsToAdd: any[] = [];
-    const stadiumImage = stadiumImages[summary.placeName] || summary.imageUrl;
+    // La imagen del estadio se usa solo para el plano; en el carrito usamos la foto del evento
 
     if (summary.placeType.toLowerCase() === 'nonenumerated') {
       totalSelected = generalQuantity;
@@ -161,7 +161,7 @@ const EventDetailPage: React.FC = () => {
             sectorName: 'Entrada General',
             price: summary.price || 0,
             availableTickets: summary.availableTickets,
-            imageUrl: stadiumImage,
+            imageUrl: summary.imageUrl,
             type: summary.type,
             featured: false,
             time: new Date(summary.date).toLocaleTimeString('es-AR', {
@@ -192,7 +192,7 @@ const EventDetailPage: React.FC = () => {
             sectorName: sec.name,
             price: sec.price,
             availableTickets: sec.availableTickets,
-            imageUrl: stadiumImage,
+            imageUrl: summary.imageUrl,
             type: summary.type,
             featured: false,
             time: new Date(summary.date).toLocaleTimeString('es-AR', {
@@ -214,7 +214,7 @@ const EventDetailPage: React.FC = () => {
               sectorName: `${sec.name} Asiento ${seatId}`,
               price: sec.price,
               availableTickets: sec.availableTickets,
-              imageUrl: stadiumImage,
+              imageUrl: summary.imageUrl,
               type: summary.type,
               featured: false,
               time: new Date(summary.date).toLocaleTimeString('es-AR', {
@@ -296,23 +296,13 @@ const EventDetailPage: React.FC = () => {
         <div className={styles.eventDetailCard}>
           <div className={styles.eventImageContainer}>
             <img
-              src={stadiumImages[summary.placeName] || summary.imageUrl}
+              src={summary.imageUrl}
               alt={summary.eventName}
               className={styles.eventImage}
               onError={(e) => {
                 e.currentTarget.src = '/ticket.png';
               }}
             />
-            {summary.placeType.toLowerCase() !== 'nonenumerated' && (
-              sectors.map(sec => (
-                <div
-                  key={sec.idSector}
-                  className={`${styles.sectorArea} ${selectedSector === sec.idSector ? styles.activeSector : ''}`}
-                  style={sectorAreas[sec.idSector]}
-                  onClick={() => setSelectedSector(sec.idSector)}
-                />
-              ))
-            )}
           </div>
 
         <div className={styles.eventInfo}>
@@ -340,6 +330,27 @@ const EventDetailPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {summary.placeType.toLowerCase() !== 'nonenumerated' && (
+        <div className={styles.stadiumPlanContainer}>
+          <img
+            src={stadiumImages[summary.placeName] || '/ticket.png'}
+            alt={`Plano del estadio ${summary.placeName}`}
+            className={styles.stadiumImage}
+            onError={(e) => {
+              e.currentTarget.src = '/ticket.png';
+            }}
+          />
+          {sectors.map(sec => (
+            <div
+              key={sec.idSector}
+              className={`${styles.sectorArea} ${selectedSector === sec.idSector ? styles.activeSector : ''}`}
+              style={sectorAreas[sec.idSector]}
+              onClick={() => setSelectedSector(sec.idSector)}
+            />
+          ))}
+        </div>
+      )}
 
       <h2 className={styles.sectionTitle}>
         {summary.placeType.toLowerCase() === 'nonenumerated' ? 'Comprar Entradas' : 'Sectores Disponibles'}
