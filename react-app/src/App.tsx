@@ -7,7 +7,7 @@ import Pay from './pages/purchase/Pay';
 import AdminHomePage from './pages/adminHomePage/AdminHomePage';
 import MyTickets from './pages/purchase/MyTickets';
 import Help from './pages/support/Help';
-import EventDetailPage from './pages/userHomePage/EventDetailPage';
+import EventDetailPageWrapper from './pages/userHomePage/EventDetailPageWrapper';
 import About from './pages/support/About';
 import Login from './pages/login/LoginUser';
 import Register from './pages/register/RegisterUser';
@@ -63,7 +63,7 @@ const App: React.FC = () => {
         {/* Rutas Públicas */}
         <Route path="/" element={<Layout><HomePage /></Layout>} />
         <Route path="/help" element={<Layout><Help /></Layout>} />
-        <Route path="/event/:id" element={<Layout><EventDetailPage /></Layout>} />
+        <Route path="/event/:id" element={<Layout><EventDetailPageWrapper /></Layout>} />
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/newsletter" element={<NewsLetter />} />
 

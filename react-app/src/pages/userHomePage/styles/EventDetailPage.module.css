@@ -47,14 +47,14 @@
 .stadiumPlanContainer {
   position: relative;
   width: 100%;
-  aspect-ratio: 732 / 530;
-  height: auto;
+  height: auto;            
   margin: 1rem 0 1.5rem 0;
-  border: none;
-  border-radius: 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
   overflow: hidden;
-  background: transparent;
+  background: #f8f9fa;
 }
+
 
 .stadiumContent {
   position: relative;
@@ -64,18 +64,70 @@
   transition: transform 220ms ease;
 }
 
+.stadiumContent[data-zoom="1"] {
+  transform: scale(1);
+}
+
+.stadiumContent[data-zoom="1.1"] {
+  transform: scale(1.1);
+}
+
+.stadiumContent[data-zoom="1.2"] {
+  transform: scale(1.2);
+}
+
+.stadiumContent[data-zoom="1.3"] {
+  transform: scale(1.3);
+}
+
+.stadiumContent[data-zoom="1.4"] {
+  transform: scale(1.4);
+}
+
+.stadiumContent[data-zoom="1.5"] {
+  transform: scale(1.5);
+}
+
+.stadiumContent[data-zoom="1.6"] {
+  transform: scale(1.6);
+}
+
+.stadiumContent[data-zoom="1.7"] {
+  transform: scale(1.7);
+}
+
+.stadiumContentZoomed {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  transition: transform 220ms ease;
+}
+
+.stadiumPlanContainer {
+  position: relative;
+  width: 100%;
+  height: auto;            /* 🔥 dejamos que el alto se ajuste automáticamente */
+  margin: 1rem 0 1.5rem 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
 .imageFrame {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .stadiumImage {
-  position: absolute;
-  inset: 0;
   width: 100%;
-  height: 100%;
-  object-fit: contain; 
-  background: transparent;
+  height: auto;         
+  object-fit: contain;    
+  display: block;
 }
 
 .zoomToolbar {

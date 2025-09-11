@@ -6,12 +6,10 @@
   height: 100%;
   background: rgba(30, 41, 59, 0.6);
   display: flex;
-  /* --- MODIFICACIÓN AQUÍ --- */
-  align-items: flex-start; /* Alinea el modal en la parte superior */
-  padding-top: 20vh; /* Lo baja un 20% desde el tope para un mejor centrado visual */
+  align-items: flex-start; 
+  padding-top: 20vh;
   justify-content: center;
   z-index: 50;
-  backdrop-filter: blur(4px);
 }
 
 .purchaseModal {
