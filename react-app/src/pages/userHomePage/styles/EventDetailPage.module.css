@@ -10,7 +10,7 @@
 }
 
 .eventDetailContainer {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
   font-family: 'Inter', sans-serif;
@@ -31,7 +31,10 @@
 
 .eventImageContainer {
   width: 100%;
-  height: 300px;
+  /* Hero responsivo: muestra mejor la foto del artista */
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 260px;
   overflow: hidden;
   position: relative;
 }
@@ -40,6 +43,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 50% 30%; /* Enfoca un poco hacia arriba */
+  display: block;
   background: #e5e7eb;
 }
 
@@ -47,19 +52,27 @@
 .stadiumPlanContainer {
   position: relative;
   width: 100%;
-  height: 420px;
+  /* Mostrar la foto completa sin bordes extra */
+  aspect-ratio: 732 / 530;
+  height: auto;
   margin: 1rem 0 1.5rem 0;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
+  border: none;
+  border-radius: 0;
   overflow: hidden;
-  background: #f3f4f6;
+  background: transparent;
 }
 
 .stadiumContent {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
   transform-origin: center center;
   transition: transform 220ms ease;
+}
+
+.imageFrame {
+  position: absolute;
+  inset: 0;
 }
 
 .stadiumImage {
@@ -67,8 +80,8 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  background: #e5e7eb;
+  object-fit: contain; /* foto entera */
+  background: transparent;
 }
 
 /* Toolbar de zoom */
@@ -86,9 +99,8 @@
   min-width: 32px;
   padding: 0 8px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #ffffffcc;
-  backdrop-filter: blur(4px);
+  border: 1px solid rgba(0,0,0,0.06);
+  background: rgba(255,255,255,0.92); 
   color: #111827;
   display: inline-flex;
   align-items: center;
@@ -202,7 +214,8 @@
   }
 
   .eventImageContainer {
-    height: 200px;
+    aspect-ratio: 4 / 3;
+    min-height: 200px;
   }
 
   .eventTitle {

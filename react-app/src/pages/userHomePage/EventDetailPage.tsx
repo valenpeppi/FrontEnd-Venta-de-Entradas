@@ -59,10 +59,14 @@ const EventDetailPage: React.FC = () => {
   };
 
   const sectorAreas: Record<number, React.CSSProperties> = {
-    1: { top: '22%', left: '32%', width: '12%', height: '56%', background: 'rgba(88,115,209,0.35)' },
-    2: { top: '22%', left: '79%', width: '11%', height: '56%', background: 'rgba(236,72,72,0.35)' },
-    3: { top: '82%', left: '44%', width: '38%', height: '12%', background: 'rgba(234,179,8,0.35)' },
-    4: { top: '20%', left: '46%', width: '32%', height: '58%', background: 'rgba(16,185,129,0.35)' }
+    //Izquierda - Azul
+    1: { top: '22%', left: '36%', width: '11%', height: '63.5%', background: 'rgba(88,115,209,0.35)' },
+    //Derecha - Rojo
+    2: { top: '22%', left: '78.5%', width: '11%', height: '63.5%', background: 'rgba(236,72,72,0.35)' },
+    //Abajo - Amarillo
+    3: { top: '88%', left: '36%', width: '53%', height: '8%', background: 'rgba(234,179,8,0.35)' },
+    //Campo - Verde
+    4: { top: '22%', left: '47.5%', width: '30.5%', height: '63.5%', background: 'rgba(16,185,129,0.35)' }
   };
 
   const formatPlaceType = (placeType: string) => {
