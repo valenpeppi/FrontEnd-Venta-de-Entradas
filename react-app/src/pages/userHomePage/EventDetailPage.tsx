@@ -4,7 +4,9 @@ import axios from 'axios';
 import { useCart } from '../../shared/context/CartContext';
 import { useMessage } from '../../shared/context/MessageContext';
 import styles from './styles/EventDetailPage.module.css';
-import SeatSelector from '../../components/SeatSelector';
+import { EventDetailProvider } from './context/EventDetailContext';
+import StadiumPlan from '../place/StadiumPlan';
+import SeatSelector from '../place/SeatSelector';
 import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
 
 interface Sector {
@@ -58,19 +60,7 @@ const EventDetailPage: React.FC = () => {
     'Estadio Gigante de Arroyito': estadioArroyito
   };
 
-  // Pasamos estilos de sectores a CSS por nombre
-  const getSectorOverlayClass = (sec: Sector) => {
-    const name = sec.name.toLowerCase().trim();
-    const nameToClass: Record<string, string> = {
-      'tribuna norte': 'sector-1',
-      'tribuna sur': 'sector-2',
-      'popular': 'sector-3',
-      'campo': 'sector-4'
-    };
-    const key = nameToClass[name] || `sector-${sec.idSector}`;
-    const active = selectedSector === sec.idSector ? styles.activeSector : '';
-    return `${styles.sectorArea} ${styles[key] || ''} ${active}`.trim();
-  };
+  // (mapeo visual se maneja ahora en StadiumPlan)
 
   const formatPlaceType = (placeType: string) => {
     switch (placeType.toLowerCase()) {
@@ -308,6 +298,7 @@ const EventDetailPage: React.FC = () => {
 
   return (
     <div className={styles.eventDetailContainer}>
+      <EventDetailProvider value={{ selectedSector, setSelectedSector, zoom, zoomIn, zoomOut, resetZoom }}>
         <div className={styles.eventDetailCard}>
           <div className={styles.eventImageContainer}>
             <img
@@ -347,48 +338,11 @@ const EventDetailPage: React.FC = () => {
       </div>
 
       {summary.placeType.toLowerCase() !== 'nonenumerated' && (
-        <div className={styles.stadiumPlanContainer}>
-          <div className={styles.zoomToolbar}>
-            <button type="button" className={styles.zoomBtn} onClick={zoomOut} aria-label="Alejar">
-              {/* Lupa con signo menos */}
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="7"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                <line x1="8" y1="11" x2="14" y2="11"/>
-              </svg>
-            </button>
-            <button type="button" className={styles.zoomBtn} onClick={resetZoom} aria-label="Restablecer zoom">1x</button>
-            <button type="button" className={styles.zoomBtn} onClick={zoomIn} aria-label="Acercar">
-              {/* Lupa con signo más */}
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="7"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                <line x1="11" y1="8" x2="11" y2="14"/>
-                <line x1="8" y1="11" x2="14" y2="11"/>
-              </svg>
-            </button>
-          </div>
-          <div className={styles.stadiumContent} style={{ transform: `scale(${zoom})` }}>
-            <div className={styles.imageFrame}>
-              <img
-                src={stadiumImages[summary.placeName] || '/ticket.png'}
-                alt={`Plano del estadio ${summary.placeName}`}
-                className={styles.stadiumImage}
-                onError={(e) => {
-                  e.currentTarget.src = '/ticket.png';
-                }}
-              />
-              {sectors.map(sec => (
-                <div
-                  key={sec.idSector}
-                  className={getSectorOverlayClass(sec)}
-                  onClick={() => setSelectedSector(sec.idSector)}
-                  title={sec.name}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <StadiumPlan
+          placeName={summary.placeName}
+          sectors={sectors}
+          imageSrc={stadiumImages[summary.placeName] || '/ticket.png'}
+        />
       )}
 
       <h2 className={styles.sectionTitle}>
@@ -480,6 +434,7 @@ const EventDetailPage: React.FC = () => {
           Agregar al Carrito
         </button>
       </div>
+      </EventDetailProvider>
     </div>
   );
 };

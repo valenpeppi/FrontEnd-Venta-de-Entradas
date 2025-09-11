@@ -3,21 +3,12 @@ import type { ReactNode } from 'react';
 import type { Ticket } from './CartContext';
 import axios from 'axios';
 
-interface EventsState {
-  featuredTickets: Ticket[];
-  approvedTickets: Ticket[];
-}
 
 type EventsAction =
   | { type: 'SET_FEATURED_TICKETS'; payload: { tickets: Ticket[] } }
   | { type: 'SET_APPROVED_TICKETS'; payload: { tickets: Ticket[] } }
   | { type: 'UPDATE_AVAILABLE_TICKETS'; payload: { id: string; quantity: number } };
 
-interface EventsContextType {
-  featuredTickets: Ticket[];
-  approvedTickets: Ticket[];
-  updateAvailableTickets: (id: string, quantity: number) => void;
-}
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 

@@ -2,30 +2,6 @@ import React, { createContext, useReducer, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
 
 
-export interface Ticket {
-  id: string;
-  eventId: string;
-  eventName: string;
-  date: string;
-  location: string;
-  placeName: string;
-  sectorName?: string; 
-  price: number;
-  availableTickets: number;
-  imageUrl: string;
-  time: string;
-  type: string;
-  featured: boolean;
-  agotado?: boolean;
-}
-
-export interface CartItem extends Ticket {
-  quantity: number;
-}
-
-interface CartState {
-  cartItems: CartItem[];
-}
 
 type CartAction =
   | { type: 'ADD_TO_CART'; payload: { ticket: Omit<CartItem, 'quantity'>; quantity: number } }
@@ -33,6 +9,7 @@ type CartAction =
   | { type: 'CLEAR_CART' }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'LOAD_CART'; payload: { items: CartItem[] } };
+  
 
 interface CartContextType {
   cartItems: CartItem[];

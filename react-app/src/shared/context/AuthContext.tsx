@@ -1,17 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react';
 
-export interface User {
-  name: string;
-  role: string | null;
-}
-
-interface AuthState {
-  isLoggedIn: boolean;
-  user: User | null;
-  isLoading: boolean;
-}
-
 type AuthAction =
   | { type: 'INITIALIZE'; payload: { user: User | null } }
   | { type: 'LOGIN'; payload: { user: User } }

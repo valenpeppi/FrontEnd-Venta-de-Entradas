@@ -1,9 +1,6 @@
 import React, { createContext, useReducer, useContext } from 'react';
 import type { ReactNode } from 'react';
 
-interface SearchState {
-  searchQuery: string;
-}
 
 type SearchAction =
   | { type: 'SET_SEARCH_QUERY'; payload: { query: string } }
