@@ -1,3 +1,13 @@
+/*
+Recomendaciones de Santinelli Agustín:
+1. Dividir en componentes más pequeños (EventInfo, SectorList, SeatSelector, ZoomControls).
+2. Unificar todas las interfaces en un unico archivo de tipos.
+(EventDetailPage es un archivo muy grande y complejo).
+3. Armar un EventDetailContext para manejar el estado compartido.
+4. Despues de todo esto, retomar el modelado -sino cada vez se va a volver mas dificil-.
+
+-Quise hacer uno y dos en una rama aparte pero Codex me hizo cualquier cosa. Tener mucho cuidado.-
+*/
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
