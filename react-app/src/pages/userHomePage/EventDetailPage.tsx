@@ -45,16 +45,24 @@ const EventDetailPage: React.FC = () => {
   const [selectedSector, setSelectedSector] = useState<number | null>(null);
   const [seats, setSeats] = useState<{ id: number; label?: string }[]>([]);
   const [selectedSeatsMap, setSelectedSeatsMap] = useState<Record<number, number[]>>({});
+  // Zoom del plano (mantener hooks antes de cualquier return)
+  const [zoom, setZoom] = useState(1);
+  const minZoom = 1;
+  const maxZoom = 1.7;
+  const stepZoom = 0.1;
+  const zoomIn = () => setZoom(z => Math.min(maxZoom, parseFloat((z + stepZoom).toFixed(2))));
+  const zoomOut = () => setZoom(z => Math.max(minZoom, parseFloat((z - stepZoom).toFixed(2))));
+  const resetZoom = () => setZoom(1);
 
   const stadiumImages: Record<string, string> = {
     'Estadio Gigante de Arroyito': estadioArroyito
   };
 
   const sectorAreas: Record<number, React.CSSProperties> = {
-    1: { top: '15%', left: '5%', width: '20%', height: '60%', background: 'rgba(0,0,255,0.3)' },
-    2: { top: '15%', left: '75%', width: '20%', height: '60%', background: 'rgba(255,0,0,0.3)' },
-    3: { top: '80%', left: '10%', width: '80%', height: '15%', background: 'rgba(255,255,0,0.3)' },
-    4: { top: '15%', left: '25%', width: '50%', height: '60%', background: 'rgba(0,128,0,0.3)' }
+    1: { top: '22%', left: '32%', width: '12%', height: '56%', background: 'rgba(88,115,209,0.35)' },
+    2: { top: '22%', left: '79%', width: '11%', height: '56%', background: 'rgba(236,72,72,0.35)' },
+    3: { top: '82%', left: '44%', width: '38%', height: '12%', background: 'rgba(234,179,8,0.35)' },
+    4: { top: '20%', left: '46%', width: '32%', height: '58%', background: 'rgba(16,185,129,0.35)' }
   };
 
   const formatPlaceType = (placeType: string) => {
@@ -333,22 +341,46 @@ const EventDetailPage: React.FC = () => {
 
       {summary.placeType.toLowerCase() !== 'nonenumerated' && (
         <div className={styles.stadiumPlanContainer}>
-          <img
-            src={stadiumImages[summary.placeName] || '/ticket.png'}
-            alt={`Plano del estadio ${summary.placeName}`}
-            className={styles.stadiumImage}
-            onError={(e) => {
-              e.currentTarget.src = '/ticket.png';
-            }}
-          />
-          {sectors.map(sec => (
-            <div
-              key={sec.idSector}
-              className={`${styles.sectorArea} ${selectedSector === sec.idSector ? styles.activeSector : ''}`}
-              style={sectorAreas[sec.idSector]}
-              onClick={() => setSelectedSector(sec.idSector)}
-            />
-          ))}
+          <div className={styles.zoomToolbar}>
+            <button type="button" className={styles.zoomBtn} onClick={zoomOut} aria-label="Alejar">
+              {/* Lupa con signo menos */}
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </button>
+            <button type="button" className={styles.zoomBtn} onClick={resetZoom} aria-label="Restablecer zoom">1x</button>
+            <button type="button" className={styles.zoomBtn} onClick={zoomIn} aria-label="Acercar">
+              {/* Lupa con signo más */}
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </button>
+          </div>
+          <div className={styles.stadiumContent} style={{ transform: `scale(${zoom})` }}>
+            <div className={styles.imageFrame}>
+              <img
+                src={stadiumImages[summary.placeName] || '/ticket.png'}
+                alt={`Plano del estadio ${summary.placeName}`}
+                className={styles.stadiumImage}
+                onError={(e) => {
+                  e.currentTarget.src = '/ticket.png';
+                }}
+              />
+              {sectors.map(sec => (
+                <div
+                  key={sec.idSector}
+                  className={`${styles.sectorArea} ${selectedSector === sec.idSector ? styles.activeSector : ''}`}
+                  style={sectorAreas[sec.idSector]}
+                  onClick={() => setSelectedSector(sec.idSector)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
