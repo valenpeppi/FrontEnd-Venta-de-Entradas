@@ -58,15 +58,18 @@ const EventDetailPage: React.FC = () => {
     'Estadio Gigante de Arroyito': estadioArroyito
   };
 
-  const sectorAreas: Record<number, React.CSSProperties> = {
-    //Izquierda - Azul
-    1: { top: '22%', left: '36%', width: '11%', height: '63.5%', background: 'rgba(88,115,209,0.35)' },
-    //Derecha - Rojo
-    2: { top: '22%', left: '78.5%', width: '11%', height: '63.5%', background: 'rgba(236,72,72,0.35)' },
-    //Abajo - Amarillo
-    3: { top: '88%', left: '36%', width: '53%', height: '8%', background: 'rgba(234,179,8,0.35)' },
-    //Campo - Verde
-    4: { top: '22%', left: '47.5%', width: '30.5%', height: '63.5%', background: 'rgba(16,185,129,0.35)' }
+  // Pasamos estilos de sectores a CSS por nombre
+  const getSectorOverlayClass = (sec: Sector) => {
+    const name = sec.name.toLowerCase().trim();
+    const nameToClass: Record<string, string> = {
+      'tribuna norte': 'sector-1',
+      'tribuna sur': 'sector-2',
+      'popular': 'sector-3',
+      'campo': 'sector-4'
+    };
+    const key = nameToClass[name] || `sector-${sec.idSector}`;
+    const active = selectedSector === sec.idSector ? styles.activeSector : '';
+    return `${styles.sectorArea} ${styles[key] || ''} ${active}`.trim();
   };
 
   const formatPlaceType = (placeType: string) => {
@@ -378,9 +381,9 @@ const EventDetailPage: React.FC = () => {
               {sectors.map(sec => (
                 <div
                   key={sec.idSector}
-                  className={`${styles.sectorArea} ${selectedSector === sec.idSector ? styles.activeSector : ''}`}
-                  style={sectorAreas[sec.idSector]}
+                  className={getSectorOverlayClass(sec)}
                   onClick={() => setSelectedSector(sec.idSector)}
+                  title={sec.name}
                 />
               ))}
             </div>

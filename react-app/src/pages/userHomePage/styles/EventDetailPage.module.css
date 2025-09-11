@@ -10,7 +10,7 @@
 }
 
 .eventDetailContainer {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
   font-family: 'Inter', sans-serif;
@@ -31,10 +31,7 @@
 
 .eventImageContainer {
   width: 100%;
-  /* Hero responsivo: muestra mejor la foto del artista */
-  aspect-ratio: 16 / 9;
-  height: auto;
-  min-height: 260px;
+  height: 300px;
   overflow: hidden;
   position: relative;
 }
@@ -43,8 +40,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 30%; /* Enfoca un poco hacia arriba */
-  display: block;
   background: #e5e7eb;
 }
 
@@ -52,7 +47,6 @@
 .stadiumPlanContainer {
   position: relative;
   width: 100%;
-  /* Mostrar la foto completa sin bordes extra */
   aspect-ratio: 732 / 530;
   height: auto;
   margin: 1rem 0 1.5rem 0;
@@ -80,11 +74,10 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* foto entera */
+  object-fit: contain; 
   background: transparent;
 }
 
-/* Toolbar de zoom */
 .zoomToolbar {
   position: absolute;
   top: 8px;
@@ -145,8 +138,9 @@
 
 .sectorList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
+  align-items: stretch;
 }
 
 .centeredList {
@@ -161,6 +155,9 @@
   padding: 1.2rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .sectorCard:hover {
@@ -179,7 +176,6 @@
     margin: 0.4rem 0;
 }
 
-/* Botón */
 .actions {
   margin-top: 2rem;
   display: flex;
@@ -208,23 +204,24 @@
 }
 
 /* Responsivo */
+@media (max-width: 992px) {
+  .sectorList { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 768px) {
   .eventDetailCard {
     flex-direction: column;
   }
 
   .eventImageContainer {
-    aspect-ratio: 4 / 3;
-    min-height: 200px;
+    height: 200px;
   }
 
   .eventTitle {
     font-size: 1.6rem;
   }
 
-  .sectorList {
-    grid-template-columns: 1fr;
-  }
+  .sectorList { grid-template-columns: 1fr; }
 }
 
 .sectorInput {
@@ -239,6 +236,39 @@
   cursor: pointer;
   border: 2px solid transparent;
   transition: box-shadow 150ms ease, transform 150ms ease;
+}
+
+/* Posiciones y colores por sector (editá libremente) */
+.sector-1 { /* Tribuna Norte - izquierda, azul */
+  top: 22%;
+  left: 36%;
+  width: 11%;
+  height: 63.5%;
+  background: rgba(88,115,209,0.35);
+}
+
+.sector-2 { /* Tribuna Sur - derecha, rojo */
+  top: 22%;
+  left: 78.5%;
+  width: 11%;
+  height: 63.5%;
+  background: rgba(236,72,72,0.35);
+}
+
+.sector-3 { /* Popular - abajo, amarillo */
+  top: 88%;
+  left: 36%;
+  width: 53%;
+  height: 8%;
+  background: rgba(234,179,8,0.35);
+}
+
+.sector-4 { /* Campo - centro, verde */
+  top: 22%;
+  left: 47.5%;
+  width: 30.5%;
+  height: 63.5%;
+  background: rgba(16,185,129,0.35);
 }
 
 .activeSector {
