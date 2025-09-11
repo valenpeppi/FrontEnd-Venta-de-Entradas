@@ -107,7 +107,7 @@
 .stadiumPlanContainer {
   position: relative;
   width: 100%;
-  height: auto;            /* 🔥 dejamos que el alto se ajuste automáticamente */
+  height: auto;         
   margin: 1rem 0 1.5rem 0;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -292,33 +292,33 @@
 
 /* Posiciones y colores por sector (editá libremente) */
 .sector-1 { /* Tribuna Norte - izquierda, azul */
-  top: 22%;
-  left: 36%;
-  width: 11%;
+  top: 23%;
+  left: 32.75%;
+  width: 10%;
   height: 63.5%;
   background: rgba(88,115,209,0.35);
 }
 
 .sector-2 { /* Tribuna Sur - derecha, rojo */
-  top: 22%;
-  left: 78.5%;
-  width: 11%;
+  top: 23%;
+  left: 78%;
+  width: 10%;
   height: 63.5%;
   background: rgba(236,72,72,0.35);
 }
 
 .sector-3 { /* Popular - abajo, amarillo */
-  top: 88%;
-  left: 36%;
-  width: 53%;
-  height: 8%;
+  top: 89%;
+  left: 33%;
+  width: 55%;
+  height: 8.25%;
   background: rgba(234,179,8,0.35);
 }
 
 .sector-4 { /* Campo - centro, verde */
-  top: 22%;
-  left: 47.5%;
-  width: 30.5%;
+  top: 23%;
+  left: 45%;
+  width: 31%;
   height: 63.5%;
   background: rgba(16,185,129,0.35);
 }
