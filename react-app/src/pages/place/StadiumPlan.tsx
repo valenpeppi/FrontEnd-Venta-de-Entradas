@@ -1,6 +1,6 @@
 import React from 'react';
-import { useEventDetail } from '../userHomePage/context/EventDetailContext';
-import s from './styles/StadiumPlan.module.css';
+import { useEventDetail } from '../context/EventDetailContext';
+import s from './StadiumPlan.module.css';
 
 interface SectorLite {
   idSector: number;
@@ -27,7 +27,6 @@ const StadiumPlan: React.FC<Props> = ({ placeName, sectors, imageSrc }) => {
   const getOverlayClass = (sec: SectorLite) => {
     const key = nameToClass[sec.name.toLowerCase().trim()] || `sector-${sec.idSector}`;
     const active = selectedSector === sec.idSector ? s.activeSector : '';
-    // @ts-ignore - dynamic module key
     return `${s.sectorArea} ${s[key] || ''} ${active}`.trim();
   };
 
@@ -74,3 +73,4 @@ const StadiumPlan: React.FC<Props> = ({ placeName, sectors, imageSrc }) => {
 };
 
 export default StadiumPlan;
+
