@@ -1,16 +1,15 @@
-import React, { createContext, useReducer, useContext, useEffect } from 'react';
-import type { ReactNode } from 'react';
+// shared/context/AuthContext.tsx
+import React, { createContext, useReducer, useContext, useEffect } from "react";
+import type { ReactNode } from "react";
+import type { User, AuthState } from "./Interfaces";
 
 type AuthAction =
-  | { type: 'INITIALIZE'; payload: { user: User | null } }
-  | { type: 'LOGIN'; payload: { user: User } }
-  | { type: 'LOGOUT' }
-  | { type: 'UPDATE_USER'; payload: { name: string; role?: string } };
+  | { type: "INITIALIZE"; payload: { user: User | null } }
+  | { type: "LOGIN"; payload: { user: User } }
+  | { type: "LOGOUT" }
+  | { type: "UPDATE_USER"; payload: { name: string; role?: string } };
 
-interface AuthContextType {
-  isLoggedIn: boolean;
-  user: User | null;
-  isLoading: boolean;
+interface AuthContextType extends AuthState {
   login: (user: User, token: string) => void;
   logout: () => void;
   updateUser: (name: string, role?: string) => void;
@@ -24,28 +23,28 @@ interface AuthProviderProps {
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
-    case 'INITIALIZE':
+    case "INITIALIZE":
       return {
         ...state,
         isLoggedIn: !!action.payload.user,
         user: action.payload.user,
         isLoading: false,
       };
-    case 'LOGIN':
+    case "LOGIN":
       return {
         ...state,
         isLoggedIn: true,
         user: action.payload.user,
         isLoading: false,
       };
-    case 'LOGOUT':
+    case "LOGOUT":
       return {
         ...state,
         isLoggedIn: false,
         user: null,
         isLoading: false,
       };
-    case 'UPDATE_USER':
+    case "UPDATE_USER":
       return {
         ...state,
         user: state.user
@@ -70,8 +69,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     let user: User | null = null;
-    const token = localStorage.getItem('token');
-    const userString = localStorage.getItem('user');
+    const token = localStorage.getItem("token");
+    const userString = localStorage.getItem("user");
     if (token && userString) {
       try {
         user = JSON.parse(userString);
@@ -80,23 +79,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.clear();
       }
     }
-    dispatch({ type: 'INITIALIZE', payload: { user } });
+    dispatch({ type: "INITIALIZE", payload: { user } });
   }, []);
 
   const login = (user: User, token: string) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    dispatch({ type: 'LOGIN', payload: { user } });
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    dispatch({ type: "LOGIN", payload: { user } });
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    dispatch({ type: 'LOGOUT' });
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    dispatch({ type: "LOGOUT" });
   };
 
   const updateUser = (name: string, role?: string) => {
-    dispatch({ type: 'UPDATE_USER', payload: { name, role } });
+    dispatch({ type: "UPDATE_USER", payload: { name, role } });
   };
 
   return (
@@ -116,7 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
+    throw new Error("useAuth debe ser usado dentro de un AuthProvider");
   }
   return context;
 };

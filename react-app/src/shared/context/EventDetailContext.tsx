@@ -11,7 +11,11 @@ interface EventDetailContextType {
 
 const EventDetailContext = createContext<EventDetailContextType | undefined>(undefined);
 
-export const EventDetailProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface EventDetailProviderProps {
+  children: React.ReactNode;
+}
+
+export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ children }) => {
   const [zoom, setZoom] = useState(1);
   const [selectedSector, setSelectedSector] = useState<number | null>(null);
 

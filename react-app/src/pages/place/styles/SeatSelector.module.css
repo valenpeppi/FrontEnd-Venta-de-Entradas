@@ -1,0 +1,28 @@
+.seatGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.seat {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #f9fafb;
+  color: #111;
+  user-select: none;
+  -webkit-user-select: none; 
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.seat:hover {
+  background: #e5e7eb;
+}
+
+.selected {
+  background: #10b981;
+  color: #fff;
+  border-color: #059669;
+}

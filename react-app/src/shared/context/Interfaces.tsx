@@ -1,49 +1,33 @@
-
-// Sectores del estadio
-export interface SectorLite {
+// Sectores del estadio con precio
+export interface EventSector {
   idSector: number;
   name: string;
-  enumerated?: boolean; 
-}
-
-// Asientos
-export interface Seat {
-  id: number;
-  label?: string; 
-}
-
-export interface CartItem {
-  ticketId: number;
-  quantity: number;
-  sector: SectorLite;
   price: number;
+  enumerated: boolean;
+  availableTickets: number;
 }
 
+
+
+// Evento (detalle completo)
 export interface Event {
   idEvent: number;
   name: string;
   description: string;
   date: string;
   image?: string;
+  type: string;
   placeName: string;
-  sectors: SectorLite[];
+  sectors: EventSector[];
 }
 
-interface SearchState {
-  searchQuery: string;
+// Asientos
+export interface Seat {
+  id: number;
+  label?: string;
 }
 
-interface EventsState {
-  featuredTickets: Ticket[];
-  approvedTickets: Ticket[];
-}
-
-interface EventsContextType {
-  featuredTickets: Ticket[];
-  approvedTickets: Ticket[];
-  updateAvailableTickets: (id: string, quantity: number) => void;
-}
-
+// Ticket (listado en home o carrito)
 export interface Ticket {
   id: string;
   eventId: string;
@@ -51,7 +35,7 @@ export interface Ticket {
   date: string;
   location: string;
   placeName: string;
-  sectorName?: string; 
+  sectorName?: string;
   price: number;
   availableTickets: number;
   imageUrl: string;
@@ -61,21 +45,40 @@ export interface Ticket {
   agotado?: boolean;
 }
 
+// Carrito
 export interface CartItem extends Ticket {
   quantity: number;
 }
 
-interface CartState {
+export interface CartState {
   cartItems: CartItem[];
 }
 
+// Contexto de eventos
+export interface EventsState {
+  featuredTickets: Ticket[];
+  approvedTickets: Ticket[];
+}
+
+export interface EventsContextType {
+  featuredTickets: Ticket[];
+  approvedTickets: Ticket[];
+  updateAvailableTickets: (id: string, quantity: number) => void;
+}
+
+// Auth
 export interface User {
   name: string;
   role: string | null;
 }
 
-interface AuthState {
+export interface AuthState {
   isLoggedIn: boolean;
   user: User | null;
   isLoading: boolean;
+}
+
+// Search
+export interface SearchState {
+  searchQuery: string;
 }
