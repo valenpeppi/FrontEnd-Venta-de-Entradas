@@ -112,6 +112,28 @@
   margin-top: 1rem;
 }
 
+.btnPay {
+  background-color: #009ee3; 
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btnPay:hover {
+  background-color: #007bbd; 
+  transform: translateY(-2px);
+}
+
+.btnPay:active {
+  background-color: #005f8c;
+  transform: translateY(0);
+}
+
 @media (max-width: 768px) {
   .payContainer {
     margin: 20px auto;

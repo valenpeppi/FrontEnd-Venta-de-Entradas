@@ -1,14 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../shared/context/CartContext';
 import styles from './styles/Pay.module.css';
 
+// SDK de Mercado Pago
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+
 const Pay: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useCart();
+  const [preferenceId, setPreferenceId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Inicializar SDK con tu PUBLIC_KEY de TEST
+    initMercadoPago("APP_USR-cd78e2e4-b7ee-4b1d-ad89-e90d69693f9c", { locale: "es-AR" });
+  }, []);
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  const handlePayment = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/payments/create_preference", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: cartItems.map(item => ({
+            id: item.id.toString(),
+            title: item.eventName,
+            unit_price: item.price,
+            quantity: item.quantity,
+          }))
+        })
+      });
+
+      const data = await response.json();
+      setPreferenceId(data.id);
+    } catch (error) {
+      console.error("Error al generar preferencia de pago:", error);
+    }
   };
 
   return (
@@ -31,7 +62,13 @@ const Pay: React.FC = () => {
           </div>
 
           <div className={styles.payWalletContainer}>
-            <p className={styles.loadingText}>Próximamente: Métodos de pago.</p>
+            {!preferenceId ? (
+              <button onClick={handlePayment} className={styles.btnPay}>
+                Pagar con Mercado Pago
+              </button>
+            ) : (
+              <Wallet initialization={{ preferenceId }} />
+            )}
           </div>
 
           <div className={styles.payActions}>
