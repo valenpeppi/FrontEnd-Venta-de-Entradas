@@ -10,17 +10,35 @@ const Pay: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useCart();
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
+ const [userData, setUserData] = useState({
+    email: 'test_user_123456@testuser.com',
+    name: 'Test',
+    surname: 'User'
+  });
 
-  useEffect(() => {
-    // Inicializar SDK con tu PUBLIC_KEY de TEST
-    initMercadoPago("APP_USR-cd78e2e4-b7ee-4b1d-ad89-e90d69693f9c", { locale: "es-AR" });
+
+ useEffect(() => {
+    initMercadoPago("APP_USR-cd78e2e4-b7ee-4b1d-ad89-e90d69693f9c", { 
+    locale: "es-AR",
+    advancedFraudPrevention: false
+     });
+    
+    // Obtener datos del usuario (puedes modificar esto según tu auth)
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    setUserData({
+      email: user.email || 'test_user_123456@testuser.com',
+      name: user.name || 'Test',
+      surname: user.surname || 'User'
+    });
   }, []);
+
+  
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  const handlePayment = async () => {
+const handlePayment = async () => {
     try {
       const response = await fetch("http://localhost:3000/api/payments/create_preference", {
         method: "POST",
@@ -31,7 +49,21 @@ const Pay: React.FC = () => {
             title: item.eventName,
             unit_price: item.price,
             quantity: item.quantity,
-          }))
+          })),
+          payer: {
+            email: userData.email,
+            name: userData.name,
+            surname: userData.surname,
+            // Datos adicionales para testing
+            phone: {
+              area_code: '11',
+              number: '12345678'
+            },
+            identification: {
+              type: 'DNI',
+              number: '12345678'
+            }
+          }
         })
       });
 
@@ -41,7 +73,6 @@ const Pay: React.FC = () => {
       console.error("Error al generar preferencia de pago:", error);
     }
   };
-
   return (
     <div className={styles.payContainer}>
       <h1 className={styles.payTitle}>Finalizar Compra</h1>
