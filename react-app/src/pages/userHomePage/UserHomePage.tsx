@@ -62,7 +62,7 @@ const HomePage: React.FC = () => {
         />
 
         <div className={styles.eventTypeFilterContainer}>
-          <label htmlFor="event-type-select" className={styles.eventTypeFilterLabel}>Filtrar por tipo:</label>
+          <label htmlFor="event-type-select" className={styles.eventTypeFilterLabel}>Filtrar</label>
           <select
             id="event-type-select"
             className={styles.eventTypeFilterSelect}
