@@ -1,7 +1,7 @@
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(50px); /* Aumentado para un movimiento más notorio */
+    transform: translateX(50px);
   }
   to {
     opacity: 1;
@@ -9,98 +9,104 @@
   }
 }
 
+/* 🔵 Carrusel contenedor principal */
 .eventCarousel {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  gap: 1rem;
-  width: 100%; 
-  max-width: 1100px; 
+  width: 100%;
+  max-width: 1100px;
   box-sizing: border-box;
-  padding: 0 3.5rem; 
-  overflow: hidden; /* Oculta el contenido que se sale durante la animación */
+  padding: 0 3rem;
+  overflow: hidden;
 }
 
+/* 🔵 Botones de navegación */
 .carouselNavigationBtn {
   position: absolute;
-  top: 50%; 
+  top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.95);
+  background: #fff;
   border: none;
-  border-radius: 9999px;
+  border-radius: 50%;
   width: 3rem;
   height: 3rem;
   cursor: pointer;
-  z-index: 20;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
   transition: transform 0.14s ease, background 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.carouselNavigationBtn:hover { transform: translateY(-50%) scale(1.05); }
-.carouselNavigationBtn:active { transform: translateY(-50%) scale(0.98); }
+
+.carouselNavigationBtn:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.carouselNavigationBtn:active {
+  transform: translateY(-50%) scale(0.95);
+}
 
 .carouselNavigationBtnPrev { left: 0; }
 .carouselNavigationBtnNext { right: 0; }
 
-.carouselNavigationIcon { font-size: 1.5rem; pointer-events: none; color: #333; }
-
-.eventCardLink {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: stretch;
-  text-decoration: none;
-  color: inherit;
-  animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* Duración y suavizado ajustados */
+.carouselNavigationIcon {
+  font-size: 1.5rem;
+  color: #333;
+  pointer-events: none;
 }
 
+/* 🔵 Tarjeta del evento */
 .eventCard {
-  width: 100%;
-  background: #fff;
-  border-radius: 1.25rem;
-  box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.12);
-  padding: 1.5rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: box-shadow 0.2s;
+  flex-direction: row;
+  width: 100%;
+  height: 460px;
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  animation: slideIn 0.5s ease-out;
+  box-sizing: border-box;
 }
 
+/* 🔵 Imagen */
 .eventCardImage {
-  width: 100%;
-  height: 550px; 
+  width: 50%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 0.75rem;
-  margin-bottom: 1.5rem;
   display: block;
 }
 
-.eventCardContent {
+/* 🔵 Contenido */
+.eventCardDetailsWrapper {
+  width: 50%;
+  padding: 2rem 1.8rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  color: #111827;
-  width: 100%;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
+/* 🔵 Título */
 .eventCardTitle {
-  font-size: 2.2rem; 
+  font-size: 2.1rem;
   font-weight: 700;
   color: #111827;
-  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  word-break: break-word;
 }
 
+/* 🔵 Metadata */
 .eventCardMeta {
   display: flex;
-  flex-direction: column; 
-  align-items: flex-start;
+  flex-direction: column;
   gap: 0.6rem;
-  margin: 1rem 0;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #374151;
 }
 
@@ -110,81 +116,100 @@
   gap: 0.5rem;
 }
 
-.eventCardText {
-  white-space: nowrap; 
-}
-
-
-
 .eventCardIcon {
-  color: #4338ca;
-  width: 1.1rem;
+  color: #4f46e5;
+  width: 1.2rem;
 }
 
+/* 🔵 Footer */
 .eventCardFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #eef2ff;
-  gap: 1rem;
-  width: 100%;
+  border-top: 1px solid #e5e7eb;
+  font-size: 1.2rem;
 }
 
+/* 🔵 Precio */
 .eventCardPrice {
-  font-size: 1.6rem;
   font-weight: 800;
   color: #059669;
+  font-size: 1.4rem;
 }
 
+/* 🔵 Botón Comprar */
 .btnPurchase {
-  background: #4f46e5;
-  color: #fff;
+  background-color: #4f46e5;
+  color: white;
   font-weight: 600;
-  padding: 0.8rem 1.5rem;
-  border-radius: 0.6rem;
-  box-shadow: 0 4px 15px rgba(79,70,229,0.15);
-  transition: background 0.18s ease, transform 0.12s ease;
+  padding: 0.7rem 1.5rem;
   border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.15);
   cursor: pointer;
-  font-size: 1.1rem;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
-.btnPurchase:hover { background: #3730a3; transform: translateY(-2px); }
-.btnPurchase:disabled,
-.btnPurchaseDisabled { background: #9ca3af; cursor: not-allowed; box-shadow: none; }
 
+.btnPurchase:hover {
+  background-color: #3730a3;
+  transform: translateY(-2px);
+}
+
+.btnPurchase:disabled,
+.btnPurchaseDisabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btnPurchase:hover {
+  background-color: #3730a3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.2);
+}
+/* 🔵 Placeholder cuando no hay eventos */
 .eventCarouselEmpty {
   text-align: center;
   color: #6b7280;
-  font-size: 1.125rem;
+  font-size: 1.2rem;
   padding: 2rem;
 }
 
-@media (min-width: 768px) {
+/* 🔵 Responsive: Mobile */
+@media (max-width: 768px) {
+  .eventCarousel {
+    padding: 0 1rem;
+  }
+
+  .carouselNavigationBtn {
+    display: none;
+  }
+
   .eventCard {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 2.5rem; 
-  }
-  .eventCardImage {
-    width: 55%; 
+    flex-direction: column;
     height: auto;
-    max-height: 450px; 
-    margin-bottom: 0;
   }
-  .eventCardContent {
-    width: 45%;
+
+  .eventCardImage {
+    width: 100%;
+    height: 280px;
+  }
+
+  .eventCardDetailsWrapper {
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .eventCardTitle {
+    font-size: 1.8rem;
+  }
+
+  .eventCardPrice {
+    font-size: 1.2rem;
+  }
+
+  .btnPurchase {
+    font-size: 1rem;
   }
 }
-
-@media (max-width: 480px) {
-  .eventCarousel { padding: 0 0.5rem; }
-  .carouselNavigationBtn { display: none; }
-  .eventCardImage { height: 350px; }
-  .eventCardTitle { font-size: 1.8rem; }
-}
-
-.eventCardLink:focus { outline: none; }
-.eventCard:focus-within { box-shadow: 0 10px 35px rgba(0,0,0,0.12); }
-
