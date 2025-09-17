@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/SearchedEvents.module.css';
@@ -91,23 +91,31 @@ const SearchedEvents: React.FC = () => {
 
 export default SearchedEvents;
 
-//  EventCard (con estilos externos)
 const EventCard: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.card}>
-      <img src={ticket.imageUrl} alt={ticket.eventName} className={styles.image} />
+      <img
+        src={ticket.imageUrl}
+        alt={ticket.eventName}
+        className={styles.image}
+        onError={(e) => {
+          (e.currentTarget as HTMLImageElement).src = '/ticket.png';
+        }}
+      />
       <div className={styles.content}>
         <h3 className={styles.cardTitle}>{ticket.eventName}</h3>
         <p><strong>Lugar:</strong> {ticket.placeName}</p>
         <p><strong>Fecha:</strong> {ticket.date} - {ticket.time}</p>
         <p><strong>Tipo:</strong> {ticket.type}</p>
         <p><strong>Desde:</strong> ${ticket.price.toLocaleString()}</p>
-        <p className={ticket.agotado ? styles.soldOut : styles.available}>
-          {ticket.agotado ? 'AGOTADO ❌' : `${ticket.availableTickets} disponibles ✅`}
-        </p>
-        <Link to={`/event/${ticket.eventId}`} className={styles.button}>
-          Ver Detalles
-        </Link>
+        <button
+          onClick={() => navigate(`/event/${ticket.eventId}`)}
+          className={styles.button}
+        >
+          Comprar
+        </button>
       </div>
     </div>
   );

@@ -1,91 +1,140 @@
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem;
-  background-color: var(--background-gray);
-  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: #1f2937;
+  animation: scaleIn 0.4s ease-out forwards;
 }
 
 .title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--dark-blue);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3730a3;
   margin-bottom: 1.5rem;
 }
 
 .loading,
 .noResults {
-  color: var(--text-light);
+  color: #6b7280;
   font-size: 1rem;
   margin-top: 1rem;
 }
 
+/* EXACTAMENTE 3 tarjetas por fila en desktop */
 .grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  justify-content: flex-start;
 }
 
+/* Card igual al EventDetailPage */
 .card {
-  background-color: var(--white);
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-  width: 280px;
   display: flex;
   flex-direction: column;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  box-shadow: 0 4px 10px var(--shadow-light);
-  transition: transform 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
 .image {
   width: 100%;
   height: 180px;
   object-fit: cover;
+  background: #e5e7eb;
 }
 
 .content {
-  padding: 1rem;
-  flex: 1;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .cardTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-dark);
-  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.8rem;
 }
 
-.soldOut {
-  font-weight: bold;
-  color: var(--danger-red);
+p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+  letter-spacing: 0.8px;
+}
+
+
+.available {
+  font-weight: 600;
+  color: #10b981;
   margin-top: 0.5rem;
 }
 
-.available {
-  font-weight: bold;
-  color: green;
+.soldOut {
+  font-weight: 600;
+  color: #ef4444;
   margin-top: 0.5rem;
 }
 
 .button {
-  margin-top: auto;
-  margin-top: 1rem;
+  display: inline-block;
   text-align: center;
-  background-color: var(--primary-blue);
-  color: var(--white);
-  padding: 0.5rem;
-  border-radius: 6px;
-  text-decoration: none;
+  background-color: #6366f1;
+  color: #fff;
+  padding: 0.6rem;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  font-size: 0.95rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+.button:hover {
+  background-color: #4f46e5;
 }
 
-.button:hover {
-  background-color: var(--dark-blue);
+
+/* Responsive: 2 columnas en tablets */
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Responsive: 1 columna en móviles */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .cardTitle {
+    font-size: 1.1rem;
+  }
+
+  .image {
+    height: 150px;
+  }
 }

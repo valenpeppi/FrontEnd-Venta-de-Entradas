@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../../shared/context/CartContext.tsx';
@@ -6,6 +6,7 @@ import { useMessage } from '../../shared/context/MessageContext.tsx';
 import { useEventDetail } from '../../shared/context/EventDetailContext.tsx';
 import type { Sector } from '../../shared/types.ts';
 import styles from './styles/EventDetailPage.module.css';
+import modalStyles from '../seatSelector/styles/SeatModal.module.css';
 import EventInfo from '../seatSelector/EventInfo.tsx';
 import SectorList from '../seatSelector/SectorList.tsx';
 import ZoomControls from '../seatSelector/ZoomControls.tsx';
@@ -20,6 +21,8 @@ const EventDetailPage: React.FC = () => {
   const { addToCart } = useCart();
   const { setAppMessage } = useMessage();
   
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar la visibilidad del modal
+
   const {
     summary, sectors, loading, generalQuantity, selectedSector, seats,
     selectedSeatsMap, zoom, setSummary, setSectors, setLoading,
@@ -93,19 +96,20 @@ const EventDetailPage: React.FC = () => {
     }
   }, [selectedSector, sectors, summary, setSeats, setAppMessage, id]);
 
-  const handleSectorClick = (sectorId: number) => {
+  const openSeatModal = (sectorId: number) => {
     const sector = sectors.find(s => s.idSector === sectorId);
     if (sector?.enumerated) {
       setSelectedSector(sectorId);
-    } else {
-        const element = document.getElementById(`sector-card-${sectorId}`);
-        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setIsModalOpen(true);
     }
   };
 
-  const handleBackToSectors = () => {
-    setSelectedSector(null);
-    setSeats([]);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => {
+        setSelectedSector(null);
+        setSeats([]);
+    }, 300); // Espera a que la animación de cierre termine
   };
 
   const handleAddToCart = () => {
@@ -225,7 +229,7 @@ const EventDetailPage: React.FC = () => {
   
     if (allAddedSuccessfully) {
       setAppMessage(
-        `Has agregado ${totalSelected} entradas para ${summary.eventName}`,
+        `Has agregado ${totalSelected} entrada(s) para ${summary.eventName}`,
         'success'
       );
       navigate('/cart');
@@ -252,73 +256,85 @@ const EventDetailPage: React.FC = () => {
     <div className={styles.eventDetailContainer}>
       <EventInfo summary={summary} />
 
-      {currentSelectedSector?.enumerated ? (
-        <div className={styles.seatSelectionView}>
-          <div className={styles.seatSelectionHeader}>
-            <button onClick={handleBackToSectors} className={styles.backButton}>
-              <i className="fas fa-arrow-left"></i> Volver al Plano General
-            </button>
-            <h2>{currentSelectedSector.name}</h2>
-          </div>
-          <div className={styles.seatLegend}>
-            <div className={styles.legendItem}><span className={`${styles.seatDemo} ${styles.available}`}></span> Libres</div>
-            <div className={styles.legendItem}><span className={`${styles.seatDemo} ${styles.occupied}`}></span> Ocupados</div>
-            <div className={styles.legendItem}><span className={`${styles.seatDemo} ${styles.selected}`}></span> Seleccionados</div>
-          </div>
-          <SeatSelector
-            seats={seats}
-            selectedSeats={selectedSeatsMap[selectedSector!] || []}
-            onChange={(sel) => handleSeatsChange(selectedSector!, sel)}
-            setAppMessage={setAppMessage}
-          />
-        </div>
-      ) : (
-        <>
-          {summary.placeType.toLowerCase() !== 'nonenumerated' && (
-            <div className={styles.stadiumPlanContainer}>
-              <ZoomControls zoom={zoom} onZoomIn={zoomIn} onZoomOut={zoomOut} onResetZoom={resetZoom} minZoom={minZoom} maxZoom={maxZoom} />
-              <div className={styles.stadiumContent} data-zoom={zoom}>
-                <div className={styles.imageFrame}>
-                  <img src={stadiumImages[summary.placeName] || '/ticket.png'} alt={`Plano del estadio ${summary.placeName}`} className={styles.stadiumImage} onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/ticket.png'; }} />
-                  {sectors.map(sec => (
-                    <div key={sec.idSector} className={getSectorOverlayClass(sec)} onClick={() => handleSectorClick(sec.idSector)} title={sec.name} />
-                  ))}
-                </div>
-              </div>
+      {summary.placeType.toLowerCase() !== 'nonenumerated' && (
+        <div className={styles.stadiumPlanContainer}>
+          <ZoomControls zoom={zoom} onZoomIn={zoomIn} onZoomOut={zoomOut} onResetZoom={resetZoom} minZoom={minZoom} maxZoom={maxZoom} />
+          <div className={styles.stadiumContent} data-zoom={zoom}>
+            <div className={styles.imageFrame}>
+              <img src={stadiumImages[summary.placeName] || '/ticket.png'} alt={`Plano del estadio ${summary.placeName}`} className={styles.stadiumImage} onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/ticket.png'; }} />
+              {sectors.map(sec => (
+                <div key={sec.idSector} className={getSectorOverlayClass(sec)} onClick={() => openSeatModal(sec.idSector)} title={sec.name} />
+              ))}
             </div>
-          )}
+          </div>
+        </div>
+      )}
 
-          <h2 className={styles.sectionTitle}>
-            {summary.placeType.toLowerCase() === 'nonenumerated' ? 'Comprar Entradas' : 'Sectores Disponibles'}
-          </h2>
+      <h2 className={styles.sectionTitle}>
+        {summary.placeType.toLowerCase() === 'nonenumerated' ? 'Comprar Entradas' : 'Sectores Disponibles'}
+      </h2>
 
-          {summary.placeType.toLowerCase() === 'nonenumerated' ? (
-             <div className={`${styles.sectorList} ${styles.centeredList}`}>
-                <div className={styles.sectorCard} id="sector-card-general">
-                    <div className={styles.sectorInfo}>
-                        <h3 className={styles.sectorName}>Entrada General</h3>
-                        <p><span className={styles.detailLabel}>Precio:</span> ${summary.price?.toFixed(2)}</p>
-                        <p><span className={styles.detailLabel}>Disponibles:</span> {summary.availableTickets}</p>
-                    </div>
-                    <div className={styles.sectorInput}>
-                        <label htmlFor="general-quantity">Cantidad</label>
-                        <select
-                            id="general-quantity"
-                            value={generalQuantity}
-                            onChange={(e) => handleGeneralQuantityChange(parseInt(e.target.value), setAppMessage)}
-                            className={styles.quantitySelect}
-                        >
-                            {[...Array(Math.min(6, summary.availableTickets) + 1).keys()].map(n => (
-                                <option key={n} value={n}>{n}</option>
-                            ))}
-                        </select>
-                    </div>
+      {summary.placeType.toLowerCase() === 'nonenumerated' ? (
+         <div className={`${styles.sectorList} ${styles.centeredList}`}>
+            <div className={styles.sectorCard} id="sector-card-general">
+                <div className={styles.sectorInfo}>
+                    <h3 className={styles.sectorName}>Entrada General</h3>
+                    <p><span className={styles.detailLabel}>Precio:</span> ${summary.price?.toFixed(2)}</p>
+                    <p><span className={styles.detailLabel}>Disponibles:</span> {summary.availableTickets}</p>
                 </div>
-             </div>
-          ) : (
-            <SectorList sectors={sectors} selectedSector={selectedSector} onQuantityChange={handleSectorQuantityChange} onSeatsChange={handleSeatsChange} selectedSeatsMap={selectedSeatsMap} seats={seats} setAppMessage={setAppMessage} />
-          )}
-        </>
+                <div className={styles.sectorInput}>
+                    <label htmlFor="general-quantity">Cantidad</label>
+                    <select
+                        id="general-quantity"
+                        value={generalQuantity}
+                        onChange={(e) => handleGeneralQuantityChange(parseInt(e.target.value), setAppMessage)}
+                        className={styles.quantitySelect}
+                    >
+                        {[...Array(Math.min(6, summary.availableTickets) + 1).keys()].map(n => (
+                            <option key={n} value={n}>{n}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+         </div>
+      ) : (
+        <SectorList 
+            sectors={sectors} 
+            onQuantityChange={handleSectorQuantityChange}
+            onSelectSeatsClick={openSeatModal}
+            setAppMessage={setAppMessage} 
+        />
+      )}
+
+      {isModalOpen && currentSelectedSector?.enumerated && (
+        <div className={modalStyles.modalOverlay} onClick={closeModal}>
+          <div className={modalStyles.modalContent} onClick={e => e.stopPropagation()}>
+            <div className={modalStyles.modalHeader}>
+              <h2 className={modalStyles.modalTitle}>{currentSelectedSector.name}</h2>
+              <button onClick={closeModal} className={modalStyles.closeButton}>&times;</button>
+            </div>
+            <div className={modalStyles.modalBody}>
+                <div className={modalStyles.stage}>ESCENARIO</div>
+                <div className={modalStyles.seatLegend}>
+                    <div className={modalStyles.legendItem}><span className={`${modalStyles.seatDemo} ${modalStyles.available}`}></span> Libres</div>
+                    <div className={modalStyles.legendItem}><span className={`${modalStyles.seatDemo} ${modalStyles.occupied}`}></span> Ocupados</div>
+                    <div className={modalStyles.legendItem}><span className={`${modalStyles.seatDemo} ${modalStyles.selected}`}></span> Seleccionados</div>
+                </div>
+                <SeatSelector
+                    seats={seats}
+                    selectedSeats={selectedSeatsMap[selectedSector!] || []}
+                    onChange={(sel) => handleSeatsChange(selectedSector!, sel)}
+                    setAppMessage={setAppMessage}
+                    sectorName={currentSelectedSector.name}
+                />
+            </div>
+            <div className={modalStyles.modalFooter}>
+                <button onClick={closeModal} className={`${modalStyles.btn} ${modalStyles.btnCancel}`}>
+                    Cerrar
+                </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <div className={styles.actions}>
@@ -331,4 +347,3 @@ const EventDetailPage: React.FC = () => {
 };
 
 export default EventDetailPage;
-

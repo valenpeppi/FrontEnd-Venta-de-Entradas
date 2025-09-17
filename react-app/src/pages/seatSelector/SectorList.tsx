@@ -1,15 +1,19 @@
 import React from 'react';
-import type { SectorListProps } from '../../shared/types';
-import SeatSelector from './SeatSelector';
+import type { Sector } from '../../shared/types';
 import styles from './styles/SectorList.module.css';
 
-const SectorList: React.FC<SectorListProps> = ({
+interface CustomSectorListProps {
+  sectors: Sector[];
+  onQuantityChange: (sectorId: number, quantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => void;
+  onSelectSeatsClick: (sectorId: number) => void;
+  setAppMessage?: (message: string, type: 'success' | 'error') => void;
+}
+
+
+const SectorList: React.FC<CustomSectorListProps> = ({
   sectors,
-  selectedSector,
   onQuantityChange,
-  onSeatsChange,
-  selectedSeatsMap,
-  seats,
+  onSelectSeatsClick,
   setAppMessage
 }) => {
   const order = ['tribuna norte', 'tribuna sur', 'popular', 'campo'];
@@ -24,9 +28,8 @@ const SectorList: React.FC<SectorListProps> = ({
       {orderedSectors.map((sec) => (
         <div
           key={sec.idSector}
-          className={`${styles.sectorCard} ${
-            selectedSector === sec.idSector ? styles.activeCard : ''
-          }`}
+          id={`sector-card-${sec.idSector}`}
+          className={styles.sectorCard}
         >
           <div className={styles.sectorInfo}>
             <h3 className={styles.sectorName}>{sec.name}</h3>
@@ -40,15 +43,14 @@ const SectorList: React.FC<SectorListProps> = ({
           </div>
 
           {sec.enumerated ? (
-            selectedSector === sec.idSector ? (
-              <SeatSelector
-                seats={seats}
-                selectedSeats={selectedSeatsMap[sec.idSector] || []}
-                onChange={(sel) => onSeatsChange(sec.idSector, sel)}
-              />
-            ) : (
-              <p className={styles.selectPrompt}>Seleccione el sector en el plano</p>
-            )
+            <div className={styles.sectorInput}>
+                <button 
+                    onClick={() => onSelectSeatsClick(sec.idSector)}
+                    className={styles.selectSeatsBtn}
+                >
+                    Seleccionar Asientos
+                </button>
+            </div>
           ) : (
             <div className={styles.sectorInput}>
               <label htmlFor={`sector-${sec.idSector}`}>Cantidad</label>

@@ -7,12 +7,25 @@
   flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 1rem;
-  max-height: 200px;
+  max-height: 300px;
   overflow-y: auto;
   padding: 0.5rem;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
   background: #fafafa;
+  justify-content: center;
+}
+
+.defaultGrid {
+  /* Utiliza el flexbox por defecto de .seatGrid */
+}
+
+.verticalGrid {
+  display: grid;
+  grid-template-columns: repeat(10, auto); /* 10 asientos por fila para la vista vertical */
+  width: auto;
+  justify-content: center;
+  max-width: 450px; /* Evita que sea demasiado ancho en pantallas grandes */
 }
 
 .seat {
@@ -74,8 +87,12 @@
 
 @media (max-width: 768px) {
   .seatGrid {
-    max-height: 150px;
+    max-height: 250px;
     gap: 4px;
+  }
+
+  .verticalGrid {
+    grid-template-columns: repeat(8, auto); /* Menos columnas en pantallas más chicas */
   }
   
   .seat {
@@ -84,4 +101,3 @@
     min-width: 35px;
   }
 }
-

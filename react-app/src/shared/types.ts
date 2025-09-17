@@ -85,19 +85,18 @@ export interface EventInfoProps {
 
 export interface SectorListProps {
   sectors: Sector[];
-  selectedSector: number | null;
   onQuantityChange: (sectorId: number, quantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => void;
-  onSeatsChange: (sectorId: number, seats: number[]) => void;
-  selectedSeatsMap: Record<number, number[]>;
-  seats: Seat[];
+  onSelectSeatsClick: (sectorId: number) => void;
   setAppMessage?: (message: string, type: 'success' | 'error') => void;
 }
+
 
 export interface SeatSelectorProps {
   seats: Seat[];
   selectedSeats: number[];
   onChange: (selectedSeats: number[]) => void;
   setAppMessage?: (message: string, type: 'success' | 'error') => void;
+  sectorName?: string;
 }
 
 export interface ZoomControlsProps {
@@ -108,4 +107,3 @@ export interface ZoomControlsProps {
   minZoom: number;
   maxZoom: number;
 }
-
