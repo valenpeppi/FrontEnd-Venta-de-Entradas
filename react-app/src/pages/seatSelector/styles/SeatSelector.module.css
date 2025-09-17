@@ -49,6 +49,19 @@
   transform: translateY(-1px);
 }
 
+.seat.occupied {
+  background: #6b7280;
+  border-color: #4b5563;
+  color: #e5e7eb;
+  cursor: not-allowed;
+}
+
+.seat.occupied:hover {
+  background: #6b7280;
+  border-color: #4b5563;
+  transform: none;
+}
+
 .selectionInfo {
   text-align: center;
   padding: 0.5rem;
@@ -71,3 +84,4 @@
     min-width: 35px;
   }
 }
+

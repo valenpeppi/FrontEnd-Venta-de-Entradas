@@ -15,27 +15,37 @@ const Navbar: React.FC = () => {
   const { cartCount } = useCart();
   const { isLoggedIn, user, logout } = useAuth();
 
+
+
+
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
     setSearchTerm(term);
+
     if (term.length > 2) {
-      setSearchResults([
-        { id: '1', name: 'Concierto de Verano' },
-        { id: '2', name: 'Festival de Jazz' },
-      ]);
-      setShowDropdown(true);
+      try {
+        const res = await fetch(`http://localhost:3000/api/events/search?query=${encodeURIComponent(term)}`);
+        const json = await res.json();
+        if (json.ok) {
+          setSearchResults(json.data.slice(0, 5));
+          setShowDropdown(true);
+        }
+      } catch (err) {
+        console.error('Error al buscar eventos:', err);
+      }
     } else {
       setSearchResults([]);
       setShowDropdown(false);
     }
   };
 
-  const handleSearchItemClick = (id: string) => {
-    navigate(`/event/${id}`);
+  const handleSearchItemClick = (term: string) => {
+    navigate(`/searchedEvents?query=${encodeURIComponent(term)}`);
     setSearchTerm('');
     setSearchResults([]);
     setShowDropdown(false);
   };
+
 
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true);
@@ -81,7 +91,7 @@ const Navbar: React.FC = () => {
                       <li
                         key={result.id}
                         className={styles.searchDropdownItem}
-                        onMouseDown={() => handleSearchItemClick(result.id)}
+                        onMouseDown={() => handleSearchItemClick(result.name)}
                       >
                         {result.name}
                       </li>

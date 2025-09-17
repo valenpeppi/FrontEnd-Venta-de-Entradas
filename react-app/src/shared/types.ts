@@ -26,6 +26,7 @@ export interface EventSummary {
 export interface Seat {
   id: number;
   label?: string;
+  state: 'available' | 'occupied' | 'selected';
 }
 
 export interface CartItem {
@@ -96,6 +97,7 @@ export interface SeatSelectorProps {
   seats: Seat[];
   selectedSeats: number[];
   onChange: (selectedSeats: number[]) => void;
+  setAppMessage?: (message: string, type: 'success' | 'error') => void;
 }
 
 export interface ZoomControlsProps {
@@ -106,3 +108,4 @@ export interface ZoomControlsProps {
   minZoom: number;
   maxZoom: number;
 }
+

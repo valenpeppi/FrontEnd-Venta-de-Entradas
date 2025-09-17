@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Layout from './shared/layout/Layout';
 import HomePage from './pages/userHomePage/UserHomePage';
+import SearchedEvents from './pages/userHomePage/SearchEvents';
 import CarritoPage from './pages/purchase/CarritoPage';
 import Pay from './pages/purchase/Pay';
 import AdminHomePage from './pages/adminHomePage/AdminHomePage';
@@ -66,6 +67,7 @@ const App: React.FC = () => {
         <Route path="/event/:id" element={<Layout><EventDetailPageWrapper /></Layout>} />
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/newsletter" element={<NewsLetter />} />
+        <Route path="/searchedEvents" element={<Layout><SearchedEvents /></Layout>} />
 
         {/* Rutas para Invitados (no logueados) */}
         <Route path="/login" element={<AuthRoute guestOnly><Login onLoginSuccess={handleLoginSuccess} /></AuthRoute>} />
