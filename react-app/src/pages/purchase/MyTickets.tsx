@@ -66,7 +66,7 @@ const handleDownloadPDF = (ticket: CartItem) => {
         pdf.setFont('helvetica', 'normal');
         pdf.text(`Evento: ${ticket.eventName}`, 40, y); y += 20;
         pdf.text(`Fecha y Hora: ${formattedDate}`, 40, y); y += 20;
-        pdf.text(`Lugar: ${ticket.placeName}`, 40, y); y += 20;
+        pdf.text(`Lugar: ${ticket.location}`, 40, y); y += 20;
         pdf.text(`Sector: ${ticket.sectorName || 'General'}`, 40, y); y += 20;
         pdf.text(`Cantidad: ${ticket.quantity}`, 40, y); y += 30;
 
@@ -120,7 +120,7 @@ const handleDownloadPDF = (ticket: CartItem) => {
               </div>
               <div className={styles.ticketBody}>
                 <div className={styles.ticketInfo}>
-                  <p><strong>Lugar:</strong> {ticket.placeName}</p>
+                  <p><strong>Lugar:</strong> {ticket.location}</p>
                   <p><strong>Sector:</strong> {ticket.sectorName || 'General'}</p>
                   <p><strong>Hora:</strong> {ticket.time}</p>
                 </div>
