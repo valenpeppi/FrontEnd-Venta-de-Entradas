@@ -20,6 +20,7 @@
   gap: 12px;
   margin-bottom: 18px;
 }
+
 .adminHeader h1 {
   margin: 0;
   font-size: 1.9rem;
@@ -33,6 +34,7 @@
   align-items: center;
   flex-wrap: wrap;
 }
+
 .adminSearch {
   flex: 1;
   min-width: 280px;
@@ -43,18 +45,12 @@
   font-size: 0.98rem;
   background: #fff;
 }
+
 .adminSearch:focus {
   border-color: #93c5fd;
   box-shadow: 0 0 0 4px rgba(147, 197, 253, 0.25);
 }
-.adminFilter {
-    padding: 12px 14px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    outline: none;
-    font-size: 0.98rem;
-    background: #fff;
-}
+
 .adminCounter {
   font-size: 0.92rem;
   color: var(--muted);
@@ -68,6 +64,7 @@
   text-align: center;
   color: var(--text);
 }
+
 .error {
   color: #b91c1c;
   border-color: #fecaca;
@@ -88,13 +85,16 @@
 .card {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   background: var(--card-bg);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
+  min-height: 360px; /* uniforme para todas las tarjetas */
   transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
 }
+
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 40px rgba(2, 6, 23, 0.12);
@@ -103,17 +103,19 @@
 
 /* Media */
 .mediaWrap {
-  position: relative;
+  height: 180px;
   width: 100%;
-  aspect-ratio: 16/9;
+  position: relative;
   background: #f1f5f9;
 }
+
 .media {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
+
 .mediaPlaceholder {
   width: 100%;
   height: 100%;
@@ -126,7 +128,7 @@
   );
 }
 
-/* Badges (estado) */
+/* Badges */
 .badges {
   position: absolute;
   top: 10px;
@@ -134,26 +136,30 @@
   display: flex;
   gap: 8px;
 }
+
 .badge {
   padding: 4px 10px;
   font-size: 0.78rem;
   font-weight: 600;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: rgba(255,255,255,0.85);
+  background: rgba(255, 255, 255, 0.85);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
+
 .badgePending {
   border-color: #fcd34d;
   background: #fef9c3;
   color: #92400e;
 }
+
 .badgeApproved {
   border-color: #86efac;
   background: #dcfce7;
   color: #14532d;
 }
+
 .badgeRejected {
   border-color: #fecaca;
   background: #fee2e2;
@@ -162,10 +168,22 @@
 
 /* Body */
 .body {
-  padding: 14px 14px 6px 14px;
+  padding: 14px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+ p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+  /* letter-spacing: 0.8px; ← quítala o cámbiala a algo más sutil como: */
+  letter-spacing: 0.2px;
 }
 .title {
-  margin: 0 0 6px;
+  margin: 0 0 2px; /* antes: 0 0 6px */
   font-size: 1.06rem;
   color: var(--text);
   font-weight: 700;
@@ -174,22 +192,16 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .desc {
-  margin: 0;
+  margin-top: 0; /* más compacto */
   color: var(--muted);
   font-size: 0.96rem;
-  line-height: 1.35rem;
-  max-height: 2.7rem; /* ~2 líneas */
+  line-height: 1.4rem;
+  letter-spacing: 0px;
+  max-height: 2.7rem;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.meta {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #334155;
 }
 
 /* Actions */
@@ -213,10 +225,12 @@
   cursor: pointer;
   transition: transform 80ms ease, box-shadow 120ms ease, border-color 120ms ease, background 120ms ease;
 }
+
 .btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(2,6,23,0.08);
+  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.08);
 }
+
 .btn:active {
   transform: translateY(0);
 }
@@ -226,6 +240,7 @@
   background: #dcfce7;
   color: #14532d;
 }
+
 .btnApprove:hover {
   border-color: #22c55e;
   background: #bbf7d0;
@@ -236,11 +251,13 @@
   background: #fee2e2;
   color: #7f1d1d;
 }
+
 .btnReject:hover {
   border-color: #f87171;
   background: #fecaca;
 }
 
+/* Feature toggle (estrella) */
 .featureBtn {
   position: absolute;
   top: 10px;
@@ -286,4 +303,3 @@
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
-
