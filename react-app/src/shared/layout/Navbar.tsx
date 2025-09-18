@@ -15,14 +15,10 @@ const Navbar: React.FC = () => {
   const { cartCount } = useCart();
   const { isLoggedIn, user, logout } = useAuth();
 
-
-
-
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value;
+  const handleSearch = async (term: string) => {
     setSearchTerm(term);
 
-    if (term.length > 2) {
+    if (term.length > 0) {
       try {
         const res = await fetch(`http://localhost:3000/api/events/search?query=${encodeURIComponent(term)}`);
         const json = await res.json();
@@ -39,6 +35,10 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleSearch(e.target.value);
+  };
+
   const handleSearchItemClick = (term: string) => {
     navigate(`/searchedEvents?query=${encodeURIComponent(term)}`);
     setSearchTerm('');
@@ -46,6 +46,12 @@ const Navbar: React.FC = () => {
     setShowDropdown(false);
   };
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchTerm.trim() !== '') {
+      navigate(`/searchedEvents?query=${encodeURIComponent(searchTerm.trim())}`);
+      setShowDropdown(false);
+    }
+  };
 
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true);
@@ -78,8 +84,9 @@ const Navbar: React.FC = () => {
               placeholder="Buscar eventos..."
               className={styles.navbarSearchInput}
               value={searchTerm}
-              onChange={handleSearch}
-              onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
+              onChange={handleSearchChange}
+              onKeyDown={handleSearchKeyDown}
+              onFocus={() => searchTerm.length > 0 && setShowDropdown(true)}
               onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
             />
             <i className={`fas fa-search ${styles.searchIcon}`}></i>
@@ -89,15 +96,20 @@ const Navbar: React.FC = () => {
                   {searchResults.length > 0 ? (
                     searchResults.map(result => (
                       <li
-                        key={result.id}
+                        key={result.idEvent ?? result.id}
                         className={styles.searchDropdownItem}
                         onMouseDown={() => handleSearchItemClick(result.name)}
                       >
                         {result.name}
+                        {result.agotado && (
+                          <span className={styles.agotadoBadge}> (Agotado)</span>
+                        )}
                       </li>
                     ))
                   ) : (
-                    <li className={`${styles.searchDropdownItem} ${styles.noResults}`}>No hay resultados</li>
+                    <li className={`${styles.searchDropdownItem} ${styles.noResults}`}>
+                      No hay resultados
+                    </li>
                   )}
                 </ul>
               </div>
@@ -167,4 +179,3 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
-

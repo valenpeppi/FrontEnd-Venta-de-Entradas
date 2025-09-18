@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate} from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/SearchedEvents.module.css';
 
+import {
+  MdLocationOn,
+  MdCalendarToday,
+  MdCategory,
+  MdAttachMoney
+} from 'react-icons/md';
+
 const SearchedEvents: React.FC = () => {
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [results, setResults] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const query = new URLSearchParams(location.search).get('query') || '';
+  const query = searchParams.get('query') || '';
   const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
   const mapApiEventToTicket = (ev: any): Ticket => {
@@ -30,14 +37,12 @@ const SearchedEvents: React.FC = () => {
         year: "numeric",
         timeZone: "UTC",
       }),
-      time:
-        eventDate.toLocaleTimeString("es-ES", {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "UTC",
-        }) + " hs",
-      location: ev.place?.name || ev.placeName || "Sin lugar",
-      placeName: ev.place?.name || ev.placeName || "Lugar no especificado",
+      time: eventDate.toLocaleTimeString("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC",
+      }) + " hs",
+      location: ev.location || ev.place?.name || ev.placeName || "Lugar no especificado",
       price: minPrice,
       availableTickets: ev.availableSeats ?? ev.availableTickets ?? 0,
       type: ev.eventType?.name || ev.type || "General",
@@ -49,6 +54,7 @@ const SearchedEvents: React.FC = () => {
 
   useEffect(() => {
     const fetchSearchResults = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`${BASE_URL}/api/events/search`, {
           params: { query }
@@ -57,6 +63,8 @@ const SearchedEvents: React.FC = () => {
         if (response.data?.ok) {
           const mapped = response.data.data.map(mapApiEventToTicket);
           setResults(mapped);
+        } else {
+          setResults([]);
         }
       } catch (err) {
         console.error('Error buscando eventos:', err);
@@ -65,7 +73,12 @@ const SearchedEvents: React.FC = () => {
       }
     };
 
-    fetchSearchResults();
+    if (query.trim().length > 0) {
+      fetchSearchResults();
+    } else {
+      setResults([]);
+      setLoading(false);
+    }
   }, [query, BASE_URL]);
 
   return (
@@ -106,15 +119,33 @@ const EventCard: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
       />
       <div className={styles.content}>
         <h3 className={styles.cardTitle}>{ticket.eventName}</h3>
-        <p><strong>Lugar:</strong> {ticket.placeName}</p>
-        <p><strong>Fecha:</strong> {ticket.date} - {ticket.time}</p>
-        <p><strong>Tipo:</strong> {ticket.type}</p>
-        <p><strong>Desde:</strong> ${ticket.price.toLocaleString()}</p>
+
+        <p className={styles.infoRow}>
+          <MdLocationOn className={styles.icon} />
+          <span>{ticket.location}</span>
+        </p>
+
+        <p className={styles.infoRow}>
+          <MdCalendarToday className={styles.icon} />
+          <span>{ticket.date} - {ticket.time}</span>
+        </p>
+
+        <p className={styles.infoRow}>
+          <MdCategory className={styles.icon} />
+          <span>{ticket.type}</span>
+        </p>
+
+        <p className={styles.infoRow}>
+          <MdAttachMoney className={styles.icon} />
+          <span>Desde ${ticket.price.toLocaleString()}</span>
+        </p>
+
         <button
           onClick={() => navigate(`/event/${ticket.eventId}`)}
-          className={styles.button}
+          className={`${styles.button} ${ticket.agotado ? styles.disabledButton : ''}`}
+          disabled={ticket.agotado}
         >
-          Comprar
+          {ticket.agotado ? 'Agotado' : 'Comprar'}
         </button>
       </div>
     </div>

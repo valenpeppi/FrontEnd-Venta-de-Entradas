@@ -8,7 +8,6 @@ export interface Ticket {
   eventName: string;
   date: string;
   location: string;
-  placeName: string;
   sectorName?: string; 
   price: number;
   availableTickets: number;

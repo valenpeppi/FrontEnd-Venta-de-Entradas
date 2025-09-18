@@ -30,6 +30,7 @@
   color: #6b7280;
   font-size: 1rem;
   margin-top: 1rem;
+  text-align: center;
 }
 
 /* EXACTAMENTE 3 tarjetas por fila en desktop */
@@ -39,7 +40,7 @@
   gap: 1.5rem;
 }
 
-/* Card igual al EventDetailPage */
+/* CARD */
 .card {
   display: flex;
   flex-direction: column;
@@ -76,13 +77,50 @@
   margin-bottom: 0.8rem;
 }
 
-p {
-  margin: 0.25rem 0;
+/* INFO ROWS */
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.4rem 0;
   font-size: 0.95rem;
   color: #4b5563;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.4px;
 }
 
+.icon {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+/* BOTÓN */
+
+.button {
+  margin-top: 1rem;
+  background-color: #6366f1;
+  color: #fff;
+  padding: 0.6rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #4f46e5;
+}
+
+.disabledButton {
+  background-color: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* MENSAJES EXTRA */
 
 .available {
   font-weight: 600;
@@ -95,23 +133,6 @@ p {
   color: #ef4444;
   margin-top: 0.5rem;
 }
-
-.button {
-  display: inline-block;
-  text-align: center;
-  background-color: #6366f1;
-  color: #fff;
-  padding: 0.6rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-}
-.button:hover {
-  background-color: #4f46e5;
-}
-
 
 /* Responsive: 2 columnas en tablets */
 @media (max-width: 1023px) {
