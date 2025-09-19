@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/Carousel.module.css';
+import GlobalStyles from '../../shared/styles/GlobalStyles.module.css';
+
 
 export interface CarouselProps {
   tickets: Ticket[];
@@ -70,7 +72,7 @@ const Carousel: React.FC<CarouselProps> = ({
                     e.preventDefault();
                     navigate(`/event/${currentEvent.id}`);
                   }}
-                  className={`${styles.btnPurchase} ${currentEvent.availableTickets > 0 ? '' : styles.btnPurchaseDisabled}`}
+                  className={`${GlobalStyles.glowBtnInverse} ${currentEvent.availableTickets > 0 ? '' : styles.btnPurchaseDisabled}`}
                   disabled={currentEvent.availableTickets === 0}
                 >
                   {currentEvent.availableTickets > 0 ? 'Comprar' : 'Agotado'}

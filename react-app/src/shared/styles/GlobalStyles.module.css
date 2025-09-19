@@ -23,7 +23,7 @@
   position: relative;
   padding: 12px 30px;
   border: 2px solid var(--primary-blue);
-  border-radius: 30px;
+  border-radius: 25px;
   font-size: 1.1rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -48,7 +48,7 @@
   position: relative;
   padding: 12px 30px;
   border: 2px solid var(--primary-blue);
-  border-radius: 30px;
+  border-radius: 25px;
   font-size: 1.1rem;
   font-weight: bold;
   text-transform: uppercase;
