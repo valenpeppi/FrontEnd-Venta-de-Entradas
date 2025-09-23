@@ -22,13 +22,13 @@ const Footer: React.FC = () => {
           </Link>
           <p className={styles.footerSlogan}>Encuentra los mejores eventos cerca de ti</p>
           <div className={styles.footerSocial}>
-            <a href="#" aria-label="Facebook">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
               <img src={facebookIcon} alt="Facebook" />
             </a>
-            <a href="#" aria-label="Twitter">
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
               <img src={twitterIcon} alt="Twitter" />
             </a>
-            <a href="#" aria-label="Instagram">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <img src={instagramIcon} alt="Instagram" />
             </a>
           </div>
@@ -38,15 +38,17 @@ const Footer: React.FC = () => {
           <div className={styles.footerLinksColumn}>
             <h4>Eventos</h4>
             <ul>
-              <li><Link to="/events/music">Conciertos</Link></li>
+              <li><Link to="/">Conciertos</Link></li>
+              <li><Link to="/">Deportes</Link></li>
+              <li><Link to="/">Teatro</Link></li>
             </ul>
           </div>
 
           <div className={styles.footerLinksColumn}>
             <h4>Compañía</h4>
             <ul>
-              <li><a href="/about#sobre-nosotros">Sobre nosotros</a></li>
-              <li><Link to="/help">Contacto</Link></li>
+              <li><Link to="/about">Sobre nosotros</Link></li>
+              <li><Link to="/contact">Contacto</Link></li>
             </ul>
           </div>
 

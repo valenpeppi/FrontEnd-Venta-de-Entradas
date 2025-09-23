@@ -8,6 +8,7 @@ export interface Ticket {
   eventName: string;
   date: string;
   location: string;
+  placeName: string;
   sectorName?: string; 
   price: number;
   availableTickets: number;
@@ -20,6 +21,7 @@ export interface Ticket {
 
 export interface CartItem extends Ticket {
   quantity: number;
+  seats?: (string | number)[];
 }
 
 interface CartState {

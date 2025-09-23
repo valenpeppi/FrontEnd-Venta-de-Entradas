@@ -30,22 +30,21 @@ export interface Seat {
 }
 
 export interface CartItem {
-  ticket: {
-    id: string;
-    eventId: string;
-    eventName: string;
-    date: string;
-    location: string;
-    placeName: string;
-    sectorName: string;
-    price: number;
-    availableTickets: number;
-    imageUrl: string;
-    type: string;
-    featured: boolean;
-    time: string;
-  };
+  id: string;
+  eventId: string;
+  eventName: string;
+  date: string;
+  location: string;
+  placeName: string;
+  sectorName: string;
+  price: number;
+  availableTickets: number;
+  imageUrl: string;
+  type: string;
+  featured: boolean;
+  time: string;
   quantity: number;
+  seats?: (string | number)[];
 }
 
 export interface EventDetailState {
@@ -56,7 +55,6 @@ export interface EventDetailState {
   selectedSector: number | null;
   seats: Seat[];
   selectedSeatsMap: Record<number, number[]>;
-  zoom: number;
 }
 
 export interface EventDetailActions {
@@ -67,13 +65,9 @@ export interface EventDetailActions {
   setSelectedSector: (sectorId: number | null) => void;
   setSeats: (seats: Seat[]) => void;
   setSelectedSeatsMap: (map: Record<number, number[]>) => void;
-  setZoom: (zoom: number) => void;
   handleSectorQuantityChange: (sectorId: number, newQuantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => void;
   handleSeatsChange: (sectorId: number, seatsSel: number[]) => void;
   handleGeneralQuantityChange: (newQuantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => void;
-  zoomIn: () => void;
-  zoomOut: () => void;
-  resetZoom: () => void;
 }
 
 export interface EventDetailContextType extends EventDetailState, EventDetailActions {}
@@ -97,13 +91,7 @@ export interface SeatSelectorProps {
   onChange: (selectedSeats: number[]) => void;
   setAppMessage?: (message: string, type: 'success' | 'error') => void;
   sectorName?: string;
+  enumerated?: boolean;
+  columns?: number;
 }
 
-export interface ZoomControlsProps {
-  zoom: number;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onResetZoom: () => void;
-  minZoom: number;
-  maxZoom: number;
-}

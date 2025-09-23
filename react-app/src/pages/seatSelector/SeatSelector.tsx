@@ -2,7 +2,7 @@ import React from 'react';
 import type { SeatSelectorProps } from '../../shared/types.ts';
 import styles from './styles/SeatSelector.module.css';
 
-const SeatSelector: React.FC<SeatSelectorProps> = ({ seats, selectedSeats, onChange, setAppMessage, sectorName = '' }) => {
+const SeatSelector: React.FC<SeatSelectorProps> = ({ seats, selectedSeats, onChange, setAppMessage, enumerated = false, columns }) => {
   const toggleSeat = (id: number) => {
     const seat = seats.find(s => s.id === id);
     if (!seat || seat.state !== 'available') {
@@ -22,14 +22,14 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({ seats, selectedSeats, onCha
     }
   };
 
-  const layoutClass =
-    sectorName.toLowerCase().includes('tribuna')
-      ? styles.verticalGrid
-      : styles.defaultGrid;
+  const gridStyle = enumerated && columns ? { gridTemplateColumns: `repeat(${columns}, 1fr)` } : {};
 
   return (
     <div className={styles.seatSelector}>
-      <div className={`${styles.seatGrid} ${layoutClass}`}>
+      <div
+        className={`${styles.seatGrid} ${enumerated ? styles.verticalGrid : styles.defaultGrid}`}
+        style={gridStyle}
+      >
         {seats.map(seat => (
           <div
             key={seat.id}
@@ -55,3 +55,4 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({ seats, selectedSeats, onCha
 };
 
 export default SeatSelector;
+

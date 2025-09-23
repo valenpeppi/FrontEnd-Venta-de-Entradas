@@ -39,6 +39,10 @@ const CarritoPage = () => {
     }
   };
 
+  const isSeatNumbered = (sectorName: string | undefined) => {
+    return sectorName?.toLowerCase().includes('asiento');
+  };
+
   return (
     <div className={styles.cartContainer}>
       <h2 className={styles.cartTitle}>Carrito de compras</h2>
@@ -58,19 +62,25 @@ const CarritoPage = () => {
                 </div>
                 
                 <div className={styles.itemQuantity}>
-                  <label htmlFor={`quantity-select-${item.id}`} className={styles.quantityLabel}>
-                    Cantidad:
-                  </label>
-                  <select
-                    id={`quantity-select-${item.id}`}
-                    value={item.quantity}
-                    onChange={e => handleQuantityChange(item.id, e.target.value)}
-                    className={styles.cartQuantitySelect}
-                  >
-                    {[...Array(7).keys()].slice(1).map(n => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
+                  {isSeatNumbered(item.sectorName) ? (
+                    <span>Cantidad: 1</span>
+                  ) : (
+                    <>
+                      <label htmlFor={`quantity-select-${item.id}`} className={styles.quantityLabel}>
+                        Cantidad:
+                      </label>
+                      <select
+                        id={`quantity-select-${item.id}`}
+                        value={item.quantity}
+                        onChange={e => handleQuantityChange(item.id, e.target.value)}
+                        className={styles.cartQuantitySelect}
+                      >
+                        {[...Array(7).keys()].slice(1).map(n => (
+                          <option key={n} value={n}>{n}</option>
+                        ))}
+                      </select>
+                    </>
+                  )}
                 </div>
                 
                 <div className={styles.itemSubtotal}>

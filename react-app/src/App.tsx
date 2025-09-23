@@ -22,6 +22,10 @@ import styles from './shared/styles/App.module.css';
 import globalStyles from './shared/styles/GlobalStyles.module.css';
 import FeatureEventsPage from './pages/adminHomePage/FeatureEventsPage';
 import AuthRoute from './shared/AuthRoute';
+import Contact from './pages/support/Contact';
+import Privacy from './pages/support/Privacy';
+import Terms from './pages/support/Terms';
+import Faq from './pages/support/Faq';
 
 
 const App: React.FC = () => {
@@ -64,6 +68,10 @@ const App: React.FC = () => {
         {/* Rutas Públicas */}
         <Route path="/" element={<Layout><HomePage /></Layout>} />
         <Route path="/help" element={<Layout><Help /></Layout>} />
+        <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        <Route path="/privacy" element={<Layout><Privacy /></Layout>} />
+        <Route path="/terms" element={<Layout><Terms /></Layout>} />
+        <Route path="/faq" element={<Layout><Faq /></Layout>} />
         <Route path="/event/:id" element={<Layout><EventDetailPageWrapper /></Layout>} />
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/newsletter" element={<NewsLetter />} />

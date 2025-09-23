@@ -16,24 +16,6 @@ export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ childr
   const [selectedSector, setSelectedSector] = useState<number | null>(null);
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeatsMap, setSelectedSeatsMap] = useState<Record<number, number[]>>({});
-  const [zoom, setZoom] = useState(1);
-
-  // Constantes para zoom
-  const minZoom = 1;
-  const maxZoom = 1.7;
-  const stepZoom = 0.1;
-
-  const zoomIn = useCallback(() => {
-    setZoom(z => Math.min(maxZoom, parseFloat((z + stepZoom).toFixed(2))));
-  }, []);
-
-  const zoomOut = useCallback(() => {
-    setZoom(z => Math.max(minZoom, parseFloat((z - stepZoom).toFixed(2))));
-  }, []);
-
-  const resetZoom = useCallback(() => {
-    setZoom(1);
-  }, []);
 
   const handleSectorQuantityChange = useCallback((sectorId: number, newQuantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => {
     const currentTotal = sectors.reduce((sum, s) => sum + (s.selected || 0), 0);
@@ -69,7 +51,6 @@ export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ childr
   }, []);
 
   const value: EventDetailContextType = {
-    // Estado
     summary,
     sectors,
     loading,
@@ -77,8 +58,6 @@ export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ childr
     selectedSector,
     seats,
     selectedSeatsMap,
-    zoom,
-    // Acciones
     setSummary,
     setSectors,
     setLoading,
@@ -86,13 +65,9 @@ export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ childr
     setSelectedSector,
     setSeats,
     setSelectedSeatsMap,
-    setZoom,
     handleSectorQuantityChange,
     handleSeatsChange,
     handleGeneralQuantityChange,
-    zoomIn,
-    zoomOut,
-    resetZoom,
   };
 
   return (

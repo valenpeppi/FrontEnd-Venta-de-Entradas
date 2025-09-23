@@ -1,53 +1,76 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../../shared/context/CartContext.tsx';
 import { useMessage } from '../../shared/context/MessageContext.tsx';
 import { useEventDetail } from '../../shared/context/EventDetailContext.tsx';
-import type { Sector } from '../../shared/types.ts';
+import type { Sector, CartItem } from '../../shared/types.ts';
 import styles from './styles/EventDetailPage.module.css';
 import modalStyles from '../seatSelector/styles/SeatModal.module.css';
 import EventInfo from '../seatSelector/EventInfo.tsx';
 import SectorList from '../seatSelector/SectorList.tsx';
-import ZoomControls from '../seatSelector/ZoomControls.tsx';
 import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
+import bioceresArena from '../../assets/bioceres-arena.jpg';
+// import elCirculo from '../../assets/el-circulo.png'; // Descomentar cuando tengas la imagen
 import SeatSelector from '../seatSelector/SeatSelector.tsx';
 
 const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+
+interface ItemToAdd {
+  ticket: Omit<CartItem, 'quantity' | 'seats'>;
+  quantity: number;
+  seats?: (string | number)[];
+}
+
+const SECTOR_LAYOUT_CONFIG: Record<string, Record<string, number>> = {
+  'Estadio Gigante de Arroyito': {
+    'Tribuna Norte': 4,
+    'Tribuna Sur': 4,
+  },
+  'Bioceres Arena': {
+      'VIP': 10,
+  },
+  'El Circulo': {
+    'Sala Principal': 4,
+  }
+};
 
 const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { setAppMessage } = useMessage();
+  const sectorListRef = useRef<HTMLDivElement>(null);
   
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar la visibilidad del modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     summary, sectors, loading, generalQuantity, selectedSector, seats,
-    selectedSeatsMap, zoom, setSummary, setSectors, setLoading,
+    selectedSeatsMap, setSummary, setSectors, setLoading,
     setSelectedSector, setSeats, handleSectorQuantityChange, handleSeatsChange,
-    handleGeneralQuantityChange, zoomIn, zoomOut, resetZoom
+    handleGeneralQuantityChange
   } = useEventDetail();
 
-  const minZoom = 1;
-  const maxZoom = 1.7;
-
   const stadiumImages: Record<string, string> = {
-    'Estadio Gigante de Arroyito': estadioArroyito
+    'Estadio Gigante de Arroyito': estadioArroyito,
+    'Bioceres Arena': bioceresArena,
+    // 'El Circulo': elCirculo, // Descomentar cuando tengas la imagen
   };
 
   const getSectorOverlayClass = (sec: Sector) => {
     const name = sec.name.toLowerCase().trim();
     const nameToClass: Record<string, string> = {
-      'tribuna norte': 'sector-1',
-      'tribuna sur': 'sector-2',
-      'popular': 'sector-3',
-      'campo': 'sector-4'
+      'tribuna norte': styles.sectorTribunaNorte,
+      'tribuna sur': styles.sectorTribunaSur,
+      'popular': styles.sectorPopular,
+      'campo': styles.sectorCampo,
+      'vip': styles.sectorVip,
+      'general': styles.sectorGeneral,
+      'sala principal': styles.sectorSalaPrincipal,
     };
     const key = nameToClass[name] || `sector-${sec.idSector}`;
     const active = selectedSector === sec.idSector ? styles.activeSector : '';
-    return `${styles.sectorArea} ${styles[key] || ''} ${active}`.trim();
+    return `${styles.sectorArea} ${key || ''} ${active}`.trim();
   };
 
   useEffect(() => {
@@ -69,7 +92,7 @@ const EventDetailPage: React.FC = () => {
         setSummary({ ...summaryData, imageUrl: summaryData.imageUrl || "/ticket.png" });
 
         if (summaryData.placeType.toLowerCase() !== 'nonenumerated') {
-          setSectors((sectorsRes.data?.data ?? []).map((s: Sector) => ({ ...s, selected: 0, enumerated: !['campo', 'popular'].includes(s.name.toLowerCase()) })));
+          setSectors((sectorsRes.data?.data ?? []).map((s: Sector) => ({ ...s, selected: 0, enumerated: s.enumerated })));
         }
       } catch (e) {
         console.error('Error al cargar detalle del evento', e);
@@ -96,6 +119,19 @@ const EventDetailPage: React.FC = () => {
     }
   }, [selectedSector, sectors, summary, setSeats, setAppMessage, id]);
 
+  const handleSectorClick = (sector: Sector) => {
+    if (sector.enumerated) {
+      openSeatModal(sector.idSector);
+    } else {
+      sectorListRef.current?.scrollIntoView({ behavior: 'smooth' });
+      const sectorCard = document.getElementById(`sector-card-${sector.idSector}`);
+      sectorCard?.classList.add(styles.activeCard);
+      setTimeout(() => {
+        sectorCard?.classList.remove(styles.activeCard);
+      }, 1500);
+    }
+  };
+  
   const openSeatModal = (sectorId: number) => {
     const sector = sectors.find(s => s.idSector === sectorId);
     if (sector?.enumerated) {
@@ -109,7 +145,12 @@ const EventDetailPage: React.FC = () => {
     setTimeout(() => {
         setSelectedSector(null);
         setSeats([]);
-    }, 300); // Espera a que la animación de cierre termine
+    }, 300);
+  };
+
+  const handleAddToCartInModal = () => {
+    handleAddToCart();
+    closeModal();
   };
 
   const handleAddToCart = () => {
@@ -126,7 +167,7 @@ const EventDetailPage: React.FC = () => {
     }
   
     let totalSelected = 0;
-    let itemsToAdd: any[] = [];
+    let itemsToAdd: ItemToAdd[] = [];
 
     if (summary.placeType.toLowerCase() === 'nonenumerated') {
       totalSelected = generalQuantity;
@@ -203,7 +244,8 @@ const EventDetailPage: React.FC = () => {
                 minute: '2-digit'
               }) + ' hs'
             },
-            quantity: 1
+            quantity: 1,
+            seats: [seatId]
           }))
         )
       ];
@@ -252,59 +294,69 @@ const EventDetailPage: React.FC = () => {
   
   const currentSelectedSector = sectors.find(s => s.idSector === selectedSector);
 
+  const getSectorColumns = () => {
+    if (summary && currentSelectedSector && currentSelectedSector.enumerated) {
+        return SECTOR_LAYOUT_CONFIG[summary.placeName]?.[currentSelectedSector.name];
+    }
+    return undefined;
+  };
+
+  const columns = getSectorColumns();
+
   return (
     <div className={styles.eventDetailContainer}>
       <EventInfo summary={summary} />
 
       {summary.placeType.toLowerCase() !== 'nonenumerated' && (
         <div className={styles.stadiumPlanContainer}>
-          <ZoomControls zoom={zoom} onZoomIn={zoomIn} onZoomOut={zoomOut} onResetZoom={resetZoom} minZoom={minZoom} maxZoom={maxZoom} />
-          <div className={styles.stadiumContent} data-zoom={zoom}>
+          <div className={styles.stadiumContent}>
             <div className={styles.imageFrame}>
               <img src={stadiumImages[summary.placeName] || '/ticket.png'} alt={`Plano del estadio ${summary.placeName}`} className={styles.stadiumImage} onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/ticket.png'; }} />
               {sectors.map(sec => (
-                <div key={sec.idSector} className={getSectorOverlayClass(sec)} onClick={() => openSeatModal(sec.idSector)} title={sec.name} />
+                <div key={sec.idSector} className={getSectorOverlayClass(sec)} onClick={() => handleSectorClick(sec)} title={sec.name} />
               ))}
             </div>
           </div>
         </div>
       )}
 
-      <h2 className={styles.sectionTitle}>
-        {summary.placeType.toLowerCase() === 'nonenumerated' ? 'Comprar Entradas' : 'Sectores Disponibles'}
-      </h2>
+      <div ref={sectorListRef}>
+        <h2 className={styles.sectionTitle}>
+          {summary.placeType.toLowerCase() === 'nonenumerated' ? 'Comprar Entradas' : 'Sectores Disponibles'}
+        </h2>
 
-      {summary.placeType.toLowerCase() === 'nonenumerated' ? (
-         <div className={`${styles.sectorList} ${styles.centeredList}`}>
-            <div className={styles.sectorCard} id="sector-card-general">
-                <div className={styles.sectorInfo}>
-                    <h3 className={styles.sectorName}>Entrada General</h3>
-                    <p><span className={styles.detailLabel}>Precio:</span> ${summary.price?.toFixed(2)}</p>
-                    <p><span className={styles.detailLabel}>Disponibles:</span> {summary.availableTickets}</p>
-                </div>
-                <div className={styles.sectorInput}>
-                    <label htmlFor="general-quantity">Cantidad</label>
-                    <select
-                        id="general-quantity"
-                        value={generalQuantity}
-                        onChange={(e) => handleGeneralQuantityChange(parseInt(e.target.value), setAppMessage)}
-                        className={styles.quantitySelect}
-                    >
-                        {[...Array(Math.min(6, summary.availableTickets) + 1).keys()].map(n => (
-                            <option key={n} value={n}>{n}</option>
-                        ))}
-                    </select>
-                </div>
-            </div>
-         </div>
-      ) : (
-        <SectorList 
-            sectors={sectors} 
-            onQuantityChange={handleSectorQuantityChange}
-            onSelectSeatsClick={openSeatModal}
-            setAppMessage={setAppMessage} 
-        />
-      )}
+        {summary.placeType.toLowerCase() === 'nonenumerated' ? (
+          <div className={`${styles.sectorList} ${styles.centeredList}`}>
+              <div className={styles.sectorCard} id="sector-card-general">
+                  <div className={styles.sectorInfo}>
+                      <h3 className={styles.sectorName}>Entrada General</h3>
+                      <p><span className={styles.detailLabel}>Precio:</span> ${summary.price?.toFixed(2)}</p>
+                      <p><span className={styles.detailLabel}>Disponibles:</span> {summary.availableTickets}</p>
+                  </div>
+                  <div className={styles.sectorInput}>
+                      <label htmlFor="general-quantity">Cantidad</label>
+                      <select
+                          id="general-quantity"
+                          value={generalQuantity}
+                          onChange={(e) => handleGeneralQuantityChange(parseInt(e.target.value), setAppMessage)}
+                          className={styles.quantitySelect}
+                      >
+                          {[...Array(Math.min(6, summary.availableTickets) + 1).keys()].map(n => (
+                              <option key={n} value={n}>{n}</option>
+                          ))}
+                      </select>
+                  </div>
+              </div>
+          </div>
+        ) : (
+          <SectorList 
+              sectors={sectors} 
+              onQuantityChange={handleSectorQuantityChange}
+              onSelectSeatsClick={openSeatModal}
+              setAppMessage={setAppMessage} 
+          />
+        )}
+      </div>
 
       {isModalOpen && currentSelectedSector?.enumerated && (
         <div className={modalStyles.modalOverlay} onClick={closeModal}>
@@ -326,9 +378,14 @@ const EventDetailPage: React.FC = () => {
                     onChange={(sel) => handleSeatsChange(selectedSector!, sel)}
                     setAppMessage={setAppMessage}
                     sectorName={currentSelectedSector.name}
+                    enumerated={currentSelectedSector.enumerated}
+                    columns={columns}
                 />
             </div>
             <div className={modalStyles.modalFooter}>
+                <button onClick={handleAddToCartInModal} className={`${modalStyles.btn} ${modalStyles.btnConfirm}`}>
+                  Agregar al carrito
+                </button>
                 <button onClick={closeModal} className={`${modalStyles.btn} ${modalStyles.btnCancel}`}>
                     Cerrar
                 </button>
@@ -347,3 +404,4 @@ const EventDetailPage: React.FC = () => {
 };
 
 export default EventDetailPage;
+

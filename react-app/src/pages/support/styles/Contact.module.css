@@ -1,14 +1,22 @@
-.helpPage {
+.contactPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 2rem;
   font-family: 'Inter', sans-serif;
   background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
-  padding: 2rem 1.5rem;
-  min-height: 80vh;
 }
 
-.helpContainer {
-  max-width: 900px;
-  margin: 0 auto;
+.contactContainer {
+  max-width: 800px;
   width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  text-align: center;
   animation: fadeIn 0.5s ease-out forwards;
 }
 
@@ -23,88 +31,72 @@
   }
 }
 
-.helpHero {
-  text-align: center;
-  padding: 3rem 1rem;
-  margin-bottom: 3rem;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  color: white;
-  border-radius: 1rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.helpTitle {
+.contactTitle {
   font-size: 2.5rem;
   font-weight: 800;
+  color: #4338ca;
   margin-bottom: 1rem;
 }
 
-.helpSubtitle {
+.contactSubtitle {
   font-size: 1.1rem;
-  max-width: 600px;
-  margin: 0 auto;
-  color: #e0e7ff; /* Color de texto más claro y visible */
-  opacity: 1; /* Aseguramos opacidad completa */
+  color: #6b7280;
+  margin-bottom: 2.5rem;
 }
 
-.helpSection {
-  margin-bottom: 3rem;
-}
-
-.helpGrid {
+.contactMethods {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
-.helpCard {
-  background: white;
-  border-radius: 1rem;
+.contactCard {
   padding: 2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  border-radius: 0.75rem;
+  background: #f9fafb;
   transition: all 0.3s ease;
-  cursor: pointer;
+  border: 1px solid #e5e7eb;
   display: flex; /* Añadido para controlar alineación interna */
   flex-direction: column; /* Añadido */
   align-items: center; /* Centra horizontalmente todo el contenido */
-  text-align: center; /* Centra el texto */
 }
 
-.helpCard:hover {
+.contactCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: #d1d5db;
 }
 
-.helpIcon {
+.contactIcon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
   color: #4f46e5;
 }
 
-.helpCard h3 {
+.contactCard h3 {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #1f2937;
 }
 
-.helpCard p {
+.contactCard p {
   color: #6b7280;
-  line-height: 1.6;
   margin-bottom: 1rem;
+  line-height: 1.6;
   flex-grow: 1; /* Empuja el link hacia abajo */
 }
 
-.helpLink {
+.contactLink {
   color: #4f46e5;
   font-weight: 600;
   text-decoration: none;
   margin-top: auto; /* Alinea el link en la parte inferior */
 }
 
-.backButtonContainer {
-  text-align: center;
-  margin-top: 2rem;
+.contactLink:hover {
+  text-decoration: underline;
 }
 
 .backButton {
