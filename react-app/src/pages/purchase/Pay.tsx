@@ -68,7 +68,7 @@ const Pay: React.FC = () => {
   };
 
   // STRIPE
-  const handleStripePayment = async () => {
+    const handleStripePayment = async () => {
     try {
       const response = await fetch("http://localhost:3000/api/stripe/checkout", {
         method: "POST",
@@ -84,12 +84,16 @@ const Pay: React.FC = () => {
 
       const data = await response.json();
       if (data.url) {
-        window.location.href = data.url; // Redirige al checkout de Stripe
+        // ✅ Guardamos el carrito actual en localStorage antes de salir a Stripe
+        localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
+        window.location.href = data.url;
       }
+
     } catch (error) {
       console.error("Error en Stripe Checkout:", error);
     }
   };
+
 
   return (
     <div className={styles.payContainer}>
