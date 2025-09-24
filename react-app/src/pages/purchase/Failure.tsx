@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../../shared/context/CartContext"; 
+import { useCart } from "../../shared/context/CartContext";
+import { MdCancel } from "react-icons/md";  
 import styles from "./styles/Pay.module.css";
 
 const Failure: React.FC = () => {
@@ -21,7 +22,9 @@ const Failure: React.FC = () => {
 
   return (
     <div className={styles.failureContent}>
-      <div className={styles.failureIcon}>❌</div>
+      <div className={styles.failureIcon}>
+        <MdCancel size={64} color="#dc2626" />
+      </div>
       <h1 className={styles.failureTitle}>Pago cancelado</h1>
       <p className={styles.failureMessage}>
         Hubo un problema al procesar tu pago, o lo cancelaste y volviste atrás.

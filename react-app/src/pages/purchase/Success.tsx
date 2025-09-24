@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../shared/context/CartContext"; 
+import { MdCheckCircle } from "react-icons/md";  // ✅ icono
 import styles from "./styles/Pay.module.css";
 
 const Success: React.FC = () => {
@@ -8,16 +9,19 @@ const Success: React.FC = () => {
   const { clearCart } = useCart();
 
   useEffect(() => {
-    clearCart(); // ✅ vacía el carrito al entrar
+    clearCart();
+    localStorage.removeItem("ticket-cart");
   }, [clearCart]);
 
   return (
     <div className={styles.successContent}>
-      <div className={styles.successIcon}>✅</div>
+      <div className={styles.successIcon}>
+        <MdCheckCircle size={64} color="#059669" />
+      </div>
       <h1 className={styles.successTitle}>¡Pago exitoso!</h1>
       <p className={styles.successMessage}>
         Tu compra se procesó correctamente. <br />
-        Gracias por confiar en nosotros 🎉
+        Gracias por confiar en nosotros 
       </p>
       <button
         onClick={() => navigate("/")}
