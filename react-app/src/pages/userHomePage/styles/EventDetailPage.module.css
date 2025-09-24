@@ -169,11 +169,18 @@
 
 /* El Círculo */
 .sectorSalaPrincipal { 
-    top: 30%; 
-    left: 25%; 
-    width: 50%; 
-    height: 60%; 
-    background: rgba(139, 92, 246, 0.4); }
+    top: 28%; 
+    left: 33%; 
+    width: 58.5%; 
+    height: 39.5%; 
+    background: rgba(88,115,209,0.35); }
+
+.sectorTribunaSuperior { 
+    top: 70%; 
+    left: 33%; 
+    width: 58.5%; 
+    height: 17%; 
+    background: rgba(236, 72, 72, 0.4); }
 
 /* Lista de Sectores y Tarjetas */
 .sectorList { 

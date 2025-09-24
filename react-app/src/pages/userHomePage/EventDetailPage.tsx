@@ -11,7 +11,7 @@ import EventInfo from '../seatSelector/EventInfo.tsx';
 import SectorList from '../seatSelector/SectorList.tsx';
 import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
 import bioceresArena from '../../assets/bioceres-arena.jpg';
-// import elCirculo from '../../assets/el-circulo.png'; // Descomentar cuando tengas la imagen
+import elCirculo from '../../assets/el-circulo.png'; 
 import SeatSelector from '../seatSelector/SeatSelector.tsx';
 
 const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
@@ -54,7 +54,7 @@ const EventDetailPage: React.FC = () => {
   const stadiumImages: Record<string, string> = {
     'Estadio Gigante de Arroyito': estadioArroyito,
     'Bioceres Arena': bioceresArena,
-    // 'El Circulo': elCirculo, // Descomentar cuando tengas la imagen
+    'El Circulo': elCirculo, 
   };
 
   const getSectorOverlayClass = (sec: Sector) => {
@@ -67,6 +67,8 @@ const EventDetailPage: React.FC = () => {
       'vip': styles.sectorVip,
       'general': styles.sectorGeneral,
       'sala principal': styles.sectorSalaPrincipal,
+      'tribuna superior': styles.sectorTribunaSuperior,
+
     };
     const key = nameToClass[name] || `sector-${sec.idSector}`;
     const active = selectedSector === sec.idSector ? styles.activeSector : '';
