@@ -296,3 +296,45 @@
   }
 }
 
+.eventSummaryCard {
+  display: flex;
+  gap: 20px;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 15px var(--shadow-light);
+  margin-bottom: 20px;
+}
+
+.eventImage {
+  width: 250px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.eventInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eventTitle {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+.icon {
+  color: var(--primary-blue);
+  font-size: 1.3rem;
+}

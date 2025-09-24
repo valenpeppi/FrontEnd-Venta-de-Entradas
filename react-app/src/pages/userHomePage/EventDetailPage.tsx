@@ -13,6 +13,14 @@ import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
 import bioceresArena from '../../assets/bioceres-arena.jpg';
 import elCirculo from '../../assets/el-circulo.png'; 
 import SeatSelector from '../seatSelector/SeatSelector.tsx';
+import { 
+  MdLocationOn, 
+  MdCalendarToday, 
+  MdAccessTime, 
+  MdLocationCity, 
+  MdConfirmationNumber 
+} from "react-icons/md";
+
 
 const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
@@ -307,15 +315,85 @@ const EventDetailPage: React.FC = () => {
 
   return (
     <div className={styles.eventDetailContainer}>
-      <EventInfo summary={summary} />
+      <div className={styles.eventSummaryCard}>
+        <img
+          src={summary.imageUrl || "/ticket.png"}
+          alt={summary.eventName}
+          className={styles.eventImage}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = "/ticket.png";
+          }}
+        />
+        <div className={styles.eventInfo}>
+          <h1 className={styles.eventTitle}>{summary.eventName}</h1>
 
-      {summary.placeType.toLowerCase() !== 'nonenumerated' && (
+          <p className={styles.infoRow}>
+            <MdCalendarToday className={styles.icon} />
+            <span>
+              <strong>Fecha:</strong>{" "}
+              {new Date(summary.date).toLocaleDateString("es-AR", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}{" "}
+              {new Date(summary.date).toLocaleTimeString("es-AR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          </p>
+
+          <p className={styles.infoRow}>
+            <MdAccessTime className={styles.icon} />
+            <span>
+              <strong>Tipo:</strong> {summary.type}
+            </span>
+          </p>
+
+          <p className={styles.infoRow}>
+            <MdLocationOn className={styles.icon} />
+            <span>
+              <strong>Lugar:</strong> {formatPlaceType(summary.placeType)}
+            </span>
+          </p>
+
+          <p className={styles.infoRow}>
+            <MdLocationCity className={styles.icon} />
+            <span>
+              <strong>Estadio:</strong> {summary.placeName}
+            </span>
+          </p>
+
+          <p className={styles.infoRow}>
+            <MdConfirmationNumber className={styles.icon} />
+            <span>
+              <strong>Entradas disponibles:</strong> {summary.availableTickets}
+            </span>
+          </p>
+
+        </div>
+      </div>
+
+      {summary.placeType.toLowerCase() !== "nonenumerated" && (
         <div className={styles.stadiumPlanContainer}>
           <div className={styles.stadiumContent}>
             <div className={styles.imageFrame}>
-              <img src={stadiumImages[summary.placeName] || '/ticket.png'} alt={`Plano del estadio ${summary.placeName}`} className={styles.stadiumImage} onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/ticket.png'; }} />
-              {sectors.map(sec => (
-                <div key={sec.idSector} className={getSectorOverlayClass(sec)} onClick={() => handleSectorClick(sec)} title={sec.name} />
+              <img
+                src={stadiumImages[summary.placeName] || "/ticket.png"}
+                alt={`Plano del estadio ${summary.placeName}`}
+                className={styles.stadiumImage}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = "/ticket.png";
+                }}
+              />
+              {sectors.map((sec) => (
+                <div
+                  key={sec.idSector}
+                  className={getSectorOverlayClass(sec)}
+                  onClick={() => handleSectorClick(sec)}
+                  title={sec.name}
+                />
               ))}
             </div>
           </div>
@@ -324,73 +402,118 @@ const EventDetailPage: React.FC = () => {
 
       <div ref={sectorListRef}>
         <h2 className={styles.sectionTitle}>
-          {summary.placeType.toLowerCase() === 'nonenumerated' ? 'Comprar Entradas' : 'Sectores Disponibles'}
+          {summary.placeType.toLowerCase() === "nonenumerated"
+            ? "Comprar Entradas"
+            : "Sectores Disponibles"}
         </h2>
 
-        {summary.placeType.toLowerCase() === 'nonenumerated' ? (
+        {summary.placeType.toLowerCase() === "nonenumerated" ? (
           <div className={`${styles.sectorList} ${styles.centeredList}`}>
-              <div className={styles.sectorCard} id="sector-card-general">
-                  <div className={styles.sectorInfo}>
-                      <h3 className={styles.sectorName}>Entrada General</h3>
-                      <p><span className={styles.detailLabel}>Precio:</span> ${summary.price?.toFixed(2)}</p>
-                      <p><span className={styles.detailLabel}>Disponibles:</span> {summary.availableTickets}</p>
-                  </div>
-                  <div className={styles.sectorInput}>
-                      <label htmlFor="general-quantity">Cantidad</label>
-                      <select
-                          id="general-quantity"
-                          value={generalQuantity}
-                          onChange={(e) => handleGeneralQuantityChange(parseInt(e.target.value), setAppMessage)}
-                          className={styles.quantitySelect}
-                      >
-                          {[...Array(Math.min(6, summary.availableTickets) + 1).keys()].map(n => (
-                              <option key={n} value={n}>{n}</option>
-                          ))}
-                      </select>
-                  </div>
+            <div className={styles.sectorCard} id="sector-card-general">
+              <div className={styles.sectorInfo}>
+                <h3 className={styles.sectorName}>Entrada General</h3>
+                <p>
+                  <span className={styles.detailLabel}>Precio:</span> $
+                  {summary.price?.toFixed(2)}
+                </p>
+                <p>
+                  <span className={styles.detailLabel}>Disponibles:</span>{" "}
+                  {summary.availableTickets}
+                </p>
               </div>
+              <div className={styles.sectorInput}>
+                <label htmlFor="general-quantity">Cantidad</label>
+                <select
+                  id="general-quantity"
+                  value={generalQuantity}
+                  onChange={(e) =>
+                    handleGeneralQuantityChange(
+                      parseInt(e.target.value),
+                      setAppMessage
+                    )
+                  }
+                  className={styles.quantitySelect}
+                >
+                  {[...Array(Math.min(6, summary.availableTickets) + 1).keys()].map(
+                    (n) => (
+                      <option key={n} value={n}>
+                        {n}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+            </div>
           </div>
         ) : (
-          <SectorList 
-              sectors={sectors} 
-              onQuantityChange={handleSectorQuantityChange}
-              onSelectSeatsClick={openSeatModal}
-              setAppMessage={setAppMessage} 
+          <SectorList
+            sectors={sectors}
+            onQuantityChange={handleSectorQuantityChange}
+            onSelectSeatsClick={openSeatModal}
+            setAppMessage={setAppMessage}
           />
         )}
       </div>
 
       {isModalOpen && currentSelectedSector?.enumerated && (
         <div className={modalStyles.modalOverlay} onClick={closeModal}>
-          <div className={modalStyles.modalContent} onClick={e => e.stopPropagation()}>
+          <div
+            className={modalStyles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className={modalStyles.modalHeader}>
-              <h2 className={modalStyles.modalTitle}>{currentSelectedSector.name}</h2>
-              <button onClick={closeModal} className={modalStyles.closeButton}>&times;</button>
+              <h2 className={modalStyles.modalTitle}>
+                {currentSelectedSector.name}
+              </h2>
+              <button onClick={closeModal} className={modalStyles.closeButton}>
+                &times;
+              </button>
             </div>
             <div className={modalStyles.modalBody}>
-                <div className={modalStyles.stage}>ESCENARIO</div>
-                <div className={modalStyles.seatLegend}>
-                    <div className={modalStyles.legendItem}><span className={`${modalStyles.seatDemo} ${modalStyles.available}`}></span> Libres</div>
-                    <div className={modalStyles.legendItem}><span className={`${modalStyles.seatDemo} ${modalStyles.occupied}`}></span> Ocupados</div>
-                    <div className={modalStyles.legendItem}><span className={`${modalStyles.seatDemo} ${modalStyles.selected}`}></span> Seleccionados</div>
+              <div className={modalStyles.stage}>ESCENARIO</div>
+              <div className={modalStyles.seatLegend}>
+                <div className={modalStyles.legendItem}>
+                  <span
+                    className={`${modalStyles.seatDemo} ${modalStyles.available}`}
+                  ></span>{" "}
+                  Libres
                 </div>
-                <SeatSelector
-                    seats={seats}
-                    selectedSeats={selectedSeatsMap[selectedSector!] || []}
-                    onChange={(sel) => handleSeatsChange(selectedSector!, sel)}
-                    setAppMessage={setAppMessage}
-                    sectorName={currentSelectedSector.name}
-                    enumerated={currentSelectedSector.enumerated}
-                    columns={columns}
-                />
+                <div className={modalStyles.legendItem}>
+                  <span
+                    className={`${modalStyles.seatDemo} ${modalStyles.occupied}`}
+                  ></span>{" "}
+                  Ocupados
+                </div>
+                <div className={modalStyles.legendItem}>
+                  <span
+                    className={`${modalStyles.seatDemo} ${modalStyles.selected}`}
+                  ></span>{" "}
+                  Seleccionados
+                </div>
+              </div>
+              <SeatSelector
+                seats={seats}
+                selectedSeats={selectedSeatsMap[selectedSector!] || []}
+                onChange={(sel) => handleSeatsChange(selectedSector!, sel)}
+                setAppMessage={setAppMessage}
+                sectorName={currentSelectedSector.name}
+                enumerated={currentSelectedSector.enumerated}
+                columns={columns}
+              />
             </div>
             <div className={modalStyles.modalFooter}>
-                <button onClick={handleAddToCartInModal} className={`${modalStyles.btn} ${modalStyles.btnConfirm}`}>
-                  Agregar al carrito
-                </button>
-                <button onClick={closeModal} className={`${modalStyles.btn} ${modalStyles.btnCancel}`}>
-                    Cerrar
-                </button>
+              <button
+                onClick={handleAddToCartInModal}
+                className={`${modalStyles.btn} ${modalStyles.btnConfirm}`}
+              >
+                Agregar al carrito
+              </button>
+              <button
+                onClick={closeModal}
+                className={`${modalStyles.btn} ${modalStyles.btnCancel}`}
+              >
+                Cerrar
+              </button>
             </div>
           </div>
         </div>
@@ -403,6 +526,7 @@ const EventDetailPage: React.FC = () => {
       </div>
     </div>
   );
+
 };
 
 export default EventDetailPage;

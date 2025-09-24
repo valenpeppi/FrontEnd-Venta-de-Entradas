@@ -133,6 +133,12 @@
   color: #ef4444;
   margin-top: 0.5rem;
 }
+.icon {
+  color: var(--primary-blue);
+  font-size: 1.2rem;
+  margin-right: 6px;
+}
+
 
 /* Responsive: 2 columnas en tablets */
 @media (max-width: 1023px) {
