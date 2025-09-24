@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../../shared/context/CartContext"; 
 import styles from "./styles/Pay.module.css";
 
 const Success: React.FC = () => {
   const navigate = useNavigate();
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    clearCart(); // ✅ vacía el carrito al entrar
+  }, [clearCart]);
 
   return (
     <div className={styles.successContent}>
