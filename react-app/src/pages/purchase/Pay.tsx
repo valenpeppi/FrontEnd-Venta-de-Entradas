@@ -52,14 +52,16 @@ const Pay: React.FC = () => {
             email: userData.email,
             name: userData.name,
             surname: userData.surname,
-            phone: { area_code: '11', number: '12345678' },
-            identification: { type: 'DNI', number: '12345678' },
           },
         }),
       });
 
       const data = await response.json();
-      setPreferenceId(data.id);
+      if (data.id) {
+        setPreferenceId(data.id);
+      } else {
+        console.error("No se recibió preferenceId:", data);
+      }
     } catch (error) {
       console.error("Error al generar preferencia de pago:", error);
     }
@@ -88,7 +90,6 @@ const Pay: React.FC = () => {
       console.error("Error en Stripe Checkout:", error);
     }
   };
-
 
   return (
     <div className={styles.payContainer}>
@@ -122,7 +123,6 @@ const Pay: React.FC = () => {
               Pagar con Stripe
             </button>
           </div>
-
 
           <div className={styles.payActions}>
             <button onClick={() => navigate('/cart')} className={styles.btnBack}>
