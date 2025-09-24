@@ -79,6 +79,42 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoading: true,
   });
 
+useEffect(() => {
+    const validateToken = async () => {
+      const token = localStorage.getItem('token');
+      const userString = localStorage.getItem('user');
+
+      if (token && userString) {
+        try {
+          const user = JSON.parse(userString);
+
+          // Verifica el token con backend
+          const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'}/api/auth/validate`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (res.ok) {
+            dispatch({ type: 'INITIALIZE', payload: { user } });
+          } else {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            dispatch({ type: 'LOGOUT' });
+          }
+        } catch (e) {
+          console.error("Error al validar token:", e);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          dispatch({ type: 'LOGOUT' });
+        }
+      } else {
+        dispatch({ type: 'INITIALIZE', payload: { user: null } });
+      }
+    };
+
+    validateToken();
+  }, []);
+
+
   useEffect(() => {
     let user: User | null = null;
     const token = localStorage.getItem('token');

@@ -182,3 +182,117 @@
     width: 100%;
   }
 }
+.successContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.successIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  animation: pop 0.6s ease-out;
+}
+
+.successTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #059669; 
+  margin-bottom: 15px;
+}
+
+.successMessage {
+  font-size: 1.2rem;
+  color: #374151;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.successButton {
+  background-color: #4f46e5; /* Violeta principal */
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.successButton:hover {
+  background-color: #4338ca;
+  transform: translateY(-2px);
+}
+
+.successButton:active {
+  background-color: #3730a3;
+  transform: translateY(0);
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.failureContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.failureIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #dc2626; /* Rojo error */
+  animation: pop 0.6s ease-out;
+}
+
+.failureTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #b91c1c; /* Rojo fuerte */
+  margin-bottom: 15px;
+}
+
+.failureMessage {
+  font-size: 1.2rem;
+  color: #374151;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.failureButton {
+  background-color: #6b7280; /* Gris */
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.failureButton:hover {
+  background-color: #4b5563;
+  transform: translateY(-2px);
+}
+
+.failureButton:active {
+  background-color: #374151;
+  transform: translateY(0);
+}
