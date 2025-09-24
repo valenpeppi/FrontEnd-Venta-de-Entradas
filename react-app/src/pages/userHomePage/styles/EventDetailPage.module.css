@@ -154,17 +154,17 @@
 
 /* Bioceres Arena */
 .sectorVip { 
-    top: 29.5%; 
-    left: 24.5%; 
-    width: 51%; 
-    height: 21.5%; 
+    top: 31%; 
+    left: 35.5%; 
+    width: 60%; 
+    height: 16%; 
     background: rgba(88, 115, 209, 0.4); }
     
 .sectorGeneral { 
-    top: 54%; 
-    left: 24.5%; 
-    width: 51%; 
-    height: 44%; 
+    top: 50.75%; 
+    left: 35.5%; 
+    width: 60%; 
+    height: 40%; 
     background: rgba(236, 72, 72, 0.4); }
 
 /* El Círculo */
