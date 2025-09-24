@@ -109,7 +109,7 @@ const Pay: React.FC = () => {
             </div>
           </div>
 
-          <div className={styles.payWalletContainer}>
+          <div className={styles.payButtons}>
             {!preferenceId ? (
               <button onClick={handlePayment} className={styles.btnPay}>
                 Pagar con Mercado Pago
@@ -117,13 +117,12 @@ const Pay: React.FC = () => {
             ) : (
               <Wallet initialization={{ preferenceId }} />
             )}
-          </div>
 
-          <div className={styles.payWalletContainer}>
             <button onClick={handleStripePayment} className={styles.btnStripe}>
               Pagar con Stripe
             </button>
           </div>
+
 
           <div className={styles.payActions}>
             <button onClick={() => navigate('/cart')} className={styles.btnBack}>

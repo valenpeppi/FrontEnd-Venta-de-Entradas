@@ -10,6 +10,14 @@
   animation: scaleIn 0.4s ease-out forwards;
 }
 
+.payButtons {
+  display: flex;
+  flex-direction: column; 
+  gap: 12px; 
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 @keyframes scaleIn {
   from {
     transform: scale(0.98);
