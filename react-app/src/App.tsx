@@ -26,6 +26,9 @@ import Contact from './pages/support/Contact';
 import Privacy from './pages/support/Privacy';
 import Terms from './pages/support/Terms';
 import Faq from './pages/support/Faq';
+import Success from './pages/purchase/Success';
+import Failure from './pages/purchase/Failure';
+
 
 
 const App: React.FC = () => {
@@ -87,6 +90,8 @@ const App: React.FC = () => {
         <Route path="/cart" element={<AuthRoute allowedRoles={['user']}><Layout><CarritoPage /></Layout></AuthRoute>} />
         <Route path="/pay" element={<AuthRoute allowedRoles={['user']}><Layout><Pay /></Layout></AuthRoute>} />
         <Route path="/myTickets" element={<AuthRoute allowedRoles={['user']}><Layout><MyTickets /></Layout></AuthRoute>} />
+        <Route path="/pay/success" element={<AuthRoute allowedRoles={['user']}><Layout><Success /></Layout></AuthRoute>} />
+        <Route path="/pay/failure" element={<AuthRoute allowedRoles={['user']}><Layout><Failure /></Layout></AuthRoute>} />
 
         {/* Rutas Protegidas para Administradores */}
         <Route path="/admin" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminHomePage /></Layout></AuthRoute>} />

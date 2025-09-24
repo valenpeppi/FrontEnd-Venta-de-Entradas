@@ -9,16 +9,6 @@ import { EventsProvider } from './shared/context/EventsContext.tsx';
 import { AuthProvider } from './shared/context/AuthContext.tsx';
 import { MessageProvider } from './shared/context/MessageContext.tsx';
 
-// Forzar el logout en cada inicio de corrida en entorno de desarrollo
-if (import.meta.env && import.meta.env.DEV) {
-  try {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  } catch (err) {
-    // ignore storage access errors
-  }
-}
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
