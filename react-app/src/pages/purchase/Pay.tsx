@@ -77,7 +77,6 @@ const Pay: React.FC = () => {
             amount: Math.round(item.price * 100),
             quantity: item.quantity,
           })),
-          customerEmail: userData.email,
         }),
       });
 
@@ -89,6 +88,7 @@ const Pay: React.FC = () => {
       console.error("Error en Stripe Checkout:", error);
     }
   };
+
 
   return (
     <div className={styles.payContainer}>
