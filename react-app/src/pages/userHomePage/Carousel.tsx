@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/Carousel.module.css';
 import GlobalStyles from '../../shared/styles/GlobalStyles.module.css';
-
+import { MdCalendarToday, MdLocationOn } from "react-icons/md";
 
 export interface CarouselProps {
   tickets: Ticket[];
@@ -42,44 +42,43 @@ const Carousel: React.FC<CarouselProps> = ({
       </button>
       
       {currentEvent ? (
-          <div className={styles.eventCard}>
-            <img
-              src={currentEvent.imageUrl}
-              alt={currentEvent.eventName}
-              className={styles.eventCardImage}
-              onError={e => { e.currentTarget.src = '/ticket.png'; }}
-            />
-            <div className={styles.eventCardDetailsWrapper}>
-              <div className={styles.eventCardContent}>
-                <h3 className={styles.eventCardTitle}>{currentEvent.eventName}</h3>
-                
-                <div className={styles.eventCardMeta}>
-                  <div className={styles.eventCardDetailItem}>
-                    <i className={`fas fa-calendar-alt ${styles.eventCardIcon}`}></i>
-                    <span className={styles.eventCardText}>{currentEvent.date}</span>
-                  </div>
-                  <div className={styles.eventCardDetailItem}>
-                    <i className={`fas fa-map-marker-alt ${styles.eventCardIcon}`}></i>
-                    <span className={styles.eventCardText}>{currentEvent.location}</span>
-                  </div>
+        <div className={styles.eventCard}>
+          <img
+            src={currentEvent.imageUrl}
+            alt={currentEvent.eventName}
+            className={styles.eventCardImage}
+            onError={e => { e.currentTarget.src = '/ticket.png'; }}
+          />
+          <div className={styles.eventCardDetailsWrapper}>
+            <div className={styles.eventCardContent}>
+              <h3 className={styles.eventCardTitle}>{currentEvent.eventName}</h3>
+              <div className={styles.eventCardMeta}>
+                <div className={styles.eventCardDetailItem}>
+                  <MdCalendarToday className={styles.eventCardIcon} />
+                  <span className={styles.eventCardText}>{currentEvent.date}</span>
+                </div>
+                <div className={styles.eventCardDetailItem}>
+                  <MdLocationOn className={styles.eventCardIcon} />
+                  <span className={styles.eventCardText}>{currentEvent.location}</span>
                 </div>
               </div>
-              <div className={styles.eventCardFooter}>
-                <span className={styles.eventCardPrice}>Desde ${currentEvent.price.toFixed(2)}</span>
-                <br></br>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate(`/event/${currentEvent.id}`);
-                  }}
-                  className={`${GlobalStyles.glowBtnInverse} ${currentEvent.availableTickets > 0 ? '' : styles.btnPurchaseDisabled}`}
-                  disabled={currentEvent.availableTickets === 0}
-                >
-                  {currentEvent.availableTickets > 0 ? 'Comprar' : 'Agotado'}
-                </button>
-              </div>
+            </div>
+            <div className={styles.eventCardFooter}>
+              <span className={styles.eventCardPrice}>Desde ${currentEvent.price.toFixed(2)}</span>
+              <br />
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate(`/event/${currentEvent.id}`);
+                }}
+                className={`${GlobalStyles.glowBtnInverse} ${currentEvent.availableTickets > 0 ? '' : styles.btnPurchaseDisabled}`}
+                disabled={currentEvent.availableTickets === 0}
+              >
+                {currentEvent.availableTickets > 0 ? 'Comprar' : 'Agotado'}
+              </button>
             </div>
           </div>
+        </div>
       ) : (
         <p className={styles.eventCarouselEmpty}>No hay eventos disponibles.</p>
       )}
@@ -97,4 +96,3 @@ const Carousel: React.FC<CarouselProps> = ({
 };
 
 export default Carousel;
-
