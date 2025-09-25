@@ -81,7 +81,7 @@ const mapApiEventToTicket = (ev: any): Ticket => {
   };
 };
 
-export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
+function EventsProvider({ children }: EventsProviderProps) {
   const [state, dispatch] = useReducer(eventsReducer, { featuredTickets: [], approvedTickets: [] });
   const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
@@ -109,6 +109,7 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
     return () => { alive = false; };
   }, [BASE_URL]);
 
+
   const updateAvailableTickets = (id: string, quantity: number) =>
     dispatch({ type: 'UPDATE_AVAILABLE_TICKETS', payload: { id, quantity } });
 
@@ -118,6 +119,9 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
     </EventsContext.Provider>
   );
 };
+
+export { EventsProvider };
+
 
 export const useEvents = () => {
   const ctx = useContext(EventsContext);

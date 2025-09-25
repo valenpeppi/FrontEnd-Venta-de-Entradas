@@ -6,19 +6,22 @@ export interface Ticket {
   id: string;
   eventId: string;
   eventName: string;
-  date: string;
+  date: string; 
+  time: string;
   location: string;
   placeName: string;
-  sectorName?: string; 
+  sectorName?: string;
   price: number;
   availableTickets: number;
   imageUrl: string;
-  time: string;
   type: string;
   featured: boolean;
   agotado?: boolean;
   description?: string;
+  quantity: number;
+  idTicket?: number; 
 }
+
 
 export interface CartItem extends Ticket {
   quantity: number;
@@ -122,7 +125,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
   }
 };
 
-export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+function CartProvider({ children }: CartProviderProps) {
   const [state, dispatch] = useReducer(cartReducer, { cartItems: [] });
 
   useEffect(() => {
@@ -196,6 +199,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     </CartContext.Provider>
   );
 };
+
+export { CartProvider };
+
 
 export const useCart = () => {
   const context = useContext(CartContext);
