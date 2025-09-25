@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/Carousel.module.css';
 import GlobalStyles from '../../shared/styles/GlobalStyles.module.css';
-import { MdCalendarToday, MdLocationOn, MdDescription } from "react-icons/md";
+import { MdCalendarToday, MdLocationOn } from "react-icons/md";
 
 export interface CarouselProps {
   tickets: Ticket[];

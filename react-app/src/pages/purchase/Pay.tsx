@@ -1,4 +1,3 @@
-// Pay.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../shared/context/CartContext';
@@ -84,7 +83,7 @@ const Pay: React.FC = () => {
 
       const data = await response.json();
       if (data.url) {
-        // ✅ Guardamos el carrito actual en localStorage antes de salir a Stripe
+        // Guardamos el carrito actual en localStorage antes de salir a Stripe
         localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
         window.location.href = data.url;
       }

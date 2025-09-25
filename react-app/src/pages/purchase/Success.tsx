@@ -7,7 +7,7 @@ import styles from "./styles/Pay.module.css";
 
 const Success = () => {
   const { cartItems, clearCart } = useCart();
-  const navigate = useNavigate(); // ← Mover esto FUERA del useEffect
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sendSaleConfirmation = async () => {

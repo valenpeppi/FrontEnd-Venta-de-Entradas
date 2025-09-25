@@ -13,7 +13,6 @@ import {
 
 const SearchedEvents: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [results, setResults] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const query = searchParams.get('query') || '';

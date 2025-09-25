@@ -7,7 +7,6 @@ import { useEventDetail } from '../../shared/context/EventDetailContext.tsx';
 import type { Sector, CartItem } from '../../shared/types.ts';
 import styles from './styles/EventDetailPage.module.css';
 import modalStyles from '../seatSelector/styles/SeatModal.module.css';
-import EventInfo from '../seatSelector/EventInfo.tsx';
 import SectorList from '../seatSelector/SectorList.tsx';
 import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
 import bioceresArena from '../../assets/bioceres-arena.jpg';
@@ -19,7 +18,6 @@ import {
   MdAccessTime, 
   MdLocationCity, 
   MdConfirmationNumber,
-  MdDescription
 } from "react-icons/md";
 
 
