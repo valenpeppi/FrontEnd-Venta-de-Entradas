@@ -56,6 +56,7 @@ const mapApiEventToTicket = (ev: any): Ticket => {
   return {
     id: String(ev.idEvent ?? ev.id),
     eventId: String(ev.idEvent ?? ev.id),
+    description: ev.description,
     eventName: ev.eventName ?? ev.name,
     date: eventDate.toLocaleDateString("es-ES", {
       day: "numeric",

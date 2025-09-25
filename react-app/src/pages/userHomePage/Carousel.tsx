@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/Carousel.module.css';
 import GlobalStyles from '../../shared/styles/GlobalStyles.module.css';
-import { MdCalendarToday, MdLocationOn } from "react-icons/md";
+import { MdCalendarToday, MdLocationOn, MdDescription } from "react-icons/md";
 
 export interface CarouselProps {
   tickets: Ticket[];
@@ -53,7 +53,14 @@ const Carousel: React.FC<CarouselProps> = ({
             <div className={styles.eventCardContent}>
               <h3 className={styles.eventCardTitle}>{currentEvent.eventName}</h3>
               <div className={styles.eventCardMeta}>
-                <div className={styles.eventCardDetailItem}>
+                {currentEvent.description && (
+                  <div className={styles.eventCardDescription}>
+                    <span className={styles.eventCardText}>
+                      {currentEvent.description}
+                    </span>
+                  </div>
+                )}
+               <div className={styles.eventCardDetailItem}>
                   <MdCalendarToday className={styles.eventCardIcon} />
                   <span className={styles.eventCardText}>{currentEvent.date}</span>
                 </div>
@@ -61,6 +68,7 @@ const Carousel: React.FC<CarouselProps> = ({
                   <MdLocationOn className={styles.eventCardIcon} />
                   <span className={styles.eventCardText}>{currentEvent.location}</span>
                 </div>
+
               </div>
             </div>
             <div className={styles.eventCardFooter}>

@@ -16,6 +16,7 @@ export interface EventSummary {
   imageUrl: string;
   type: string;
   date: string;
+  description?: string;
   placeType: string;
   placeName: string;
   availableTickets: number;

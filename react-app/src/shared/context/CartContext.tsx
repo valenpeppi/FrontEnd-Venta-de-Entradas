@@ -17,6 +17,7 @@ export interface Ticket {
   type: string;
   featured: boolean;
   agotado?: boolean;
+  description?: string;
 }
 
 export interface CartItem extends Ticket {
