@@ -26,7 +26,9 @@ export interface Ticket {
 export interface CartItem extends Ticket {
   quantity: number;
   seats?: (string | number)[];
-  ticketIds?: number[]; 
+  ticketIds?: number[];
+  idPlace: number;
+  idSector: number;
 }
 
 

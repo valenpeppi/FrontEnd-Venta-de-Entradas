@@ -1,51 +1,59 @@
-import React, { useEffect } from "react";
+import { useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../shared/context/CartContext"; 
-import { MdCheckCircle } from "react-icons/md";  //
+import { MdCheckCircle } from "react-icons/md";
 import styles from "./styles/Pay.module.css";
-import axios from "axios";
 
-const Success: React.FC = () => {
-  const navigate = useNavigate();
-  const { clearCart } = useCart();
-
-  useEffect(() => {
-    clearCart();
-    localStorage.removeItem("ticket-cart");
-  }, [clearCart]);
+const Success = () => {
+  const { cartItems, clearCart } = useCart();
+  const navigate = useNavigate(); // ← Mover esto FUERA del useEffect
 
   useEffect(() => {
     const sendSaleConfirmation = async () => {
-      const storedCart = JSON.parse(localStorage.getItem("ticket-cart") || "[]");
-
-      if (storedCart.length === 0) return;
+      if (cartItems.length === 0) return;
 
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       const dniClient = user.dni;
 
-      const grouped: Record<string, { quantity: number; ids: number[] }> = {};
+      type TicketGroup = {
+        idEvent: number;
+        idPlace: number;
+        idSector: number;
+        ids: number[];
+      };
 
-      for (const item of storedCart) {
-        const key = `${item.eventId}_${item.sectorName}`;
+      const grouped: Record<string, TicketGroup> = {};
+
+      cartItems.forEach(item => {
+        if (!item.ticketIds || item.ticketIds.length === 0) return;
+
+        const idPlace = (item as any).idPlace;
+        const idSector = (item as any).idSector;
+
+        const key = `${item.eventId}_${idPlace}_${item.sectorName}_${idSector}`;
+
         if (!grouped[key]) {
-          grouped[key] = { quantity: 0, ids: [] };
+          grouped[key] = {
+            idEvent: Number(item.eventId),
+            idPlace: Number(idPlace),
+            idSector: Number(idSector),
+            ids: [],
+          };
         }
 
-        grouped[key].quantity += item.quantity;
-        if (Array.isArray(item.idTickets)) {
-          grouped[key].ids.push(...item.idTickets);
-        }
-      }
+        grouped[key].ids.push(...item.ticketIds);
+      });
 
       const ticketsPayload = Object.values(grouped);
 
       try {
-        await axios.post("http://localhost:3000/api/sales/confirm", {
+        await axios.post(`${import.meta.env.VITE_API_BASE}/api/sales/confirm`, {
           dniClient,
           tickets: ticketsPayload,
         });
       } catch (error) {
-        console.error("Error al confirmar venta:", error);
+        console.error("Error al confirmar la venta:", error);
       }
 
       clearCart();
@@ -53,8 +61,7 @@ const Success: React.FC = () => {
     };
 
     sendSaleConfirmation();
-  }, [clearCart]);
-
+  }, [cartItems, clearCart]);
 
   return (
     <div className={styles.successContent}>
