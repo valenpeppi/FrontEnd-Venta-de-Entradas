@@ -85,7 +85,7 @@ const HomePage: React.FC = () => {
   return (
     <div className={styles.homepage}>
       <main className={styles.homepageMain}>
-        <h1 className={styles.homepageTitle}>Eventos destacados</h1>
+        {/* <h1 className={styles.homepageTitle}>Eventos destacados</h1> */}
         <Carousel
           tickets={featuredTickets}
           currentEventIndex={currentEventIndex}

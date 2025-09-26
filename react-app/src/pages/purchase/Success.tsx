@@ -9,7 +9,6 @@ const Success = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Limpiamos carrito y storage
     clearCart();
     localStorage.removeItem("ticket-cart");
   }, [clearCart]);

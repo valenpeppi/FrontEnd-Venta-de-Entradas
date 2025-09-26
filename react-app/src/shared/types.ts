@@ -1,5 +1,3 @@
-// Tipos unificados para la aplicación de venta de entradas
-
 export interface Sector {
   idEvent: number;
   idSector: number;
@@ -12,7 +10,7 @@ export interface Sector {
 
 export interface EventSummary {
   id: number;
-  idPlace: number; // Propiedad añadida para consistencia
+  idPlace: number; 
   eventName: string;
   imageUrl: string;
   type: string;
@@ -47,9 +45,9 @@ export interface CartItem {
   time: string;
   quantity: number;
   seats?: (string | number)[];
-  idPlace: number; // Propiedad añadida para consistencia
-  idSector: number; // Propiedad añadida para consistencia
-  ticketIds?: number[]; // Propiedad añadida para consistencia
+  idPlace: number; 
+  idSector: number; 
+  ticketIds?: number[]; 
 }
 
 export interface EventDetailState {
