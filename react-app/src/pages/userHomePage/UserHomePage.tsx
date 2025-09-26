@@ -1,13 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useEvents } from '../../shared/context/EventsContext';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import Carousel from './Carousel';
 import styles from './styles/UserHomePage.module.css';
 import type { Ticket } from '../../shared/context/CartContext';
 
+interface EventType {
+  idType: number;
+  name: string;
+}
+
 const HomePage: React.FC = () => {
   const { featuredTickets, approvedTickets } = useEvents();
   const [currentEventIndex, setCurrentEventIndex] = useState<number>(0);
+  const [allEventTypes, setAllEventTypes] = useState<EventType[]>([]);
+  const [selectedType, setSelectedType] = useState<string>('Todos');
+  const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+
+  useEffect(() => {
+    const fetchEventTypes = async () => {
+      try {
+        // La respuesta del backend no viene con una propiedad 'ok', accedemos a 'data' directamente.
+        const response = await axios.get<EventType[]>(`${BASE_URL}/api/catalog/event-types`);
+        setAllEventTypes(response.data);
+      } catch (error) {
+        console.error("Error fetching event types:", error);
+      }
+    };
+    fetchEventTypes();
+  }, [BASE_URL]);
 
   useEffect(() => {
     if (featuredTickets.length > 0 && currentEventIndex >= featuredTickets.length) {
@@ -29,20 +51,30 @@ const HomePage: React.FC = () => {
     );
   };
 
-  const eventTypes = Array.from(new Set(approvedTickets.map(ticket => ticket.type)));
-  const [selectedType, setSelectedType] = useState<string>('Todos');
+  const eventCounts = useMemo(() => {
+    const counts: { [key: string]: number } = {};
+    for (const ticket of approvedTickets) {
+      counts[ticket.type] = (counts[ticket.type] || 0) + 1;
+    }
+    return counts;
+  }, [approvedTickets]);
 
   const filteredTickets = selectedType === 'Todos'
     ? approvedTickets
     : approvedTickets.filter(ticket => ticket.type === selectedType);
 
-  const eventsByType: { [key: string]: Ticket[] } = {};
-  filteredTickets.forEach(ticket => {
-    if (!eventsByType[ticket.type]) eventsByType[ticket.type] = [];
-    eventsByType[ticket.type].push(ticket);
-  });
+  const eventsByType = useMemo(() => {
+    const groups: { [key: string]: Ticket[] } = {};
+    filteredTickets.forEach(ticket => {
+      if (!groups[ticket.type]) {
+        groups[ticket.type] = [];
+      }
+      groups[ticket.type].push(ticket);
+    });
+    return groups;
+  }, [filteredTickets]);
 
-  if (approvedTickets.length === 0) {
+  if (approvedTickets.length === 0 && allEventTypes.length === 0) {
     return (
       <div className={styles.loadingState}>
         <p className={styles.loadingStateText}>Cargando eventos...</p>
@@ -62,26 +94,29 @@ const HomePage: React.FC = () => {
         />
 
         <div className={styles.eventTypeFilterContainer}>
-          <label htmlFor="event-type-select" className={styles.eventTypeFilterLabel}>Filtrar</label>
-          <select
-            id="event-type-select"
-            className={styles.eventTypeFilterSelect}
-            value={selectedType}
-            onChange={e => setSelectedType(e.target.value)}
+          <button
+            onClick={() => setSelectedType('Todos')}
+            className={`${styles.eventTypeFilterButton} ${selectedType === 'Todos' ? styles.active : ''}`}
           >
-            <option value="Todos">Todos</option>
-            {eventTypes.map(type => (
-              <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
-            ))}
-          </select>
+            Todos
+            <span className={styles.eventCount}>{approvedTickets.length}</span>
+          </button>
+          {allEventTypes.map(type => (
+            <button
+              key={type.idType}
+              onClick={() => setSelectedType(type.name)}
+              className={`${styles.eventTypeFilterButton} ${selectedType === type.name ? styles.active : ''}`}
+            >
+              {type.name}
+              <span className={styles.eventCount}>{eventCounts[type.name] || 0}</span>
+            </button>
+          ))}
         </div>
 
         <h2 className={styles.eventListTitle}>Todos los Eventos</h2>
         
         <div className={styles.eventListContainer}>
-          {Object.keys(eventsByType).length === 0 ? (
-            <p className={styles.eventTypeEmpty}>No hay eventos para este tipo.</p>
-          ) : (
+          {Object.keys(eventsByType).length > 0 ? (
             Object.entries(eventsByType).map(([type, tickets]) => (
               <div key={type} className={styles.eventTypeSection}>
                 <h2 className={styles.eventTypeTitle}>{type.charAt(0).toUpperCase() + type.slice(1)}</h2>
@@ -97,7 +132,7 @@ const HomePage: React.FC = () => {
                           src={ticket.imageUrl}
                           alt={(ticket as any).eventName}
                           className={styles.eventCardImg}
-                          onError={e => { e.currentTarget.src = '/ticket.png'; }}
+                          onError={e => { (e.currentTarget as HTMLImageElement).src = '/ticket.png'; }}
                         />
                         <div className={styles.eventCardTitle}>{(ticket as any).eventName}</div>
                         {ticket.agotado && (
@@ -109,6 +144,8 @@ const HomePage: React.FC = () => {
                 </div>
               </div>
             ))
+          ) : (
+            <p className={styles.eventTypeEmpty}>No hay eventos disponibles para esta categoría.</p>
           )}
         </div>
       </main>

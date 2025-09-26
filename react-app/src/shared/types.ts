@@ -12,6 +12,7 @@ export interface Sector {
 
 export interface EventSummary {
   id: number;
+  idPlace: number; // Propiedad añadida para consistencia
   eventName: string;
   imageUrl: string;
   type: string;
@@ -46,6 +47,9 @@ export interface CartItem {
   time: string;
   quantity: number;
   seats?: (string | number)[];
+  idPlace: number; // Propiedad añadida para consistencia
+  idSector: number; // Propiedad añadida para consistencia
+  ticketIds?: number[]; // Propiedad añadida para consistencia
 }
 
 export interface EventDetailState {
@@ -95,4 +99,3 @@ export interface SeatSelectorProps {
   enumerated?: boolean;
   columns?: number;
 }
-

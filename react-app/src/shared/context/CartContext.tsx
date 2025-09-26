@@ -1,12 +1,11 @@
-import  { createContext, useReducer, useEffect, useContext } from 'react';
+import { createContext, useReducer, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
-
 
 export interface Ticket {
   id: string;
   eventId: string;
   eventName: string;
-  date: string; 
+  date: string;
   time: string;
   location: string;
   placeName: string;
@@ -19,9 +18,8 @@ export interface Ticket {
   agotado?: boolean;
   description?: string;
   quantity: number;
-  idTicket?: number; 
+  idTicket?: number;
 }
-
 
 export interface CartItem extends Ticket {
   quantity: number;
@@ -30,7 +28,6 @@ export interface CartItem extends Ticket {
   idPlace: number;
   idSector: number;
 }
-
 
 interface CartState {
   cartItems: CartItem[];
@@ -63,7 +60,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     case 'ADD_TO_CART': {
       const { ticket, quantity } = action.payload;
       const existingItemIndex = state.cartItems.findIndex(item => item.id === ticket.id);
-      
+
       let totalInCartForEvent = state.cartItems
         .filter(item => item.eventId === ticket.eventId)
         .reduce((sum, item) => sum + item.quantity, 0);
@@ -75,28 +72,43 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       if (totalInCartForEvent + quantity > 6) {
         return state;
       }
-      
-      if (existingItemIndex > -1) {
-        const updatedItems = [...state.cartItems];
-        updatedItems[existingItemIndex].quantity += quantity;
-        return { ...state, cartItems: updatedItems };
-      } else {
-        return { ...state, cartItems: [...state.cartItems, { ...ticket, quantity }] };
-      }
+
+     if (existingItemIndex > -1) {
+  const updatedItems = [...state.cartItems];
+  updatedItems[existingItemIndex].quantity += quantity;
+  return { ...state, cartItems: updatedItems };
+} else {
+  return {
+    ...state,
+    cartItems: [
+      ...state.cartItems,
+      {
+        ...ticket,
+        quantity,
+        idPlace: ticket.idPlace ?? 0,
+        idSector: ticket.idSector ?? 0,
+        ticketIds: Array.isArray(ticket.ticketIds)
+          ? ticket.ticketIds.map(id => Number(id))
+          : [],
+      },
+    ],
+  };
+}
+
     }
-    
+
     case 'REMOVE_ITEM': {
       const { id } = action.payload;
       return {
         ...state,
-        cartItems: state.cartItems.filter(item => item.id !== id)
+        cartItems: state.cartItems.filter(item => item.id !== id),
       };
     }
-    
+
     case 'CLEAR_CART': {
       return { ...state, cartItems: [] };
     }
-    
+
     case 'UPDATE_QUANTITY': {
       const { id, quantity } = action.payload;
       const itemToUpdate = state.cartItems.find(item => item.id === id);
@@ -105,9 +117,9 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       const totalInCartForEvent = state.cartItems
         .filter(item => item.eventId === itemToUpdate.eventId && item.id !== id)
         .reduce((sum, item) => sum + item.quantity, 0);
-      
+
       if (totalInCartForEvent + quantity > 6) {
-          return state; 
+        return state;
       }
 
       return {
@@ -117,11 +129,11 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         ),
       };
     }
-    
+
     case 'LOAD_CART': {
       return { ...state, cartItems: action.payload.items };
     }
-    
+
     default:
       return state;
   }
@@ -137,7 +149,7 @@ function CartProvider({ children }: CartProviderProps) {
         dispatch({ type: 'LOAD_CART', payload: { items: JSON.parse(storedCart) } });
       }
     } catch (error) {
-      console.error("CartContext: Error al cargar el carrito de localStorage:", error);
+      console.error('CartContext: Error al cargar el carrito de localStorage:', error);
     }
   }, []);
 
@@ -145,7 +157,7 @@ function CartProvider({ children }: CartProviderProps) {
     try {
       localStorage.setItem('ticket-cart', JSON.stringify(state.cartItems));
     } catch (error) {
-      console.error("CartContext: Error al guardar el carrito en localStorage:", error);
+      console.error('CartContext: Error al guardar el carrito en localStorage:', error);
     }
   }, [state.cartItems]);
 
@@ -157,7 +169,7 @@ function CartProvider({ children }: CartProviderProps) {
     if (totalInCartForEvent + quantity > 6) {
       return false;
     }
-    
+
     dispatch({ type: 'ADD_TO_CART', payload: { ticket, quantity } });
     return true;
   };
@@ -171,13 +183,13 @@ function CartProvider({ children }: CartProviderProps) {
   };
 
   const updateItemQuantity = (id: string, newQuantity: number): boolean => {
-     const itemToUpdate = state.cartItems.find(item => item.id === id);
+    const itemToUpdate = state.cartItems.find(item => item.id === id);
     if (!itemToUpdate) return false;
 
     const totalInCartForEvent = state.cartItems
       .filter(item => item.eventId === itemToUpdate.eventId && item.id !== id)
       .reduce((sum, item) => sum + item.quantity, 0);
-      
+
     if (totalInCartForEvent + newQuantity > 6) {
       return false;
     }
@@ -189,21 +201,22 @@ function CartProvider({ children }: CartProviderProps) {
   const cartCount = state.cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ 
-      cartItems: state.cartItems, 
-      cartCount, 
-      addToCart, 
-      removeItem, 
-      clearCart, 
-      updateItemQuantity 
-    }}>
+    <CartContext.Provider
+      value={{
+        cartItems: state.cartItems,
+        cartCount,
+        addToCart,
+        removeItem,
+        clearCart,
+        updateItemQuantity,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
-};
+}
 
 export { CartProvider };
-
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -212,4 +225,3 @@ export const useCart = () => {
   }
   return context;
 };
-

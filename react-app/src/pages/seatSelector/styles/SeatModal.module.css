@@ -1,3 +1,25 @@
+/* Keyframes para las animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideOutDown {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(30px); opacity: 0; }
+}
+
+/* Estilos del Overlay */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -9,14 +31,17 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.modalOverlay.modalOpen {
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
+.modalOverlay.modalClosing {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
+/* Estilos del Contenido del Modal */
 .modalContent {
   background: white;
   padding: 2rem;
@@ -27,13 +52,16 @@
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  animation: scaleIn 0.3s ease-out;
 }
 
-@keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+.modalContent.modalOpen {
+  animation: slideInUp 0.3s ease-out forwards;
 }
+
+.modalContent.modalClosing {
+  animation: slideOutDown 0.3s ease-in forwards;
+}
+
 
 .modalHeader {
   display: flex;

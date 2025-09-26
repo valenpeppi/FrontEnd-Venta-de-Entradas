@@ -1,159 +1,181 @@
-import React, { useReducer, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
 import styles from './styles/RegisterUser.module.css';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 interface RegisterProps {
   onRegisterSuccess: () => void;
 }
 
-interface RegisterState {
-  dni: string;
-  fullName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  birthDate: string;
-  error: string | null;
-  successMessage: string | null;
-}
-
-type RegisterAction =
-  | { type: 'SET_FIELD'; payload: { field: keyof Omit<RegisterState, 'error' | 'successMessage'>; value: string } }
-  | { type: 'SET_ERROR'; payload: { error: string | null } }
-  | { type: 'SET_SUCCESS'; payload: { message: string | null } }
-  | { type: 'RESET_FORM' };
-
-const registerReducer = (state: RegisterState, action: RegisterAction): RegisterState => {
-  switch (action.type) {
-    case 'SET_FIELD':
-      return { ...state, [action.payload.field]: action.payload.value };
-    case 'SET_ERROR':
-      return { ...state, error: action.payload.error, successMessage: null };
-    case 'SET_SUCCESS':
-      return { ...state, successMessage: action.payload.message, error: null };
-    case 'RESET_FORM':
-      return {
-        dni: '',
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        birthDate: '',
-        error: null,
-        successMessage: null
-      };
-    default:
-      return state;
-  }
-};
-
 const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
-  const [state, dispatch] = useReducer(registerReducer, {
+  const [formData, setFormData] = useState({
     dni: '',
     fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
     birthDate: '',
-    error: null,
-    successMessage: null
   });
   
+  const [errors, setErrors] = useState<Partial<typeof formData>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof typeof formData, boolean>>>({});
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
-  const handleFieldChange = (field: keyof Omit<RegisterState, 'error' | 'successMessage'>, value: string) => {
-    dispatch({ type: 'SET_FIELD', payload: { field, value } });
+  const validateField = (name: keyof typeof formData, value: string) => {
+    let errorMsg = '';
+    switch (name) {
+      case 'dni':
+        if (!/^\d{7,8}$/.test(value)) errorMsg = 'El DNI debe tener 7 u 8 dígitos.';
+        break;
+      case 'fullName':
+        if (value.trim().split(' ').length < 2) errorMsg = 'Ingresa nombre y apellido.';
+        break;
+      case 'email':
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMsg = 'Email inválido.';
+        break;
+      case 'password':
+        if (value.length < 4) errorMsg = 'La contraseña debe tener al menos 4 caracteres.';
+        break;
+      case 'confirmPassword':
+        if (value !== formData.password) errorMsg = 'Las contraseñas no coinciden.';
+        break;
+      case 'birthDate':
+        if (!value) errorMsg = 'La fecha es obligatoria.';
+        else if (new Date(value) > new Date()) errorMsg = 'La fecha no puede ser futura.';
+        break;
+      default:
+        break;
+    }
+    setErrors(prev => ({ ...prev, [name]: errorMsg || undefined }));
+  };
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target as { name: keyof typeof formData, value: string };
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (touched[name]) {
+      validateField(name, value);
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target as { name: keyof typeof formData, value: string };
+    setTouched(prev => ({ ...prev, [name]: true }));
+    validateField(name, value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch({ type: 'SET_ERROR', payload: { error: null } });
-    dispatch({ type: 'SET_SUCCESS', payload: { message: null } });
+    setServerError(null);
+    setSuccessMessage(null);
 
+    // Validate all fields on submit
+    Object.keys(formData).forEach(key => {
+      const fieldName = key as keyof typeof formData;
+      validateField(fieldName, formData[fieldName]);
+    });
+
+    const hasErrors = Object.values(errors).some(error => !!error);
+    if (hasErrors || Object.values(formData).some(val => val === '')) {
+      setServerError('Por favor, corrige los errores antes de continuar.');
+      return;
+    }
+    
     if (!captchaValue) {
-      dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, verifica que no eres un robot.' } });
+      setServerError('Por favor, verifica que no eres un robot.');
       return;
     }
 
-    if (!state.dni || !state.fullName || !state.email || !state.password || !state.confirmPassword || !state.birthDate) {
-      dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, completa todos los campos.' } });
-      return;
-    }
-
-    if (state.password !== state.confirmPassword) {
-      dispatch({ type: 'SET_ERROR', payload: { error: 'Las contraseñas no coinciden.' } });
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(state.email)) {
-      dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, introduce un email válido.' } });
-      return;
-    }
-
-    const nameParts = state.fullName.trim().split(' ');
-    let name = nameParts.length > 1 ? nameParts[0] : state.fullName;
-    let surname = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+    const nameParts = formData.fullName.trim().split(' ');
+    const name = nameParts.length > 1 ? nameParts[0] : formData.fullName;
+    const surname = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
 
     try {
-      await axios.post('http://localhost:3000/api/auth/register', {
-        dni: state.dni,
+      await axios.post(`${import.meta.env.VITE_API_BASE}/api/auth/register`, {
+        dni: formData.dni,
         name,
         surname,
-        mail: state.email,
-        password: state.password,
-        birthDate: state.birthDate,
+        mail: formData.email,
+        password: formData.password,
+        birthDate: formData.birthDate,
         captchaToken: captchaValue,
       });
 
-      dispatch({ type: 'SET_SUCCESS', payload: { message: '¡Registro exitoso! Serás redirigido para iniciar sesión.' } });
+      setSuccessMessage('¡Registro exitoso! Serás redirigido para iniciar sesión.');
       setTimeout(() => {
         onRegisterSuccess();
         navigate('/login');
       }, 2000);
     } catch (error: any) {
       const errorMsg = error.response?.data?.message || 'Error de red o del servidor.';
-      dispatch({ type: 'SET_ERROR', payload: { error: errorMsg } });
+      setServerError(errorMsg);
     }
+  };
+
+  const getInputClass = (field: keyof typeof formData) => {
+    if (!touched[field]) return styles.registerInput;
+    return errors[field] ? `${styles.registerInput} ${styles.invalid}` : `${styles.registerInput} ${styles.valid}`;
   };
 
   return (
     <div className={styles.registerContainer}>
       <div className={styles.registerCard}>
         <h2 className={styles.registerTitle}>Registrarse</h2>
-        {state.error && <div className={styles.registerErrorMessage}>{state.error}</div>}
-        {state.successMessage && <div className={styles.registerSuccessMessage}>{state.successMessage}</div>}
+        {serverError && <div className={styles.registerErrorMessage}>{serverError}</div>}
+        {successMessage && <div className={styles.registerSuccessMessage}>{successMessage}</div>}
         <form onSubmit={handleSubmit} className={styles.registerForm}>
-          <div className={styles.registerFormGroup}>
-            <label htmlFor="dni" className={styles.registerLabel}>DNI:</label>
-            <input type="text" id="dni" value={state.dni} onChange={(e) => handleFieldChange('dni', e.target.value)} className={styles.registerInput} placeholder="Ingresa tu DNI" />
-          </div>
-          <div className={styles.registerFormGroup}>
-            <label htmlFor="fullName" className={styles.registerLabel}>Nombre completo:</label>
-            <input type="text" id="fullName" value={state.fullName} onChange={(e) => handleFieldChange('fullName', e.target.value)} className={styles.registerInput} placeholder="Ingresa tu nombre completo" />
-          </div>
-          <div className={styles.registerFormGroup}>
-            <label htmlFor="email" className={styles.registerLabel}>Email:</label>
-            <input type="email" id="email" value={state.email} onChange={(e) => handleFieldChange('email', e.target.value)} className={styles.registerInput} placeholder="Ingresa tu email" />
-          </div>
-          <div className={styles.registerFormGroup}>
-            <label htmlFor="birthDate" className={styles.registerLabel}>Fecha de nacimiento:</label>
-            <input type="date" id="birthDate" value={state.birthDate} onChange={(e) => handleFieldChange('birthDate', e.target.value)} className={styles.registerInput} />
-          </div>
-          <div className={styles.registerFormGroup}>
-            <label htmlFor="password" className={styles.registerLabel}>Contraseña:</label>
-            <input type="password" id="password" value={state.password} onChange={(e) => handleFieldChange('password', e.target.value)} className={styles.registerInput} placeholder="Ingresa tu contraseña" />
-          </div>
-          <div className={styles.registerFormGroup}>
-            <label htmlFor="confirmPassword" className={styles.registerLabel}>Confirmar contraseña:</label>
-            <input type="password" id="confirmPassword" value={state.confirmPassword} onChange={(e) => handleFieldChange('confirmPassword', e.target.value)} className={styles.registerInput} placeholder="Confirma tu contraseña" />
-          </div>
+          {Object.keys(formData).map(key => {
+             const fieldName = key as keyof typeof formData;
+             const labelMap: Record<keyof typeof formData, string> = {
+                dni: 'DNI',
+                fullName: 'Nombre completo',
+                email: 'Email',
+                birthDate: 'Fecha de nacimiento',
+                password: 'Contraseña',
+                confirmPassword: 'Confirmar contraseña',
+             };
+             const typeMap: Record<keyof typeof formData, string> = {
+                dni: 'text',
+                fullName: 'text',
+                email: 'email',
+                birthDate: 'date',
+                password: 'password',
+                confirmPassword: 'password',
+             };
+
+             return (
+               <div className={styles.registerFormGroup} key={fieldName}>
+                 <label htmlFor={fieldName} className={styles.registerLabel}>{labelMap[fieldName]}:</label>
+                 <div className={styles.inputWrapper}>
+                   <input
+                     type={typeMap[fieldName]}
+                     id={fieldName}
+                     name={fieldName}
+                     value={formData[fieldName]}
+                     onChange={handleChange}
+                     onBlur={handleBlur}
+                     className={getInputClass(fieldName)}
+                     placeholder={`Ingresa tu ${labelMap[fieldName].toLowerCase()}`}
+                   />
+                   {touched[fieldName] && (
+                     errors[fieldName] 
+                       ? <FaTimesCircle className={`${styles.inputIcon} ${styles.invalidIcon}`} />
+                       : <FaCheckCircle className={`${styles.inputIcon} ${styles.validIcon}`} />
+                   )}
+                 </div>
+                 {touched[fieldName] && errors[fieldName] && <span className={styles.errorMessage}>{errors[fieldName]}</span>}
+               </div>
+             );
+          })}
+          
           <div className={styles.captchaContainer}>
             <ReCAPTCHA
-              sitekey="6LfEeKIrAAAAAOtnJGyIq4LpZC2Zw1kIVr1BLOLa"
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"}
               onChange={(value) => setCaptchaValue(value)}
             />
           </div>
@@ -171,3 +193,4 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
 };
 
 export default Register;
+

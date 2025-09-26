@@ -37,14 +37,15 @@
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
+  color: #e0e7ff;
 }
 
 .helpSubtitle {
   font-size: 1.1rem;
   max-width: 600px;
   margin: 0 auto;
-  color: #e0e7ff; /* Color de texto más claro y visible */
-  opacity: 1; /* Aseguramos opacidad completa */
+  color: #e0e7ff; 
+  opacity: 1; 
 }
 
 .helpSection {

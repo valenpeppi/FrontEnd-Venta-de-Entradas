@@ -5,7 +5,7 @@ import styles from './styles/Footer.module.css';
 // Importa las imágenes desde la carpeta assets
 import logoTicket from '../../assets/ticket.png';
 import facebookIcon from '../../assets/facebook.png';
-import twitterIcon from '../../assets/x.png'; 
+import twitterIcon from '../../assets/x.png';
 import instagramIcon from '../../assets/instagram.png';
 import visaIcon from '../../assets/visa.png';
 import mastercardIcon from '../../assets/mastercard.png';
@@ -38,9 +38,12 @@ const Footer: React.FC = () => {
           <div className={styles.footerLinksColumn}>
             <h4>Eventos</h4>
             <ul>
-              <li><Link to="/">Conciertos</Link></li>
-              <li><Link to="/">Deportes</Link></li>
-              <li><Link to="/">Teatro</Link></li>
+              <li><Link to="/searchedEvents?query=concierto">Conciertos</Link></li>
+              <li><Link to="/searchedEvents?query=evento%20deportivo">Eventos Deportivos</Link></li>
+              <li><Link to="/searchedEvents?query=fiesta">Fiestas</Link></li>
+              <li><Link to="/searchedEvents?query=arte">Exposiciones de Arte</Link></li>
+              <li><Link to="/searchedEvents?query=jornada%20de%20lectura">Jornadas de Lectura</Link></li>
+              <li><Link to="/searchedEvents?query=stand%20up">Stand Ups</Link></li>
             </ul>
           </div>
 
@@ -69,7 +72,9 @@ const Footer: React.FC = () => {
                 <Link to="/newsletter">Recibe ofertas exclusivas</Link>
               </li>
               <li>
-                <Link to="/registercompany">Sé un organizador</Link>
+                <Link to="/registercompany">Sé un organizador.</Link>
+                {' ¿Ya tienes una cuenta? '}
+                <Link to="/logincompany">Inicia sesión aquí</Link>
               </li>
             </ul>
           </div>
@@ -91,3 +96,4 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
+

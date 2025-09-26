@@ -148,11 +148,20 @@
   text-align: center;
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
 }
 
 .fileInputContainer:hover {
   background-color: #f9fafb;
   border-color: #6366f1;
+}
+
+.fileInputContainer.dragOver {
+  background-color: #e0e7ff;
+  border-color: #4f46e5;
 }
 
 .fileInputButton {
@@ -166,6 +175,13 @@
 .fileInputText strong {
   color: #4f46e5;
   font-weight: 600;
+}
+
+.imagePreview {
+  max-width: 100%;
+  max-height: 150px;
+  border-radius: 0.5rem;
+  object-fit: cover;
 }
 
 
@@ -309,3 +325,4 @@
     font-size: 0.9rem;
   }
 }
+

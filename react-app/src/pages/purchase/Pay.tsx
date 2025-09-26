@@ -10,10 +10,16 @@ const Pay: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useCart();
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
-  const [userData, setUserData] = useState({
-    email: 'test_user_123456@testuser.com',
-    name: 'Test',
-    surname: 'User',
+  const [userData, setUserData] = useState<{
+    email: string;
+    name: string;
+    surname: string;
+    dni: number | null;
+  }>({
+    email: '',
+    name: '',
+    surname: '',
+    dni: null,
   });
 
   useEffect(() => {
@@ -22,12 +28,22 @@ const Pay: React.FC = () => {
       advancedFraudPrevention: false,
     });
 
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    setUserData({
-      email: user.email || 'test_user_123456@testuser.com',
-      name: user.name || 'Test',
-      surname: user.surname || 'User',
-    });
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        console.log("👤 Usuario cargado desde localStorage:", user);
+
+        setUserData({
+          email: user.mail || user.email || '',
+          name: user.name || 'Usuario',
+          surname: user.surname || '',
+          dni: user.dni ? Number(user.dni) : null,
+        });
+      } catch (e) {
+        console.error("❌ Error parseando user de localStorage:", e);
+      }
+    }
   }, []);
 
   const calculateTotal = () => {
@@ -67,32 +83,46 @@ const Pay: React.FC = () => {
   };
 
   // STRIPE
-    const handleStripePayment = async () => {
+  const handleStripePayment = async () => {
+    if (!userData.dni) {
+      alert("Debes iniciar sesión con un usuario válido para pagar con Stripe");
+      return;
+    }
+
     try {
+      console.log("🛒 cartItems enviados al backend:", cartItems);
+
       const response = await fetch("http://localhost:3000/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: cartItems.map(item => ({
             name: item.eventName,
-            amount: Math.round(item.price * 100),
+            amount: Math.round(item.price * 100), // Stripe usa centavos
             quantity: item.quantity,
           })),
+          dniClient: userData.dni,
+          ticketGroups: cartItems.map(item => ({
+            idEvent: Number(item.eventId),
+            idPlace: Number(item.idPlace),
+            idSector: Number(item.idSector),
+            ids: (item.ticketIds || []).map((id: any) => Number(id)),
+          })),
+          customerEmail: userData.email,
         }),
       });
 
       const data = await response.json();
       if (data.url) {
-        // Guardamos el carrito actual en localStorage antes de salir a Stripe
         localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
         window.location.href = data.url;
+      } else {
+        console.error("❌ Error en Stripe Checkout, respuesta inválida:", data);
       }
-
     } catch (error) {
-      console.error("Error en Stripe Checkout:", error);
+      console.error("❌ Error en Stripe Checkout:", error);
     }
   };
-
 
   return (
     <div className={styles.payContainer}>
@@ -122,8 +152,12 @@ const Pay: React.FC = () => {
               <Wallet initialization={{ preferenceId }} />
             )}
 
-            <button onClick={handleStripePayment} className={styles.btnStripe}>
-              Pagar con Stripe
+            <button
+              onClick={handleStripePayment}
+              className={styles.btnStripe}
+              disabled={!userData.dni}
+            >
+              {userData.dni ? "Pagar con Stripe" : "Inicia sesión para usar Stripe"}
             </button>
           </div>
 

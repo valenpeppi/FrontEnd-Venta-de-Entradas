@@ -41,13 +41,15 @@ const SearchedEvents: React.FC = () => {
         minute: "2-digit",
         timeZone: "UTC",
       }) + " hs",
-      location: ev.location || ev.place?.name || ev.placeName || "Lugar no especificado",
+      location: ev.location || ev.place?.name || "Lugar no especificado",
+      placeName: ev.placeName || ev.place?.name || "Lugar no especificado",
       price: minPrice,
       availableTickets: ev.availableSeats ?? ev.availableTickets ?? 0,
       type: ev.eventType?.name || ev.type || "General",
       imageUrl: ev.imageUrl || "/ticket.png",
       featured: ev.featured ?? false,
       agotado: ev.agotado ?? false,
+      quantity: 0
     };
   };
 
@@ -92,8 +94,8 @@ const SearchedEvents: React.FC = () => {
         <p className={styles.noResults}>No se encontraron eventos.</p>
       ) : (
         <div className={styles.grid}>
-          {results.map(ticket => (
-            <EventCard key={ticket.id} ticket={ticket} />
+          {results.map((ticket, index) => (
+            <EventCard key={ticket.id} ticket={ticket} index={index} />
           ))}
         </div>
       )}
@@ -103,11 +105,11 @@ const SearchedEvents: React.FC = () => {
 
 export default SearchedEvents;
 
-const EventCard: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
+const EventCard: React.FC<{ ticket: Ticket; index: number }> = ({ ticket, index }) => {
   const navigate = useNavigate();
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} style={{ animationDelay: `${index * 80}ms` }}>
       <img
         src={ticket.imageUrl}
         alt={ticket.eventName}
@@ -150,3 +152,4 @@ const EventCard: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
     </div>
   );
 };
+

@@ -86,6 +86,8 @@ const CreateEventPage: React.FC = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [sectors, setSectors] = useState<Sector[]>([]);
   const [types, setTypes] = useState<EventType[]>([]);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const navigate = useNavigate();
   const { setAppMessage } = useMessage();
 
@@ -141,11 +143,36 @@ const CreateEventPage: React.FC = () => {
       }
     });
   };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
+  
+  const handleImageChange = (file: File | null) => {
     dispatch({ type: 'SET_IMAGE', payload: { image: file } });
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview);
+    }
+    if (file) {
+      const newPreviewUrl = URL.createObjectURL(file);
+      setImagePreview(newPreviewUrl);
+    } else {
+      setImagePreview(null);
+    }
   };
+  
+  const handleDragEvents = (e: React.DragEvent<HTMLLabelElement>, isEntering: boolean) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(isEntering);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+    handleDragEvents(e, false);
+    const file = e.dataTransfer.files?.[0] || null;
+    if (file && file.type.startsWith('image/')) {
+      handleImageChange(file);
+    } else {
+      setAppMessage('Por favor, suelta un archivo de imagen válido.', 'error');
+    }
+  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -308,7 +335,7 @@ const CreateEventPage: React.FC = () => {
                     className={styles.priceInput}
                     value={state.sectorPrices[sector.idSector] || ''}
                     onChange={(e) => handlePriceChange(sector.idSector, e.target.value)}
-                    placeholder="Ej: 150.00"
+                    placeholder="Ej: 40000.00"
                     required min="0" step="0.01"
                   />
                 </div>
@@ -318,18 +345,29 @@ const CreateEventPage: React.FC = () => {
 
           <div className={styles.formGroup}>
             <label htmlFor="image">Foto del Evento</label>
-            <label htmlFor="image-upload" className={styles.fileInputContainer}>
+            <label 
+              htmlFor="image-upload" 
+              className={`${styles.fileInputContainer} ${isDragging ? styles.dragOver : ''}`}
+              onDragEnter={(e) => handleDragEvents(e, true)}
+              onDragOver={(e) => handleDragEvents(e, true)}
+              onDragLeave={(e) => handleDragEvents(e, false)}
+              onDrop={handleDrop}
+            >
               <input 
                 id="image-upload" 
                 className={styles.fileInputButton}
                 type="file" 
                 accept="image/*" 
-                onChange={handleImageChange} 
+                onChange={(e) => handleImageChange(e.target.files?.[0] || null)} 
                 required 
               />
-              <span className={styles.fileInputText}>
-                {state.image ? state.image.name : <span><strong>Haz clic para subir</strong> o arrastra una imagen</span>}
-              </span>
+              {imagePreview ? (
+                <img src={imagePreview} alt="Vista previa" className={styles.imagePreview} />
+              ) : (
+                <span className={styles.fileInputText}>
+                  <strong>Haz clic para subir</strong> o arrastra una imagen
+                </span>
+              )}
             </label>
           </div>
 
@@ -344,3 +382,4 @@ const CreateEventPage: React.FC = () => {
 };
 
 export default CreateEventPage;
+

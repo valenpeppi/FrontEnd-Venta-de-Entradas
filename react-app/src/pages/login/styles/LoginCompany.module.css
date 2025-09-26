@@ -75,6 +75,41 @@
   box-shadow: 0 0 0 2px #6366f1;
 }
 
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.loginCompanyInput, .loginCompanyInputPassword {
+  width: 100%;
+  padding-right: 2.5rem; /* Space for icon */
+}
+
+.inputSuccess {
+  border-color: #10b981;
+}
+
+.inputError {
+  border-color: #ef4444;
+}
+
+.validationIcon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+
 .loginCompanyFieldPassword {
   margin-bottom: 1.5rem;
   position: relative;
@@ -219,3 +254,4 @@
     font-size: 0.9rem;
   }
 }
+

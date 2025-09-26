@@ -39,9 +39,7 @@
   text-align: center;
 }
 
-.registerErrorMessage {
-  background-color: #fee2e2;
-  color: #b91c1c;
+.registerErrorMessage, .registerSuccessMessage {
   padding: 0.75rem;
   border-radius: 0.5rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -49,14 +47,14 @@
   text-align: center;
 }
 
+.registerErrorMessage {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
 .registerSuccessMessage {
   background-color: #d1fae5;
   color: #065f46;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  margin-bottom: 1rem;
-  text-align: center;
 }
 
 .registerForm {
@@ -80,9 +78,14 @@
   margin-bottom: 0.25rem;
 }
 
+.inputWrapper {
+  position: relative;
+}
+
 .registerInput {
   width: 100%;
   padding: 0.75rem;
+  padding-right: 2.5rem; /* Space for icon */
   border: 1px solid #d1d5db;
   border-radius: 0.5rem;
   outline: none;
@@ -92,7 +95,42 @@
 
 .registerInput:focus {
   border-color: #6366f1;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.registerInput.valid {
+  border-color: #10b981;
+}
+.registerInput.valid:focus {
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.registerInput.invalid {
+  border-color: #ef4444;
+}
+.registerInput.invalid:focus {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.inputIcon {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+}
+
+.validIcon {
+  color: #10b981;
+}
+
+.invalidIcon {
+  color: #ef4444;
+}
+
+.errorMessage {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }
 
 .registerButton {
@@ -116,8 +154,24 @@
 .captchaContainer {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: 1rem 0;
+  transform-origin: center;
+  width: 100%;
 }
+
+/* Responsive scaling for reCAPTCHA */
+@media (max-width: 480px) {
+  .captchaContainer {
+    transform: scale(0.9);
+  }
+}
+@media (max-width: 400px) {
+  .captchaContainer {
+    transform: scale(0.8);
+  }
+}
+
 
 .registerLoginLink {
   margin-top: 1.5rem;
@@ -175,6 +229,7 @@
 
   .registerInput {
     padding: 0.6rem;
+    padding-right: 2.5rem;
     font-size: 0.9rem;
   }
 
@@ -209,6 +264,7 @@
 
   .registerInput {
     padding: 0.5rem;
+    padding-right: 2.5rem;
     font-size: 0.85rem;
   }
 
@@ -217,3 +273,4 @@
     font-size: 0.9rem;
   }
 }
+

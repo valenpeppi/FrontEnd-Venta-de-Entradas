@@ -1,67 +1,18 @@
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-import { useCart } from "../../shared/context/CartContext"; 
 import { MdCheckCircle } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useCart } from "../../shared/context/CartContext";
 import styles from "./styles/Pay.module.css";
 
 const Success = () => {
-  const { cartItems, clearCart } = useCart();
+  const { clearCart } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const sendSaleConfirmation = async () => {
-      if (cartItems.length === 0) return;
-
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      const dniClient = user.dni;
-
-      type TicketGroup = {
-        idEvent: number;
-        idPlace: number;
-        idSector: number;
-        ids: number[];
-      };
-
-      const grouped: Record<string, TicketGroup> = {};
-
-      cartItems.forEach(item => {
-        if (!item.ticketIds || item.ticketIds.length === 0) return;
-
-        const idPlace = (item as any).idPlace;
-        const idSector = (item as any).idSector;
-
-        const key = `${item.eventId}_${idPlace}_${item.sectorName}_${idSector}`;
-
-        if (!grouped[key]) {
-          grouped[key] = {
-            idEvent: Number(item.eventId),
-            idPlace: Number(idPlace),
-            idSector: Number(idSector),
-            ids: [],
-          };
-        }
-
-        grouped[key].ids.push(...item.ticketIds);
-      });
-
-      const ticketsPayload = Object.values(grouped);
-
-      try {
-        await axios.post(`${import.meta.env.VITE_API_BASE}/api/sales/confirm`, {
-          dniClient,
-          tickets: ticketsPayload,
-        });
-      } catch (error) {
-        console.error("Error al confirmar la venta:", error);
-      }
-
-      clearCart();
-      localStorage.removeItem("ticket-cart");
-    };
-
-    sendSaleConfirmation();
-  }, [cartItems, clearCart]);
+    // Limpiamos carrito y storage
+    clearCart();
+    localStorage.removeItem("ticket-cart");
+  }, [clearCart]);
 
   return (
     <div className={styles.successContent}>

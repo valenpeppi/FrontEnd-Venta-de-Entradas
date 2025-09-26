@@ -28,6 +28,7 @@
 
 .navbarBrand:hover {
   color: #3730a3;
+  text-decoration: none;
 }
 
 .navbarCartContainer {
@@ -162,6 +163,7 @@
 
 .navbarLoginBtn:hover {
   background: #3730a3;
+  text-decoration: none;
 }
 
 .navbarRegisterBtn {
@@ -182,6 +184,7 @@
   background: #4f46e5;
   color: #fff;
   border-color: #4f46e5;
+  text-decoration: none;
 }
 
 .image1 {
@@ -441,3 +444,4 @@
   justify-content: center;
   align-items: center;
 }
+
