@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './styles/Footer.module.css';
 
-// Importa las imágenes desde la carpeta assets
 import logoTicket from '../../assets/ticket.png';
 import facebookIcon from '../../assets/facebook.png';
 import twitterIcon from '../../assets/x.png';

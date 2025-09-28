@@ -5,6 +5,7 @@ import logoTicket from '../../assets/ticket.png';
 import cartIcon from '../../assets/cart.png';
 import { useCart } from '../../shared/context/CartContext';
 import { useAuth } from '../../shared/context/AuthContext';
+import GradientText from './GradientText';
 
 const Navbar: React.FC = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -74,7 +75,7 @@ const Navbar: React.FC = () => {
       <div className={styles.navbarContainer}>
         <Link to="/" className={styles.navbarBrand}>
           <img src={logoTicket} alt="TicketApp Logo" className={styles.image1} />
-          TicketApp
+          <GradientText>TicketApp</GradientText>
         </Link>
 
         {!isAdmin && (
