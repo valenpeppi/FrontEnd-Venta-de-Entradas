@@ -145,8 +145,13 @@ function CartProvider({ children }: CartProviderProps) {
   useEffect(() => {
     try {
       const storedCart = localStorage.getItem('ticket-cart');
+      console.log('🛒 CartContext: Cargando carrito desde localStorage:', storedCart);
       if (storedCart) {
-        dispatch({ type: 'LOAD_CART', payload: { items: JSON.parse(storedCart) } });
+        const parsedCart = JSON.parse(storedCart);
+        console.log('🛒 CartContext: Carrito parseado:', parsedCart);
+        dispatch({ type: 'LOAD_CART', payload: { items: parsedCart } });
+      } else {
+        console.log('🛒 CartContext: No hay carrito en localStorage');
       }
     } catch (error) {
       console.error('CartContext: Error al cargar el carrito de localStorage:', error);

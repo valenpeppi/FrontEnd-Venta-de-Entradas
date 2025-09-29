@@ -29,17 +29,9 @@ interface ItemToAdd {
 }
 
 const SECTOR_LAYOUT_CONFIG: Record<string, Record<string, number>> = {
-  'Estadio Gigante de Arroyito': {
-    'Tribuna Norte': 4,
-    'Tribuna Sur': 4,
-  },
-  'Bioceres Arena': {
-    'VIP': 10,
-  },
-  'El Circulo': {
-    'Sala Principal': 5,
-    'Tribuna Superior': 5,
-  }
+  'Estadio Gigante de Arroyito': { 'Tribuna Norte': 4, 'Tribuna Sur': 4 },
+  'Bioceres Arena': { 'VIP': 10 },
+  'El Circulo': { 'Sala Principal': 5, 'Tribuna Superior': 5 }
 };
 
 const EventDetailPage: React.FC = () => {
@@ -51,6 +43,8 @@ const EventDetailPage: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalClosing, setIsModalClosing] = useState(false);
+
+  const [seatTicketMap, setSeatTicketMap] = useState<Record<string, number>>({});
 
   const {
     summary, sectors, loading, generalQuantity, selectedSector, seats,
@@ -64,6 +58,20 @@ const EventDetailPage: React.FC = () => {
     'Bioceres Arena': bioceresArena,
     'El Circulo': elCirculo,
   };
+
+  useEffect(() => {
+    if (!summary) return;
+    const fetchTicketMap = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/api/events/events/${summary.id}/tickets/map`);
+        setSeatTicketMap(res.data?.data || {});
+      } catch (err) {
+        console.error("❌ Error al cargar mapa de tickets", err);
+        setSeatTicketMap({});
+      }
+    };
+    fetchTicketMap();
+  }, [summary]);
 
   const getSectorOverlayClass = (sec: Sector) => {
     const name = sec.name.toLowerCase().trim();
@@ -86,23 +94,33 @@ const EventDetailPage: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [summaryRes, sectorsRes] = await Promise.all([
-          axios.get(`${BASE_URL}/api/events/events/${id}`),
-          axios.get(`${BASE_URL}/api/events/events/${id}/sectors`)
-        ]);
+
+        const summaryRes = await axios.get(`${BASE_URL}/api/events/events/${id}`);
+        const sectorsRes = await axios.get(`${BASE_URL}/api/events/events/${id}/sectors`);
 
         const summaryData = summaryRes.data?.data;
+
         if (!summaryData) {
           setAppMessage('No se encontró el evento', 'error');
           navigate('/');
           return;
         }
 
-        setSummary({ ...summaryData, imageUrl: summaryData.imageUrl || "/ticket.png" });
+        setSummary({
+          ...summaryData,
+          imageUrl: summaryData.imageUrl || "/ticket.png"
+        });
 
         if (summaryData.placeType.toLowerCase() !== 'nonenumerated') {
-          setSectors((sectorsRes.data?.data ?? []).map((s: Sector) => ({ ...s, selected: 0, enumerated: s.enumerated })));
+          setSectors(
+            (sectorsRes.data?.data ?? []).map((s: Sector) => ({
+              ...s,
+              selected: 0,
+              enumerated: s.enumerated,
+            }))
+          );
         }
+
       } catch (e) {
         console.error('Error al cargar detalle del evento', e);
         setAppMessage('No se pudo cargar el evento', 'error');
@@ -111,8 +129,10 @@ const EventDetailPage: React.FC = () => {
         setLoading(false);
       }
     };
+
     fetchData();
-  }, [id, navigate, setAppMessage, setLoading, setSectors, setSummary]);
+  }, [id]);
+
 
   useEffect(() => {
     if (selectedSector !== null) {
@@ -128,19 +148,6 @@ const EventDetailPage: React.FC = () => {
     }
   }, [selectedSector, sectors, summary, setSeats, setAppMessage, id]);
 
-  const handleSectorClick = (sector: Sector) => {
-    if (sector.enumerated) {
-      openSeatModal(sector.idSector);
-    } else {
-      sectorListRef.current?.scrollIntoView({ behavior: 'smooth' });
-      const sectorCard = document.getElementById(`sector-card-${sector.idSector}`);
-      sectorCard?.classList.add(styles.activeCard);
-      setTimeout(() => {
-        sectorCard?.classList.remove(styles.activeCard);
-      }, 1500);
-    }
-  };
-
   const openSeatModal = (sectorId: number) => {
     const sector = sectors.find(s => s.idSector === sectorId);
     if (sector?.enumerated) {
@@ -153,10 +160,10 @@ const EventDetailPage: React.FC = () => {
   const closeModal = () => {
     setIsModalClosing(true);
     setTimeout(() => {
-        setIsModalOpen(false);
-        setSelectedSector(null);
-        setSeats([]);
-    }, 300); // Coincide con la duración de la animación de salida
+      setIsModalOpen(false);
+      setSelectedSector(null);
+      setSeats([]);
+    }, 300);
   };
 
   const handleAddToCartInModal = () => {
@@ -169,20 +176,22 @@ const EventDetailPage: React.FC = () => {
       setAppMessage('Error: No se ha cargado la información del evento.', 'error');
       return;
     }
-  
     const token = localStorage.getItem('token');
     if (!token) {
       setAppMessage('Debes iniciar sesión para comprar entradas', 'error');
       navigate('/login');
       return;
     }
-  
+
     let totalSelected = 0;
     let itemsToAdd: ItemToAdd[] = [];
-  
+
     if (summary.placeType.toLowerCase() === 'nonenumerated') {
       totalSelected = generalQuantity;
       if (totalSelected > 0) {
+        // Para entrada general, generar IDs temporales
+        const tempTicketIds = Array.from({ length: totalSelected }, (_, i) => i + 1);
+        
         itemsToAdd.push({
           ticket: {
             id: `${summary.id}-general`,
@@ -200,7 +209,7 @@ const EventDetailPage: React.FC = () => {
             time: new Date(summary.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ' hs',
             idPlace: summary.idPlace,
             idSector: 0,
-            ticketIds: []
+            ticketIds: tempTicketIds,
           },
           quantity: totalSelected
         });
@@ -208,70 +217,81 @@ const EventDetailPage: React.FC = () => {
     } else {
       const nonEnum = sectors.filter(s => !s.enumerated && s.selected && s.selected > 0);
       const enumSectors = sectors.filter(s => s.enumerated && selectedSeatsMap[s.idSector]?.length);
-  
+
       totalSelected =
         nonEnum.reduce((sum, s) => sum + (s.selected || 0), 0) +
         enumSectors.reduce((sum, s) => sum + (selectedSeatsMap[s.idSector] || []).length, 0);
-  
+
       itemsToAdd = [
-        ...nonEnum.map(sec => ({
-          ticket: {
-            id: `${summary.id}-${sec.idSector}`,
-            eventId: String(summary.id),
-            eventName: summary.eventName,
-            date: summary.date,
-            location: formatPlaceType(summary.placeType),
-            placeName: summary.placeName,
-            sectorName: sec.name,
-            price: sec.price,
-            availableTickets: sec.availableTickets,
-            imageUrl: summary.imageUrl,
-            type: summary.type,
-            featured: false,
-            time: new Date(summary.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ' hs',
-            idPlace: summary.idPlace,
-            idSector: sec.idSector,
-            ticketIds: []
-          },
-          quantity: sec.selected || 0
-        })),
-        ...enumSectors.flatMap(sec =>
-          (selectedSeatsMap[sec.idSector] || []).map(seatId => ({
+        ...nonEnum.map(sec => {
+          // Para sectores no enumerados, generar IDs temporales basados en la cantidad
+          const tempTicketIds = Array.from({ length: sec.selected || 0 }, (_, i) => 
+            `${summary.idPlace}-${sec.idSector}-temp-${i}`
+          ).map(id => parseInt(id.split('-').pop() || '0'));
+          
+          return {
             ticket: {
-              id: `${summary.id}-${sec.idSector}-${seatId}`,
+              id: `${summary.id}-${sec.idSector}`,
               eventId: String(summary.id),
               eventName: summary.eventName,
               date: summary.date,
               location: formatPlaceType(summary.placeType),
               placeName: summary.placeName,
-              sectorName: `${sec.name} Asiento ${seatId}`,
+              sectorName: sec.name,
               price: sec.price,
-              availableTickets: 1,
+              availableTickets: sec.availableTickets,
               imageUrl: summary.imageUrl,
               type: summary.type,
               featured: false,
               time: new Date(summary.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ' hs',
               idPlace: summary.idPlace,
               idSector: sec.idSector,
-              ticketIds: [seatId]
+              ticketIds: tempTicketIds,
             },
-            quantity: 1,
-            seats: [seatId]
-          }))
+            quantity: sec.selected || 0
+          };
+        }),
+        ...enumSectors.flatMap(sec =>
+          (selectedSeatsMap[sec.idSector] || []).map(seatId => {
+            const ticketKey = `${summary.idPlace}-${sec.idSector}-${seatId}`;
+            const ticketId = seatTicketMap[ticketKey];
+            return {
+              ticket: {
+                id: ticketKey,
+                eventId: String(summary.id),
+                eventName: summary.eventName,
+                date: summary.date,
+                location: formatPlaceType(summary.placeType),
+                placeName: summary.placeName,
+                sectorName: `${sec.name} Asiento ${seatId}`,
+                price: sec.price,
+                availableTickets: 1,
+                imageUrl: summary.imageUrl,
+                type: summary.type,
+                featured: false,
+                time: new Date(summary.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ' hs',
+                idPlace: summary.idPlace,
+                idSector: sec.idSector,
+                ticketIds: ticketId ? [ticketId] : [],
+              },
+              quantity: 1,
+              seats: [seatId],
+            };
+          })
         )
       ];
     }
-  
+
     if (totalSelected === 0) {
       setAppMessage('Debes seleccionar al menos una entrada', 'error');
       return;
     }
-  
+
     if (totalSelected > 6) {
       setAppMessage('Solo puedes comprar hasta 6 entradas en total para este evento.', 'error');
       return;
     }
-  
+
     let allAddedSuccessfully = true;
     itemsToAdd.forEach(item => {
       const wasAdded = addToCart(item.ticket, item.quantity);
@@ -279,12 +299,9 @@ const EventDetailPage: React.FC = () => {
         allAddedSuccessfully = false;
       }
     });
-  
+
     if (allAddedSuccessfully) {
-      setAppMessage(
-        `Has agregado ${totalSelected} entrada(s) para ${summary.eventName}`,
-        'success'
-      );
+      setAppMessage(`Has agregado ${totalSelected} entrada(s) para ${summary.eventName}`, 'success');
       navigate('/cart');
     } else {
       setAppMessage('No puedes tener más de 6 entradas para este evento en tu carrito.', 'error');
@@ -307,12 +324,25 @@ const EventDetailPage: React.FC = () => {
 
   const getSectorColumns = () => {
     if (summary && currentSelectedSector && currentSelectedSector.enumerated) {
-        return SECTOR_LAYOUT_CONFIG[summary.placeName]?.[currentSelectedSector.name];
+      return SECTOR_LAYOUT_CONFIG[summary.placeName]?.[currentSelectedSector.name];
     }
     return undefined;
   };
 
   const columns = getSectorColumns();
+  const handleSectorClick = (sector: Sector) => {
+    if (sector.enumerated) {
+      openSeatModal(sector.idSector);
+    } else {
+      sectorListRef.current?.scrollIntoView({ behavior: 'smooth' });
+      const sectorCard = document.getElementById(`sector-card-${sector.idSector}`);
+      sectorCard?.classList.add(styles.activeCard);
+      setTimeout(() => {
+        sectorCard?.classList.remove(styles.activeCard);
+      }, 1500);
+    }
+  };
+
 
   return (
     <div className={styles.eventDetailContainer}>
