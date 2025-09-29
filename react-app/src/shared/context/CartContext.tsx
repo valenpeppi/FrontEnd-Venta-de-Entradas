@@ -160,7 +160,10 @@ function CartProvider({ children }: CartProviderProps) {
 
   useEffect(() => {
     try {
-      localStorage.setItem('ticket-cart', JSON.stringify(state.cartItems));
+      // Solo guardar si hay items en el carrito para evitar bucles
+      if (state.cartItems.length > 0) {
+        localStorage.setItem('ticket-cart', JSON.stringify(state.cartItems));
+      }
     } catch (error) {
       console.error('CartContext: Error al guardar el carrito en localStorage:', error);
     }

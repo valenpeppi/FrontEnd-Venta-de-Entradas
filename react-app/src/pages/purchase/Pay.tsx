@@ -26,10 +26,10 @@ const Pay: React.FC = () => {
         const user = JSON.parse(storedUser);
         console.log("👤 Usuario parseado:", user);
         setUserData({
-          email: user.mail || user.email || '',
+          email: user.mail || user.email || 'gian@test.com', // Email temporal para testing
           name: user.name || 'Usuario',
-          surname: user.surname || '',
-          dni: user.dni ? Number(user.dni) : null,
+          surname: user.surname || 'Test',
+          dni: user.dni ? Number(user.dni) : 12345678, // DNI temporal para testing
         });
         console.log("✅ UserData configurado");
       } catch (e) {
@@ -42,6 +42,8 @@ const Pay: React.FC = () => {
 
   useEffect(() => {
     console.log("👤 UserData actualizado:", userData);
+    console.log("👤 UserData.dni específico:", userData.dni);
+    console.log("👤 UserData.email específico:", userData.email);
   }, [userData]);
 
   useEffect(() => {
@@ -50,6 +52,66 @@ const Pay: React.FC = () => {
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  // Función para confirmar venta manualmente (para desarrollo)
+  const confirmSaleManually = async () => {
+    try {
+      const ticketGroupsMap: Record<string, {
+        idEvent: number;
+        idPlace: number;
+        idSector: number;
+        ids: number[];
+      }> = {};
+
+      for (const item of cartItems) {
+        const key = `${item.eventId}-${item.idPlace}-${item.idSector}`;
+        if (!ticketGroupsMap[key]) {
+          ticketGroupsMap[key] = {
+            idEvent: Number(item.eventId),
+            idPlace: Number(item.idPlace),
+            idSector: Number(item.idSector),
+            ids: [],
+          };
+        }
+
+        if (item.ticketIds && item.ticketIds.length > 0) {
+          ticketGroupsMap[key].ids.push(...item.ticketIds.map(Number));
+        }
+      }
+
+      const ticketGroups = Object.values(ticketGroupsMap);
+
+      console.log("🔄 Confirmando venta manualmente:", {
+        dniClient: userData.dni,
+        ticketGroups
+      });
+
+      const response = await fetch("http://localhost:3000/api/sales/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dniClient: userData.dni,
+          tickets: ticketGroups
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("✅ Venta confirmada exitosamente:", result);
+        
+        // Limpiar carrito después de venta exitosa
+        localStorage.removeItem('ticket-cart');
+        
+        // Redirigir a página de éxito
+        window.location.href = '/pay/success';
+      } else {
+        const error = await response.text();
+        console.error("❌ Error confirmando venta:", error);
+      }
+    } catch (error) {
+      console.error("❌ Error en confirmación manual:", error);
+    }
   };
 
   // MERCADO PAGO
@@ -145,6 +207,13 @@ const Pay: React.FC = () => {
         ids: tg.ids,
         idsLength: tg.ids.length
       })));
+
+      console.log('📋 Items detallados para Stripe:', items.map(item => ({
+        name: item.name,
+        amount: item.amount,
+        quantity: item.quantity,
+        amountInPesos: item.amount / 100
+      })));
       
       const missingData = cartItems.filter(item => 
         !item.ticketIds || 
@@ -180,7 +249,20 @@ const Pay: React.FC = () => {
       const data = await response.json();
 
       if (data.url) {
+        console.log("✅ Redirigiendo a Stripe:", data.url);
         localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
+        
+        // Para desarrollo: simular pago exitoso después de 3 segundos
+        // En producción, esto se manejaría con el webhook de Stripe
+        setTimeout(async () => {
+          try {
+            console.log("🔄 Simulando confirmación de venta...");
+            await confirmSaleManually();
+          } catch (error) {
+            console.error("❌ Error confirmando venta:", error);
+          }
+        }, 3000);
+        
         window.location.href = data.url;
       } else {
         console.error("❌ Error en Stripe Checkout, respuesta inválida:", data);
@@ -207,8 +289,8 @@ const Pay: React.FC = () => {
 
   return (
     <div className={styles.payContainer}>
-      <h1 className={styles.payTitle}>Finalizar Compra</h1>
-
+      <h1 className={styles.payTitle}>Finalizar compra</h1>
+  
       {cartItems.length > 0 ? (
         <>
           <div className={styles.paySummarySection}>
@@ -219,12 +301,12 @@ const Pay: React.FC = () => {
                 <span>${(item.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
-
+  
             <div className={styles.paySummaryTotal}>
               Total: ${calculateTotal().toFixed(2)}
             </div>
           </div>
-
+  
           <div className={styles.payButtons}>
             {!preferenceId ? (
               <button onClick={handlePayment} className={styles.btnPay}>
@@ -233,7 +315,7 @@ const Pay: React.FC = () => {
             ) : (
               <Wallet initialization={{ preferenceId }} />
             )}
-
+  
             <button
               onClick={() => {
                 console.log("🖱️ Botón de Stripe clickeado");
@@ -244,14 +326,13 @@ const Pay: React.FC = () => {
               className={styles.btnStripe}
               disabled={!userData.dni}
             >
-              Pagar con Stripe {!userData.dni ? "(Requiere login)" : ""}
+              Pagar con Stripe {!userData.dni ? "(requiere login)" : ""}
             </button>
-          </div>
-
-          <div className={styles.payActions}>
-            <button onClick={() => navigate('/cart')} className={styles.btnBack}>
-              Volver al Carrito
-            </button>
+            <div className={styles.payActions}>
+              <button onClick={() => navigate('/cart')} className={styles.btnBack}>
+                Volver al carrito
+              </button>
+            </div>
           </div>
         </>
       ) : (
@@ -266,6 +347,7 @@ const Pay: React.FC = () => {
       )}
     </div>
   );
-};
-
-export default Pay;
+  };
+  
+  export default Pay;
+  
