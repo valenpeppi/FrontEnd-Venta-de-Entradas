@@ -78,6 +78,7 @@ const mapApiEventToTicket = (ev: any): Ticket => {
     imageUrl: ev.imageUrl || "/ticket.png",
     featured: ev.featured ?? false,
     agotado: ev.agotado ?? false,
+    quantity: 0,
   };
 };
 
