@@ -317,7 +317,15 @@ const EventDetailPage: React.FC = () => {
     }
   };
 
-  if (loading) return <p>Cargando evento...</p>;
+  if (loading) return (
+    <div className={styles.loadingState}>
+    <div className={styles.loadingDots}>
+      <span className={styles.dot}></span>
+      <span className={styles.dot}></span>
+      <span className={styles.dot}></span>
+    </div>
+    <p className={styles.loadingStateText}>Cargando evento...</p>
+  </div>);
   if (!summary) return <p>Evento no encontrado</p>;
 
   const currentSelectedSector = sectors.find(s => s.idSector === selectedSector);

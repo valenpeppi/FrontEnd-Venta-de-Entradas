@@ -75,8 +75,13 @@ export default function AdminHomePage() {
 
   if (loading)
     return (
-      <div className={styles.adminContainer}>
-        <div className={styles.adminStatus}>Cargando eventos pendientes…</div>
+      <div className={styles.loadingState}>
+        <div className={styles.loadingDots}>
+          <span className={styles.dot}></span>
+          <span className={styles.dot}></span>
+          <span className={styles.dot}></span>
+        </div>
+        <p className={styles.loadingStateText}>Cargando eventos...</p>
       </div>
     );
 
