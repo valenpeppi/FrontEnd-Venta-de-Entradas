@@ -1,8 +1,12 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react';
 
+// Se agregan las propiedades que faltaban al tipo User
 export interface User {
   name: string;
+  surname?: string;
+  mail?: string;
+  dni?: number;
   role: string | null;
 }
 
@@ -114,21 +118,6 @@ useEffect(() => {
     validateToken();
   }, []);
 
-
-  useEffect(() => {
-    let user: User | null = null;
-    const token = localStorage.getItem('token');
-    const userString = localStorage.getItem('user');
-    if (token && userString) {
-      try {
-        user = JSON.parse(userString);
-      } catch (e) {
-        console.error("Error al parsear datos de usuario desde localStorage", e);
-        localStorage.clear();
-      }
-    }
-    dispatch({ type: 'INITIALIZE', payload: { user } });
-  }, []);
 
   const login = (user: User, token: string) => {
     localStorage.setItem('token', token);
