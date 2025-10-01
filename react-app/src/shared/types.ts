@@ -26,7 +26,7 @@ export interface EventSummary {
 export interface Seat {
   id: number;
   label?: string;
-  state: 'available' | 'reserved' | 'sold';
+  state: 'available' | 'reserved' | 'sold'| 'selected';
 }
 
 export interface CartItem {

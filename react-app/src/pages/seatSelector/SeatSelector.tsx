@@ -38,6 +38,7 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({ seats, selectedSeats, onCha
               ${styles.seat} 
               ${selectedSeats.includes(seat.id) ? styles.selected : ''}
               ${seat.state === 'reserved' ? styles.reserved : ''}
+              ${seat.state === 'sold' ? styles.reserved : ''}
             `}
             title={seat.state === 'reserved' ? 'Asiento no disponible' : `Asiento ${seat.label}`}
           >
