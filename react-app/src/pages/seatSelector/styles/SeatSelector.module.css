@@ -67,14 +67,14 @@
   transform: translateY(-1px);
 }
 
-.seat.occupied {
+.seat.reserved {
   background: #6b7280;
   border-color: #4b5563;
   color: #e5e7eb;
   cursor: not-allowed;
 }
 
-.seat.occupied:hover {
+.seat.reserved:hover {
   background: #6b7280;
   border-color: #4b5563;
   transform: none;
