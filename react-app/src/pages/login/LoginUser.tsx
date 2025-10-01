@@ -7,9 +7,10 @@ import MessageDisplay from "../../shared/MessageDisplay";
 import styles from './styles/LoginUser.module.css';
 import globalStyles from '../../shared/styles/GlobalStyles.module.css';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+import type { User } from "../../shared/context/AuthContext.tsx";
 
 interface LoginProps {
-  onLoginSuccess: (user: { name: string, role?: string }, token: string) => void;
+  onLoginSuccess: (user: User, token: string) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
@@ -80,7 +81,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
       const data = response.data;
 
-        // 👉 Guardar token y user en localStorage
+        // Guarda el token y user en localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 

@@ -16,7 +16,7 @@ import CreateEventPage from './pages/companyHomePage/CreateEventPage';
 import LoginCompany from './pages/login/LoginCompany';
 import RegisterCompany from './pages/register/RegisterCompany';
 import NewsLetter from './pages/support/NewsLetter';
-import { useAuth, type User } from './shared/context/AuthContext';
+import { useAuth, type User } from './shared/context/AuthContext.tsx';
 import { useMessage } from './shared/context/MessageContext';
 import styles from './shared/styles/App.module.css';
 import globalStyles from './shared/styles/GlobalStyles.module.css';
@@ -36,12 +36,8 @@ const App: React.FC = () => {
   const { setAppMessage } = useMessage();
   const navigate = useNavigate();
 
-  const handleLoginSuccess = (user: { name: string, role?: string }, token: string) => {
-    const userToLogin: User = {
-      name: user.name,
-      role: user.role || null
-    };
-    login(userToLogin, token);
+  const handleLoginSuccess = (user: User, token: string) => {
+    login(user, token); // Se pasa el objeto user completo
     setAppMessage(`¡Inicio de sesión exitoso como ${user.name}!`);
 
     if (user.role === 'admin') {
@@ -108,4 +104,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-

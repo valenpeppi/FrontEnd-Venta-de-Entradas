@@ -1,61 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../shared/context/CartContext';
+import { useCart } from '../../shared/context/CartContext.tsx';
+import { useAuth } from '../../shared/context/AuthContext.tsx'; // Importamos el hook de autenticación
 import styles from './styles/Pay.module.css';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 
 const Pay: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useCart();
+  const { user } = useAuth(); // Obtenemos el usuario directamente del contexto
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
-  const [userData, setUserData] = useState<{ email: string; name: string; surname: string; dni: number | null; }>({ email: '', name: '', surname: '', dni: null });
 
   useEffect(() => {
-    console.log("🚀 Pay component inicializando...");
-    
+    // Inicializamos Mercado Pago solo una vez
     initMercadoPago("APP_USR-cd78e2e4-b7ee-4b1d-ad89-e90d69693f9c", {
       locale: "es-AR",
       advancedFraudPrevention: false,
     });
-
-    const storedUser = localStorage.getItem('user');
-    console.log("👤 Usuario almacenado:", storedUser);
-    
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
-        console.log("👤 Usuario parseado:", user);
-        setUserData({
-          email: user.mail || user.email || 'gian@test.com', // Email temporal para testing
-          name: user.name || 'Usuario',
-          surname: user.surname || 'Test',
-          dni: user.dni ? Number(user.dni) : 12345678, // DNI temporal para testing
-        });
-        console.log("✅ UserData configurado");
-      } catch (e) {
-        console.error("❌ Error parseando user de localStorage:", e);
-      }
-    } else {
-      console.warn("⚠️ No hay usuario en localStorage");
-    }
   }, []);
 
   useEffect(() => {
-    console.log("👤 UserData actualizado:", userData);
-    console.log("👤 UserData.dni específico:", userData.dni);
-    console.log("👤 UserData.email específico:", userData.email);
-  }, [userData]);
-
-  useEffect(() => {
-    console.log("🛒 CartItems actualizado:", cartItems);
-  }, [cartItems]);
+    console.log("👤 Usuario desde AuthContext:", user);
+    console.log("🛒 Items del carrito:", cartItems);
+  }, [user, cartItems]);
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  // Función para confirmar venta manualmente (para desarrollo)
+  // Función para confirmar la venta (usada por Stripe para simulación)
   const confirmSaleManually = async () => {
+    if (!user || !user.dni) {
+        console.error("No se puede confirmar la venta sin un DNI de cliente.");
+        return;
+    }
     try {
       const ticketGroupsMap: Record<string, {
         idEvent: number;
@@ -82,40 +60,34 @@ const Pay: React.FC = () => {
 
       const ticketGroups = Object.values(ticketGroupsMap);
 
-      console.log("🔄 Confirmando venta manualmente:", {
-        dniClient: userData.dni,
-        ticketGroups
-      });
-
       const response = await fetch("http://localhost:3000/api/sales/confirm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          dniClient: userData.dni,
+          dniClient: user.dni, // Usamos el DNI del contexto
           tickets: ticketGroups
         }),
       });
 
       if (response.ok) {
-        const result = await response.json();
-        console.log("✅ Venta confirmada exitosamente:", result);
-        
-        // Limpiar carrito después de venta exitosa
+        console.log("✅ Venta confirmada exitosamente (manual).");
         localStorage.removeItem('ticket-cart');
-        
-        // Redirigir a página de éxito
         window.location.href = '/pay/success';
       } else {
         const error = await response.text();
-        console.error("❌ Error confirmando venta:", error);
+        console.error("❌ Error confirmando venta (manual):", error);
       }
     } catch (error) {
       console.error("❌ Error en confirmación manual:", error);
     }
   };
 
-  // MERCADO PAGO
+  // --- Lógica para MERCADO PAGO ---
   const handlePayment = async () => {
+    if (!user) {
+      alert("Debes iniciar sesión para pagar con Mercado Pago.");
+      return;
+    }
     try {
       const response = await fetch("http://localhost:3000/api/payments/create_preference", {
         method: "POST",
@@ -128,9 +100,9 @@ const Pay: React.FC = () => {
             quantity: item.quantity,
           })),
           payer: {
-            email: userData.email,
-            name: userData.name,
-            surname: userData.surname,
+            email: user.mail,
+            name: user.name,
+            surname: user.surname,
           },
         }),
       });
@@ -146,14 +118,10 @@ const Pay: React.FC = () => {
     }
   };
 
-  // STRIPE
+  // --- Lógica para STRIPE ---
   const handleStripePayment = async () => {
-    console.log("👉 handleStripePayment ejecutado");
-    console.log("👤 User data:", userData);
-    console.log("🛒 Cart items:", cartItems);
-
-    if (!userData.dni) {
-      alert("Debes iniciar sesión con un usuario válido para pagar con Stripe");
+    if (!user || !user.dni || !user.mail) {
+      alert("Debes iniciar sesión con un usuario válido para pagar con Stripe.");
       return;
     }
 
@@ -163,8 +131,6 @@ const Pay: React.FC = () => {
         amount: Math.round(item.price * 100),
         quantity: item.quantity,
       }));
-
-      console.log("💰 Items procesados para Stripe:", items);
 
       const ticketGroupsMap: Record<string, {
         idEvent: number;
@@ -183,48 +149,15 @@ const Pay: React.FC = () => {
             ids: [],
           };
         }
-
         if (item.ticketIds && item.ticketIds.length > 0) {
           ticketGroupsMap[key].ids.push(...item.ticketIds.map(Number));
-        } else {
-          console.warn("⚠️ Este item no tiene ticketIds:", item);
         }
       }
-
       const ticketGroups = Object.values(ticketGroupsMap);
-
-      console.log('🔁 Enviando a Stripe:', {
-        items,
-        ticketGroups,
-        dniClient: userData.dni,
-        customerEmail: userData.email,
-      });
-
-      console.log('📊 TicketGroups detallado:', ticketGroups.map(tg => ({
-        idEvent: tg.idEvent,
-        idPlace: tg.idPlace,
-        idSector: tg.idSector,
-        ids: tg.ids,
-        idsLength: tg.ids.length
-      })));
-
-      console.log('📋 Items detallados para Stripe:', items.map(item => ({
-        name: item.name,
-        amount: item.amount,
-        quantity: item.quantity,
-        amountInPesos: item.amount / 100
-      })));
       
-      const missingData = cartItems.filter(item => 
-        !item.ticketIds || 
-        item.ticketIds.length === 0 || 
-        !item.idPlace || 
-        !item.idSector
-      );
-      
-      if (missingData.length > 0) {
-        console.warn("🧨 Ítems con datos faltantes:", missingData);
-        alert("Faltan datos necesarios para algunos ítems del carrito. Por favor, vuelve a seleccionar las entradas.");
+      const missingData = cartItems.some(item => !item.ticketIds || item.ticketIds.length === 0 || item.idPlace == null || item.idSector == null);
+      if (missingData) {
+        alert("Faltan datos en algunos ítems del carrito. Por favor, vuelve a seleccionar las entradas.");
         return;
       }
 
@@ -234,8 +167,8 @@ const Pay: React.FC = () => {
         body: JSON.stringify({
           items,
           ticketGroups,
-          dniClient: userData.dni,
-          customerEmail: userData.email,
+          dniClient: user.dni,
+          customerEmail: user.mail, // Usamos el mail del contexto
         }),
       });
 
@@ -249,20 +182,11 @@ const Pay: React.FC = () => {
       const data = await response.json();
 
       if (data.url) {
-        console.log("✅ Redirigiendo a Stripe:", data.url);
         localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
-        
-        // Para desarrollo: simular pago exitoso después de 3 segundos
-        // En producción, esto se manejaría con el webhook de Stripe
-        setTimeout(async () => {
-          try {
-            console.log("🔄 Simulando confirmación de venta...");
-            await confirmSaleManually();
-          } catch (error) {
-            console.error("❌ Error confirmando venta:", error);
-          }
+        // En desarrollo, simulamos el pago exitoso. En producción, esto es manejado por webhooks.
+        setTimeout(() => {
+          confirmSaleManually();
         }, 3000);
-        
         window.location.href = data.url;
       } else {
         console.error("❌ Error en Stripe Checkout, respuesta inválida:", data);
@@ -274,7 +198,7 @@ const Pay: React.FC = () => {
     }
   };
 
-
+  // Agrupamos items para mostrar en el resumen
   const groupedItems = cartItems.reduce((acc, item) => {
     const key = `${item.eventName}-${item.price}`;
     if (!acc[key]) {
@@ -283,9 +207,7 @@ const Pay: React.FC = () => {
     acc[key].quantity += item.quantity;
     return acc;
   }, {} as Record<string, typeof cartItems[0]>);
-
   const groupedArray = Object.values(groupedItems);
-
 
   return (
     <div className={styles.payContainer}>
@@ -301,7 +223,6 @@ const Pay: React.FC = () => {
                 <span>${(item.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
-  
             <div className={styles.paySummaryTotal}>
               Total: ${calculateTotal().toFixed(2)}
             </div>
@@ -317,16 +238,11 @@ const Pay: React.FC = () => {
             )}
   
             <button
-              onClick={() => {
-                console.log("🖱️ Botón de Stripe clickeado");
-                console.log("👤 userData.dni:", userData.dni);
-                console.log("🛒 cartItems.length:", cartItems.length);
-                handleStripePayment();
-              }}
+              onClick={handleStripePayment}
               className={styles.btnStripe}
-              disabled={!userData.dni}
+              disabled={!user?.dni} // Deshabilitado si no hay usuario o DNI
             >
-              Pagar con Stripe {!userData.dni ? "(requiere login)" : ""}
+              Pagar con Stripe {!user?.dni ? "(requiere login)" : ""}
             </button>
             <div className={styles.payActions}>
               <button onClick={() => navigate('/cart')} className={styles.btnBack}>
@@ -347,7 +263,7 @@ const Pay: React.FC = () => {
       )}
     </div>
   );
-  };
+};
   
-  export default Pay;
-  
+export default Pay;
+
