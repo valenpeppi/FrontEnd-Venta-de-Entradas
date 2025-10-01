@@ -182,7 +182,12 @@ const Pay: React.FC = () => {
       const data = await response.json();
 
       if (data.url) {
+        // Guardar datos en localStorage ANTES de redirigir
+        localStorage.setItem("ticketGroups", JSON.stringify(ticketGroups));
+        localStorage.setItem("dniClient", String(user.dni));
+        
         localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
+        
         // En desarrollo, simulamos el pago exitoso. En producción, esto es manejado por webhooks.
         setTimeout(() => {
           confirmSaleManually();
@@ -266,4 +271,3 @@ const Pay: React.FC = () => {
 };
   
 export default Pay;
-
