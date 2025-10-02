@@ -39,7 +39,7 @@ const ProcessingPayment = () => {
         localStorage.removeItem("ticketGroups");
         localStorage.removeItem("dniClient");
 
-        setTimeout(() => navigate("/pay/success"), 1500);
+        setTimeout(() => navigate("/pay/success"), 3500);
       }
     };
 
@@ -50,7 +50,7 @@ const ProcessingPayment = () => {
     <div className={`${styles.payContainer} text-center`}>
       <h2 className={styles.payTitle}>Estamos procesando tu compra...</h2>
       <div className={styles.payWalletContainer}>
-        <div className="loader"></div>
+        <div className={styles.loader}></div>
       </div>
       <p className={styles.loadingText}>{loadingMessage}</p>
     </div>
