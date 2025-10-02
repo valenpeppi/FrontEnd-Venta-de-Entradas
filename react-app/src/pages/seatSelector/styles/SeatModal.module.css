@@ -41,7 +41,6 @@
   animation: fadeOut 0.3s ease-in forwards;
 }
 
-/* Estilos del Contenido del Modal */
 .modalContent {
   background: white;
   padding: 2rem;
@@ -126,6 +125,7 @@
 }
 
 .seatDemo.available { background-color: #f9fafb; }
+.seatDemo.occupied { background-color: #6b7280; border-color: #6b7280; }
 .seatDemo.reserved { background-color: #6b7280; border-color: #4b5563; }
 .seatDemo.selected { background-color: #10b981; border-color: #059669; }
 
