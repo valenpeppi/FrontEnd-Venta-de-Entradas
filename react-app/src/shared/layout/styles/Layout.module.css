@@ -40,3 +40,8 @@
     padding: 0.8rem 1rem;
   }
 }
+
+.disabled {
+  pointer-events: none; 
+  opacity: 0.6; 
+}

@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import MessageDisplay from '../MessageDisplay';
 import { useMessage } from '../../shared/context/MessageContext';
+import { useLocation } from "react-router-dom";   // 👈 agregado
 import styles from './styles/Layout.module.css';
 
 interface LayoutProps {
@@ -12,10 +13,16 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { messages } = useMessage();
+  const location = useLocation();
+
+  // 👇 Bloquear header/footer solo en ruta de procesamiento de pago
+  const disableHeaderFooter = location.pathname.startsWith("/pay/processing");
 
   return (
     <div className={styles.layoutContainer}>
-      <Navbar />
+      <div className={disableHeaderFooter ? styles.disabled : ""}>
+        <Navbar />
+      </div>
       
       <div className={styles.messageListContainer}>
         {messages.map(message => (
@@ -31,7 +38,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
 
-      <Footer />
+      <div className={disableHeaderFooter ? styles.disabled : ""}>
+        <Footer />
+      </div>
     </div>
   );
 };
