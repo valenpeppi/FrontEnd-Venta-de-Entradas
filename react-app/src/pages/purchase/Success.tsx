@@ -1,9 +1,19 @@
 import { MdCheckCircle } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useCart } from "../../shared/context/CartContext";
 import styles from "./styles/Pay.module.css";
 
 const Success = () => {
   const navigate = useNavigate();
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    clearCart();
+    localStorage.removeItem("ticket-cart");
+    localStorage.removeItem("ticketGroups");
+    localStorage.removeItem("dniClient");
+  }, [clearCart]);
 
   return (
     <div className={styles.successContent}>
@@ -26,7 +36,6 @@ const Success = () => {
       <button
         onClick={() => navigate("/")}
         className={styles.failureButton}
-        style={{ marginTop: "10px" }}
       >
         Volver a la tienda
       </button>

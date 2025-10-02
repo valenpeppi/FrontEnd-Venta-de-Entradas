@@ -284,7 +284,7 @@
 }
 
 .failureButton {
-  background-color: #6b7280; /* Gris */
+  background-color: #6b7280; 
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -293,6 +293,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 10px; 
 }
 
 .failureButton:hover {
@@ -304,6 +305,7 @@
   background-color: #374151;
   transform: translateY(0);
 }
+
 
 .loader {
   width: 48px;
