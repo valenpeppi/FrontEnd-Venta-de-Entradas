@@ -21,7 +21,10 @@ const ProcessingPayment = () => {
           setLoadingMessage("No hay datos de venta. Redirigiendo...");
           clearCart();
           localStorage.removeItem("ticket-cart");
-          navigate("/pay/success");
+
+          setTimeout(() => {
+            navigate("/pay/success");
+          }, 3000);
           return;
         }
 
@@ -30,28 +33,27 @@ const ProcessingPayment = () => {
           tickets: JSON.parse(ticketGroups),
         });
 
-        console.log("✅ Venta confirmada:", response.data);
-      } catch (err) {
-        console.error("❌ Error confirmando venta:", err);
-      } finally {
-        clearCart();
-        localStorage.removeItem("ticket-cart");
-        localStorage.removeItem("ticketGroups");
-        localStorage.removeItem("dniClient");
+        console.log("Venta confirmada:", response.data);
 
-        setTimeout(() => navigate("/pay/success"), 3500);
+        setTimeout(() => {
+          navigate("/pay/success");
+        }, 3000);
+
+      } catch (error) {
+        console.error("Error al confirmar la venta:", error);
+
+        setTimeout(() => {
+          navigate("/pay/failure");
+        }, 3000);
       }
     };
 
     confirmSale();
-  }, []);
+  }, [clearCart, navigate]);
 
   return (
-    <div className={`${styles.payContainer} text-center`}>
-      <h2 className={styles.payTitle}>Estamos procesando tu compra...</h2>
-      <div className={styles.payWalletContainer}>
-        <div className={styles.loader}></div>
-      </div>
+    <div className={styles.successContent}>
+      <div className={styles.loader}></div>
       <p className={styles.loadingText}>{loadingMessage}</p>
     </div>
   );

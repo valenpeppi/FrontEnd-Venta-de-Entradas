@@ -306,65 +306,47 @@
 }
 
 .loader {
-  border: 8px solid #f3f3f3;
-  border-top: 8px solid #4f46e5;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
+  position: relative;
+  animation: rotate 1s linear infinite;
+  margin: 20px auto;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
+.loader::before,
+.loader::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #4f46e5; 
+  animation: prixClipFix 2s linear infinite;
+}
+
+.loader::after {
+  border-color: #b2acff; 
+  animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
+  inset: 6px;
+}
+
+@keyframes rotate {
+  0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-.loader {
-  width: 65px;
-  aspect-ratio: 1;
-  position: relative;
-  margin: 0 auto; /* centrar el loader */
+
+@keyframes prixClipFix {
+  0%   { clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0); }
+  25%  { clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0); }
+  50%  { clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%); }
+  75%  { clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%); }
+  100% { clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0); }
 }
 
-.loader:before,
-.loader:after {
-  content: "";
-  position: absolute;
-  border-radius: 50px;
-  box-shadow: 0 0 0 3px inset #fff;
-  animation: l4 2.5s infinite;
-}
-
-.loader:after {
-  animation-delay: -1.25s;
-}
-
-@keyframes l4 {
-  0% {
-    inset: 0 35px 35px 0;
-  }
-  12.5% {
-    inset: 0 35px 0 0;
-  }
-  25% {
-    inset: 35px 35px 0 0;
-  }
-  37.5% {
-    inset: 35px 0 0 0;
-  }
-  50% {
-    inset: 35px 0 0 35px;
-  }
-  62.5% {
-    inset: 0 0 0 35px;
-  }
-  75% {
-    inset: 0 0 35px 35px;
-  }
-  87.5% {
-    inset: 0 0 35px 0;
-  }
-  100% {
-    inset: 0 35px 35px 0;
-  }
+.loadingText {
+  color: #4b5563;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-top: 12px;
 }
