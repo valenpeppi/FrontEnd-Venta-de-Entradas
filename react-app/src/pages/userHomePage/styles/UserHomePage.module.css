@@ -26,6 +26,11 @@
 .homepageTitle, .eventListTitle {
   text-align: center;
   margin-bottom: 2.5rem;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #312e81;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #e0e7ff;
 }
 
 .eventListTitle {
@@ -47,11 +52,11 @@
 .eventTypeFilterButton {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem; /* 8px */
-  padding: 0.625rem 1.25rem; /* 10px 20px */
+  gap: 0.5rem; 
+  padding: 0.625rem 1.25rem; 
   font-size: 0.95rem;
   font-weight: 600;
-  border-radius: 9999px; /* Pill shape */
+  border-radius: 9999px; 
   border: 1px solid transparent;
   background-color: var(--white);
   color: var(--text-light);
@@ -75,8 +80,8 @@
 
 .eventCount {
   background-color: rgba(0, 0, 0, 0.05);
-  color: inherit; /* Inherits color from parent button */
-  padding: 0.125rem 0.5rem; /* 2px 8px */
+  color: inherit; 
+  padding: 0.125rem 0.5rem; 
   border-radius: 9999px;
   font-size: 0.8rem;
   font-weight: 700;
@@ -114,9 +119,14 @@
 
 .eventTypeTitle {
   text-align: center;
-  color: #1f2937;
-  margin-bottom: 1.2rem;
+  color: #5b21b6;
+  margin-bottom: 1.5rem;
   padding: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  padding-bottom: 0.5rem;
+  width: auto;
+  display: inline-block;
 }
 
 .eventTypeGallery {
@@ -140,12 +150,11 @@
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;
   padding: 0.75rem;
-  /* Apply animation */
   animation: fadeIn 0.5s ease-out;
-  animation-fill-mode: both; /* Keep final state */
+  animation-fill-mode: both; 
 }
 
 /* Stagger animation for cards */
@@ -156,10 +165,9 @@
 .eventTypeGallery .eventCardLink:nth-child(5) .eventCard { animation-delay: 0.25s; }
 .eventTypeGallery .eventCardLink:nth-child(6) .eventCard { animation-delay: 0.3s; }
 
-
-.eventCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.12);
+.eventCardLink:hover .eventCard {
+  transform: scale(1.1);
+  box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.15);
 }
 
 .eventCardImg {
@@ -256,3 +264,4 @@
     opacity: 1;
   }
 }
+
