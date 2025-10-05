@@ -95,6 +95,47 @@
   gap: 15px;
 }
 
+
+.payEventHeader {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.payEventPlace {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+
+.paySectorGroup {
+  margin-bottom: 18px; 
+  padding-left: 8px;
+}
+
+.paySectorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 4px 4px 4px 16px;
+}
+
+.paySectorPrice {
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+}
+
+.paySeatList {
+  font-size: 0.95rem;
+  color: #4b5563;
+  padding-left: 24px; 
+  margin-top: 2px;
+}
+
 .btnBack {
   padding: 12px 25px;
   border: none;
@@ -305,7 +346,6 @@
   background-color: #374151;
   transform: translateY(0);
 }
-
 
 .loader {
   width: 48px;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../shared/context/CartContext.tsx';
-import { useAuth } from '../../shared/context/AuthContext.tsx'; // Importamos el hook de autenticación
+import { useAuth } from '../../shared/context/AuthContext.tsx'; 
 import styles from './styles/Pay.module.css';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import axios from 'axios';
@@ -12,6 +12,21 @@ const Pay: React.FC = () => {
   const { user } = useAuth(); 
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
 
+  interface GroupedBySector {
+    sectorName: string;
+    totalQuantity: number;
+    totalPrice: number;
+    seatNumbers: string[];
+  }
+
+  interface GroupedByEvent {
+    eventId: string;
+    eventName: string;
+    date: string;
+    time: string;
+    placeName?: string;
+    sectors: GroupedBySector[];
+  }
   useEffect(() => {
     // Inicializamos Mercado Pago solo una vez
     initMercadoPago("APP_USR-cd78e2e4-b7ee-4b1d-ad89-e90d69693f9c", {
@@ -187,8 +202,62 @@ const Pay: React.FC = () => {
     acc[key].quantity += item.quantity;
     return acc;
   }, {} as Record<string, typeof cartItems[0]>);
+  
   const groupedArray = Object.values(groupedItems);
 
+  const groupCartByEventSector = (): GroupedByEvent[] => {
+    const eventMap = new Map<string, GroupedByEvent>();
+
+    for (const item of cartItems) {
+      // Agrupamos por evento
+      let eventGroup = eventMap.get(item.eventId);
+      if (!eventGroup) {
+        eventGroup = {
+          eventId: item.eventId,
+          eventName: item.eventName,
+          date: item.date,
+          time: item.time,
+          placeName: item.placeName,
+          sectors: [],
+        };
+        eventMap.set(item.eventId, eventGroup);
+      }
+
+      // Normalizamos sector (quitamos "Asiento xx")
+      const baseSectorName = (item.sectorName || 'Sin sector').replace(/Asiento\s*\d+/gi, '').trim();
+
+      // Buscamos si ese sector ya existe dentro del evento
+      let sectorGroup = eventGroup.sectors.find(s => s.sectorName === baseSectorName);
+      if (!sectorGroup) {
+        sectorGroup = {
+          sectorName: baseSectorName,
+          totalQuantity: 0,
+          totalPrice: 0,
+          seatNumbers: [],
+        };
+        eventGroup.sectors.push(sectorGroup);
+      }
+
+      // Sumamos cantidad y precio
+      sectorGroup.totalQuantity += item.quantity;
+      sectorGroup.totalPrice += item.price * item.quantity;
+
+      // Añadimos los asientos si existen
+      if (item.sectorName) {
+        const match = item.sectorName.match(/Asiento\s*(\d+)/i);
+        if (match) {
+          sectorGroup.seatNumbers.push(match[1]);
+        }
+      }
+    }
+
+    return Array.from(eventMap.values());
+  };
+
+
+
+  const groupedEvents = groupCartByEventSector();
+  
   return (
     <div className={styles.payContainer}>
       <h1 className={styles.payTitle}>Finalizar compra</h1>
@@ -197,12 +266,41 @@ const Pay: React.FC = () => {
         <>
           <div className={styles.paySummarySection}>
             <h2>Resumen de tu compra</h2>
-            {groupedArray.map(item => (
-              <div key={`${item.eventName}-${item.price}`} className={styles.paySummaryItem}>
-                <span>{item.eventName} (x{item.quantity})</span>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
+
+            {groupedEvents.map(event => (
+              <div key={event.eventId} className={styles.payEventGroup}>
+                <div className={styles.payEventHeader}>
+                  {event.eventName} 
+                </div>
+
+                {event.placeName && (
+                  <div className={styles.payEventPlace}>
+                    Estadio: {event.placeName}
+                  </div>
+                )}
+
+                <div className={styles.paySectorsList}>
+                  {event.sectors.map(sector => (
+                    <div key={sector.sectorName} className={styles.paySectorGroup}>
+                      <div className={styles.paySectorHeader}>
+                        <span>{sector.sectorName} (x{sector.totalQuantity})</span>
+                        <span className={styles.paySectorPrice}>
+                          ${sector.totalPrice.toFixed(2)}
+                        </span>
+                      </div>
+
+                      {sector.seatNumbers.length > 0 && (
+                        <div className={styles.paySeatList}>
+                          Asientos: {sector.seatNumbers.sort((a, b) => Number(a) - Number(b)).join(', ')}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                </div>
               </div>
             ))}
+
             <div className={styles.paySummaryTotal}>
               Total: ${calculateTotal().toFixed(2)}
             </div>
@@ -220,10 +318,11 @@ const Pay: React.FC = () => {
             <button
               onClick={handleStripePayment}
               className={styles.btnStripe}
-              disabled={!user?.dni} // Deshabilitado si no hay usuario o DNI
+              disabled={!user?.dni}
             >
-              Pagar con Stripe {!user?.dni ? "(requiere login)" : ""}
+              Pagar con Stripe{!user?.dni ? " (requiere login)" : ""}
             </button>
+
             <div className={styles.payActions}>
               <button onClick={() => navigate('/cart')} className={styles.btnBack}>
                 Volver al carrito
@@ -237,12 +336,15 @@ const Pay: React.FC = () => {
           <div className={`${styles.payActions} ${styles.payActionsMargin}`}>
             <button onClick={() => navigate('/')} className={styles.btnBack}>
               Ir a la tienda
-            </button>
-          </div>
+          </button>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    )}
+  </div>
+);
+
+
+
 };
 
 export default Pay;
