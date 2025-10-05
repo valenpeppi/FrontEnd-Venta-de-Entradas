@@ -6,9 +6,9 @@ import styles from './styles/MyTickets.module.css';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-// Definimos un tipo para la estructura de la entrada que esperamos del backend
 interface PurchasedTicket {
   id: string;
+  idSale: number;         // ahora obligatorio para agrupar por venta
   eventId: number;
   eventName: string;
   date: string;
@@ -20,13 +20,25 @@ interface PurchasedTicket {
   idTicket: number;
 }
 
+// Un grupo de tickets pertenecientes a la misma venta
+interface TicketGroup {
+  idSale: number;
+  eventId: number;
+  eventName: string;
+  date: string;
+  time: string;
+  location: string;
+  sectorName: string;
+  tickets: PurchasedTicket[];
+}
+
 const MyTickets: React.FC = () => {
   const navigate = useNavigate();
   const { user, isLoggedIn, isLoading } = useAuth();
   const [tickets, setTickets] = useState<PurchasedTicket[]>([]);
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const fetchTickets = async () => {
       if (!isLoggedIn || !user?.dni) {
@@ -36,13 +48,13 @@ const MyTickets: React.FC = () => {
         }
         return;
       }
-
       try {
         const token = localStorage.getItem('token');
         const response = await axios.get(`http://localhost:3000/api/sales/my-tickets`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setTickets(response.data.data || []);
+        const data = response.data.data || [];
+        setTickets(data);
       } catch (err) {
         console.error("Error al obtener las entradas:", err);
         setError("No se pudieron cargar tus entradas. Inténtalo de nuevo más tarde.");
@@ -72,16 +84,45 @@ const MyTickets: React.FC = () => {
         const pageWidth = pdf.internal.pageSize.getWidth();
         const imgWidth = pageWidth - 80;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
         pdf.addImage(imgData, 'PNG', 40, 40, imgWidth, imgHeight);
         pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}-${ticket.idTicket}.pdf`);
       });
     }
   };
 
+  // Agrupa tickets por idSale
+  const groupTicketsBySale = (tickets: PurchasedTicket[]): TicketGroup[] => {
+    const map = new Map<number, TicketGroup>();
+    for (const tk of tickets) {
+      const saleId = tk.idSale;
+      let grp = map.get(saleId);
+      if (!grp) {
+        grp = {
+          idSale: saleId,
+          eventId: tk.eventId,
+          eventName: tk.eventName,
+          date: tk.date,
+          time: tk.time,
+          location: tk.location,
+          sectorName: tk.sectorName,
+          tickets: [],
+        };
+        map.set(saleId, grp);
+      }
+      grp.tickets.push(tk);
+    }
+    return Array.from(map.values());
+  };
+
   if (isFetching) {
-    return <div className={styles.myTicketsContainer}><p>Cargando tus entradas...</p></div>;
+    return (
+      <div className={styles.myTicketsContainer}>
+        <p>Cargando tus entradas...</p>
+      </div>
+    );
   }
+
+  const ticketGroups = groupTicketsBySale(tickets);
 
   return (
     <div className={styles.myTicketsContainer}>
@@ -89,34 +130,48 @@ const MyTickets: React.FC = () => {
 
       {error && <p className={styles.noTickets}>{error}</p>}
 
-      {!error && tickets.length > 0 ? (
+      {!error && ticketGroups.length > 0 ? (
         <div className={styles.ticketsGrid}>
-          {tickets.map((ticket) => (
-            <div key={ticket.id} id={`ticket-${ticket.id}`} className={styles.ticketCard}>
+          {ticketGroups.map(group => (
+            <div
+              key={group.idSale}
+              id={`ticketGroup-${group.idSale}`}
+              className={styles.ticketCard}
+            >
               <div className={styles.ticketHeader}>
-                <h2 className={styles.ticketEventName}>{ticket.eventName}</h2>
-                <span className={styles.ticketDate}>{formatDate(ticket.date)}</span>
+                <h2 className={styles.ticketEventName}>{group.eventName}</h2>
+                <span className={styles.ticketDate}>{formatDate(group.date)}</span>
               </div>
+
               <div className={styles.ticketBody}>
                 <div className={styles.ticketInfo}>
-                  <p><strong>Lugar:</strong> {ticket.location}</p>
-                  <p><strong>Sector:</strong> {ticket.sectorName}</p>
-                  {ticket.seatNumber && <p><strong>Asiento:</strong> {ticket.seatNumber}</p>}
-                  <p><strong>Hora:</strong> {ticket.time}</p>
+                  <p><strong>Lugar:</strong> {group.location}</p>
+                  <p><strong>Sector:</strong> {group.sectorName} (x{group.tickets.length})</p>
+                  {group.tickets.length > 0 && (
+                    <p>
+                      <strong>Asientos:</strong>{' '}
+                      {group.tickets
+                        .map(tk => tk.seatNumber ?? 'Sin asignar')
+                        .sort((a, b) => Number(a) - Number(b))
+                        .join(', ')}
+                    </p>
+                  )}
+                  <p><strong>Hora:</strong> {group.time}</p>
                 </div>
                 <div className={styles.ticketQRCode}>
                   <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=evento:${ticket.eventId}-ticket:${ticket.idTicket}`}
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=venta:${group.idSale}`}
                     alt="Código QR de la entrada"
                   />
                 </div>
               </div>
+
               <div className={styles.ticketFooter}>
                 <button
-                  onClick={() => handleDownloadPDF(ticket)}
+                  onClick={() => group.tickets.forEach(tk => handleDownloadPDF(tk))}
                   className={styles.ticketActionButton}
                 >
-                  Descargar PDF
+                  Descargar PDFs
                 </button>
               </div>
             </div>
@@ -140,4 +195,3 @@ const MyTickets: React.FC = () => {
 };
 
 export default MyTickets;
-
