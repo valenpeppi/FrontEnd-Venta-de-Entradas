@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../shared/context/CartContext';
 import styles from './styles/CarritoPage.module.css';
+import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
+
 import {
   MdCalendarToday,
   MdAccessTime,
@@ -21,23 +23,6 @@ const CarritoPage = () => {
   useEffect(() => {
     console.log('CarritoPage: Renderizando. Items en el carrito:', cartItems);
   }, [cartItems]);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      return dateString;
-    }
-    const formatted = new Intl.DateTimeFormat('es-AR', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      timeZone: 'UTC'
-    }).format(date);
-
-    const capitalized = formatted.charAt(0).toUpperCase() + formatted.slice(1);
-    return capitalized.replace(',', '');
-  };
 
 
   const getSectorGroupName = (sectorName: string | undefined): string => {
@@ -122,18 +107,14 @@ const CarritoPage = () => {
                   {group.date && (
                     <p className={styles.itemRow}>
                       <MdCalendarToday className={styles.icon} />
-                      {formatDate(group.date)}
+                      {formatLongDate(group.date)}
                     </p>
                   )}
 
                   {group.time && (
                     <p className={styles.itemRow}>
                       <MdAccessTime className={styles.icon} />
-                      <strong>Hora:</strong> {new Intl.DateTimeFormat('es-AR', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true
-                      }).format(new Date(group.date))}
+                      {formatTime(group.date)}
                     </p>
                   )}
                   

@@ -382,11 +382,7 @@ const EventDetailPage: React.FC = () => {
           <p className={styles.infoRow}>
             <MdAccessTime className={styles.icon} />
             <span>
-              <strong>Hora:</strong>{" "}
-              {new Date(summary.date).toLocaleTimeString("es-AR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              <strong>Hora:</strong> {formatTime(summary.date)}
             </span>
           </p>
           <p className={styles.infoRow}>

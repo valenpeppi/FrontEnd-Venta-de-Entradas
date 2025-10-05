@@ -13,9 +13,14 @@ export const formatLongDate = (isoDate: string): string => {
 
 export const formatTime = (isoDate: string): string => {
   const date = new Date(isoDate);
-  return new Intl.DateTimeFormat('es-AR', {
+  let formatted = new Intl.DateTimeFormat('es-AR', {
     hour: '2-digit',
     minute: '2-digit',
-    hour12: false,
-  }).format(date) + ' hs';
+    hour12: true,
+  }).format(date);
+
+  // reemplazar "a. m." y "p. m." por AM y PM
+  formatted = formatted.replace(/a\.?\s*m\.?/gi, 'AM').replace(/p\.?\s*m\.?/gi, 'PM');
+
+  return formatted;
 };

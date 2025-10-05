@@ -5,6 +5,7 @@ import { useAuth } from '../../shared/context/AuthContext';
 import styles from './styles/MyTickets.module.css';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
 
 interface PurchasedTicket {
   id: string;
@@ -67,18 +68,6 @@ const MyTickets: React.FC = () => {
       fetchTickets();
     }
   }, [isLoggedIn, user, isLoading]);
-
-  const formatDate = (isoDate: string) => {
-    const date = new Date(isoDate);
-    const formatted = new Intl.DateTimeFormat('es-AR', {
-      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-    }).format(date);
-
-    const capitalized = formatted.charAt(0).toUpperCase() + formatted.slice(1);
-    return capitalized.replace(',', '');
-  };
-
-
 
   const handleDownloadPDF = (ticket: PurchasedTicket) => {
     const ticketElement = document.getElementById(`ticket-${ticket.id}`);
@@ -145,7 +134,7 @@ const MyTickets: React.FC = () => {
             >
               <div className={styles.ticketHeader}>
                 <h2 className={styles.ticketEventName}>{group.eventName}</h2>
-                <span className={styles.ticketDate}>{formatDate(group.date)}</span>
+                <span className={styles.ticketDate}>{formatLongDate(group.date)}</span>
               </div>
 
               <div className={styles.ticketBody}>
@@ -161,7 +150,7 @@ const MyTickets: React.FC = () => {
                         .join(', ')}
                     </p>
                   )}
-                  <p><strong>Hora:</strong> {group.time}</p>
+                    <p><strong>Hora:</strong> {formatTime(group.date)}</p>
                 </div>
                 <div className={styles.ticketQRCode}>
                   <img
