@@ -9,7 +9,7 @@ import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
 
 interface PurchasedTicket {
   id: string;
-  idSale: number;         // ahora obligatorio para agrupar por venta
+  idSale: number;
   eventId: number;
   eventName: string;
   date: string;
@@ -21,7 +21,6 @@ interface PurchasedTicket {
   idTicket: number;
 }
 
-// Un grupo de tickets pertenecientes a la misma venta
 interface TicketGroup {
   idSale: number;
   eventId: number;
@@ -69,22 +68,124 @@ const MyTickets: React.FC = () => {
     }
   }, [isLoggedIn, user, isLoading]);
 
-  const handleDownloadPDF = (ticket: PurchasedTicket) => {
-    const ticketElement = document.getElementById(`ticket-${ticket.id}`);
-    if (ticketElement) {
-      html2canvas(ticketElement, { scale: 2 }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: 'a4' });
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const imgWidth = pageWidth - 80;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        pdf.addImage(imgData, 'PNG', 40, 40, imgWidth, imgHeight);
-        pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}-${ticket.idTicket}.pdf`);
-      });
+  const handleDownloadPDF = async (ticket: PurchasedTicket) => {
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: 'a4' });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    let y = 60;
+
+    pdf.setFontSize(24);
+    pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(79, 70, 229);
+    pdf.text('TicketApp - Entrada Oficial', pageWidth / 2, y, { align: 'center' });
+    y += 25;
+
+    pdf.setDrawColor(79, 70, 229);
+    pdf.setLineWidth(1);
+    pdf.line(40, y, pageWidth - 40, y);
+    y += 35;
+
+    pdf.setFontSize(18);
+    pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(ticket.eventName, pageWidth / 2, y, { align: 'center' });
+    y += 20;
+
+    pdf.setDrawColor(79, 70, 229);
+    pdf.setLineWidth(0.8);
+    const titleWidth = pdf.getTextWidth(ticket.eventName);
+    pdf.line(pageWidth / 2 - titleWidth / 2 - 5, y, pageWidth / 2 + titleWidth / 2 + 5, y);
+    y += 30;
+
+    const printLabel = (label: string, value: string | number) => {
+      const xStart = 60;
+      const gap = 7; 
+      const labelText = `${label}:`;
+      const labelWidth = pdf.getTextWidth(labelText);
+
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(79, 70, 229);
+      pdf.text(labelText, xStart, y);
+
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(String(value), xStart + labelWidth + gap, y);
+
+      y += 22;
+    };
+
+    printLabel('Fecha', formatLongDate(ticket.date));
+    printLabel('Hora', formatTime(ticket.date));
+    printLabel('Lugar', ticket.location);
+    printLabel('Sector', ticket.sectorName);
+    printLabel('Asiento', ticket.seatNumber ?? 'Sin asignar');
+    printLabel('ID Ticket', ticket.idTicket);
+
+    y += 20;
+
+    pdf.setDrawColor(200, 200, 200);
+    pdf.setLineWidth(0.5);
+    pdf.line(40, y, pageWidth - 40, y);
+    y += 25;
+
+    if (ticket.imageUrl) {
+      try {
+        const imgData = await fetch(ticket.imageUrl)
+          .then(res => res.blob())
+          .then(blob => new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(blob);
+          }));
+
+        const imgWidth = pageWidth - 100;
+        const imgHeight = 160;
+        pdf.addImage(imgData, 'JPEG', 50, y, imgWidth, imgHeight);
+        y += imgHeight + 30;
+      } catch (error) {
+        console.warn('Error al cargar imagen para PDF:', error);
+      }
     }
+
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=ticket:${ticket.idTicket}-venta:${ticket.idSale}`;
+    const qrImg = await fetch(qrUrl)
+      .then(res => res.blob())
+      .then(blob => new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      }));
+
+    pdf.addImage(qrImg, 'PNG', pageWidth / 2 - 70, y, 140, 140);
+    y += 170;
+
+    pdf.setDrawColor(79, 70, 229);
+    pdf.setLineWidth(0.8);
+    pdf.line(40, y, pageWidth - 40, y);
+    y += 40;
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(16);
+    pdf.setTextColor(79, 70, 229);
+    pdf.text('¡Gracias por tu compra!', pageWidth / 2, y, { align: 'center' });
+    y += 25;
+
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(13);
+    pdf.setTextColor(0, 0, 0);
+    if (user?.name) {
+      pdf.text(`Usuario: ${user.name}   DNI: ${user.dni}`, pageWidth / 2, y, { align: 'center' });
+      y += 20;
+    }
+
+    pdf.setFontSize(12);
+    pdf.setTextColor(90, 90, 90);
+    pdf.text('Conserva este PDF como comprobante oficial de tu entrada.', pageWidth / 2, y, { align: 'center' });
+
+    pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}-${ticket.idTicket}.pdf`);
   };
 
-  // Agrupa tickets por idSale
+
+  // --- Agrupar tickets por venta ---
   const groupTicketsBySale = (tickets: PurchasedTicket[]): TicketGroup[] => {
     const map = new Map<number, TicketGroup>();
     for (const tk of tickets) {
@@ -150,7 +251,7 @@ const MyTickets: React.FC = () => {
                         .join(', ')}
                     </p>
                   )}
-                    <p><strong>Hora:</strong> {formatTime(group.date)}</p>
+                  <p><strong>Hora:</strong> {formatTime(group.date)}</p>
                 </div>
                 <div className={styles.ticketQRCode}>
                   <img
