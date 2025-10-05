@@ -17,6 +17,7 @@ import {
   MdCalendarToday,
   MdAccessTime,
   MdLocationCity,
+  MdAudiotrack,
   MdConfirmationNumber,
 } from "react-icons/md";
 
@@ -387,7 +388,7 @@ const EventDetailPage: React.FC = () => {
             </span>
           </p>
           <p className={styles.infoRow}>
-            <MdAccessTime className={styles.icon} />
+            <MdAudiotrack className={styles.icon} />
             <span>
               <strong>Tipo:</strong> {summary.type}
             </span>
@@ -395,13 +396,6 @@ const EventDetailPage: React.FC = () => {
 
           <p className={styles.infoRow}>
             <MdLocationOn className={styles.icon} />
-            <span>
-              <strong>Lugar:</strong> {formatPlaceType(summary.placeType)}
-            </span>
-          </p>
-
-          <p className={styles.infoRow}>
-            <MdLocationCity className={styles.icon} />
             <span>
               <strong>Estadio:</strong> {summary.placeName}
             </span>

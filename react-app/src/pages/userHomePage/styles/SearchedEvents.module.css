@@ -44,7 +44,6 @@
   text-align: center;
 }
 
-/* EXACTAMENTE 3 tarjetas por fila en desktop */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -60,7 +59,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  opacity: 0; /* Ocultar inicialmente para la animación */
+  opacity: 0; 
   animation: fadeInUp 0.5s ease-out forwards;
 }
 
@@ -133,7 +132,6 @@
   cursor: not-allowed;
 }
 
-/* MENSAJES EXTRA */
 
 .available {
   font-weight: 600;

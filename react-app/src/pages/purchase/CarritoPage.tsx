@@ -2,6 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../shared/context/CartContext';
 import styles from './styles/CarritoPage.module.css';
+import {
+  MdCalendarToday,
+  MdAccessTime,
+  MdLocationOn,
+  MdLocationCity,
+  MdEventSeat,
+  MdAttachMoney,
+} from "react-icons/md";
 
 type CartItemGroupKey = string;
 
@@ -25,10 +33,6 @@ const CarritoPage = () => {
     }).format(date);
   };
 
-  const isSeatNumbered = (sectorName: string | undefined) => {
-    return sectorName?.toLowerCase().includes('asiento');
-  };
-
   const getSectorGroupName = (sectorName: string | undefined): string => {
     if (!sectorName) return 'Otro';
     return sectorName.replace(/Asiento\s*\d+/gi, '').trim();
@@ -46,7 +50,6 @@ const CarritoPage = () => {
     for (const item of cartItems) {
       const sectorGroup = getSectorGroupName(item.sectorName);
       const seatNumber = extractSeatNumber(item.sectorName);
-
       const key = `${item.eventName}-${item.date}-${item.time}-${item.location}-${sectorGroup}-${item.price}`;
 
       if (!groups.has(key)) {
@@ -105,62 +108,91 @@ const CarritoPage = () => {
           <div className={styles.cartItemsContainer}>
             {groupedItems.map((group, index) => (
               <div key={index} className={styles.cartItem}>
-                <div className={styles.itemInfo}>
+                {/* Columna izquierda */}
+                <div className={styles.cartItemContent}>
                   <h3 className={styles.itemName}>{group.eventName}</h3>
-                  {group.date && <p className={styles.itemDate}>{formatDate(group.date)}</p>}
-                  {group.time && <p className={styles.itemDate}><strong>Hora:</strong> {group.time}</p>}
-                  {group.location && <p className={styles.itemLocation}><strong>Lugar:</strong> {group.location}</p>}
+
+                  {group.date && (
+                    <p className={styles.itemRow}>
+                      <MdCalendarToday className={styles.icon} />
+                      {formatDate(group.date)}
+                    </p>
+                  )}
+
+                  {group.time && (
+                    <p className={styles.itemRow}>
+                      <MdAccessTime className={styles.icon} />
+                      <strong>Hora:</strong> {new Intl.DateTimeFormat('es-AR', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                      }).format(new Date(group.date))}
+                    </p>
+                  )}
+                  
+                  {group.placeName && (
+                    <p className={styles.itemRow}>
+                      <MdLocationOn className={styles.icon} />
+                      <strong>Estadio:</strong> {group.placeName}
+                    </p>
+                  )}
+
+
                   {group.groupedSectorName && (
-                    <p className={styles.itemSector}>
+                    <p className={styles.itemRow}>
+                      <MdLocationCity className={styles.icon} />
                       <strong>Sector:</strong> {group.groupedSectorName}
                     </p>
                   )}
+
                   {group.seatNumbers.length > 0 && (
-                    <p className={styles.itemSector}>
+                    <p className={styles.itemRow}>
+                      <MdEventSeat className={styles.icon} />
                       <strong>Asientos:</strong> {group.seatNumbers.sort((a, b) => Number(a) - Number(b)).join(', ')}
                     </p>
                   )}
-                  <p className={styles.itemPrice}>Precio unitario: ${group.price.toFixed(2)}</p>
+
+                  <p className={styles.itemRow}>
+                    <MdAttachMoney className={styles.icon} />
+                    <strong>Precio unitario:</strong> ${group.price.toFixed(2)}
+                  </p>
                 </div>
 
-                <div className={styles.itemQuantity}>
-                  {group.seatNumbers.length > 0 ? (
-                    <span>Cantidad: {group.quantity}</span>
-                  ) : (
-                    <>
-                      <label htmlFor={`quantity-select-${index}`} className={styles.quantityLabel}>
-                        Cantidad:
-                      </label>
-                      <select
-                        id={`quantity-select-${index}`}
-                        value={group.quantity}
-                        onChange={e => handleQuantityChange(group.ids, e.target.value)}
-                        className={styles.cartQuantitySelect}
-                        disabled={group.ids.length > 1}
-                      >
-                        {[...Array(7).keys()].slice(1).map(n => (
-                          <option key={n} value={n}>{n}</option>
-                        ))}
-                      </select>
-                      {group.ids.length > 1 && (
-                        <p className={styles.cartErrorMessageSmall}>
-                          Para modificar la cantidad, elimina y vuelve a agregar.
-                        </p>
-                      )}
-                    </>
-                  )}
-                </div>
+                <div className={styles.cartItemControls}>
+                  <div className={styles.itemQuantity}>
+                    {group.seatNumbers.length > 0 ? (
+                      <span>Cantidad: {group.quantity}</span>
+                    ) : (
+                      <>
+                        <label htmlFor={`quantity-select-${index}`} className={styles.quantityLabel}>
+                          Cantidad:
+                        </label>
+                        <select
+                          id={`quantity-select-${index}`}
+                          value={group.quantity}
+                          onChange={e => handleQuantityChange(group.ids, e.target.value)}
+                          className={styles.cartQuantitySelect}
+                          disabled={group.ids.length > 1}
+                        >
+                          {[...Array(7).keys()].slice(1).map(n => (
+                            <option key={n} value={n}>{n}</option>
+                          ))}
+                        </select>
+                      </>
+                    )}
+                  </div>
 
-                <div className={styles.itemSubtotal}>
-                  <p>Subtotal: ${group.totalPrice.toFixed(2)}</p>
-                </div>
+                  <div className={styles.itemSubtotal}>
+                    Subtotal: ${group.totalPrice.toFixed(2)}
+                  </div>
 
-                <button 
-                  onClick={() => handleRemoveGroup(group.ids)}
-                  className={styles.itemRemoveBtn}
-                >
-                  Eliminar
-                </button>
+                  <button
+                    onClick={() => handleRemoveGroup(group.ids)}
+                    className={styles.itemRemoveBtn}
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </div>
             ))}
           </div>
