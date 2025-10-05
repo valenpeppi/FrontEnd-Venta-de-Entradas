@@ -3,12 +3,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/SearchedEvents.module.css';
+import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
 
 import {
   MdLocationOn,
   MdCalendarToday,
   MdCategory,
-  MdAttachMoney
+  MdAttachMoney,
+  MdAccessTime
 } from 'react-icons/md';
 
 const SearchedEvents: React.FC = () => {
@@ -24,23 +26,13 @@ const SearchedEvents: React.FC = () => {
       minPrice = Math.min(...ev.eventSectors.map((s: any) => parseFloat(s.price)));
     }
 
-    const eventDate = new Date(ev.date);
 
     return {
       id: String(ev.idEvent ?? ev.id),
       eventId: String(ev.idEvent ?? ev.id),
       eventName: ev.eventName ?? ev.name,
-      date: eventDate.toLocaleDateString("es-ES", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-        timeZone: "UTC",
-      }),
-      time: eventDate.toLocaleTimeString("es-ES", {
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "UTC",
-      }) + " hs",
+      date: formatLongDate(ev.date),
+      time: formatTime(ev.date),
       location: ev.location || ev.place?.name || "Lugar no especificado",
       placeName: ev.placeName || ev.place?.name || "Lugar no especificado",
       price: minPrice,
@@ -135,8 +127,14 @@ const EventCard: React.FC<{ ticket: Ticket; index: number }> = ({ ticket, index 
 
         <p className={styles.infoRow}>
           <MdCalendarToday className={styles.icon} />
-          <span>{ticket.date} - {ticket.time}</span>
+          <span>{ticket.date}</span>
         </p>
+
+        <p className={styles.infoRow}>
+          <MdAccessTime className={styles.icon} />
+          <span>{ticket.time}</span>
+        </p>
+
 
         <p className={styles.infoRow}>
           <MdCategory className={styles.icon} />

@@ -12,6 +12,8 @@ import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
 import bioceresArena from '../../assets/bioceres-arena.jpg';
 import elCirculo from '../../assets/el-circulo.png';
 import SeatSelector from '../seatSelector/SeatSelector.tsx';
+import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
+
 import {
   MdLocationOn,
   MdCalendarToday,
@@ -374,13 +376,13 @@ const EventDetailPage: React.FC = () => {
           <p className={styles.infoRow}>
             <MdCalendarToday className={styles.icon} />
             <span>
-              <strong>Fecha:</strong>{" "}
-              {new Date(summary.date).toLocaleDateString("es-AR", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}{" "}
+              <strong>Fecha:</strong> {formatLongDate(summary.date)}
+            </span>
+          </p>
+          <p className={styles.infoRow}>
+            <MdAccessTime className={styles.icon} />
+            <span>
+              <strong>Hora:</strong>{" "}
               {new Date(summary.date).toLocaleTimeString("es-AR", {
                 hour: "2-digit",
                 minute: "2-digit",

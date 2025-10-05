@@ -27,11 +27,18 @@ const CarritoPage = () => {
     if (isNaN(date.getTime())) {
       return dateString;
     }
-    return new Intl.DateTimeFormat('es-AR', {
-      dateStyle: 'full',
+    const formatted = new Intl.DateTimeFormat('es-AR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
       timeZone: 'UTC'
     }).format(date);
+
+    const capitalized = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    return capitalized.replace(',', '');
   };
+
 
   const getSectorGroupName = (sectorName: string | undefined): string => {
     if (!sectorName) return 'Otro';

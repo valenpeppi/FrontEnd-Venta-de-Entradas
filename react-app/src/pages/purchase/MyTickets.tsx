@@ -70,10 +70,15 @@ const MyTickets: React.FC = () => {
 
   const formatDate = (isoDate: string) => {
     const date = new Date(isoDate);
-    return new Intl.DateTimeFormat('es-AR', {
+    const formatted = new Intl.DateTimeFormat('es-AR', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
     }).format(date);
+
+    const capitalized = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    return capitalized.replace(',', '');
   };
+
+
 
   const handleDownloadPDF = (ticket: PurchasedTicket) => {
     const ticketElement = document.getElementById(`ticket-${ticket.id}`);

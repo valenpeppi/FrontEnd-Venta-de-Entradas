@@ -4,6 +4,7 @@ import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/Carousel.module.css';
 import GlobalStyles from '../../shared/styles/GlobalStyles.module.css';
 import { MdCalendarToday, MdLocationOn } from "react-icons/md";
+import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
 
 export interface CarouselProps {
   tickets: Ticket[];

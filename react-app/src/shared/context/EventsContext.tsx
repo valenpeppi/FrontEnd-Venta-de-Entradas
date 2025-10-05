@@ -2,6 +2,7 @@ import { createContext, useReducer, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
 import type { Ticket } from './CartContext';
 import axios from 'axios';
+import { formatLongDate, formatTime } from '../utils/dateFormatter';
 
 interface EventsState {
   featuredTickets: Ticket[];
@@ -51,25 +52,13 @@ const mapApiEventToTicket = (ev: any): Ticket => {
     minPrice = Math.min(...ev.eventSectors.map((s: any) => parseFloat(s.price)));
   }
 
-  const eventDate = new Date(ev.date);
-
   return {
     id: String(ev.idEvent ?? ev.id),
     eventId: String(ev.idEvent ?? ev.id),
     description: ev.description,
     eventName: ev.eventName ?? ev.name,
-    date: eventDate.toLocaleDateString("es-ES", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      timeZone: "UTC",
-    }),
-    time:
-      eventDate.toLocaleTimeString("es-ES", {
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "UTC",
-      }) + " hs",
+    date: formatLongDate(ev.date),
+    time: formatTime(ev.date),
     location: ev.place?.name || ev.placeName || "Sin lugar",
     placeName: ev.place?.name || ev.placeName || "Lugar no especificado",
     price: minPrice,
@@ -81,6 +70,7 @@ const mapApiEventToTicket = (ev: any): Ticket => {
     quantity: 0,
   };
 };
+
 
 function EventsProvider({ children }: EventsProviderProps) {
   const [state, dispatch] = useReducer(eventsReducer, { featuredTickets: [], approvedTickets: [] });
