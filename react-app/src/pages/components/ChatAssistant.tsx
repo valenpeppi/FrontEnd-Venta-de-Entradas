@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { sendMessageToAI } from "../../shared/api/AIClient";
-import { PiRobotFill } from "react-icons/pi";
+import { RiRobot2Fill } from "react-icons/ri";
 import { MdClose, MdConfirmationNumber } from "react-icons/md";
 import styles from "./styles/ChatAssistant.module.css";
 
@@ -84,7 +84,7 @@ const ChatAssistant: React.FC = () => {
           onClick={openChat}
           title="Abrir asistente TicketBot"
         >
-          <PiRobotFill className={styles.iconPulse} size={32} color="#fff" />
+          <RiRobot2Fill  className={styles.iconPulse} size={32} color="#fff" />
         </button>
       )}
 
