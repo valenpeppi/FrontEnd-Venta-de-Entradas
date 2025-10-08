@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import type { Components } from "react-markdown";
 import { sendMessageToAI } from "../../shared/api/AIClient";
+import { RiRobot2Fill } from "react-icons/ri";
+import { MdClose, MdConfirmationNumber } from "react-icons/md";
 import styles from "./styles/ChatAssistant.module.css";
 
 const MarkdownMessage = React.memo(({ text }: { text: string }) => (
   <div className={styles.markdown}>
-    <ReactMarkdown components={{}}>{text}</ReactMarkdown>
+    <ReactMarkdown>{text}</ReactMarkdown>
   </div>
 ));
 
@@ -18,67 +19,58 @@ const ChatAssistant: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // 🔹 Autoajuste de altura del textarea
   useEffect(() => {
     if (textareaRef.current) {
-      requestAnimationFrame(() => {
-        const el = textareaRef.current!;
-        el.style.height = "auto";
-        el.style.height = Math.min(el.scrollHeight, 200) + "px";
-      });
+      const el = textareaRef.current;
+      el.style.height = "auto";
+      el.style.height = Math.min(el.scrollHeight, 200) + "px";
     }
   }, [input]);
 
-  // 🔹 Scroll automático al último mensaje
   useEffect(() => {
     const timeout = setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 80);
+    }, 100);
     return () => clearTimeout(timeout);
   }, [messages]);
 
-  // 🔹 Mensaje inicial automático al abrir el chat
   const openChat = () => {
     setIsOpen(true);
     if (messages.length === 0) {
       setMessages([
         {
           sender: "ai",
-          text: "👋 ¡Hola! ¿En qué puedo ayudarte hoy?",
+          text: "👋 ¡Hola! Soy **TicketBot**. ¿En qué puedo ayudarte hoy?",
         },
       ]);
     }
   };
 
-  // 🔹 Envío de mensaje al backend IA
   const handleSend = async () => {
     if (!input.trim()) return;
-
     const userMsg = { sender: "user", text: input };
-    setMessages((prev) => [...prev, userMsg]);
+    const writingMsg = { sender: "ai", text: "💬 Escribiendo..." };
+    setMessages((prev) => [...prev, userMsg, writingMsg]);
     setInput("");
     setLoading(true);
 
-    // Mostrar mensaje temporal "escribiendo..."
-    setMessages((prev) => [
-      ...prev,
-      { sender: "ai", text: "💬 Escribiendo" },
-    ]);
-
     try {
       const reply = await sendMessageToAI(input);
-
-      // Reemplazar el mensaje "Escribiendo" con la respuesta real
-      setMessages((prev) => [
-        ...prev.slice(0, -1),
-        { sender: "ai", text: reply },
-      ]);
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = { sender: "ai", text: reply };
+        return updated;
+      });
     } catch (err) {
       console.error("Error al enviar mensaje:", err);
-      setMessages((prev) => [
-        ...prev.slice(0, -1),
-        { sender: "ai", text: "⚠️ Error al conectar con el asistente." },
-      ]);
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          sender: "ai",
+          text: "⚠️ Ocurrió un error al conectar con el asistente.",
+        };
+        return updated;
+      });
     } finally {
       setLoading(false);
     }
@@ -86,28 +78,29 @@ const ChatAssistant: React.FC = () => {
 
   return (
     <>
-      {/* 🔘 Botón flotante */}
       {!isOpen && (
         <button
           className={styles.floatingButton}
           onClick={openChat}
-          title="Abrir asistente"
+          title="Abrir asistente TicketBot"
         >
-          💬
+          <RiRobot2Fill  className={styles.iconPulse} size={32} color="#fff" />
         </button>
       )}
 
-      {/* 💬 Ventana del chat */}
       {isOpen && (
         <div className={styles.chatContainer}>
           <div className={styles.chatHeader}>
-            <span>Asistente TicketBot</span>
+            <div className={styles.headerTitle}>
+              <MdConfirmationNumber size={22} className={styles.ticketIcon} />
+              <span>TicketBot</span>
+            </div>
             <button
               className={styles.closeButton}
               onClick={() => setIsOpen(false)}
               title="Cerrar chat"
             >
-              ✖
+              <MdClose size={20} />
             </button>
           </div>
 
@@ -126,7 +119,7 @@ const ChatAssistant: React.FC = () => {
                 ) : m.sender === "ai" ? (
                   <MarkdownMessage text={m.text} />
                 ) : (
-                  m.text
+                  <div className={styles.userText}>{m.text}</div>
                 )}
               </div>
             ))}
@@ -136,7 +129,7 @@ const ChatAssistant: React.FC = () => {
           <div className={styles.chatInput}>
             <textarea
               ref={textareaRef}
-              placeholder="Escribí tu pregunta..."
+              placeholder="Escribí tu mensaje..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) =>
@@ -145,6 +138,7 @@ const ChatAssistant: React.FC = () => {
                 (e.preventDefault(), handleSend())
               }
               rows={1}
+              disabled={loading}
             />
             <button onClick={handleSend} disabled={loading}>
               {loading ? "..." : "Enviar"}
