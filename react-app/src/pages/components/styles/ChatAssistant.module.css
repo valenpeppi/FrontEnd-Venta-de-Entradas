@@ -1,23 +1,79 @@
+.floatingButton {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, background 0.2s ease;
+  z-index: 999;
+}
+
+.floatingButton:hover {
+  transform: scale(1.1);
+  background: #3730a3;
+}
+
+/* Contenedor principal */
 .chatContainer {
   position: fixed;
-  bottom: 20px;
+  bottom: 100px;
   right: 25px;
-  width: 320px;
+  width: 340px;
+  max-height: 70vh;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-family: sans-serif;
+  font-family: "Inter", sans-serif;
   z-index: 1000;
+  animation: slideUp 0.3s ease;
 }
 
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Header */
+.chatHeader {
+  background: #4f46e5;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Mensajes */
 .chatMessages {
   flex: 1;
   padding: 10px;
   overflow-y: auto;
-  max-height: 400px;
+  scroll-behavior: smooth;
 }
 
 .userMsg {
@@ -27,27 +83,62 @@
   padding: 8px 12px;
   margin: 6px 0;
   border-radius: 12px 12px 0 12px;
+  max-width: 85%;
+  word-wrap: break-word;
 }
 
 .aiMsg {
   align-self: flex-start;
-  background: #e5e7eb;
-  color: black;
+  background: #f3f4f6;
+  color: #111827;
   padding: 8px 12px;
   margin: 6px 0;
   border-radius: 12px 12px 12px 0;
+  max-width: 85%;
+  word-wrap: break-word;
 }
 
+/* Markdown */
+.markdown {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.markdown ul {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+
+.markdown li {
+  list-style-type: disc;
+  margin-bottom: 4px;
+}
+
+.markdown strong {
+  font-weight: 600;
+  color: #1e1b4b;
+}
+
+/* Input */
 .chatInput {
   display: flex;
   border-top: 1px solid #ddd;
+  padding: 5px;
+  background: #fff;
 }
 
-.chatInput input {
+.chatInput textarea {
   flex: 1;
+  resize: none;
   border: none;
   padding: 10px;
   outline: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  max-height: 120px;
+  overflow-y: auto;
 }
 
 .chatInput button {
@@ -55,6 +146,8 @@
   background: #4f46e5;
   color: white;
   padding: 0 15px;
+  border-radius: 8px;
+  margin-left: 8px;
   cursor: pointer;
   transition: background 0.2s;
 }
