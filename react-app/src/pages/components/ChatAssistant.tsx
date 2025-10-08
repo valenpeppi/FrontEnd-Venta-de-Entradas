@@ -18,7 +18,7 @@ const ChatAssistant: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // 🔹 Auto-ajuste de altura del textarea (con límite y sin loop)
+  // 🔹 Autoajuste de altura del textarea
   useEffect(() => {
     if (textareaRef.current) {
       requestAnimationFrame(() => {
@@ -29,15 +29,28 @@ const ChatAssistant: React.FC = () => {
     }
   }, [input]);
 
-  // 🔹 Scroll automático al último mensaje (sin ciclo)
+  // 🔹 Scroll automático al último mensaje
   useEffect(() => {
     const timeout = setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 60);
+    }, 80);
     return () => clearTimeout(timeout);
   }, [messages]);
 
-  // 🔹 Enviar mensaje al backend IA
+  // 🔹 Mensaje inicial automático al abrir el chat
+  const openChat = () => {
+    setIsOpen(true);
+    if (messages.length === 0) {
+      setMessages([
+        {
+          sender: "ai",
+          text: "👋 ¡Hola! ¿En qué puedo ayudarte hoy?",
+        },
+      ]);
+    }
+  };
+
+  // 🔹 Envío de mensaje al backend IA
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -46,13 +59,24 @@ const ChatAssistant: React.FC = () => {
     setInput("");
     setLoading(true);
 
+    // Mostrar mensaje temporal "escribiendo..."
+    setMessages((prev) => [
+      ...prev,
+      { sender: "ai", text: "💬 Escribiendo" },
+    ]);
+
     try {
       const reply = await sendMessageToAI(input);
-      setMessages((prev) => [...prev, { sender: "ai", text: reply }]);
+
+      // Reemplazar el mensaje "Escribiendo" con la respuesta real
+      setMessages((prev) => [
+        ...prev.slice(0, -1),
+        { sender: "ai", text: reply },
+      ]);
     } catch (err) {
       console.error("Error al enviar mensaje:", err);
       setMessages((prev) => [
-        ...prev,
+        ...prev.slice(0, -1),
         { sender: "ai", text: "⚠️ Error al conectar con el asistente." },
       ]);
     } finally {
@@ -62,11 +86,11 @@ const ChatAssistant: React.FC = () => {
 
   return (
     <>
-      {/* 🔘 Botón flotante para abrir el chat */}
+      {/* 🔘 Botón flotante */}
       {!isOpen && (
         <button
           className={styles.floatingButton}
-          onClick={() => setIsOpen(true)}
+          onClick={openChat}
           title="Abrir asistente"
         >
           💬
@@ -93,7 +117,13 @@ const ChatAssistant: React.FC = () => {
                 key={i}
                 className={m.sender === "user" ? styles.userMsg : styles.aiMsg}
               >
-                {m.sender === "ai" ? (
+                {m.sender === "ai" && m.text.includes("Escribiendo") ? (
+                  <div className={styles.typingDots}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                ) : m.sender === "ai" ? (
                   <MarkdownMessage text={m.text} />
                 ) : (
                   m.text
