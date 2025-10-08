@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { sendMessageToAI } from "../../shared/api/AIClient";
-import styles from "./ChatAssistant.module.css";
+import styles from "./styles/ChatAssistant.module.css";
 
 const ChatAssistant: React.FC = () => {
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
