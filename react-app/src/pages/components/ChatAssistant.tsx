@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { sendMessageToAI } from "../shared/api/AIClient";
+import { sendMessageToAI } from "../../shared/api/AIClient";
 import styles from "./ChatAssistant.module.css";
 
 const ChatAssistant: React.FC = () => {
@@ -15,7 +15,7 @@ const ChatAssistant: React.FC = () => {
     setLoading(true);
 
     const reply = await sendMessageToAI(input);
-    setMessages((prev) => [...prev, { sender: "assistant", text: reply }]);
+    setMessages((prev) => [...prev, { sender: "ai", text: reply }]);
     setLoading(false);
   };
 
@@ -31,6 +31,7 @@ const ChatAssistant: React.FC = () => {
           </div>
         ))}
       </div>
+
       <div className={styles.chatInput}>
         <input
           type="text"
