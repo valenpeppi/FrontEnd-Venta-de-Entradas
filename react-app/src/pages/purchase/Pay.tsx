@@ -254,8 +254,6 @@ const Pay: React.FC = () => {
     return Array.from(eventMap.values());
   };
 
-
-
   const groupedEvents = groupCartByEventSector();
   
   return (
