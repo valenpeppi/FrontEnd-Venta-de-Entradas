@@ -5,11 +5,9 @@ export const sendMessageToAI = async (message: string): Promise<string> => {
   const timeout = setTimeout(() => controller.abort(), 30000);
 
   try {
-    // 1️⃣ Obtener eventos aprobados desde el backend
     const eventsResponse = await axios.get("http://localhost:3000/api/events/approved");
     const events = eventsResponse.data?.data ?? [];
 
-    // 2️⃣ Transformarlos en JSON estructurado (mejor precisión del modelo)
     const structuredEvents = events.slice(0, 10).map((e: any) => ({
       nombre: e.name,
       lugar: e.placeName,
@@ -22,7 +20,7 @@ export const sendMessageToAI = async (message: string): Promise<string> => {
       precioMinimo: e.minPrice || e.price || 0,
     }));
 
-    // 3️⃣ Prompt completo con contexto y eventos JSON
+    // Prompt completo con contexto y eventos JSON
     const prompt = `
 Eres **TicketBot**, el asistente oficial y exclusivo de la plataforma **TicketApp**, una aplicación web desarrollada en React + Node/Express + Prisma + MySQL, cuyo propósito es permitir la compra de entradas para eventos en línea (recitales, partidos, obras de teatro, etc.).
 
@@ -30,7 +28,7 @@ Tu objetivo es ayudar al usuario en todas las acciones relacionadas con TicketAp
 
 ---
 
-### 🧭 Contexto general del sitio
+### Contexto general del sitio
 TicketApp tiene varias secciones principales:
 
 1. **Inicio (HomePage)** — muestra los eventos destacados (carousel) y los aprobados, filtrados por tipo (música, teatro, deportes, etc.).
@@ -47,7 +45,7 @@ TicketApp tiene varias secciones principales:
 
 ---
 
-### 🧠 Tu función como TicketBot
+### Tu función como TicketBot
 Debes responder **solo sobre temas relacionados con TicketApp**, en **español natural**, con tono amable y claro (máximo 3 párrafos).  
 
 Puedes:
@@ -68,7 +66,7 @@ ${JSON.stringify(structuredEvents, null, 2)}
 
 ---
 
-### 🧩 Ejemplos de interacción
+### Ejemplos de interacción
 
 **Usuario:** cómo compro entradas  
 **TicketBot:** Podés comprar tus entradas desde la sección **Eventos** de TicketApp.  
@@ -95,10 +93,10 @@ Por ejemplo: “Bizarrap se presenta en el Bioceres Arena el 12 de diciembre de 
 
 ---
 
-🧠 El usuario escribió: "${message}"
+El usuario escribió: "${message}"
 `;
 
-    // 4️⃣ Enviar el prompt al backend IA (Gemma/Mistral)
+    // Enviar el prompt al backend IA (Gemma)
     const response = await axios.post(
       "http://localhost:3000/api/ai",
       { message: prompt },
