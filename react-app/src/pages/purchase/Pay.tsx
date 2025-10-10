@@ -90,38 +90,90 @@ const Pay: React.FC = () => {
     }
   };
 
-  // --- Lógica para MERCADO PAGO ---
-  const handlePayment = async () => {
-    if (!user) {
+  // Lógica para MERCADO PAGO 
+  const handleMPPayment = async () => {
+    if (!user || !user.dni || !user.mail) {
       alert("Debes iniciar sesión para pagar con Mercado Pago.");
       return;
     }
+
     try {
-      const { data } = await axios.post("http://localhost:3000/api/payments/create_preference", {
-        items: cartItems.map(item => ({
-          id: (item.ticketIds && item.ticketIds[0])?.toString() || item.id,
-          title: item.eventName,
-          unit_price: item.price,
-          quantity: item.quantity,
-        })),
-        payer: {
-          email: user.mail,
-          name: user.name,
-          surname: user.surname,
-        },
+      // Generar items para Mercado Pago
+      const items = cartItems.map((item, index) => ({
+        id: item.ticketIds?.[0]?.toString() || item.id?.toString() || String(index),
+        name: item.eventName,                   
+        amount: Math.round(item.price * 100),  
+        quantity: item.quantity,
+      }));
+
+
+      // Generar ticketGroups con quantity incluido
+      const ticketGroupsMap: Record<string, {
+        idEvent: number;
+        idPlace: number;
+        idSector: number;
+        ids: number[];
+        quantity: number;
+      }> = {};
+
+      for (const item of cartItems) {
+        const key = `${item.eventId}-${item.idPlace}-${item.idSector}`;
+        if (!ticketGroupsMap[key]) {
+          ticketGroupsMap[key] = {
+            idEvent: Number(item.eventId),
+            idPlace: Number(item.idPlace),
+            idSector: Number(item.idSector),
+            ids: [],
+            quantity: 0,
+          };
+        }
+        ticketGroupsMap[key].quantity += item.quantity;
+
+        if (item.ticketIds && item.ticketIds.length > 0) {
+          ticketGroupsMap[key].ids.push(...item.ticketIds.map(Number));
+        }
+      }
+
+      const ticketGroups = Object.values(ticketGroupsMap);
+
+      // Validar datos necesarios
+      const missingData = cartItems.some(item =>
+        !item.ticketIds || item.ticketIds.length === 0 ||
+        item.idPlace == null || item.idSector == null
+      );
+      if (missingData) {
+        alert("Faltan datos en algunos ítems del carrito. Por favor, vuelve a seleccionar las entradas.");
+        return;
+      }
+
+      // Hacer la request al backend
+      const { data } = await axios.post("http://localhost:3000/api/mp/checkout", {
+        items,
+        dniClient: user.dni,
+        customerEmail: user.mail,
+        ticketGroups,
       });
 
-      if (data.id) {
-        setPreferenceId(data.id);
+      // Setear preferenceId y guardar datos para el webhook
+      if (data.preferenceId) {
+        setPreferenceId(data.preferenceId);
+
+        localStorage.setItem("ticketGroups", JSON.stringify(ticketGroups));
+        localStorage.setItem("dniClient", String(user.dni));
+        localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
       } else {
-        console.error("No se recibió preferenceId:", data);
+        console.error("❌ No se recibió preferenceId:", data);
+        alert("No se pudo generar la preferencia de pago.");
       }
     } catch (error: any) {
-      console.error("Error al generar preferencia de pago:", error.response?.data || error.message);
+      console.error("❌ Error al generar preferencia de pago:", error.response?.data || error.message);
+      alert("Error al generar la preferencia. Ver consola.");
     }
   };
 
-  // --- Lógica para STRIPE ---
+
+
+  // Lógica para STRIPE 
   const handleStripePayment = async () => {
     if (!user || !user.dni || !user.mail) {
       alert("Debes iniciar sesión con un usuario válido para pagar con Stripe.");
@@ -301,7 +353,7 @@ const Pay: React.FC = () => {
 
           <div className={styles.payButtons}>
             {!preferenceId ? (
-              <button onClick={handlePayment} className={styles.btnPay}>
+              <button onClick={handleMPPayment} className={styles.btnPay}>
                 Pagar con Mercado Pago
               </button>
             ) : (
