@@ -7,6 +7,10 @@ import styles from "./styles/Pay.module.css";
 const Success = () => {
   const navigate = useNavigate();
   const { clearCart } = useCart();
+  
+  useEffect(() => {
+    localStorage.removeItem("saleConfirmed");
+  }, []);
 
   useEffect(() => {
     clearCart();

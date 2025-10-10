@@ -61,6 +61,9 @@ const Navbar: React.FC = () => {
   const confirmLogout = () => {
     logout();
     setShowLogoutConfirm(false);
+    localStorage.removeItem("ticket-cart");
+    localStorage.removeItem("ticketGroups");
+    localStorage.removeItem("dniClient");
     navigate('/login');
   };
 

@@ -9,6 +9,10 @@ const Failure: React.FC = () => {
   const { cartItems, addToCart } = useCart();
 
   useEffect(() => {
+    localStorage.removeItem("saleConfirmed");
+  }, []);
+
+  useEffect(() => {
     if (cartItems.length === 0) {
       const stored = localStorage.getItem("ticket-cart");
       if (stored) {

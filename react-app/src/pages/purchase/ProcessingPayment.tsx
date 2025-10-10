@@ -14,6 +14,13 @@ const ProcessingPayment = () => {
       const dniClient = localStorage.getItem("dniClient");
       const ticketGroups = localStorage.getItem("ticketGroups");
 
+      // Evitar confirmación duplicada
+      const alreadyConfirmed = localStorage.getItem("saleConfirmed");
+      if (alreadyConfirmed === "true") {
+        console.warn("⚠️ Venta ya confirmada anteriormente. Se evita duplicación.");
+        return;
+      }
+
       if (!dniClient || !ticketGroups) {
         console.warn("❌ Faltan datos para confirmar la venta:", {
           dniClient,
@@ -34,24 +41,33 @@ const ProcessingPayment = () => {
         });
 
         console.log("✅ Venta confirmada exitosamente desde frontend:", res.data);
+        localStorage.setItem("saleConfirmed", "true");
       } catch (error: any) {
         console.error("❌ Error confirmando venta desde frontend:", error?.response?.data || error.message);
+        navigate("/pay/failure");
       }
     };
 
     const start = async () => {
-      setLoadingMessage("Procesando tu pago...");
-      await new Promise(res => setTimeout(res, 3000));
-      setLoadingMessage("Confirmando tu compra...");
-      await confirmSale();
-      await new Promise(res => setTimeout(res, 3000));
-      clearCart();
-      localStorage.removeItem("ticket-cart");
-      localStorage.removeItem("ticketGroups");
-      localStorage.removeItem("dniClient");
-      navigate("/pay/success");
-    };
+      try {
+        setLoadingMessage("Procesando tu pago...");
+        await new Promise(res => setTimeout(res, 3000));
 
+        setLoadingMessage("Confirmando tu compra...");
+        await confirmSale();
+
+        await new Promise(res => setTimeout(res, 3000));
+
+        clearCart();
+        localStorage.removeItem("ticket-cart");
+        localStorage.removeItem("ticketGroups");
+        localStorage.removeItem("dniClient");
+
+        navigate("/pay/success");
+      } catch (e) {
+        navigate("/pay/failure");
+      }
+    };
 
     start();
   }, [navigate, clearCart]);
