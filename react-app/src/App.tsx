@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import Layout from './shared/layout/Layout';
 import HomePage from './pages/userHomePage/UserHomePage';
 import SearchedEvents from './pages/userHomePage/SearchedEvents';
-import CarritoPage from './pages/purchase/CarritoPage';
+import CarritoPage from './pages/purchase/CartPage';
 import Pay from './pages/purchase/Pay';
 import AdminHomePage from './pages/adminHomePage/AdminHomePage';
 import MyTickets from './pages/purchase/MyTickets';
