@@ -15,7 +15,7 @@ import {
 
 type CartItemGroupKey = string;
 
-const CarritoPage = () => {
+const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems, removeItem, updateItemQuantity, canAddTicketsToEvent } = useCart();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -238,4 +238,4 @@ const CarritoPage = () => {
   );
 };
 
-export default CarritoPage;
+export default CartPage;

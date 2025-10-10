@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import Layout from './shared/layout/Layout';
 import HomePage from './pages/userHomePage/UserHomePage';
 import SearchedEvents from './pages/userHomePage/SearchedEvents';
-import CarritoPage from './pages/purchase/CartPage';
+import CartPage from './pages/purchase/CartPage';
 import Pay from './pages/purchase/Pay';
 import AdminHomePage from './pages/adminHomePage/AdminHomePage';
 import MyTickets from './pages/purchase/MyTickets';
@@ -85,7 +85,7 @@ const App: React.FC = () => {
         <Route path="/registercompany" element={<AuthRoute guestOnly><RegisterCompany onRegisterSuccess={handleCompanyRegisterSuccess} /></AuthRoute>} />
 
         {/* Rutas Protegidas para Usuarios */}
-        <Route path="/cart" element={<AuthRoute allowedRoles={['user']}><Layout><CarritoPage /></Layout></AuthRoute>} />
+        <Route path="/cart" element={<AuthRoute allowedRoles={['user']}><Layout><CartPage /></Layout></AuthRoute>} />
         <Route path="/pay" element={<AuthRoute allowedRoles={['user']}><Layout><Pay /></Layout></AuthRoute>} />
         <Route path="/myTickets" element={<AuthRoute allowedRoles={['user']}><Layout><MyTickets /></Layout></AuthRoute>} />
         <Route path="/pay/processing" element={<AuthRoute allowedRoles={['user']}><Layout><ProcessingPayment /></Layout></AuthRoute>} />
