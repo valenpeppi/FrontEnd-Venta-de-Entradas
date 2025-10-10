@@ -1,6 +1,8 @@
 import { createContext, useReducer, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
 
+const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+
 export interface Ticket {
   id: string;
   eventId: string;
@@ -47,6 +49,7 @@ interface CartContextType {
   removeItem: (id: string) => void;
   clearCart: () => void;
   updateItemQuantity: (id: string, newQuantity: number) => boolean;
+  canAddTicketsToEvent: (eventId: string | number, quantity: number) => Promise<boolean>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -205,6 +208,32 @@ function CartProvider({ children }: CartProviderProps) {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity: newQuantity } });
     return true;
   };
+  const canAddTicketsToEvent = async (eventId: string | number, quantity: number): Promise<boolean> => {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+
+    const currentInCart = state.cartItems
+      .filter(item => item.eventId === String(eventId))
+      .reduce((sum, item) => sum + item.quantity, 0);
+
+    try {
+      const res = await fetch(`${BASE_URL}/api/sales/my-tickets`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      const alreadyBought = (data?.data || []).filter((t: any) => t.eventId == eventId).length;
+
+      const total = alreadyBought + currentInCart + quantity;
+      return total <= 6;
+    } catch (err) {
+      console.error("🛑 Error verificando cantidad total de entradas:", err);
+      return false;
+    }
+  };
 
   const cartCount = state.cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -217,6 +246,7 @@ function CartProvider({ children }: CartProviderProps) {
         removeItem,
         clearCart,
         updateItemQuantity,
+        canAddTicketsToEvent
       }}
     >
       {children}

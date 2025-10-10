@@ -40,7 +40,7 @@ const SECTOR_LAYOUT_CONFIG: Record<string, Record<string, number>> = {
 const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, cartItems, canAddTicketsToEvent } = useCart();
   const { setAppMessage } = useMessage();
   const sectorListRef = useRef<HTMLDivElement>(null);
 
@@ -289,9 +289,10 @@ const EventDetailPage: React.FC = () => {
       setAppMessage('Debes seleccionar al menos una entrada', 'error');
       return;
     }
+  const allowed = canAddTicketsToEvent(summary.id, totalSelected);
 
-    if (totalSelected > 6) {
-      setAppMessage('Solo puedes comprar hasta 6 entradas en total para este evento.', 'error');
+    if (!allowed) {
+      setAppMessage('Solo puedes tener hasta 6 entradas en total para este evento (carrito + compradas).', 'error');
       return;
     }
 
@@ -310,6 +311,7 @@ const EventDetailPage: React.FC = () => {
       setAppMessage('No puedes tener más de 6 entradas para este evento en tu carrito.', 'error');
     }
   };
+
 
   const formatPlaceType = (placeType: string) => {
     switch (placeType.toLowerCase()) {

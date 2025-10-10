@@ -17,7 +17,7 @@ type CartItemGroupKey = string;
 
 const CarritoPage = () => {
   const navigate = useNavigate();
-  const { cartItems, removeItem, updateItemQuantity } = useCart();
+  const { cartItems, removeItem, updateItemQuantity, canAddTicketsToEvent } = useCart();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
@@ -71,14 +71,38 @@ const CarritoPage = () => {
     return groupedItems.reduce((total, group) => total + group.totalPrice, 0);
   };
 
-  const handleQuantityChange = (groupIds: string[], value: string) => {
+  const handleQuantityChange = async (groupIds: string[], value: string) => {
     const newQuantity = parseInt(value, 10);
     if (isNaN(newQuantity)) return;
 
-    if (groupIds.length === 1) {
+    const ticket = cartItems.find(item => item.id === groupIds[0]);
+    if (!ticket) return;
+
+    const eventId = ticket.eventId;
+
+    // Validar si se puede agregar esta nueva cantidad
+    const delta = newQuantity - ticket.quantity;
+    if (delta <= 0) {
+      // Disminuir siempre es válido
       const wasUpdated = updateItemQuantity(groupIds[0], newQuantity);
       if (!wasUpdated) {
-        setErrorMsg('Solo puedes tener hasta 6 entradas por evento en tu carrito.');
+        setErrorMsg('Error al actualizar cantidad.');
+      } else {
+        setErrorMsg(null);
+      }
+      return;
+    }
+
+    if (groupIds.length === 1) {
+      const canAdd = await canAddTicketsToEvent(eventId, delta);
+      if (!canAdd) {
+        setErrorMsg('No puedes tener más de 6 entradas por evento (compradas + carrito).');
+        return;
+      }
+
+      const wasUpdated = updateItemQuantity(groupIds[0], newQuantity);
+      if (!wasUpdated) {
+        setErrorMsg('No puedes tener más de 6 entradas por evento en tu carrito.');
       } else {
         setErrorMsg(null);
       }
@@ -86,6 +110,7 @@ const CarritoPage = () => {
       setErrorMsg('No se puede editar la cantidad de entradas agrupadas con asiento. Elimina y vuelve a agregar.');
     }
   };
+
 
   const handleRemoveGroup = (groupIds: string[]) => {
     groupIds.forEach(id => removeItem(id));
@@ -136,7 +161,8 @@ const CarritoPage = () => {
                   {group.seatNumbers.length > 0 && (
                     <p className={styles.itemRow}>
                       <MdEventSeat className={styles.icon} />
-                      <strong>Asientos:</strong> {group.seatNumbers.sort((a, b) => Number(a) - Number(b)).join(', ')}
+                      <strong>Asientos:</strong>{group.seatNumbers.sort((a: string, b: string) => Number(a) - Number(b)).join(', ')}
+
                     </p>
                   )}
 
