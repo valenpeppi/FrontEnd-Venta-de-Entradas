@@ -11,45 +11,50 @@ const ProcessingPayment = () => {
 
   useEffect(() => {
     const confirmSale = async () => {
+      const dniClient = localStorage.getItem("dniClient");
+      const ticketGroups = localStorage.getItem("ticketGroups");
+
+      if (!dniClient || !ticketGroups) {
+        console.warn("❌ Faltan datos para confirmar la venta:", {
+          dniClient,
+          ticketGroups,
+        });
+        return;
+      }
+
       try {
-        setLoadingMessage("Confirmando la venta con el servidor...");
+        console.log("📦 Enviando confirmación de venta con:", {
+          dniClient,
+          ticketGroups: JSON.parse(ticketGroups),
+        });
 
-        const ticketGroups = localStorage.getItem("ticketGroups");
-        const dniClient = localStorage.getItem("dniClient");
-
-        if (!ticketGroups || !dniClient) {
-          setLoadingMessage("No hay datos de venta. Redirigiendo...");
-          clearCart();
-          localStorage.removeItem("ticket-cart");
-
-          setTimeout(() => {
-            navigate("/pay/success");
-          }, 3000);
-          return;
-        }
-
-        const response = await axios.post("http://localhost:3000/api/sales/confirm", {
+        const res = await axios.post("http://localhost:3000/api/sales/confirm", {
           dniClient: Number(dniClient),
           tickets: JSON.parse(ticketGroups),
         });
 
-        console.log("Venta confirmada:", response.data);
-
-        setTimeout(() => {
-          navigate("/pay/success");
-        }, 3000);
-
-      } catch (error) {
-        console.error("Error al confirmar la venta:", error);
-
-        setTimeout(() => {
-          navigate("/pay/failure");
-        }, 3000);
+        console.log("✅ Venta confirmada exitosamente desde frontend:", res.data);
+      } catch (error: any) {
+        console.error("❌ Error confirmando venta desde frontend:", error?.response?.data || error.message);
       }
     };
 
-    confirmSale();
-  }, [clearCart, navigate]);
+    const start = async () => {
+      setLoadingMessage("Procesando tu pago...");
+      await new Promise(res => setTimeout(res, 3000));
+      setLoadingMessage("Confirmando tu compra...");
+      await confirmSale();
+      await new Promise(res => setTimeout(res, 3000));
+      clearCart();
+      localStorage.removeItem("ticket-cart");
+      localStorage.removeItem("ticketGroups");
+      localStorage.removeItem("dniClient");
+      navigate("/pay/success");
+    };
+
+
+    start();
+  }, [navigate, clearCart]);
 
   return (
     <div className={styles.successContent}>

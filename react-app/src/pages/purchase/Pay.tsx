@@ -177,11 +177,6 @@ const Pay: React.FC = () => {
         localStorage.setItem("dniClient", String(user.dni));
         localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
 
-        // En desarrollo, simulamos el pago exitoso. En producción, esto es manejado por webhooks.
-        setTimeout(() => {
-          confirmSaleManually();
-        }, 3000);
-
         window.location.href = data.url;
       } else {
         console.error("❌ Error en Stripe Checkout, respuesta inválida:", data);
