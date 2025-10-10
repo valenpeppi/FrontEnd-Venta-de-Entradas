@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../shared/context/CartContext";
-import { MdCancel } from "react-icons/md";  
+import { MdCancel } from "react-icons/md";
+import axios from "axios";
 import styles from "./styles/Pay.module.css";
 
 const Failure: React.FC = () => {
@@ -12,6 +13,27 @@ const Failure: React.FC = () => {
     localStorage.removeItem("saleConfirmed");
   }, []);
 
+  // Fallback: liberar reservas al entrar a Failure (cancel_url)
+  useEffect(() => {
+    const releaseReservations = async () => {
+      try {
+        const ticketGroupsRaw = localStorage.getItem("ticketGroups");
+        if (!ticketGroupsRaw) return;
+
+        const ticketGroups = JSON.parse(ticketGroupsRaw);
+        if (!Array.isArray(ticketGroups) || ticketGroups.length === 0) return;
+
+        console.log("🔄 Liberando reservas (cancel_url)...", ticketGroups);
+        await axios.post("http://localhost:3000/api/stripe/release", { ticketGroups });
+      } catch (e) {
+        console.warn("⚠️ No se pudieron liberar reservas en Failure.", e);
+      }
+    };
+
+    releaseReservations();
+  }, []);
+
+  // Restaurar carrito guardado localmente (ya lo tenías)
   useEffect(() => {
     if (cartItems.length === 0) {
       const stored = localStorage.getItem("ticket-cart");
