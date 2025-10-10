@@ -10,66 +10,42 @@ const ProcessingPayment = () => {
   const [loadingMessage, setLoadingMessage] = useState("Procesando tu pago...");
 
   useEffect(() => {
-    const confirmSale = async () => {
+    const checkIfSaleWasConfirmed = async () => {
       const dniClient = localStorage.getItem("dniClient");
-      const ticketGroups = localStorage.getItem("ticketGroups");
 
-      // Evitar confirmación duplicada
-      const alreadyConfirmed = localStorage.getItem("saleConfirmed");
-      if (alreadyConfirmed === "true") {
-        console.warn("⚠️ Venta ya confirmada anteriormente. Se evita duplicación.");
-        return;
-      }
-
-      if (!dniClient || !ticketGroups) {
-        console.warn("❌ Faltan datos para confirmar la venta:", {
-          dniClient,
-          ticketGroups,
-        });
+      if (!dniClient) {
+        console.warn("❌ Faltan datos para verificar venta.");
+        navigate("/pay/failure");
         return;
       }
 
       try {
-        console.log("📦 Enviando confirmación de venta con:", {
-          dniClient,
-          ticketGroups: JSON.parse(ticketGroups),
-        });
+        setLoadingMessage("Verificando confirmación de venta...");
 
-        const res = await axios.post("http://localhost:3000/api/sales/confirm", {
-          dniClient: Number(dniClient),
-          tickets: JSON.parse(ticketGroups),
-        });
+        // Lógica recomendada: pedir al backend una lista de ventas recientes del usuario
+        const { data } = await axios.get(`http://localhost:3000/api/sales/check?dniClient=${dniClient}`);
 
-        console.log("✅ Venta confirmada exitosamente desde frontend:", res.data);
-        localStorage.setItem("saleConfirmed", "true");
+        if (data?.confirmed) {
+          setLoadingMessage("¡Venta confirmada!");
+          clearCart();
+          localStorage.removeItem("ticket-cart");
+          localStorage.removeItem("ticketGroups");
+          localStorage.removeItem("dniClient");
+          navigate("/pay/success");
+        } else {
+          setLoadingMessage("Esperando confirmación del pago...");
+          // Reintentar más tarde o redirigir a página de espera
+          await new Promise(res => setTimeout(res, 4000));
+          navigate("/pay/failure");
+        }
+
       } catch (error: any) {
-        console.error("❌ Error confirmando venta desde frontend:", error?.response?.data || error.message);
+        console.error("❌ Error consultando confirmación:", error.response?.data || error.message);
         navigate("/pay/failure");
       }
     };
 
-    const start = async () => {
-      try {
-        setLoadingMessage("Procesando tu pago...");
-        await new Promise(res => setTimeout(res, 3000));
-
-        setLoadingMessage("Confirmando tu compra...");
-        await confirmSale();
-
-        await new Promise(res => setTimeout(res, 3000));
-
-        clearCart();
-        localStorage.removeItem("ticket-cart");
-        localStorage.removeItem("ticketGroups");
-        localStorage.removeItem("dniClient");
-
-        navigate("/pay/success");
-      } catch (e) {
-        navigate("/pay/failure");
-      }
-    };
-
-    start();
+    checkIfSaleWasConfirmed();
   }, [navigate, clearCart]);
 
   return (

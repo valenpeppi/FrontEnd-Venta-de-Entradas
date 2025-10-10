@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../shared/context/CartContext.tsx';
-import { useAuth } from '../../shared/context/AuthContext.tsx'; 
+import { useAuth } from '../../shared/context/AuthContext.tsx';
 import styles from './styles/Pay.module.css';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import axios from 'axios';
 
+type TicketGroup = {
+  idEvent: number;
+  idPlace: number;
+  idSector: number;
+  // Para enumerados
+  ids?: number[];
+  // Para no enumerados (o también enumerados si te sirve)
+  quantity?: number;
+};
+
 const Pay: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useCart();
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
 
   interface GroupedBySector {
@@ -27,156 +37,176 @@ const Pay: React.FC = () => {
     placeName?: string;
     sectors: GroupedBySector[];
   }
+
   useEffect(() => {
-    // Inicializamos Mercado Pago solo una vez
-    initMercadoPago("APP_USR-cd78e2e4-b7ee-4b1d-ad89-e90d69693f9c", {
-      locale: "es-AR",
+    initMercadoPago('APP_USR-cd78e2e4-b7ee-4b1d-ad89-e90d69693f9c', {
+      locale: 'es-AR',
       advancedFraudPrevention: false,
     });
   }, []);
 
   useEffect(() => {
-    console.log("👤 Usuario desde AuthContext:", user);
-    console.log("🛒 Items del carrito:", cartItems);
+    console.log('👤 Usuario desde AuthContext:', user);
+    console.log('🛒 Items del carrito:', cartItems);
   }, [user, cartItems]);
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  // Función para confirmar la venta (usada por Stripe para simulación)
-  const confirmSaleManually = async () => {
-    if (!user || !user.dni) {
-      console.error("No se puede confirmar la venta sin un DNI de cliente.");
-      return;
-    }
-    try {
-      const ticketGroupsMap: Record<string, {
-        idEvent: number;
-        idPlace: number;
-        idSector: number;
-        ids: number[];
-      }> = {};
+  // 🔧 Construye ticketGroups basado en sectorType (implícito desde el carrito):
+  // - No enumerado: SIN ids, SOLO quantity (usa idSector REAL).
+  // - Enumerado: CON ids (y quantity opcional).
+  const buildTicketGroups = (): TicketGroup[] => {
+    const map: Record<
+      string,
+      { idEvent: number; idPlace: number; idSector: number; ids: number[]; quantity: number }
+    > = {};
 
-      for (const item of cartItems) {
-        const key = `${item.eventId}-${item.idPlace}-${item.idSector}`;
-        if (!ticketGroupsMap[key]) {
-          ticketGroupsMap[key] = {
-            idEvent: Number(item.eventId),
-            idPlace: Number(item.idPlace),
-            idSector: Number(item.idSector),
-            ids: [],
-          };
-        }
-        if (item.ticketIds && item.ticketIds.length > 0) {
-          ticketGroupsMap[key].ids.push(...item.ticketIds.map(Number));
-        }
+    for (const item of cartItems) {
+      const idEvent = Number(item.eventId);
+      const idPlace = Number(item.idPlace);
+      const idSector = Number(item.idSector);
+
+      // si tu CartItem trae "enumerated" úsalo:
+      const hasSeatIds = Array.isArray(item.ticketIds) && item.ticketIds.length > 0;
+
+      const key = `${idEvent}-${idPlace}-${idSector}`;
+      if (!map[key]) {
+        map[key] = { idEvent, idPlace, idSector, ids: [], quantity: 0 };
       }
 
-      const ticketGroups = Object.values(ticketGroupsMap);
+      if (hasSeatIds) {
+        // Enumerado
+        const cleanIds = Array.isArray(item.ticketIds)
+          ? item.ticketIds
+              .map((n: any) => Number(n))
+              .filter((n) => Number.isFinite(n) && n > 0)
+          : [];
 
-      const response = await axios.post("http://localhost:3000/api/sales/confirm", {
-        dniClient: user.dni,
-        tickets: ticketGroups
-      });
-
-      if (response.status === 200) {
-        console.log("✅ Venta confirmada exitosamente (manual).");
-        localStorage.removeItem('ticket-cart');
-        window.location.href = '/pay/success';
+        // evitar duplicados dentro del mismo grupo
+        const seen = new Set(map[key].ids);
+        for (const id of cleanIds) {
+          if (!seen.has(id)) {
+            map[key].ids.push(id);
+            seen.add(id);
+          }
+        }
+        map[key].quantity += Number(item.quantity) || 0; // opcional
+      } else {
+        // No enumerado → solo quantity (sin ids)
+        map[key].quantity += Number(item.quantity) || 0;
       }
-    } catch (error: any) {
-      console.error("❌ Error en confirmación manual:", error.response?.data || error.message);
     }
+
+    const groups: TicketGroup[] = [];
+    for (const k of Object.keys(map)) {
+      const g = map[k];
+      if (g.ids.length > 0) {
+        // enumerado
+        groups.push({
+          idEvent: g.idEvent,
+          idPlace: g.idPlace,
+          idSector: g.idSector,
+          ids: g.ids,
+          quantity: g.quantity || g.ids.length,
+        });
+      } else {
+        // no enumerado
+        if (g.quantity > 0) {
+          groups.push({
+            idEvent: g.idEvent,
+            idPlace: g.idPlace,
+            idSector: g.idSector,
+            quantity: g.quantity,
+          });
+        }
+      }
+    }
+
+    return groups;
   };
 
-  // Lógica para MERCADO PAGO 
+
+  // Validación: para enumerado requerimos ids; para general requerimos quantity>0
+  const validateCartForPayment = (): { valid: boolean; reason?: string } => {
+    for (const item of cartItems) {
+      const idSector = Number(item.idSector);
+      const isGeneral = idSector === 0;
+
+      if (item.idPlace == null || item.idSector == null) {
+        return { valid: false, reason: 'Faltan datos del lugar o sector.' };
+      }
+
+      if (isGeneral) {
+        if (!item.quantity || item.quantity <= 0) {
+          return { valid: false, reason: 'Cantidad inválida para entradas generales.' };
+        }
+        // No pedimos ticketIds en no enumerado
+      } else {
+        if (!item.ticketIds || item.ticketIds.length === 0) {
+          return { valid: false, reason: 'Faltan asientos seleccionados para sector enumerado.' };
+        }
+      }
+    }
+    return { valid: true };
+  };
+
+  // MERCADO PAGO
   const handleMPPayment = async () => {
     if (!user || !user.dni || !user.mail) {
-      alert("Debes iniciar sesión para pagar con Mercado Pago.");
+      alert('Debes iniciar sesión para pagar con Mercado Pago.');
+      return;
+    }
+
+    const validation = validateCartForPayment();
+    if (!validation.valid) {
+      alert(validation.reason || 'Hay datos inválidos en el carrito.');
       return;
     }
 
     try {
-      // Generar items para Mercado Pago
       const items = cartItems.map((item, index) => ({
         id: item.ticketIds?.[0]?.toString() || item.id?.toString() || String(index),
-        name: item.eventName,                   
-        amount: Math.round(item.price * 100),  
+        name: item.eventName,
+        amount: Math.round(item.price * 100),
         quantity: item.quantity,
       }));
 
+      const ticketGroups = buildTicketGroups();
 
-      // Generar ticketGroups con quantity incluido
-      const ticketGroupsMap: Record<string, {
-        idEvent: number;
-        idPlace: number;
-        idSector: number;
-        ids: number[];
-        quantity: number;
-      }> = {};
-
-      for (const item of cartItems) {
-        const key = `${item.eventId}-${item.idPlace}-${item.idSector}`;
-        if (!ticketGroupsMap[key]) {
-          ticketGroupsMap[key] = {
-            idEvent: Number(item.eventId),
-            idPlace: Number(item.idPlace),
-            idSector: Number(item.idSector),
-            ids: [],
-            quantity: 0,
-          };
-        }
-        ticketGroupsMap[key].quantity += item.quantity;
-
-        if (item.ticketIds && item.ticketIds.length > 0) {
-          ticketGroupsMap[key].ids.push(...item.ticketIds.map(Number));
-        }
-      }
-
-      const ticketGroups = Object.values(ticketGroupsMap);
-
-      // Validar datos necesarios
-      const missingData = cartItems.some(item =>
-        !item.ticketIds || item.ticketIds.length === 0 ||
-        item.idPlace == null || item.idSector == null
-      );
-      if (missingData) {
-        alert("Faltan datos en algunos ítems del carrito. Por favor, vuelve a seleccionar las entradas.");
-        return;
-      }
-
-      // Hacer la request al backend
-      const { data } = await axios.post("http://localhost:3000/api/mp/checkout", {
+      const { data } = await axios.post('http://localhost:3000/api/mp/checkout', {
         items,
         dniClient: user.dni,
         customerEmail: user.mail,
         ticketGroups,
       });
 
-      // Setear preferenceId y guardar datos para el webhook
       if (data.preferenceId) {
         setPreferenceId(data.preferenceId);
-
-        localStorage.setItem("ticketGroups", JSON.stringify(ticketGroups));
-        localStorage.setItem("dniClient", String(user.dni));
-        localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
+        localStorage.setItem('ticketGroups', JSON.stringify(ticketGroups));
+        localStorage.setItem('dniClient', String(user.dni));
+        localStorage.setItem('ticket-cart', JSON.stringify(cartItems));
       } else {
-        console.error("❌ No se recibió preferenceId:", data);
-        alert("No se pudo generar la preferencia de pago.");
+        console.error('❌ No se recibió preferenceId:', data);
+        alert('No se pudo generar la preferencia de pago.');
       }
     } catch (error: any) {
-      console.error("❌ Error al generar preferencia de pago:", error.response?.data || error.message);
-      alert("Error al generar la preferencia. Ver consola.");
+      console.error('❌ Error al generar preferencia de pago:', error.response?.data || error.message);
+      alert('Error al generar la preferencia. Ver consola.');
     }
   };
 
-
-
-  // Lógica para STRIPE 
+  // STRIPE
   const handleStripePayment = async () => {
     if (!user || !user.dni || !user.mail) {
-      alert("Debes iniciar sesión con un usuario válido para pagar con Stripe.");
+      alert('Debes iniciar sesión con un usuario válido para pagar con Stripe.');
+      return;
+    }
+
+    const validation = validateCartForPayment();
+    if (!validation.valid) {
+      alert(validation.reason || 'Hay datos inválidos en el carrito.');
       return;
     }
 
@@ -187,36 +217,9 @@ const Pay: React.FC = () => {
         quantity: item.quantity,
       }));
 
-      const ticketGroupsMap: Record<string, {
-        idEvent: number;
-        idPlace: number;
-        idSector: number;
-        ids: number[];
-      }> = {};
+      const ticketGroups = buildTicketGroups();
 
-      for (const item of cartItems) {
-        const key = `${item.eventId}-${item.idPlace}-${item.idSector}`;
-        if (!ticketGroupsMap[key]) {
-          ticketGroupsMap[key] = {
-            idEvent: Number(item.eventId),
-            idPlace: Number(item.idPlace),
-            idSector: Number(item.idSector),
-            ids: [],
-          };
-        }
-        if (item.ticketIds && item.ticketIds.length > 0) {
-          ticketGroupsMap[key].ids.push(...item.ticketIds.map(Number));
-        }
-      }
-      const ticketGroups = Object.values(ticketGroupsMap);
-
-      const missingData = cartItems.some(item => !item.ticketIds || item.ticketIds.length === 0 || item.idPlace == null || item.idSector == null);
-      if (missingData) {
-        alert("Faltan datos en algunos ítems del carrito. Por favor, vuelve a seleccionar las entradas.");
-        return;
-      }
-
-      const { data } = await axios.post("http://localhost:3000/api/stripe/checkout", {
+      const { data } = await axios.post('http://localhost:3000/api/stripe/checkout', {
         items,
         ticketGroups,
         dniClient: user.dni,
@@ -224,19 +227,18 @@ const Pay: React.FC = () => {
       });
 
       if (data.url) {
-        // Guardar datos en localStorage ANTES de redirigir
-        localStorage.setItem("ticketGroups", JSON.stringify(ticketGroups));
-        localStorage.setItem("dniClient", String(user.dni));
-        localStorage.setItem("ticket-cart", JSON.stringify(cartItems));
+        localStorage.setItem('ticketGroups', JSON.stringify(ticketGroups));
+        localStorage.setItem('dniClient', String(user.dni));
+        localStorage.setItem('ticket-cart', JSON.stringify(cartItems));
 
         window.location.href = data.url;
       } else {
-        console.error("❌ Error en Stripe Checkout, respuesta inválida:", data);
-        alert("Respuesta inválida de Stripe.");
+        console.error('❌ Error en Stripe Checkout, respuesta inválida:', data);
+        alert('Respuesta inválida de Stripe.');
       }
     } catch (error: any) {
-      console.error("❌ Error en Stripe Checkout:", error.response?.data || error.message);
-      alert("Error inesperado. Ver consola.");
+      console.error('❌ Error en Stripe Checkout:', error.response?.data || error.message);
+      alert('Error inesperado. Ver consola.');
     }
   };
 
@@ -249,14 +251,13 @@ const Pay: React.FC = () => {
     acc[key].quantity += item.quantity;
     return acc;
   }, {} as Record<string, typeof cartItems[0]>);
-  
+
   const groupedArray = Object.values(groupedItems);
 
   const groupCartByEventSector = (): GroupedByEvent[] => {
     const eventMap = new Map<string, GroupedByEvent>();
 
     for (const item of cartItems) {
-      // Agrupamos por evento
       let eventGroup = eventMap.get(item.eventId);
       if (!eventGroup) {
         eventGroup = {
@@ -270,10 +271,8 @@ const Pay: React.FC = () => {
         eventMap.set(item.eventId, eventGroup);
       }
 
-      // Normalizamos sector (quitamos "Asiento xx")
       const baseSectorName = (item.sectorName || 'Sin sector').replace(/Asiento\s*\d+/gi, '').trim();
 
-      // Buscamos si ese sector ya existe dentro del evento
       let sectorGroup = eventGroup.sectors.find(s => s.sectorName === baseSectorName);
       if (!sectorGroup) {
         sectorGroup = {
@@ -285,11 +284,9 @@ const Pay: React.FC = () => {
         eventGroup.sectors.push(sectorGroup);
       }
 
-      // Sumamos cantidad y precio
       sectorGroup.totalQuantity += item.quantity;
       sectorGroup.totalPrice += item.price * item.quantity;
 
-      // Añadimos los asientos si existen
       if (item.sectorName) {
         const match = item.sectorName.match(/Asiento\s*(\d+)/i);
         if (match) {
@@ -302,7 +299,7 @@ const Pay: React.FC = () => {
   };
 
   const groupedEvents = groupCartByEventSector();
-  
+
   return (
     <div className={styles.payContainer}>
       <h1 className={styles.payTitle}>Finalizar compra</h1>
@@ -314,24 +311,18 @@ const Pay: React.FC = () => {
 
             {groupedEvents.map(event => (
               <div key={event.eventId} className={styles.payEventGroup}>
-                <div className={styles.payEventHeader}>
-                  {event.eventName} 
-                </div>
+                <div className={styles.payEventHeader}>{event.eventName}</div>
 
-                {event.placeName && (
-                  <div className={styles.payEventPlace}>
-                    Estadio: {event.placeName}
-                  </div>
-                )}
+                {event.placeName && <div className={styles.payEventPlace}>Estadio: {event.placeName}</div>}
 
                 <div className={styles.paySectorsList}>
                   {event.sectors.map(sector => (
                     <div key={sector.sectorName} className={styles.paySectorGroup}>
                       <div className={styles.paySectorHeader}>
-                        <span>{sector.sectorName} (x{sector.totalQuantity})</span>
-                        <span className={styles.paySectorPrice}>
-                          ${sector.totalPrice.toFixed(2)}
+                        <span>
+                          {sector.sectorName} (x{sector.totalQuantity})
                         </span>
+                        <span className={styles.paySectorPrice}>${sector.totalPrice.toFixed(2)}</span>
                       </div>
 
                       {sector.seatNumbers.length > 0 && (
@@ -341,14 +332,11 @@ const Pay: React.FC = () => {
                       )}
                     </div>
                   ))}
-
                 </div>
               </div>
             ))}
 
-            <div className={styles.paySummaryTotal}>
-              Total: ${calculateTotal().toFixed(2)}
-            </div>
+            <div className={styles.paySummaryTotal}>Total: ${calculateTotal().toFixed(2)}</div>
           </div>
 
           <div className={styles.payButtons}>
@@ -360,12 +348,8 @@ const Pay: React.FC = () => {
               <Wallet initialization={{ preferenceId }} />
             )}
 
-            <button
-              onClick={handleStripePayment}
-              className={styles.btnStripe}
-              disabled={!user?.dni}
-            >
-              Pagar con Stripe{!user?.dni ? " (requiere login)" : ""}
+            <button onClick={handleStripePayment} className={styles.btnStripe} disabled={!user?.dni}>
+              Pagar con Stripe{!user?.dni ? ' (requiere login)' : ''}
             </button>
 
             <div className={styles.payActions}>
@@ -381,15 +365,12 @@ const Pay: React.FC = () => {
           <div className={`${styles.payActions} ${styles.payActionsMargin}`}>
             <button onClick={() => navigate('/')} className={styles.btnBack}>
               Ir a la tienda
-          </button>
+            </button>
+          </div>
         </div>
-      </div>
-    )}
-  </div>
-);
-
-
-
+      )}
+    </div>
+  );
 };
 
 export default Pay;
