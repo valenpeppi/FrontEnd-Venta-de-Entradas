@@ -46,7 +46,7 @@
   transition: all 0.2s ease;
   min-width: 40px;
   text-align: center;
-  flex-shrink: 0; /* Evita que los asientos se encojan */
+  flex-shrink: 0; 
 }
 
 .seat:hover {

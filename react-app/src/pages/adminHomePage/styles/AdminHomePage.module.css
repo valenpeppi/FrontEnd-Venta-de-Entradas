@@ -91,7 +91,7 @@
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
-  min-height: 360px; /* uniforme para todas las tarjetas */
+  min-height: 360px; 
   transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
 }
 
@@ -128,7 +128,6 @@
   );
 }
 
-/* Badges */
 .badges {
   position: absolute;
   top: 10px;
@@ -179,11 +178,10 @@
   margin: 0.25rem 0;
   font-size: 0.95rem;
   color: #4b5563;
-  /* letter-spacing: 0.8px; ← quítala o cámbiala a algo más sutil como: */
   letter-spacing: 0.2px;
 }
 .title {
-  margin: 0 0 2px; /* antes: 0 0 6px */
+  margin: 0 0 2px; 
   font-size: 1.06rem;
   color: var(--text);
   font-weight: 700;
@@ -194,7 +192,7 @@
 }
 
 .desc {
-  margin-top: 0; /* más compacto */
+  margin-top: 0;
   color: var(--muted);
   font-size: 0.96rem;
   line-height: 1.4rem;
@@ -257,7 +255,6 @@
   background: #fecaca;
 }
 
-/* Feature toggle (estrella) */
 .featureBtn {
   position: absolute;
   top: 10px;

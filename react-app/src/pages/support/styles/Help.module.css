@@ -65,10 +65,10 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
   transition: all 0.3s ease;
   cursor: pointer;
-  display: flex; /* Añadido para controlar alineación interna */
-  flex-direction: column; /* Añadido */
-  align-items: center; /* Centra horizontalmente todo el contenido */
-  text-align: center; /* Centra el texto */
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  text-align: center; 
 }
 
 .helpCard:hover {
@@ -93,14 +93,14 @@
   color: #6b7280;
   line-height: 1.6;
   margin-bottom: 1rem;
-  flex-grow: 1; /* Empuja el link hacia abajo */
+  flex-grow: 1;
 }
 
 .helpLink {
   color: #4f46e5;
   font-weight: 600;
   text-decoration: none;
-  margin-top: auto; /* Alinea el link en la parte inferior */
+  margin-top: auto; 
 }
 
 .backButtonContainer {

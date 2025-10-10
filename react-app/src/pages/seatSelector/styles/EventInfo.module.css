@@ -1,6 +1,6 @@
 .eventDetailCard {
   display: flex;
-  flex-direction: row; /* foto a la izquierda, info a la derecha */
+  flex-direction: row; 
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -9,10 +9,10 @@
 }
 
 .eventImageContainer {
-  flex: 0 0 300px; /* ancho fijo para la imagen */
+  flex: 0 0 300px; 
   height: auto;
   overflow: hidden;
-  border-right: 2px solid #eee; /* separador entre foto e info */
+  border-right: 2px solid #eee; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,7 +53,7 @@
 
 @media (max-width: 768px) {
   .eventDetailCard {
-    flex-direction: column; /* en mobile se apila */
+    flex-direction: column; 
   }
 
   .eventImageContainer {

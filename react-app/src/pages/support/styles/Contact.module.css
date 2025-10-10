@@ -57,9 +57,9 @@
   background: #f9fafb;
   transition: all 0.3s ease;
   border: 1px solid #e5e7eb;
-  display: flex; /* Añadido para controlar alineación interna */
-  flex-direction: column; /* Añadido */
-  align-items: center; /* Centra horizontalmente todo el contenido */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .contactCard:hover {
@@ -85,14 +85,14 @@
   color: #6b7280;
   margin-bottom: 1rem;
   line-height: 1.6;
-  flex-grow: 1; /* Empuja el link hacia abajo */
+  flex-grow: 1; 
 }
 
 .contactLink {
   color: #4f46e5;
   font-weight: 600;
   text-decoration: none;
-  margin-top: auto; /* Alinea el link en la parte inferior */
+  margin-top: auto; 
 }
 
 .contactLink:hover {
