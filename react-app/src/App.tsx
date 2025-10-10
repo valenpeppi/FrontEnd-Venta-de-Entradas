@@ -29,7 +29,7 @@ import Faq from './pages/support/Faq';
 import Success from './pages/purchase/Success';
 import ProcessingPayment from './pages/purchase/ProcessingPayment';
 import Failure from './pages/purchase/Failure';
-import ChatAssistant from './pages/components/ChatAssistant';
+import ChatAssistant from './pages/support/ChatAssistant';
 
 
 
