@@ -25,43 +25,78 @@ const ProcessingPayment = () => {
       }
     };
 
-    const checkIfSaleWasConfirmed = async () => {
+    const getSessionId = () => {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("session_id");
+    };
+
+    const confirmBySession = async (sessionId: string) => {
+      try {
+        setLoadingMessage("Confirmando pago con Stripe...");
+        const { data } = await axios.get(
+          `http://localhost:3000/api/stripe/confirm-session`,
+          { params: { session_id: sessionId } }
+        );
+        return !!data?.confirmed;
+      } catch {
+        return false;
+      }
+    };
+
+    const pollSaleConfirmation = async () => {
       const dniClient = localStorage.getItem("dniClient");
 
       if (!dniClient) {
         console.warn("❌ Faltan datos para verificar venta.");
-        await releaseReservations(); // liberar por si quedaron reservadas
+        await releaseReservations();
         navigate("/pay/failure");
         return;
       }
 
-      try {
-        setLoadingMessage("Verificando confirmación de venta...");
-
-        const { data } = await axios.get(`http://localhost:3000/api/sales/check?dniClient=${dniClient}`);
-
-        if (data?.confirmed) {
+      // Confirmar usando el session_id (fallback fuerte)
+      const sessionId = getSessionId();
+      if (sessionId) {
+        const ok = await confirmBySession(sessionId);
+        if (ok) {
           setLoadingMessage("¡Venta confirmada!");
           clearCart();
           localStorage.removeItem("ticket-cart");
           localStorage.removeItem("ticketGroups");
           localStorage.removeItem("dniClient");
           navigate("/pay/success");
-        } else {
-          setLoadingMessage("Esperando confirmación del pago...");
-          // pequeño delay y consideramos fallo
-          await new Promise(res => setTimeout(res, 2500));
-          await releaseReservations();   // liberar antes de redirigir a failure
-          navigate("/pay/failure");
+          return;
         }
-      } catch (error: any) {
-        console.error("❌ Error consultando confirmación:", error.response?.data || error.message);
-        await releaseReservations();     // fallback también si hubo error de red
-        navigate("/pay/failure");
       }
+
+      // Si aún no, hacemos polling a /sales/check por si el webhook llega con delay
+      setLoadingMessage("Verificando confirmación de venta...");
+      const MAX_ATTEMPTS = 8;
+      const DELAY_MS = 1500;
+
+      for (let i = 1; i <= MAX_ATTEMPTS; i++) {
+        try {
+          const { data } = await axios.get(`http://localhost:3000/api/sales/check?dniClient=${dniClient}`);
+          if (data?.confirmed) {
+            setLoadingMessage("¡Venta confirmada!");
+            clearCart();
+            localStorage.removeItem("ticket-cart");
+            localStorage.removeItem("ticketGroups");
+            localStorage.removeItem("dniClient");
+            navigate("/pay/success");
+            return;
+          }
+        } catch (error: any) {
+          console.error("❌ Error consultando confirmación:", error.response?.data || error.message);
+        }
+        await new Promise(res => setTimeout(res, DELAY_MS));
+      }
+
+      // Si nada confirmó, liberamos y fallamos
+      await releaseReservations();
+      navigate("/pay/failure");
     };
 
-    checkIfSaleWasConfirmed();
+    pollSaleConfirmation();
   }, [navigate, clearCart]);
 
   return (
