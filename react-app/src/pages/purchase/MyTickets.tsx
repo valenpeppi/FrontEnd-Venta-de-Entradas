@@ -98,7 +98,7 @@ const MyTickets: React.FC = () => {
 
     const printLabel = (label: string, value: string | number) => {
       const xStart = 60;
-      const gap = 7; 
+      const gap = 7;
       const labelText = `${label}:`;
       const labelWidth = pdf.getTextWidth(labelText);
 
@@ -184,29 +184,51 @@ const MyTickets: React.FC = () => {
     pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}-${ticket.idTicket}.pdf`);
   };
 
+  // --- Agrupar tickets por (venta + evento + sector) ---
+  const normalizeSectorName = (name: string) =>
+    (name || 'Sin sector').replace(/\s+/g, ' ').trim();
 
-  // --- Agrupar tickets por venta ---
-  const groupTicketsBySale = (tickets: PurchasedTicket[]): TicketGroup[] => {
-    const map = new Map<number, TicketGroup>();
-    for (const tk of tickets) {
-      const saleId = tk.idSale;
-      let grp = map.get(saleId);
+  const groupTicketsBySaleAndSector = (ts: PurchasedTicket[]): TicketGroup[] => {
+    const map = new Map<string, TicketGroup>();
+
+    for (const tk of ts) {
+      const sector = normalizeSectorName(tk.sectorName);
+      const key = `${tk.idSale}|${tk.eventId}|${sector}`;
+
+      let grp = map.get(key);
       if (!grp) {
         grp = {
-          idSale: saleId,
+          idSale: tk.idSale,
           eventId: tk.eventId,
           eventName: tk.eventName,
           date: tk.date,
           time: tk.time,
           location: tk.location,
-          sectorName: tk.sectorName,
+          sectorName: sector,
           tickets: [],
         };
-        map.set(saleId, grp);
+        map.set(key, grp);
       }
       grp.tickets.push(tk);
     }
-    return Array.from(map.values());
+
+    // Ordenar asientos dentro de cada grupo (numérico; los "Sin asignar" al final)
+    for (const g of map.values()) {
+      g.tickets.sort((a, b) => {
+        const av = Number.isFinite(a.seatNumber as number) ? (a.seatNumber as number) : Infinity;
+        const bv = Number.isFinite(b.seatNumber as number) ? (b.seatNumber as number) : Infinity;
+        return av - bv;
+      });
+    }
+
+    // Ordenar grupos por fecha/hora y luego por sector
+    return Array.from(map.values()).sort((a, b) => {
+      const da = new Date(a.date).getTime();
+      const db = new Date(b.date).getTime();
+      if (da !== db) return da - db;
+      if (a.idSale !== b.idSale) return a.idSale - b.idSale;
+      return a.sectorName.localeCompare(b.sectorName);
+    });
   };
 
   if (isFetching) {
@@ -217,7 +239,7 @@ const MyTickets: React.FC = () => {
     );
   }
 
-  const ticketGroups = groupTicketsBySale(tickets);
+  const ticketGroups = groupTicketsBySaleAndSector(tickets);
 
   return (
     <div className={styles.myTicketsContainer}>
@@ -229,8 +251,8 @@ const MyTickets: React.FC = () => {
         <div className={styles.ticketsGrid}>
           {ticketGroups.map(group => (
             <div
-              key={group.idSale}
-              id={`ticketGroup-${group.idSale}`}
+              key={`${group.idSale}-${group.eventId}-${group.sectorName}`}
+              id={`ticketGroup-${group.idSale}-${group.eventId}-${group.sectorName}`}
               className={styles.ticketCard}
             >
               <div className={styles.ticketHeader}>
@@ -247,7 +269,6 @@ const MyTickets: React.FC = () => {
                       <strong>Asientos:</strong>{' '}
                       {group.tickets
                         .map(tk => tk.seatNumber ?? 'Sin asignar')
-                        .sort((a, b) => Number(a) - Number(b))
                         .join(', ')}
                     </p>
                   )}
@@ -255,7 +276,7 @@ const MyTickets: React.FC = () => {
                 </div>
                 <div className={styles.ticketQRCode}>
                   <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=venta:${group.idSale}`}
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=venta:${group.idSale}-sector:${encodeURIComponent(group.sectorName)}`}
                     alt="Código QR de la entrada"
                   />
                 </div>
