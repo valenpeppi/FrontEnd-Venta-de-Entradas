@@ -77,36 +77,32 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         return state;
       }
 
-     if (existingItemIndex > -1) {
-  const updatedItems = [...state.cartItems];
-  updatedItems[existingItemIndex].quantity += quantity;
-  return { ...state, cartItems: updatedItems };
-} else {
-  return {
-    ...state,
-    cartItems: [
-      ...state.cartItems,
-      {
-        ...ticket,
-        quantity,
-        idPlace: ticket.idPlace ?? 0,
-        idSector: ticket.idSector ?? 0,
-        ticketIds: Array.isArray(ticket.ticketIds)
-          ? ticket.ticketIds.map(id => Number(id))
-          : [],
-      },
-    ],
-  };
-}
-
+      if (existingItemIndex > -1) {
+        const updatedItems = [...state.cartItems];
+        updatedItems[existingItemIndex].quantity += quantity;
+        return { ...state, cartItems: updatedItems };
+      } else {
+        return {
+          ...state,
+          cartItems: [
+            ...state.cartItems,
+            {
+              ...ticket,
+              quantity,
+              idPlace: ticket.idPlace ?? 0,
+              idSector: ticket.idSector ?? 0,
+              ticketIds: Array.isArray(ticket.ticketIds)
+                ? ticket.ticketIds.map(id => Number(id))
+                : [],
+            },
+          ],
+        };
+      }
     }
 
     case 'REMOVE_ITEM': {
       const { id } = action.payload;
-      return {
-        ...state,
-        cartItems: state.cartItems.filter(item => item.id !== id),
-      };
+      return { ...state, cartItems: state.cartItems.filter(item => item.id !== id) };
     }
 
     case 'CLEAR_CART': {
@@ -149,13 +145,8 @@ function CartProvider({ children }: CartProviderProps) {
   useEffect(() => {
     try {
       const storedCart = localStorage.getItem('ticket-cart');
-      console.log('🛒 CartContext: Cargando carrito desde localStorage:', storedCart);
       if (storedCart) {
-        const parsedCart = JSON.parse(storedCart);
-        console.log('🛒 CartContext: Carrito parseado:', parsedCart);
-        dispatch({ type: 'LOAD_CART', payload: { items: parsedCart } });
-      } else {
-        console.log('🛒 CartContext: No hay carrito en localStorage');
+        dispatch({ type: 'LOAD_CART', payload: { items: JSON.parse(storedCart) } });
       }
     } catch (error) {
       console.error('CartContext: Error al cargar el carrito de localStorage:', error);
@@ -164,10 +155,7 @@ function CartProvider({ children }: CartProviderProps) {
 
   useEffect(() => {
     try {
-      // Solo guardar si hay items en el carrito para evitar bucles
-      if (state.cartItems.length > 0) {
-        localStorage.setItem('ticket-cart', JSON.stringify(state.cartItems));
-      }
+      localStorage.setItem('ticket-cart', JSON.stringify(state.cartItems));
     } catch (error) {
       console.error('CartContext: Error al guardar el carrito en localStorage:', error);
     }
@@ -186,13 +174,8 @@ function CartProvider({ children }: CartProviderProps) {
     return true;
   };
 
-  const removeItem = (id: string) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: { id } });
-  };
-
-  const clearCart = () => {
-    dispatch({ type: 'CLEAR_CART' });
-  };
+  const removeItem = (id: string) => dispatch({ type: 'REMOVE_ITEM', payload: { id } });
+  const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
   const updateItemQuantity = (id: string, newQuantity: number): boolean => {
     const itemToUpdate = state.cartItems.find(item => item.id === id);
@@ -202,33 +185,31 @@ function CartProvider({ children }: CartProviderProps) {
       .filter(item => item.eventId === itemToUpdate.eventId && item.id !== id)
       .reduce((sum, item) => sum + item.quantity, 0);
 
-    if (totalInCartForEvent + newQuantity > 6) {
-      return false;
-    }
+    if (totalInCartForEvent + newQuantity > 6) return false;
 
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity: newQuantity } });
     return true;
   };
 
-  
+  /**
+   * Verifica si el usuario puede agregar `quantity` entradas del `eventId`
+   * respetando el límite de 6 por evento (compradas + carrito).
+   */
   const canAddTicketsToEvent = async (eventId: string | number, quantity: number): Promise<boolean> => {
-    const token = localStorage.getItem('token');
-    if (!token) return false;
-
-    const currentInCart = state.cartItems
-      .filter(item => item.eventId === String(eventId)) 
-      .reduce((sum, item) => sum + item.quantity, 0);
-
     try {
+      const token = localStorage.getItem('token');
+      if (!token) return false;
+
+      const eventIdStr = String(eventId);
+      const currentInCart = state.cartItems
+        .filter(item => String(item.eventId) === eventIdStr)
+        .reduce((sum, item) => sum + item.quantity, 0);
+
       const res = await axios.get(`${BASE_URL}/api/sales/my-tickets`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      const data = res.data;
-
-      const alreadyBought = (data?.data || []).filter((t: any) => t.eventId == eventId).length;
+      const alreadyBought = (res.data?.data || []).filter((t: any) => String(t.eventId) === eventIdStr).length;
 
       const total = alreadyBought + currentInCart + quantity;
       return total <= 6;
@@ -249,7 +230,7 @@ function CartProvider({ children }: CartProviderProps) {
         removeItem,
         clearCart,
         updateItemQuantity,
-        canAddTicketsToEvent
+        canAddTicketsToEvent,
       }}
     >
       {children}

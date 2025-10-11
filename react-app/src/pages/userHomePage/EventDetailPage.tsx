@@ -18,7 +18,6 @@ import {
   MdLocationOn,
   MdCalendarToday,
   MdAccessTime,
-  MdLocationCity,
   MdAudiotrack,
   MdConfirmationNumber,
 } from "react-icons/md";
@@ -40,13 +39,12 @@ const SECTOR_LAYOUT_CONFIG: Record<string, Record<string, number>> = {
 const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { addToCart, cartItems, canAddTicketsToEvent } = useCart();
+  const { addToCart, canAddTicketsToEvent } = useCart();
   const { setAppMessage } = useMessage();
   const sectorListRef = useRef<HTMLDivElement>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalClosing, setIsModalClosing] = useState(false);
-
   const [seatTicketMap, setSeatTicketMap] = useState<Record<string, number>>({});
 
   const {
@@ -102,7 +100,6 @@ const EventDetailPage: React.FC = () => {
         const sectorsRes = await axios.get(`${BASE_URL}/api/events/events/${id}/sectors`);
 
         const summaryData = summaryRes.data?.data;
-
         if (!summaryData) {
           setAppMessage('No se encontró el evento', 'error');
           navigate('/');
@@ -136,7 +133,6 @@ const EventDetailPage: React.FC = () => {
     fetchData();
   }, [id]);
 
-
   useEffect(() => {
     if (selectedSector !== null) {
       const sec = sectors.find(s => s.idSector === selectedSector);
@@ -169,12 +165,14 @@ const EventDetailPage: React.FC = () => {
     }, 300);
   };
 
-  const handleAddToCartInModal = () => {
-    handleAddToCart();
+  // ✅ abre modal esperando la validación
+  const handleAddToCartInModal = async () => {
+    await handleAddToCart();
     closeModal();
   };
 
-  const handleAddToCart = () => {
+  // ✅ agrega al carrito con validación asíncrona (límite 6 por evento)
+  const handleAddToCart = async () => {
     if (!summary) {
       setAppMessage('Error: No se ha cargado la información del evento.', 'error');
       return;
@@ -190,11 +188,12 @@ const EventDetailPage: React.FC = () => {
     let itemsToAdd: ItemToAdd[] = [];
 
     if (summary.placeType.toLowerCase() === 'nonenumerated') {
+      // Entradas generales (no enumeradas)
       totalSelected = generalQuantity;
       if (totalSelected > 0) {
-        // Para entrada general, generar IDs temporales
+        // IDs temporales para que el carrito tenga algo identificable
         const tempTicketIds = Array.from({ length: totalSelected }, (_, i) => i + 1);
-        
+
         itemsToAdd.push({
           ticket: {
             id: `${summary.id}-general`,
@@ -214,10 +213,11 @@ const EventDetailPage: React.FC = () => {
             idSector: 0,
             ticketIds: tempTicketIds,
           },
-          quantity: totalSelected
+          quantity: totalSelected,
         });
       }
     } else {
+      // Mixto: sectores enumerados y no enumerados
       const nonEnum = sectors.filter(s => !s.enumerated && s.selected && s.selected > 0);
       const enumSectors = sectors.filter(s => s.enumerated && selectedSeatsMap[s.idSector]?.length);
 
@@ -226,12 +226,13 @@ const EventDetailPage: React.FC = () => {
         enumSectors.reduce((sum, s) => sum + (selectedSeatsMap[s.idSector] || []).length, 0);
 
       itemsToAdd = [
+        // No enumerados → quantity
         ...nonEnum.map(sec => {
-          // Para sectores no enumerados, generar IDs temporales basados en la cantidad
-          const tempTicketIds = Array.from({ length: sec.selected || 0 }, (_, i) => 
+          // IDs temporales basados en cantidad
+          const tempTicketIds = Array.from({ length: sec.selected || 0 }, (_, i) =>
             `${summary.idPlace}-${sec.idSector}-temp-${i}`
           ).map(id => parseInt(id.split('-').pop() || '0'));
-          
+
           return {
             ticket: {
               id: `${summary.id}-${sec.idSector}`,
@@ -251,9 +252,10 @@ const EventDetailPage: React.FC = () => {
               idSector: sec.idSector,
               ticketIds: tempTicketIds,
             },
-            quantity: sec.selected || 0
+            quantity: sec.selected || 0,
           };
         }),
+        // Enumerados → un item por asiento
         ...enumSectors.flatMap(sec =>
           (selectedSeatsMap[sec.idSector] || []).map(seatId => {
             const ticketKey = `${summary.idPlace}-${sec.idSector}-${seatId}`;
@@ -281,7 +283,7 @@ const EventDetailPage: React.FC = () => {
               seats: [seatId],
             };
           })
-        )
+        ),
       ];
     }
 
@@ -289,19 +291,19 @@ const EventDetailPage: React.FC = () => {
       setAppMessage('Debes seleccionar al menos una entrada', 'error');
       return;
     }
-  const allowed = canAddTicketsToEvent(summary.id, totalSelected);
 
+    // 🔒 límite 6 por evento (compradas + carrito + nuevas)
+    const allowed = await canAddTicketsToEvent(summary.id, totalSelected);
     if (!allowed) {
       setAppMessage('Solo puedes tener hasta 6 entradas en total para este evento (carrito + compradas).', 'error');
       return;
     }
 
+    // Agregar al carrito
     let allAddedSuccessfully = true;
     itemsToAdd.forEach(item => {
       const wasAdded = addToCart(item.ticket, item.quantity);
-      if (!wasAdded) {
-        allAddedSuccessfully = false;
-      }
+      if (!wasAdded) allAddedSuccessfully = false;
     });
 
     if (allAddedSuccessfully) {
@@ -311,7 +313,6 @@ const EventDetailPage: React.FC = () => {
       setAppMessage('No puedes tener más de 6 entradas para este evento en tu carrito.', 'error');
     }
   };
-
 
   const formatPlaceType = (placeType: string) => {
     switch (placeType.toLowerCase()) {
@@ -324,13 +325,14 @@ const EventDetailPage: React.FC = () => {
 
   if (loading) return (
     <div className={styles.loadingState}>
-    <div className={styles.loadingDots}>
-      <span className={styles.dot}></span>
-      <span className={styles.dot}></span>
-      <span className={styles.dot}></span>
+      <div className={styles.loadingDots}>
+        <span className={styles.dot}></span>
+        <span className={styles.dot}></span>
+        <span className={styles.dot}></span>
+      </div>
+      <p className={styles.loadingStateText}>Cargando evento...</p>
     </div>
-    <p className={styles.loadingStateText}>Cargando evento...</p>
-  </div>);
+  );
   if (!summary) return <p>Evento no encontrado</p>;
 
   const currentSelectedSector = sectors.find(s => s.idSector === selectedSector);
@@ -355,7 +357,6 @@ const EventDetailPage: React.FC = () => {
       }, 1500);
     }
   };
-
 
   return (
     <div className={styles.eventDetailContainer}>
@@ -492,7 +493,10 @@ const EventDetailPage: React.FC = () => {
       </div>
 
       {isModalOpen && currentSelectedSector?.enumerated && (
-         <div className={`${modalStyles.modalOverlay} ${isModalClosing ? modalStyles.modalClosing : modalStyles.modalOpen}`} onClick={closeModal}>
+        <div
+          className={`${modalStyles.modalOverlay} ${isModalClosing ? modalStyles.modalClosing : modalStyles.modalOpen}`}
+          onClick={closeModal}
+        >
           <div
             className={`${modalStyles.modalContent} ${isModalClosing ? modalStyles.modalClosing : modalStyles.modalOpen}`}
             onClick={(e) => e.stopPropagation()}
@@ -509,21 +513,15 @@ const EventDetailPage: React.FC = () => {
               <div className={modalStyles.stage}>ESCENARIO</div>
               <div className={modalStyles.seatLegend}>
                 <div className={modalStyles.legendItem}>
-                  <span
-                    className={`${modalStyles.seatDemo} ${modalStyles.available}`}
-                  ></span>{" "}
+                  <span className={`${modalStyles.seatDemo} ${modalStyles.available}`}></span>{" "}
                   Libres
                 </div>
                 <div className={modalStyles.legendItem}>
-                  <span
-                    className={`${modalStyles.seatDemo} ${modalStyles.occupied}`}
-                  ></span>{" "}
+                  <span className={`${modalStyles.seatDemo} ${modalStyles.occupied}`}></span>{" "}
                   Ocupados
                 </div>
                 <div className={modalStyles.legendItem}>
-                  <span
-                    className={`${modalStyles.seatDemo} ${modalStyles.selected}`}
-                  ></span>{" "}
+                  <span className={`${modalStyles.seatDemo} ${modalStyles.selected}`}></span>{" "}
                   Seleccionados
                 </div>
               </div>
@@ -562,8 +560,6 @@ const EventDetailPage: React.FC = () => {
       </div>
     </div>
   );
-
 };
 
 export default EventDetailPage;
-
