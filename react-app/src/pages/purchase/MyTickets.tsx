@@ -16,6 +16,7 @@ interface PurchasedTicket {
   time: string;
   location: string;
   sectorName: string;
+  sectorType?: 'enumerated' | 'nonEnumerated' | string;
   seatNumber?: number;
   imageUrl: string;
   idTicket: number;
@@ -29,6 +30,7 @@ interface TicketGroup {
   time: string;
   location: string;
   sectorName: string;
+  sectorType?: 'enumerated' | 'nonEnumerated' | string;
   tickets: PurchasedTicket[];
 }
 
@@ -38,6 +40,16 @@ const MyTickets: React.FC = () => {
   const [tickets, setTickets] = useState<PurchasedTicket[]>([]);
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const isNonEnumeratedTicket = (tk: PurchasedTicket) =>
+    (tk.sectorType
+      ? tk.sectorType.toLowerCase() === 'nonenumerated'
+      : tk.seatNumber == null);
+
+  const isNonEnumeratedGroup = (g: TicketGroup) => {
+    if (g.sectorType) return g.sectorType.toLowerCase() === 'nonenumerated';
+    return g.tickets.every(t => t.seatNumber == null);
+  };
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -53,7 +65,7 @@ const MyTickets: React.FC = () => {
         const response = await axios.get(`http://localhost:3000/api/sales/my-tickets`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const data = response.data.data || [];
+        const data: PurchasedTicket[] = response.data.data || [];
         setTickets(data);
       } catch (err) {
         console.error("Error al obtener las entradas:", err);
@@ -63,12 +75,12 @@ const MyTickets: React.FC = () => {
       }
     };
 
-    if (!isLoading) {
-      fetchTickets();
-    }
+    if (!isLoading) fetchTickets();
   }, [isLoggedIn, user, isLoading]);
 
   const handleDownloadPDF = async (ticket: PurchasedTicket) => {
+    const nonEnum = isNonEnumeratedTicket(ticket);
+
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: 'a4' });
     const pageWidth = pdf.internal.pageSize.getWidth();
     let y = 60;
@@ -98,7 +110,7 @@ const MyTickets: React.FC = () => {
 
     const printLabel = (label: string, value: string | number) => {
       const xStart = 60;
-      const gap = 7;
+      const gap = 7; 
       const labelText = `${label}:`;
       const labelWidth = pdf.getTextWidth(labelText);
 
@@ -117,8 +129,12 @@ const MyTickets: React.FC = () => {
     printLabel('Hora', formatTime(ticket.date));
     printLabel('Lugar', ticket.location);
     printLabel('Sector', ticket.sectorName);
-    printLabel('Asiento', ticket.seatNumber ?? 'Sin asignar');
-    printLabel('ID Ticket', ticket.idTicket);
+
+    // En no enumeradas: NO mostrar Asiento ni ID Ticket
+    if (!nonEnum) {
+      printLabel('Asiento', ticket.seatNumber ?? 'Sin asignar');
+      printLabel('ID Ticket', ticket.idTicket);
+    }
 
     y += 20;
 
@@ -146,8 +162,12 @@ const MyTickets: React.FC = () => {
       }
     }
 
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=ticket:${ticket.idTicket}-venta:${ticket.idSale}`;
-    const qrImg = await fetch(qrUrl)
+    // QR: no exponer idTicket si no enumerada
+    const qrData = nonEnum
+      ? `venta:${ticket.idSale}-evento:${ticket.eventId}`
+      : `ticket:${ticket.idTicket}-venta:${ticket.idSale}`;
+
+    const qrImg = await fetch(`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(qrData)}`)
       .then(res => res.blob())
       .then(blob => new Promise<string>((resolve) => {
         const reader = new FileReader();
@@ -181,7 +201,7 @@ const MyTickets: React.FC = () => {
     pdf.setTextColor(90, 90, 90);
     pdf.text('Conserva este PDF como comprobante oficial de tu entrada.', pageWidth / 2, y, { align: 'center' });
 
-    pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}-${ticket.idTicket}.pdf`);
+    pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}-${ticket.idSale}${nonEnum ? '' : `-${ticket.idTicket}`}.pdf`);
   };
 
   // --- Agrupar tickets por (venta + evento + sector) ---
@@ -205,14 +225,15 @@ const MyTickets: React.FC = () => {
           time: tk.time,
           location: tk.location,
           sectorName: sector,
+          sectorType: tk.sectorType,
           tickets: [],
         };
         map.set(key, grp);
       }
+      if (tk.sectorType && !grp.sectorType) grp.sectorType = tk.sectorType;
       grp.tickets.push(tk);
     }
 
-    // Ordenar asientos dentro de cada grupo (numérico; los "Sin asignar" al final)
     for (const g of map.values()) {
       g.tickets.sort((a, b) => {
         const av = Number.isFinite(a.seatNumber as number) ? (a.seatNumber as number) : Infinity;
@@ -249,49 +270,54 @@ const MyTickets: React.FC = () => {
 
       {!error && ticketGroups.length > 0 ? (
         <div className={styles.ticketsGrid}>
-          {ticketGroups.map(group => (
-            <div
-              key={`${group.idSale}-${group.eventId}-${group.sectorName}`}
-              id={`ticketGroup-${group.idSale}-${group.eventId}-${group.sectorName}`}
-              className={styles.ticketCard}
-            >
-              <div className={styles.ticketHeader}>
-                <h2 className={styles.ticketEventName}>{group.eventName}</h2>
-                <span className={styles.ticketDate}>{formatLongDate(group.date)}</span>
-              </div>
-
-              <div className={styles.ticketBody}>
-                <div className={styles.ticketInfo}>
-                  <p><strong>Lugar:</strong> {group.location}</p>
-                  <p><strong>Sector:</strong> {group.sectorName} (x{group.tickets.length})</p>
-                  {group.tickets.length > 0 && (
-                    <p>
-                      <strong>Asientos:</strong>{' '}
-                      {group.tickets
-                        .map(tk => tk.seatNumber ?? 'Sin asignar')
-                        .join(', ')}
-                    </p>
-                  )}
-                  <p><strong>Hora:</strong> {formatTime(group.date)}</p>
+          {ticketGroups.map(group => {
+            const nonEnum = isNonEnumeratedGroup(group);
+            return (
+              <div
+                key={`${group.idSale}-${group.eventId}-${group.sectorName}`}
+                id={`ticketGroup-${group.idSale}-${group.eventId}-${group.sectorName}`}
+                className={styles.ticketCard}
+              >
+                <div className={styles.ticketHeader}>
+                  <h2 className={styles.ticketEventName}>{group.eventName}</h2>
+                  <span className={styles.ticketDate}>{formatLongDate(group.date)}</span>
                 </div>
-                <div className={styles.ticketQRCode}>
-                  <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=venta:${group.idSale}-sector:${encodeURIComponent(group.sectorName)}`}
-                    alt="Código QR de la entrada"
-                  />
+
+                <div className={styles.ticketBody}>
+                  <div className={styles.ticketInfo}>
+                    <p><strong>Lugar:</strong> {group.location}</p>
+                    <p><strong>Sector:</strong> {group.sectorName} (x{group.tickets.length})</p>
+
+                    {!nonEnum && group.tickets.length > 0 && (
+                      <p>
+                        <strong>Asientos:</strong>{' '}
+                        {group.tickets
+                          .map(tk => tk.seatNumber ?? 'Sin asignar')
+                          .join(', ')}
+                      </p>
+                    )}
+
+                    <p><strong>Hora:</strong> {formatTime(group.date)}</p>
+                  </div>
+                  <div className={styles.ticketQRCode}>
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=venta:${group.idSale}-sector:${encodeURIComponent(group.sectorName)}`}
+                      alt="Código QR de la entrada"
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.ticketFooter}>
+                  <button
+                    onClick={() => group.tickets.forEach(tk => handleDownloadPDF(tk))}
+                    className={styles.ticketActionButton}
+                  >
+                    Descargar PDFs
+                  </button>
                 </div>
               </div>
-
-              <div className={styles.ticketFooter}>
-                <button
-                  onClick={() => group.tickets.forEach(tk => handleDownloadPDF(tk))}
-                  className={styles.ticketActionButton}
-                >
-                  Descargar PDFs
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         !isFetching && !error && (
