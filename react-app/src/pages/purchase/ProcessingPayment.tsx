@@ -25,18 +25,28 @@ const ProcessingPayment = () => {
       }
     };
 
-    const getSessionId = () => {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("session_id");
-    };
+    const qs = new URLSearchParams(window.location.search);
+    const sessionId = qs.get("session_id");    // Stripe
+    const paymentId = qs.get("payment_id");    // MercadoPago
 
-    const confirmBySession = async (sessionId: string) => {
+    const confirmByStripeSession = async (sid: string) => {
       try {
         setLoadingMessage("Confirmando pago con Stripe...");
-        const { data } = await axios.get(
-          `http://localhost:3000/api/stripe/confirm-session`,
-          { params: { session_id: sessionId } }
-        );
+        const { data } = await axios.get("http://localhost:3000/api/stripe/confirm-session", {
+          params: { session_id: sid },
+        });
+        return !!data?.confirmed;
+      } catch {
+        return false;
+      }
+    };
+
+    const confirmByMercadoPago = async (pid: string) => {
+      try {
+        setLoadingMessage("Confirmando pago con Mercado Pago...");
+        const { data } = await axios.get("http://localhost:3000/api/mp/confirm-payment", {
+          params: { payment_id: pid },
+        });
         return !!data?.confirmed;
       } catch {
         return false;
@@ -45,18 +55,27 @@ const ProcessingPayment = () => {
 
     const pollSaleConfirmation = async () => {
       const dniClient = localStorage.getItem("dniClient");
-
       if (!dniClient) {
-        console.warn("❌ Faltan datos para verificar venta.");
         await releaseReservations();
         navigate("/pay/failure");
         return;
       }
 
-      // Confirmar usando el session_id (fallback fuerte)
-      const sessionId = getSessionId();
+      // 1) Confirmación fuerte por retorno del PSP
       if (sessionId) {
-        const ok = await confirmBySession(sessionId);
+        const ok = await confirmByStripeSession(sessionId);
+        if (ok) {
+          setLoadingMessage("¡Venta confirmada!");
+          clearCart();
+          localStorage.removeItem("ticket-cart");
+          localStorage.removeItem("ticketGroups");
+          localStorage.removeItem("dniClient");
+          navigate("/pay/success");
+          return;
+        }
+      }
+      if (paymentId) {
+        const ok = await confirmByMercadoPago(paymentId);
         if (ok) {
           setLoadingMessage("¡Venta confirmada!");
           clearCart();
@@ -68,15 +87,17 @@ const ProcessingPayment = () => {
         }
       }
 
-      // Si aún no, hacemos polling a /sales/check por si el webhook llega con delay
+      // 2) Polling al backend por si el webhook llega con delay
       setLoadingMessage("Verificando confirmación de venta...");
       const MAX_ATTEMPTS = 8;
       const DELAY_MS = 1500;
 
       for (let i = 1; i <= MAX_ATTEMPTS; i++) {
         try {
-          const { data } = await axios.get(`http://localhost:3000/api/sales/check?dniClient=${dniClient}`);
-          if (data?.confirmed) {
+          const { data } = await axios.get(
+            `http://localhost:3000/api/sales/check?dniClient=${dniClient}`
+          );
+        if (data?.confirmed) {
             setLoadingMessage("¡Venta confirmada!");
             clearCart();
             localStorage.removeItem("ticket-cart");
@@ -85,13 +106,11 @@ const ProcessingPayment = () => {
             navigate("/pay/success");
             return;
           }
-        } catch (error: any) {
-          console.error("❌ Error consultando confirmación:", error.response?.data || error.message);
-        }
-        await new Promise(res => setTimeout(res, DELAY_MS));
+        } catch {}
+        await new Promise((res) => setTimeout(res, DELAY_MS));
       }
 
-      // Si nada confirmó, liberamos y fallamos
+      // 3) Si no se confirmó, liberamos y fallamos
       await releaseReservations();
       navigate("/pay/failure");
     };
