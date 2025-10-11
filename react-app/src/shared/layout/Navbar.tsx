@@ -13,7 +13,8 @@ const Navbar: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
-  const { cartCount } = useCart();
+
+  const { cartCount, clearCart } = useCart(); // 👈 usamos clearCart
   const { isLoggedIn, user, logout } = useAuth();
 
   const handleSearch = async (term: string) => {
@@ -60,10 +61,16 @@ const Navbar: React.FC = () => {
 
   const confirmLogout = () => {
     logout();
+
+    clearCart(); //  limpia el estado del contexto inmediatamente
+
+    // 3) limpiar claves relacionadas en localStorage (por si quedaron)
+    localStorage.removeItem('ticket-cart');
+    localStorage.removeItem('ticketGroups');
+    localStorage.removeItem('dniClient');
+    localStorage.removeItem('saleConfirmed');
+
     setShowLogoutConfirm(false);
-    localStorage.removeItem("ticket-cart");
-    localStorage.removeItem("ticketGroups");
-    localStorage.removeItem("dniClient");
     navigate('/login');
   };
 

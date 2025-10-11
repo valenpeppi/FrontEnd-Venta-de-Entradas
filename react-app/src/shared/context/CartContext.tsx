@@ -142,6 +142,40 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 function CartProvider({ children }: CartProviderProps) {
   const [state, dispatch] = useReducer(cartReducer, { cartItems: [] });
 
+  // Detectar reinicio del servidor y limpiar token + carrito si cambió
+  useEffect(() => {
+    const checkBoot = async () => {
+      try {
+        const { data } = await axios.get(`${BASE_URL}/api/system/boot`);
+        const serverBoot = data?.bootId;
+        const localBoot = localStorage.getItem('bootId');
+
+        if (!serverBoot) return;
+
+        if (!localBoot) {
+          localStorage.setItem('bootId', serverBoot);
+          return;
+        }
+
+        if (localBoot !== serverBoot) {
+          // Reinicio detectado -> limpiar todo lo sensible
+          localStorage.setItem('bootId', serverBoot);
+          localStorage.removeItem('token'); // Forzar login
+          localStorage.removeItem('ticket-cart');
+          localStorage.removeItem('ticketGroups');
+          localStorage.removeItem('dniClient');
+          localStorage.removeItem('saleConfirmed');
+
+          dispatch({ type: 'CLEAR_CART' });
+        }
+      } catch (e) {
+        console.warn('No se pudo obtener /api/system/boot', e);
+      }
+    };
+    checkBoot();
+  }, []);
+
+  // Cargar carrito desde storage
   useEffect(() => {
     try {
       const storedCart = localStorage.getItem('ticket-cart');
@@ -153,9 +187,14 @@ function CartProvider({ children }: CartProviderProps) {
     }
   }, []);
 
+  // Persistir carrito
   useEffect(() => {
     try {
-      localStorage.setItem('ticket-cart', JSON.stringify(state.cartItems));
+      if (state.cartItems.length > 0) {
+        localStorage.setItem('ticket-cart', JSON.stringify(state.cartItems));
+      } else {
+        localStorage.removeItem('ticket-cart');
+      }
     } catch (error) {
       console.error('CartContext: Error al guardar el carrito en localStorage:', error);
     }
@@ -192,8 +231,7 @@ function CartProvider({ children }: CartProviderProps) {
   };
 
   /**
-   * Verifica si el usuario puede agregar `quantity` entradas del `eventId`
-   * respetando el límite de 6 por evento (compradas + carrito).
+   * Límite de 6 entradas por evento (compradas + carrito + lo nuevo a agregar)
    */
   const canAddTicketsToEvent = async (eventId: string | number, quantity: number): Promise<boolean> => {
     try {
@@ -210,7 +248,6 @@ function CartProvider({ children }: CartProviderProps) {
       });
 
       const alreadyBought = (res.data?.data || []).filter((t: any) => String(t.eventId) === eventIdStr).length;
-
       const total = alreadyBought + currentInCart + quantity;
       return total <= 6;
     } catch (err) {
