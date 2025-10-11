@@ -1,5 +1,6 @@
 import { createContext, useReducer, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
+import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
@@ -208,22 +209,24 @@ function CartProvider({ children }: CartProviderProps) {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity: newQuantity } });
     return true;
   };
+
+  
   const canAddTicketsToEvent = async (eventId: string | number, quantity: number): Promise<boolean> => {
     const token = localStorage.getItem('token');
     if (!token) return false;
 
     const currentInCart = state.cartItems
-      .filter(item => item.eventId === String(eventId))
+      .filter(item => item.eventId === String(eventId)) 
       .reduce((sum, item) => sum + item.quantity, 0);
 
     try {
-      const res = await fetch(`${BASE_URL}/api/sales/my-tickets`, {
+      const res = await axios.get(`${BASE_URL}/api/sales/my-tickets`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      const data = await res.json();
+      const data = res.data;
 
       const alreadyBought = (data?.data || []).filter((t: any) => t.eventId == eventId).length;
 
