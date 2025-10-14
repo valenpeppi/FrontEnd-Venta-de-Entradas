@@ -95,8 +95,8 @@ const CreateEventPage: React.FC = () => {
     const fetchInitialData = async () => {
       try {
         const [typesRes, placesRes] = await Promise.all([
-          axios.get<EventType[]>(`${BASE_URL}/api/catalog/event-types`),
-          axios.get<Place[]>(`${BASE_URL}/api/catalog/places`),
+          axios.get<EventType[]>(`${BASE_URL}/api/events/event-types`),
+          axios.get<Place[]>(`${BASE_URL}/api/places/getPlaces`),
         ]);
         setTypes(typesRes.data);
         setPlaces(placesRes.data);
@@ -113,7 +113,7 @@ const CreateEventPage: React.FC = () => {
       if (state.idPlace) {
         try {
           const [sectorsRes, datesRes] = await Promise.all([
-             axios.get<Sector[]>(`${BASE_URL}/api/catalog/places/${state.idPlace}/sectors`),
+             axios.get<Sector[]>(`${BASE_URL}/api/places/${state.idPlace}/sectors`),
              axios.get<{ data: string[] }>(`${BASE_URL}/api/events/available-dates/${state.idPlace}`)
           ]);
           setSectors(sectorsRes.data);

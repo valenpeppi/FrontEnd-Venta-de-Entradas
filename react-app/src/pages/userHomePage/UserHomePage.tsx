@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
     const fetchEventTypes = async () => {
       try {
         // La respuesta del backend no viene con una propiedad 'ok', accedemos a 'data' directamente.
-        const response = await axios.get<EventType[]>(`${BASE_URL}/api/catalog/event-types`);
+        const response = await axios.get<EventType[]>(`${BASE_URL}/api/events/event-types`);
         setAllEventTypes(response.data);
       } catch (error) {
         console.error("Error fetching event types:", error);
