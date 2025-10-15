@@ -15,11 +15,13 @@
   margin: 0 auto;
   padding: 0 1.5rem;
   gap: 2rem;
+  text-align: left; /* 🔹 fuerza alineación a la izquierda */
 }
 
 .footerBrandSection {
   flex: 1 1 250px;
   min-width: 200px;
+  text-align: left; /* 🔹 asegura izquierda */
 }
 
 .footerBrand {
@@ -64,10 +66,12 @@
   flex-wrap: wrap;
   gap: 2rem;
   flex: 2 1 600px;
+  text-align: left; 
 }
 
 .footerLinksColumn {
   flex: 1 1 150px;
+  text-align: left;
 }
 
 .footerLinksColumn h4 {
@@ -100,6 +104,18 @@
 
 .footerActionLinks li a {
   line-height: 1.5;
+}
+
+.footerActionLinks li a[href*="logincompany"] {
+  font-weight: 600;
+  color: #4f46e5;
+  text-decoration: underline;
+  transition: all 0.2s ease;
+}
+
+.footerActionLinks li a[href*="logincompany"]:hover {
+  color: #4338ca;
+  text-decoration: none;
 }
 
 .footerBottom {
@@ -166,11 +182,13 @@
     flex: 1 1 100%;
     width: 100%;
     align-items: center;
+    text-align: center;
   }
 
   .footerLinksColumn {
     flex: 1 1 100%;
     max-width: 100%;
+    text-align: center;
   }
 
   .footerBottomContainer {
@@ -201,7 +219,7 @@
   .footerLinksColumn h4 {
     font-size: 1rem;
   }
-  
+
   .footerLinksColumn ul li a {
     font-size: 0.9rem;
   }
