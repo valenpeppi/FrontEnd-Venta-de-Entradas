@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './styles/Footer.module.css';
 
 import logoTicket from '../../assets/ticket.png';
@@ -11,15 +11,29 @@ import mastercardIcon from '../../assets/mastercard.png';
 import paypalIcon from '../../assets/paypal.png';
 
 const Footer: React.FC = () => {
+  const navigate = useNavigate();
+
+  // Función para ir al inicio al navegar
+  const handleNavigate = (path: string) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate(path);
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
         <div className={styles.footerBrandSection}>
-          <Link to="/" className={styles.footerBrand}>
+          <button
+            className={styles.footerBrand}
+            onClick={() => handleNavigate('/')}
+          >
             <img className={styles.footerLogo} src={logoTicket} alt="TicketApp Logo" />
             <span>TicketApp</span>
-          </Link>
-          <p className={styles.footerSlogan}>Encuentra los mejores eventos cerca de ti</p>
+          </button>
+          <p className={styles.footerSlogan}>
+            Encuentra los mejores eventos cerca de ti
+          </p>
+
           <div className={styles.footerSocial}>
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
               <img src={facebookIcon} alt="Facebook" />
@@ -37,30 +51,30 @@ const Footer: React.FC = () => {
           <div className={styles.footerLinksColumn}>
             <h4>Eventos</h4>
             <ul>
-              <li><Link to="/searchedEvents?query=concierto">Conciertos</Link></li>
-              <li><Link to="/searchedEvents?query=evento%20deportivo">Eventos Deportivos</Link></li>
-              <li><Link to="/searchedEvents?query=fiesta">Fiestas</Link></li>
-              <li><Link to="/searchedEvents?query=arte">Exposiciones de Arte</Link></li>
-              <li><Link to="/searchedEvents?query=jornada%20de%20lectura">Jornadas de Lectura</Link></li>
-              <li><Link to="/searchedEvents?query=stand%20up">Stand Ups</Link></li>
+              <li><button onClick={() => handleNavigate('/searchedEvents?query=concierto')}>Conciertos</button></li>
+              <li><button onClick={() => handleNavigate('/searchedEvents?query=evento%20deportivo')}>Eventos Deportivos</button></li>
+              <li><button onClick={() => handleNavigate('/searchedEvents?query=fiesta')}>Fiestas</button></li>
+              <li><button onClick={() => handleNavigate('/searchedEvents?query=arte')}>Exposiciones de Arte</button></li>
+              <li><button onClick={() => handleNavigate('/searchedEvents?query=festival')}>Festival</button></li>
+              <li><button onClick={() => handleNavigate('/searchedEvents?query=stand%20up')}>Stand Ups</button></li>
             </ul>
           </div>
 
           <div className={styles.footerLinksColumn}>
             <h4>Compañía</h4>
             <ul>
-              <li><Link to="/about">Sobre nosotros</Link></li>
-              <li><Link to="/contact">Contacto</Link></li>
+              <li><button onClick={() => handleNavigate('/about')}>Sobre nosotros</button></li>
+              <li><button onClick={() => handleNavigate('/contact')}>Contacto</button></li>
             </ul>
           </div>
 
           <div className={styles.footerLinksColumn}>
             <h4>Ayuda</h4>
             <ul>
-              <li><Link to="/help">Centro de ayuda</Link></li>
-              <li><Link to="/privacy">Privacidad</Link></li>
-              <li><Link to="/terms">Términos y condiciones</Link></li>
-              <li><Link to="/faq">Preguntas frecuentes</Link></li>
+              <li><button onClick={() => handleNavigate('/help')}>Centro de ayuda</button></li>
+              <li><button onClick={() => handleNavigate('/privacy')}>Privacidad</button></li>
+              <li><button onClick={() => handleNavigate('/terms')}>Términos y condiciones</button></li>
+              <li><button onClick={() => handleNavigate('/faq')}>Preguntas frecuentes</button></li>
             </ul>
           </div>
 
@@ -68,12 +82,18 @@ const Footer: React.FC = () => {
             <h4>Únete</h4>
             <ul className={styles.footerActionLinks}>
               <li>
-                <Link to="/newsletter">Recibe ofertas exclusivas</Link>
+                <button className={styles.footerLinks} onClick={() => handleNavigate('/newsletter')}>
+                  Recibe ofertas exclusivas
+                </button>
               </li>
               <li>
-                <Link to="/registercompany">Sé un organizador.</Link>
+                <button onClick={() => handleNavigate('/registercompany')}>
+                  Sé un organizador
+                </button>
                 {' ¿Ya tienes una cuenta? '}
-                <Link to="/logincompany">Inicia sesión aquí</Link>
+                <button onClick={() => handleNavigate('/logincompany')}>
+                  Inicia sesión aquí
+                </button>
               </li>
             </ul>
           </div>
@@ -95,4 +115,3 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
-
