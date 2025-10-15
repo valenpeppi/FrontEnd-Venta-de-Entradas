@@ -1,7 +1,7 @@
 {
   "name": "frontend-venta-de-entradas",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

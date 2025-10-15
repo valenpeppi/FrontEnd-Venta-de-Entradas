@@ -53,12 +53,17 @@
 .carouselNavigationBtnNext { right: 0; }
 
 .carouselNavigationIcon {
-  font-size: 1.5rem;
-  color: #333;
+  font-size: 1.8rem;
+  color: #4f46e5; 
   pointer-events: none;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-/* Tarjeta del evento */
+.carouselNavigationBtn:hover .carouselNavigationIcon {
+  color: #3730a3;
+  transform: scale(1.1);
+}
+
 .eventCard {
   display: flex;
   flex-direction: row;
@@ -72,7 +77,6 @@
   box-sizing: border-box;
 }
 
-/* Imagen */
 .eventCardImage {
   width: 50%;
   height: 100%;
@@ -80,7 +84,6 @@
   display: block;
 }
 
-/* Contenido */
 .eventCardDetailsWrapper {
   width: 50%;
   padding: 2rem 1.8rem;

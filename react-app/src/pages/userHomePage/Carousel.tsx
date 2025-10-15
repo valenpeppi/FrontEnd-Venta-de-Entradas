@@ -3,7 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import type { Ticket } from '../../shared/context/CartContext';
 import styles from './styles/Carousel.module.css';
 import GlobalStyles from '../../shared/styles/GlobalStyles.module.css';
-import { MdAccessTime, MdCalendarToday, MdLocationOn } from "react-icons/md";
+import {
+  MdAccessTime,
+  MdCalendarToday,
+  MdLocationOn,
+  MdChevronLeft,
+  MdChevronRight
+} from "react-icons/md";
 
 export interface CarouselProps {
   tickets: Ticket[];
@@ -32,15 +38,17 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <div className={styles.eventCarousel}>
+      {/* Botón Izquierdo */}
       <button
         onClick={onPreviousEvent}
         className={`${styles.carouselNavigationBtn} ${styles.carouselNavigationBtnPrev}`}
         title="Evento anterior"
         aria-label="Evento anterior"
       >
-        <i className={`fas fa-chevron-left ${styles.carouselNavigationIcon}`}></i>
+        <MdChevronLeft className={styles.carouselNavigationIcon} />
       </button>
-      
+
+      {/* Contenido del Evento */}
       {currentEvent ? (
         <div className={styles.eventCard}>
           <img
@@ -60,7 +68,7 @@ const Carousel: React.FC<CarouselProps> = ({
                     </span>
                   </div>
                 )}
-               <div className={styles.eventCardDetailItem}>
+                <div className={styles.eventCardDetailItem}>
                   <MdCalendarToday className={styles.eventCardIcon} />
                   <span className={styles.eventCardText}>{currentEvent.date}</span>
                 </div>
@@ -72,7 +80,6 @@ const Carousel: React.FC<CarouselProps> = ({
                   <MdLocationOn className={styles.eventCardIcon} />
                   <span className={styles.eventCardText}>{currentEvent.location}</span>
                 </div>
-
               </div>
             </div>
             <div className={styles.eventCardFooter}>
@@ -94,14 +101,15 @@ const Carousel: React.FC<CarouselProps> = ({
       ) : (
         <p className={styles.eventCarouselEmpty}>No hay eventos disponibles.</p>
       )}
-      
+
+      {/* Botón Derecho */}
       <button
         onClick={onNextEvent}
         className={`${styles.carouselNavigationBtn} ${styles.carouselNavigationBtnNext}`}
         title="Siguiente evento"
         aria-label="Siguiente evento"
       >
-        <i className={`fas fa-chevron-right ${styles.carouselNavigationIcon}`}></i>
+        <MdChevronRight className={styles.carouselNavigationIcon} />
       </button>
     </div>
   );
