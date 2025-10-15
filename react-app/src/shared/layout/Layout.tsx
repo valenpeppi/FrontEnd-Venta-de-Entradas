@@ -15,7 +15,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { messages } = useMessage();
   const location = useLocation();
 
-  // Bloquear header/footer solo en ruta de procesamiento de pago
   const disableHeaderFooter = location.pathname.startsWith("/pay/processing");
 
   return (

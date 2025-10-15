@@ -6,6 +6,8 @@ import cartIcon from '../../assets/cart.png';
 import { useCart } from '../../shared/context/CartContext';
 import { useAuth } from '../../shared/context/AuthContext';
 import GradientText from './GradientText';
+import { FiSearch } from 'react-icons/fi';
+
 
 const Navbar: React.FC = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -14,7 +16,7 @@ const Navbar: React.FC = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
-  const { cartCount, clearCart } = useCart(); // 👈 usamos clearCart
+  const { cartCount, clearCart } = useCart();
   const { isLoggedIn, user, logout } = useAuth();
 
   const handleSearch = async (term: string) => {
@@ -100,7 +102,7 @@ const Navbar: React.FC = () => {
               onFocus={() => searchTerm.length > 0 && setShowDropdown(true)}
               onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
             />
-            <i className={`fas fa-search ${styles.searchIcon}`}></i>
+            <FiSearch className={styles.searchIcon} />
             {showDropdown && (
               <div className={styles.searchDropdownContainer}>
                 <ul className={styles.searchDropdownList}>
