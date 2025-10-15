@@ -8,7 +8,7 @@ import Pay from './pages/purchase/Pay';
 import AdminHomePage from './pages/adminHomePage/AdminHomePage';
 import MyTickets from './pages/purchase/MyTickets';
 import Help from './pages/support/Help';
-import EventDetailPageWrapper from './pages/userHomePage/EventDetailPageWrapper';
+import EventDetailPage from './pages/eventDetail/EventDetailPage';
 import About from './pages/support/About';
 import Login from './pages/login/LoginUser';
 import Register from './pages/register/RegisterUser';
@@ -73,7 +73,7 @@ const App: React.FC = () => {
         <Route path="/privacy" element={<Layout><Privacy /></Layout>} />
         <Route path="/terms" element={<Layout><Terms /></Layout>} />
         <Route path="/faq" element={<Layout><Faq /></Layout>} />
-        <Route path="/event/:id" element={<Layout><EventDetailPageWrapper /></Layout>} />
+        <Route path="/event/:id" element={<Layout><EventDetailPage /></Layout>} />
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/newsletter" element={<NewsLetter />} />
         <Route path="/searchedEvents" element={<Layout><SearchedEvents /></Layout>} />
