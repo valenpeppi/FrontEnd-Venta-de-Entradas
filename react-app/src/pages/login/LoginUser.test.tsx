@@ -37,6 +37,7 @@ describe('🔐 Componente LoginUser', () => {
     localStorage.clear();
   });
 
+  
   // 1️⃣ Validación campos vacíos
   it('muestra errores de validación si los campos están vacíos al enviar', async () => {
     render(
@@ -52,6 +53,7 @@ describe('🔐 Componente LoginUser', () => {
     ).toBeInTheDocument();
   });
 
+  
   // 2️⃣ Email inválido
   it('valida formato de email incorrecto', async () => {
     render(
@@ -67,6 +69,7 @@ describe('🔐 Componente LoginUser', () => {
     expect(await screen.findByText(/Email inválido/i)).toBeInTheDocument();
   });
 
+  
   // 3️⃣ Login exitoso
   it('realiza login exitoso y llama a onLoginSuccess', async () => {
     const mockResponse = {
@@ -103,6 +106,7 @@ describe('🔐 Componente LoginUser', () => {
     expect(localStorage.getItem('user')).toContain('Agus');
   });
 
+  
   // 4️⃣ Error 401 desde backend
   it('muestra mensaje de error si el servidor devuelve 401', async () => {
     const fakeError = {
@@ -134,7 +138,8 @@ describe('🔐 Componente LoginUser', () => {
     expect(mockOnLoginSuccess).not.toHaveBeenCalled();
   });
 
-  // 5️⃣ Error de red sin response (e.g., server down)
+  
+  // 5️⃣ Error de red sin response
   it('muestra mensaje de error genérico si no hay respuesta del servidor', async () => {
     const networkError = new Error('Network Error');
     mockedAxios.post.mockRejectedValueOnce(networkError);
@@ -165,6 +170,7 @@ describe('🔐 Componente LoginUser', () => {
   });
 
 
+  
   // 6️⃣ Si completa solo email o solo password → error general
   it('muestra error si falta uno de los campos requeridos', async () => {
     render(
@@ -193,6 +199,7 @@ describe('🔐 Componente LoginUser', () => {
     ).toBeInTheDocument();
   });
 
+  
   // 7️⃣ Íconos de validación (visual feedback)
   it('muestra íconos de validación correctos al completar los campos', async () => {
     render(
