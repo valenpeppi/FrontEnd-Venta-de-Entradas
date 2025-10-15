@@ -161,7 +161,7 @@ const CartPage = () => {
                   {group.seatNumbers.length > 0 && (
                     <p className={styles.itemRow}>
                       <MdEventSeat className={styles.icon} />
-                      <strong>Asientos:</strong>{group.seatNumbers.sort((a: string, b: string) => Number(a) - Number(b)).join(', ')}
+                      <strong>Asientos:</strong>{group.seatNumbers.sort((a: string, b: string) => Number(a) - Number(b)).join(' - ')}
 
                     </p>
                   )}

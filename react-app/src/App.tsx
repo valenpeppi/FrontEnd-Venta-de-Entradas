@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
-// # 1. Importa el ErrorBoundary
+// Importa el ErrorBoundary
 import ErrorBoundary from './shared/ErrorBoundary';
 
 // Layout y Componentes
@@ -49,7 +49,7 @@ const App: React.FC = () => {
     login(user, token);
     setAppMessage(`¡Inicio de sesión exitoso como ${user.name}!`, 'success');
 
-    if (user.role === 'ADMIN') {
+    if (user.role === 'admin') {
       navigate('/admin');
     } else {
       navigate('/');
@@ -61,8 +61,7 @@ const App: React.FC = () => {
   };
 
   const handleCompanyLoginSuccess = (company: { companyName: string }, token: string) => {
-    // # Aseguramos que el objeto 'user' que se pasa a login coincida con el tipo User
-    const companyUser: User = { name: company.companyName, role: 'COMPANY' };
+    const companyUser: User = { name: company.companyName, role: 'company' };
     login(companyUser, token);
     setAppMessage(`¡Inicio de sesión exitoso como organizador ${company.companyName}!`, 'success');
     navigate('/create-event');
@@ -92,23 +91,23 @@ const App: React.FC = () => {
           {/* Rutas para Invitados (no logueados) */}
           <Route path="/login" element={<AuthRoute guestOnly><Login onLoginSuccess={handleLoginSuccess} /></AuthRoute>} />
           <Route path="/register" element={<AuthRoute guestOnly><Register onRegisterSuccess={handleRegisterSuccess} /></AuthRoute>} />
-          <Route path="/login-company" element={<AuthRoute guestOnly><LoginCompany onLoginSuccess={handleCompanyLoginSuccess} /></AuthRoute>} />
-          <Route path="/register-company" element={<AuthRoute guestOnly><RegisterCompany onRegisterSuccess={handleCompanyRegisterSuccess} /></AuthRoute>} />
+          <Route path="/logincompany" element={<AuthRoute guestOnly><LoginCompany onLoginSuccess={handleCompanyLoginSuccess} /></AuthRoute>} />
+          <Route path="/registercompany" element={<AuthRoute guestOnly><RegisterCompany onRegisterSuccess={handleCompanyRegisterSuccess} /></AuthRoute>} />
 
           {/* Rutas Protegidas para Usuarios */}
-          <Route path="/cart" element={<AuthRoute allowedRoles={['USER']}><Layout><CartPage /></Layout></AuthRoute>} />
-          <Route path="/pay" element={<AuthRoute allowedRoles={['USER']}><Layout><Pay /></Layout></AuthRoute>} />
-          <Route path="/my-tickets" element={<AuthRoute allowedRoles={['USER']}><Layout><MyTickets /></Layout></AuthRoute>} />
-          <Route path="/processing-payment" element={<AuthRoute allowedRoles={['USER']}><Layout><ProcessingPayment /></Layout></AuthRoute>} />
-          <Route path="/success" element={<AuthRoute allowedRoles={['USER']}><Layout><Success /></Layout></AuthRoute>} />
-          <Route path="/failure" element={<AuthRoute allowedRoles={['USER']}><Layout><Failure /></Layout></AuthRoute>} />
+          <Route path="/cart" element={<AuthRoute allowedRoles={['user']}><Layout><CartPage /></Layout></AuthRoute>} />
+          <Route path="/pay" element={<AuthRoute allowedRoles={['user']}><Layout><Pay /></Layout></AuthRoute>} />
+          <Route path="/myTickets" element={<AuthRoute allowedRoles={['user']}><Layout><MyTickets /></Layout></AuthRoute>} />
+          <Route path="/pay/processing" element={<AuthRoute allowedRoles={['user']}><Layout><ProcessingPayment /></Layout></AuthRoute>} />
+          <Route path="/pay/success" element={<AuthRoute allowedRoles={['user']}><Layout><Success /></Layout></AuthRoute>} />
+          <Route path="/pay/failure" element={<AuthRoute allowedRoles={['user']}><Layout><Failure /></Layout></AuthRoute>} />
 
           {/* Rutas Protegidas para Administradores */}
-          <Route path="/admin" element={<AuthRoute allowedRoles={['ADMIN']}><Layout><AdminHomePage /></Layout></AuthRoute>} />
-          <Route path="/feature-events" element={<AuthRoute allowedRoles={['ADMIN']}><Layout><FeatureEventsPage /></Layout></AuthRoute>} />
+          <Route path="/admin" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminHomePage /></Layout></AuthRoute>} />
+          <Route path="/feature-events" element={<AuthRoute allowedRoles={['admin']}><Layout><FeatureEventsPage /></Layout></AuthRoute>} />
 
           {/* Rutas Protegidas para Empresas */}
-          <Route path="/create-event" element={<AuthRoute allowedRoles={['COMPANY']}><Layout><CreateEventPage /></Layout></AuthRoute>} />
+          <Route path="/create-event" element={<AuthRoute allowedRoles={['company']}><Layout><CreateEventPage /></Layout></AuthRoute>} />
         </Routes>
       </ErrorBoundary>
       <ChatAssistant />
