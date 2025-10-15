@@ -96,7 +96,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     const surname = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE}/api/auth/register`, {
+      await axios.post(`http://localhost:3000/api/auth/register`, {
         dni: formData.dni,
         name,
         surname,
