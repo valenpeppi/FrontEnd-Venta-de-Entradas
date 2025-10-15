@@ -7,7 +7,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
@@ -15,12 +14,14 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
+
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "src/main.tsx"]
+  "include": ["src", "vite.config.ts"]
 }
