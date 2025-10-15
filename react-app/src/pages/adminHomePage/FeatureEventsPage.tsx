@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import styles from "./styles/AdminHomePage.module.css"; 
+import { FaStar, FaRegStar } from "react-icons/fa";
 
 
 type Event = {
@@ -131,16 +132,17 @@ export default function FeatureEventsPage() {
                 ) : (
                   <div className={styles.mediaPlaceholder} />
                 )}
-                 <button
+                <button
                   className={`${styles.featureBtn} ${ev.featured ? styles.featured : ''}`}
                   onClick={() => toggleFeature(ev.idEvent)}
                   title={ev.featured ? 'Quitar de destacados' : 'Destacar evento'}
                 >
-                  <i className="fas fa-star"></i>
+                  {ev.featured ? <FaStar /> : <FaRegStar />}
                   <span className={styles.visuallyHidden}>
                     {ev.featured ? 'Quitar de destacados' : 'Destacar evento'}
                   </span>
                 </button>
+
               </div>
 
               <div className={styles.body}>
