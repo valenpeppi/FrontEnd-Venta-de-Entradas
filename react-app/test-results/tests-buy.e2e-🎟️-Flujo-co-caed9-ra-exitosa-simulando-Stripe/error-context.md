@@ -26,167 +26,156 @@
           - generic [ref=e22]: Hola, gian
           - button "Cerrar Sesión" [ref=e23] [cursor=pointer]
     - main [ref=e24]:
-      - main [ref=e26]:
+      - generic [ref=e25]:
+        - img "Nicky Nicole" [ref=e26]
         - generic [ref=e27]:
-          - button "Evento anterior" [ref=e28] [cursor=pointer]:
-            - img
-          - generic [ref=e29]:
-            - img "Bad Bunny" [ref=e30]
-            - generic [ref=e31]:
-              - generic [ref=e32]:
-                - heading "Bad Bunny" [level=3] [ref=e33]
-                - generic [ref=e34]:
-                  - generic [ref=e35]: Bad Bunny se presenta en el Gigante de Arroyito en una noche que romperá corazones.
-                  - generic [ref=e36]:
-                    - img [ref=e37]
-                    - generic [ref=e40]: Viernes 2 de enero de 2026
-                  - generic [ref=e41]:
-                    - img [ref=e42]
-                    - generic [ref=e46]: 08:30 PM
-                  - generic [ref=e47]:
-                    - img [ref=e48]
-                    - generic [ref=e51]: Estadio Gigante de Arroyito
-              - generic [ref=e52]:
-                - generic [ref=e53]: Desde $60000.00
-                - button "Comprar" [ref=e54] [cursor=pointer]
-          - button "Siguiente evento" [ref=e55] [cursor=pointer]:
-            - img
-        - button "Todos 10" [ref=e57] [cursor=pointer]:
-          - text: Todos
-          - generic [ref=e58]: "10"
-        - heading "Todos los Eventos" [level=2] [ref=e59]
-        - generic [ref=e60]:
-          - generic [ref=e61]:
-            - heading "Arte" [level=2] [ref=e62]
-            - link "Demostración de Arte de La Siberia Demostración de Arte de La Siberia" [ref=e64] [cursor=pointer]:
-              - /url: /event/10
-              - generic [ref=e65]:
-                - img "Demostración de Arte de La Siberia" [ref=e66]
-                - generic [ref=e67]: Demostración de Arte de La Siberia
-          - generic [ref=e68]:
-            - heading "Festival" [level=2] [ref=e69]
-            - link "Festival de Danzas Clásicas Festival de Danzas Clásicas" [ref=e71] [cursor=pointer]:
-              - /url: /event/8
-              - generic [ref=e72]:
-                - img "Festival de Danzas Clásicas" [ref=e73]
-                - generic [ref=e74]: Festival de Danzas Clásicas
-          - generic [ref=e75]:
-            - heading "Concierto" [level=2] [ref=e76]
-            - generic [ref=e77]:
-              - link "Bizarrap Bizarrap" [ref=e78] [cursor=pointer]:
-                - /url: /event/3
-                - generic [ref=e79]:
-                  - img "Bizarrap" [ref=e80]
-                  - generic [ref=e81]: Bizarrap
-              - link "Bad Bunny Bad Bunny" [ref=e82] [cursor=pointer]:
-                - /url: /event/2
-                - generic [ref=e83]:
-                  - img "Bad Bunny" [ref=e84]
-                  - generic [ref=e85]: Bad Bunny
-              - link "Nicky Nicole Nicky Nicole" [ref=e86] [cursor=pointer]:
-                - /url: /event/1
-                - generic [ref=e87]:
-                  - img "Nicky Nicole" [ref=e88]
-                  - generic [ref=e89]: Nicky Nicole
-          - generic [ref=e90]:
-            - heading "Fiesta" [level=2] [ref=e91]
-            - generic [ref=e92]:
-              - link "La Bresh La Bresh" [ref=e93] [cursor=pointer]:
-                - /url: /event/7
-                - generic [ref=e94]:
-                  - img "La Bresh" [ref=e95]
-                  - generic [ref=e96]: La Bresh
-              - link "Viernes en la Jungla Viernes en la Jungla" [ref=e97] [cursor=pointer]:
-                - /url: /event/6
-                - generic [ref=e98]:
-                  - img "Viernes en la Jungla" [ref=e99]
-                  - generic [ref=e100]: Viernes en la Jungla
-          - generic [ref=e101]:
-            - heading "Evento Deportivo" [level=2] [ref=e102]
-            - link "La previa de 9 de Julio contra Belgrano La previa de 9 de Julio contra Belgrano" [ref=e104] [cursor=pointer]:
-              - /url: /event/9
-              - generic [ref=e105]:
-                - img "La previa de 9 de Julio contra Belgrano" [ref=e106]
-                - generic [ref=e107]: La previa de 9 de Julio contra Belgrano
-          - generic [ref=e108]:
-            - heading "Stand Up" [level=2] [ref=e109]
-            - generic [ref=e110]:
-              - link "Vuelve Yayo a Rosario! Vuelve Yayo a Rosario!" [ref=e111] [cursor=pointer]:
-                - /url: /event/5
-                - generic [ref=e112]:
-                  - img "Vuelve Yayo a Rosario!" [ref=e113]
-                  - generic [ref=e114]: Vuelve Yayo a Rosario!
-              - link "Lucho Mellera Lucho Mellera" [ref=e115] [cursor=pointer]:
-                - /url: /event/4
-                - generic [ref=e116]:
-                  - img "Lucho Mellera" [ref=e117]
-                  - generic [ref=e118]: Lucho Mellera
-    - contentinfo [ref=e119]:
-      - generic [ref=e120]:
-        - generic [ref=e121]:
-          - button "TicketApp Logo TicketApp" [ref=e122] [cursor=pointer]:
-            - img "TicketApp Logo" [ref=e123]
-            - generic [ref=e124]: TicketApp
-          - paragraph [ref=e125]: Encuentra los mejores eventos cerca de ti
-          - generic [ref=e126]:
-            - link "Facebook" [ref=e127] [cursor=pointer]:
+          - heading "Nicky Nicole" [level=1] [ref=e28]
+          - paragraph [ref=e29]:
+            - generic [ref=e30]: Nicky Nicole se presenta en Rosario para una noche espectacular.
+          - paragraph [ref=e31]:
+            - img [ref=e32]
+            - generic [ref=e35]:
+              - strong [ref=e36]: "Fecha:"
+              - text: Martes 13 de enero de 2026
+          - paragraph [ref=e37]:
+            - img [ref=e38]
+            - generic [ref=e42]:
+              - strong [ref=e43]: "Hora:"
+              - text: 10:00 PM
+          - paragraph [ref=e44]:
+            - img [ref=e45]
+            - generic [ref=e48]:
+              - strong [ref=e49]: "Tipo:"
+              - text: Concierto
+          - paragraph [ref=e50]:
+            - img [ref=e51]
+            - generic [ref=e54]:
+              - strong [ref=e55]: "Estadio:"
+              - text: Estadio Gigante de Arroyito
+          - paragraph [ref=e56]:
+            - img [ref=e57]
+            - generic [ref=e60]:
+              - strong [ref=e61]: "Entradas disponibles:"
+              - text: "260"
+      - generic [ref=e62]:
+        - generic [ref=e65]:
+          - img "Plano del estadio Estadio Gigante de Arroyito" [ref=e66]
+          - generic "Campo" [ref=e67] [cursor=pointer]
+          - generic "Tribuna Norte" [ref=e68] [cursor=pointer]
+          - generic "Tribuna Sur" [ref=e69] [cursor=pointer]
+          - generic "Popular" [ref=e70] [cursor=pointer]
+        - generic [ref=e71]:
+          - heading "Sectores Disponibles" [level=2] [ref=e72]
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - generic [ref=e75]:
+                - heading "Tribuna Norte" [level=3] [ref=e76]
+                - paragraph [ref=e77]: "Precio: $65000"
+                - paragraph [ref=e78]: "Entradas disponibles: 60"
+              - button "Seleccionar Asientos" [ref=e80] [cursor=pointer]
+            - generic [ref=e81]:
+              - generic [ref=e82]:
+                - heading "Tribuna Sur" [level=3] [ref=e83]
+                - paragraph [ref=e84]: "Precio: $65000"
+                - paragraph [ref=e85]: "Entradas disponibles: 60"
+              - button "Seleccionar Asientos" [ref=e87] [cursor=pointer]
+            - generic [ref=e88]:
+              - generic [ref=e89]:
+                - heading "Popular" [level=3] [ref=e90]
+                - paragraph [ref=e91]: "Precio: $80000"
+                - paragraph [ref=e92]: "Entradas disponibles: 60"
+              - generic [ref=e93]:
+                - generic [ref=e94]: Cantidad
+                - combobox "Cantidad" [ref=e95] [cursor=pointer]:
+                  - option "0" [selected]
+                  - option "1"
+                  - option "2"
+                  - option "3"
+                  - option "4"
+                  - option "5"
+                  - option "6"
+            - generic [ref=e96]:
+              - generic [ref=e97]:
+                - heading "Campo" [level=3] [ref=e98]
+                - paragraph [ref=e99]: "Precio: $80000"
+                - paragraph [ref=e100]: "Entradas disponibles: 80"
+              - generic [ref=e101]:
+                - generic [ref=e102]: Cantidad
+                - combobox "Cantidad" [ref=e103] [cursor=pointer]:
+                  - option "0" [selected]
+                  - option "1"
+                  - option "2"
+                  - option "3"
+                  - option "4"
+                  - option "5"
+                  - option "6"
+        - button "Agregar al Carrito" [ref=e105] [cursor=pointer]
+    - contentinfo [ref=e106]:
+      - generic [ref=e107]:
+        - generic [ref=e108]:
+          - button "TicketApp Logo TicketApp" [ref=e109] [cursor=pointer]:
+            - img "TicketApp Logo" [ref=e110]
+            - generic [ref=e111]: TicketApp
+          - paragraph [ref=e112]: Encuentra los mejores eventos cerca de ti
+          - generic [ref=e113]:
+            - link "Facebook" [ref=e114] [cursor=pointer]:
               - /url: https://facebook.com
-              - img "Facebook" [ref=e128]
-            - link "Twitter" [ref=e129] [cursor=pointer]:
+              - img "Facebook" [ref=e115]
+            - link "Twitter" [ref=e116] [cursor=pointer]:
               - /url: https://twitter.com
-              - img "Twitter" [ref=e130]
-            - link "Instagram" [ref=e131] [cursor=pointer]:
+              - img "Twitter" [ref=e117]
+            - link "Instagram" [ref=e118] [cursor=pointer]:
               - /url: https://instagram.com
-              - img "Instagram" [ref=e132]
-        - generic [ref=e133]:
-          - generic [ref=e134]:
-            - heading "Eventos" [level=4] [ref=e135]
-            - list [ref=e136]:
-              - listitem [ref=e137]:
-                - button "Conciertos" [ref=e138] [cursor=pointer]
+              - img "Instagram" [ref=e119]
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - heading "Eventos" [level=4] [ref=e122]
+            - list [ref=e123]:
+              - listitem [ref=e124]:
+                - button "Conciertos" [ref=e125] [cursor=pointer]
+              - listitem [ref=e126]:
+                - button "Eventos Deportivos" [ref=e127] [cursor=pointer]
+              - listitem [ref=e128]:
+                - button "Fiestas" [ref=e129] [cursor=pointer]
+              - listitem [ref=e130]:
+                - button "Exposiciones de Arte" [ref=e131] [cursor=pointer]
+              - listitem [ref=e132]:
+                - button "Festival" [ref=e133] [cursor=pointer]
+              - listitem [ref=e134]:
+                - button "Stand Ups" [ref=e135] [cursor=pointer]
+          - generic [ref=e136]:
+            - heading "Compañía" [level=4] [ref=e137]
+            - list [ref=e138]:
               - listitem [ref=e139]:
-                - button "Eventos Deportivos" [ref=e140] [cursor=pointer]
+                - button "Sobre nosotros" [ref=e140] [cursor=pointer]
               - listitem [ref=e141]:
-                - button "Fiestas" [ref=e142] [cursor=pointer]
-              - listitem [ref=e143]:
-                - button "Exposiciones de Arte" [ref=e144] [cursor=pointer]
-              - listitem [ref=e145]:
-                - button "Festival" [ref=e146] [cursor=pointer]
-              - listitem [ref=e147]:
-                - button "Stand Ups" [ref=e148] [cursor=pointer]
-          - generic [ref=e149]:
-            - heading "Compañía" [level=4] [ref=e150]
-            - list [ref=e151]:
+                - button "Contacto" [ref=e142] [cursor=pointer]
+          - generic [ref=e143]:
+            - heading "Ayuda" [level=4] [ref=e144]
+            - list [ref=e145]:
+              - listitem [ref=e146]:
+                - button "Centro de ayuda" [ref=e147] [cursor=pointer]
+              - listitem [ref=e148]:
+                - button "Privacidad" [ref=e149] [cursor=pointer]
+              - listitem [ref=e150]:
+                - button "Términos y condiciones" [ref=e151] [cursor=pointer]
               - listitem [ref=e152]:
-                - button "Sobre nosotros" [ref=e153] [cursor=pointer]
-              - listitem [ref=e154]:
-                - button "Contacto" [ref=e155] [cursor=pointer]
-          - generic [ref=e156]:
-            - heading "Ayuda" [level=4] [ref=e157]
-            - list [ref=e158]:
+                - button "Preguntas frecuentes" [ref=e153] [cursor=pointer]
+          - generic [ref=e154]:
+            - heading "Únete" [level=4] [ref=e155]
+            - list [ref=e156]:
+              - listitem [ref=e157]:
+                - button "Recibe ofertas exclusivas" [ref=e158] [cursor=pointer]
               - listitem [ref=e159]:
-                - button "Centro de ayuda" [ref=e160] [cursor=pointer]
-              - listitem [ref=e161]:
-                - button "Privacidad" [ref=e162] [cursor=pointer]
-              - listitem [ref=e163]:
-                - button "Términos y condiciones" [ref=e164] [cursor=pointer]
-              - listitem [ref=e165]:
-                - button "Preguntas frecuentes" [ref=e166] [cursor=pointer]
-          - generic [ref=e167]:
-            - heading "Únete" [level=4] [ref=e168]
-            - list [ref=e169]:
-              - listitem [ref=e170]:
-                - button "Recibe ofertas exclusivas" [ref=e171] [cursor=pointer]
-              - listitem [ref=e172]:
-                - button "Sé un organizador" [ref=e173] [cursor=pointer]
+                - button "Sé un organizador" [ref=e160] [cursor=pointer]
                 - text: ¿Ya tienes una cuenta?
-                - button "Inicia sesión aquí" [ref=e174] [cursor=pointer]
-      - generic [ref=e176]:
-        - paragraph [ref=e177]: © 2025 TicketApp. Todos los derechos reservados.
-        - generic [ref=e178]:
-          - img "Visa" [ref=e179]
-          - img "Mastercard" [ref=e180]
-          - img "PayPal" [ref=e181]
-  - button "Abrir asistente TicketBot" [ref=e182] [cursor=pointer]:
-    - img [ref=e183]
+                - button "Inicia sesión aquí" [ref=e161] [cursor=pointer]
+      - generic [ref=e163]:
+        - paragraph [ref=e164]: © 2025 TicketApp. Todos los derechos reservados.
+        - generic [ref=e165]:
+          - img "Visa" [ref=e166]
+          - img "Mastercard" [ref=e167]
+          - img "PayPal" [ref=e168]
+  - button "Abrir asistente TicketBot" [ref=e169] [cursor=pointer]:
+    - img [ref=e170]
 ```
