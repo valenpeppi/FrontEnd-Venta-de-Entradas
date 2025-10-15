@@ -5,6 +5,10 @@ import modalStyles from '../seatSelector/styles/SeatModal.module.css';
 import styles from './styles/EventDetailPage.module.css';
 import type { EventSummary, Sector, Seat, CartItem } from '../../shared/types';
 
+// 🖼️ Imágenes locales para fallback
+import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
+import bioceresArena from '../../assets/bioceres-arena.jpg';
+import elCirculo from '../../assets/el-circulo.png';
 
 interface Props {
   summary: EventSummary;
@@ -13,8 +17,15 @@ interface Props {
   selectedSector: number | null;
   selectedSeatsMap: Record<number, number[]>;
   generalQuantity: number;
-  handleSectorQuantityChange: (sectorId: number, newQty: number, setAppMessage?: (msg: string, t: 'success' | 'error') => void) => void;
-  handleGeneralQuantityChange: (newQty: number, setAppMessage?: (msg: string, t: 'success' | 'error') => void) => void;
+  handleSectorQuantityChange: (
+    sectorId: number,
+    newQty: number,
+    setAppMessage?: (msg: string, t: 'success' | 'error') => void
+  ) => void;
+  handleGeneralQuantityChange: (
+    newQty: number,
+    setAppMessage?: (msg: string, t: 'success' | 'error') => void
+  ) => void;
   handleSeatsChange: (sectorId: number, seatsSel: number[]) => void;
   setSelectedSector: (sectorId: number | null) => void;
   setSeats: (seats: Seat[]) => void;
@@ -29,11 +40,17 @@ interface Props {
   addToCart: (ticket: Omit<CartItem, 'quantity'>, quantity: number) => boolean;
 }
 
-
 const SECTOR_LAYOUT_CONFIG: Record<string, Record<string, number>> = {
   'Estadio Gigante de Arroyito': { 'Tribuna Norte': 4, 'Tribuna Sur': 4 },
   'Bioceres Arena': { VIP: 10 },
   'El Circulo': { 'Sala Principal': 5, 'Tribuna Superior': 5 },
+};
+
+// 🖼️ Diccionario de imágenes locales
+const stadiumImages: Record<string, string> = {
+  'Estadio Gigante de Arroyito': estadioArroyito,
+  'Bioceres Arena': bioceresArena,
+  'El Circulo': elCirculo,
 };
 
 const EventDetailBody: React.FC<Props> = ({
@@ -83,19 +100,20 @@ const EventDetailBody: React.FC<Props> = ({
 
   return (
     <div className={styles.eventDetailContainer}>
-      {/* Plano de estadio */}
+      {/* 🏟️ Plano del estadio */}
       {summary.placeType.toLowerCase() !== 'nonenumerated' && (
         <div className={styles.stadiumPlanContainer}>
           <div className={styles.stadiumContent}>
             <div className={styles.imageFrame}>
               <img
-                src={summary.imageUrl || '/ticket.png'}
+                src={stadiumImages[summary.placeName] || '/ticket.png'}
                 alt={`Plano del estadio ${summary.placeName}`}
                 className={styles.stadiumImage}
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = '/ticket.png';
                 }}
               />
+
               {sectors.map((sec) => (
                 <div
                   key={sec.idSector}
@@ -118,7 +136,7 @@ const EventDetailBody: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Lista de sectores o entrada general */}
+      {/* 🎟️ Lista de sectores o entrada general */}
       <div ref={sectorListRef}>
         <h2 className={styles.sectionTitle}>
           {summary.placeType.toLowerCase() === 'nonenumerated'
@@ -168,7 +186,7 @@ const EventDetailBody: React.FC<Props> = ({
         )}
       </div>
 
-      {/* Modal de selección de asientos */}
+      {/* 🪑 Modal de selección de asientos */}
       {isModalOpen && currentSelectedSector?.enumerated && (
         <div
           className={`${modalStyles.modalOverlay} ${
@@ -192,16 +210,13 @@ const EventDetailBody: React.FC<Props> = ({
               <div className={modalStyles.stage}>ESCENARIO</div>
               <div className={modalStyles.seatLegend}>
                 <div className={modalStyles.legendItem}>
-                  <span className={`${modalStyles.seatDemo} ${modalStyles.available}`}></span>{' '}
-                  Libres
+                  <span className={`${modalStyles.seatDemo} ${modalStyles.available}`}></span> Libres
                 </div>
                 <div className={modalStyles.legendItem}>
-                  <span className={`${modalStyles.seatDemo} ${modalStyles.occupied}`}></span>{' '}
-                  Ocupados
+                  <span className={`${modalStyles.seatDemo} ${modalStyles.occupied}`}></span> Ocupados
                 </div>
                 <div className={modalStyles.legendItem}>
-                  <span className={`${modalStyles.seatDemo} ${modalStyles.selected}`}></span>{' '}
-                  Seleccionados
+                  <span className={`${modalStyles.seatDemo} ${modalStyles.selected}`}></span> Seleccionados
                 </div>
               </div>
               <SeatSelector
@@ -232,7 +247,7 @@ const EventDetailBody: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Botón de acción final */}
+      {/* 🛒 Botón final */}
       <div className={styles.actions}>
         <button onClick={handleAddToCart} className={styles.btnConfirm}>
           Agregar al Carrito
