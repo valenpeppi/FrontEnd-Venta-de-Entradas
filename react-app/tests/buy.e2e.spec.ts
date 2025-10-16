@@ -37,29 +37,34 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
 
   await page.waitForURL('**/cart', { timeout: 20000 });
 
-  // B) No enumerado (Popular/Campo)
+  // B) No enumerado (toma cualquier sector NO enumerado visible en la lista)
   await page.goto(EVENT_URL, { waitUntil: 'domcontentloaded' });
 
+  // card que tenga un <select id="sector-..."> => es no enumerado
   const nonEnumCard = page
-    .getByRole('heading', { name: /popular|campo/i })
-    .first()
-    .locator(
-      'xpath=ancestor::*[self::div or self::section][contains(@class,"sectorCard") or contains(@id,"sector-card-")][1]'
-    );
-  await nonEnumCard.waitFor({ state: 'visible', timeout: 15000 });
+    .locator('[id^="sector-card-"]')
+    .filter({ has: page.locator('select[id^="sector-"]') })
+    .first();
+
+  await nonEnumCard.scrollIntoViewIfNeeded();
+  await expect(nonEnumCard).toBeVisible({ timeout: 15000 });
 
   const qtySelect = nonEnumCard.locator('select[id^="sector-"]');
   await expect(qtySelect).toHaveCount(1);
   await qtySelect.selectOption('1');
 
+  // Botón global "Agregar al Carrito" (el de la página)
   const addGlobal = page
-    .getByRole('button', { name: /^agregar al carrito$/i })
+    .getByTestId('page-add-to-cart')
+    .or(page.getByRole('button', { name: /^agregar al carrito$/i }))
     .or(page.locator('button:has-text("Agregar al Carrito")'))
     .first();
-  await addGlobal.click();
 
+  await addGlobal.click();
   await page.waitForURL('**/cart', { timeout: 20000 });
-// C) Checkout con STRIPE (flujo real, sin mocks)
+
+
+  // C) Checkout con STRIPE (flujo real, sin mocks)
 await page.unroute(`${API_BASE}/api/mp/checkout`).catch(() => {});
 await page.unroute(`${API_BASE}/api/stripe/checkout`).catch(() => {});
 
