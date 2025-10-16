@@ -102,3 +102,25 @@
   }
 }
 
+.seat.available {
+  background: #ffffff;
+  border-color: #747474;
+  color: #000000;
+}
+
+.seat.available:hover {
+  background: #8f8f8f;
+  border-color: #5c5c5c;
+}
+
+.seat.available.selected {
+  background: #b16dff;       
+  border-color: #372947;     
+  color: #ffffff;           
+  box-shadow: 0 2px 6px rgba(209, 111, 255, 0.4);
+}
+
+.seat.available.selected:hover {
+  background: #60388d;       
+  border-color: #d8b7ff;
+}

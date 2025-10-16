@@ -34,16 +34,19 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({ seats, selectedSeats, onCha
           <div
             key={seat.id}
             onClick={() => toggleSeat(seat.id)}
-            className={`
-              ${styles.seat} 
-              ${selectedSeats.includes(seat.id) ? styles.selected : ''}
-              ${seat.state === 'reserved' ? styles.reserved : ''}
-              ${seat.state === 'sold' ? styles.reserved : ''}
-            `}
+            className={[
+              styles.seat,
+              seat.state === 'reserved' || seat.state === 'sold'
+                ? styles.reserved
+                : styles.available,
+              selectedSeats.includes(seat.id) ? styles.selected : '',
+            ].join(' ')}
+            data-testid={seat.state === 'available' ? `seat-available-${seat.id}` : `seat-${seat.id}`}
             title={seat.state === 'reserved' ? 'Asiento no disponible' : `Asiento ${seat.label}`}
           >
             {seat.label || seat.id}
           </div>
+
         ))}
       </div>
       {selectedSeats.length > 0 && (

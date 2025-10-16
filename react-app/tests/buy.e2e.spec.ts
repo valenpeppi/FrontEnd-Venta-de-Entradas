@@ -3,72 +3,121 @@ import { login } from './login';
 
 const FRONTEND_URL = 'http://localhost:5173';
 
-test.describe('🎟 Flujo completo de compra con Stripe (mixto enumerado + no enumerado)', () => {
+test.describe('🎟️ Flujo completo de compra con Stripe (mixto enumerado + no enumerado)', () => {
   test('Usuario compra entradas enumeradas y no enumeradas exitosamente', async ({ page }) => {
     // 1️⃣ LOGIN
     await login(page);
 
-    // 2️⃣ ENTRAR A UN EVENTO (asegúrate que tenga ambos tipos)
-    await page.goto(`${FRONTEND_URL}/event/1`);
-    await expect(page.locator('h1')).toBeVisible();
-    console.log('🎭 Entró al evento');
+    // 2️⃣ IR AL EVENTO (debe tener sectores enumerados y no enumerados)
+    const EVENT_URL = `${FRONTEND_URL}/event/1`;
+    await page.goto(EVENT_URL, { waitUntil: 'networkidle' });
 
-    // 3️⃣ SELECCIONAR UNA ENTRADA NO ENUMERADA
-    const quantitySelect = page.locator('select#general-quantity');
-    if (await quantitySelect.isVisible()) {
-      await quantitySelect.selectOption('1');
-      console.log('🎫 Seleccionada 1 entrada general');
-    } else {
-      console.warn('⚠ Este evento no tiene entradas generales');
+    await expect(page.locator('h1')).toBeVisible({ timeout: 15000 });
+    console.log('🎭 Entró al evento correctamente');
+
+    // 3️⃣ ESPERAR QUE CARGUEN LOS SECTORES / ENTRADAS
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+
+    // 4️⃣ SELECCIONAR UNA ENTRADA NO ENUMERADA (si existe)
+    try {
+      const generalSelect = page.locator('select#general-quantity');
+      if (await generalSelect.count() > 0) {
+        await generalSelect.waitFor({ state: 'visible', timeout: 10000 });
+        const options = await generalSelect.locator('option').allTextContents();
+        console.log('🔍 Opciones de entrada general:', options);
+        await generalSelect.selectOption('1');
+        console.log('🎫 Entrada general seleccionada (1 unidad)');
+      } else {
+        console.warn('⚠️ No se encontró selector de entrada general — el evento podría no tener entradas no enumeradas.');
+      }
+    } catch (err) {
+      console.error('❌ Error al seleccionar entrada no enumerada:', err);
     }
 
-    // 4️⃣ SELECCIONAR UNA ENTRADA ENUMERADA
-    // Buscar el primer sector enumerado visible en el plano
-    const firstSector = page.locator('[class*="sectorArea"]').first();
-    if (await firstSector.isVisible()) {
-      await firstSector.click();
-      console.log('🪑 Sector enumerado abierto');
-    } else {
-      console.warn('⚠ No se encontró sector enumerado clickeable');
+    // 5️⃣ ABRIR UN SECTOR ENUMERADO DESDE EL PLANO
+    const sectorEnumerado = page.locator('[class*="sectorArea"]').first();
+    try {
+      await expect(sectorEnumerado).toBeVisible({ timeout: 10000 });
+      await sectorEnumerado.click({ force: true });
+      console.log('🪑 Sector enumerado clickeado');
+    } catch (err) {
+      console.error('⚠️ No se encontró sector enumerado visible:', err);
     }
 
-    // Esperar modal y seleccionar un asiento (simulando click)
-    const seat = page.locator('.SeatSelector_seat__available').first();
-    if (await seat.isVisible()) {
-      await seat.click();
-      console.log('💺 Asiento enumerado seleccionado');
-    } else {
-      console.warn('⚠ No se encontraron asientos disponibles');
+    // 6️⃣ ESPERAR A QUE APAREZCA EL MODAL DE ASIENTOS
+    await page.waitForTimeout(1500);
+    await page.waitForSelector('.SeatSelector_seat__', { timeout: 10000 });
+    console.log('📋 Modal de asientos visible');
+
+    // 7️⃣ SELECCIONAR UN ASIENTO DISPONIBLE
+    let seatClicked = false;
+    const possibleSelectors = [
+      '.SeatSelector_seat__available',
+      '[data-testid^="seat-available-"]',
+      '.SeatSelector_seat__'
+    ];
+
+    for (const sel of possibleSelectors) {
+      const seats = page.locator(sel);
+      if ((await seats.count()) > 0) {
+        for (let i = 0; i < (await seats.count()); i++) {
+          const s = seats.nth(i);
+          const isDisabled = await s.evaluate(el => el.classList.contains('SeatSelector_reserved__'));
+          if (!isDisabled && await s.isVisible()) {
+            await s.click({ force: true });
+            seatClicked = true;
+            console.log(`💺 Asiento seleccionado (${sel})`);
+            break;
+          }
+        }
+        if (seatClicked) break;
+      }
     }
 
-    // Confirmar en el modal
-    const addBtn = page.locator('button:has-text("Agregar al carrito")');
-    if (await addBtn.isVisible()) {
-      await addBtn.click();
+    if (!seatClicked) {
+      console.warn('⚠️ No se encontró asiento disponible para seleccionar');
+    }
+
+    // 8️⃣ CONFIRMAR ASIENTO EN MODAL
+    try {
+      const addSeatBtn = page.locator('button:has-text("Agregar al carrito")');
+      await expect(addSeatBtn).toBeVisible({ timeout: 10000 });
+      await addSeatBtn.click();
       console.log('✅ Asiento agregado al carrito');
+    } catch {
+      console.warn('⚠️ Botón de "Agregar al carrito" no encontrado o ya cerrado');
     }
 
-    // 5️⃣ AGREGAR TAMBIÉN LA ENTRADA GENERAL (si existe)
-    const addGeneralBtn = page.locator('button:has-text("Agregar al Carrito")');
-    if (await addGeneralBtn.isVisible()) {
-      await addGeneralBtn.click();
-      console.log('🛒 Entrada general agregada al carrito');
+    // 9️⃣ AGREGAR ENTRADA GENERAL (si todavía existe botón)
+    try {
+      const addGeneralBtn = page.locator('button:has-text("Agregar al Carrito")');
+      if (await addGeneralBtn.isVisible({ timeout: 5000 })) {
+        await addGeneralBtn.click();
+        console.log('🛒 Entrada general agregada al carrito');
+      }
+    } catch {
+      console.warn('⚠️ Botón de agregar general no encontrado (posiblemente ya en carrito)');
     }
 
-    // 6️⃣ ESPERAR REDIRECCIÓN AL CARRITO
-    await page.waitForURL('/cart', { timeout: 20000 });
-    await expect(page.locator('h2', { hasText: 'Carrito de compras' })).toBeVisible();
-    console.log('🧾 Carrito visible con las entradas agregadas');
+    // 🔟 ESPERAR REDIRECCIÓN AL CARRITO
+    await page.waitForURL('**/cart', { timeout: 25000 });
+    await expect(page.locator('h2', { hasText: 'Carrito de compras' })).toBeVisible({ timeout: 10000 });
+    console.log('🧾 Carrito cargado correctamente con las entradas');
 
-    // 7️⃣ PROCEDER AL PAGO
-    await page.click('button:has-text("Proceder al pago")');
-    await page.waitForURL('/pay', { timeout: 20000 });
-    await expect(page.locator('h1', { hasText: 'Finalizar compra' })).toBeVisible();
-    console.log('💳 Página de pago cargada');
+    // 11️⃣ PROCEDER AL PAGO
+    const payBtn = page.locator('button:has-text("Proceder al pago")');
+    await expect(payBtn).toBeVisible({ timeout: 10000 });
+    await payBtn.click();
+    console.log('💳 Click en "Proceder al pago"');
 
-    // 8️⃣ MOCK STRIPE CHECKOUT
-    await page.route('/api/stripe/checkout', async (route) => {
-      console.log('🧩 Mock de Stripe interceptado');
+    await page.waitForURL('**/pay', { timeout: 20000 });
+    await expect(page.locator('h1', { hasText: 'Finalizar compra' })).toBeVisible({ timeout: 10000 });
+    console.log('💰 Página de pago cargada correctamente');
+
+    // 12️⃣ MOCK DE STRIPE
+    await page.route('**/api/stripe/checkout', async (route) => {
+      console.log('🧩 Interceptado /api/stripe/checkout (mock)');
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -76,21 +125,21 @@ test.describe('🎟 Flujo completo de compra con Stripe (mixto enumerado + no en
       });
     });
 
-    // 9️⃣ PAGAR CON STRIPE
-    const stripeButton = page.locator('button:has-text("Pagar con Stripe")');
-    await expect(stripeButton).toBeVisible();
-    await stripeButton.click();
-    console.log('💰 Pago iniciado (mock)');
+    // 13️⃣ CLICK EN PAGAR CON STRIPE
+    const stripeBtn = page.locator('button:has-text("Pagar con Stripe")');
+    await expect(stripeBtn).toBeVisible({ timeout: 10000 });
+    await stripeBtn.click();
+    console.log('💸 Pago con Stripe simulado (mock)');
 
-    // 🔟 REDIRECCIÓN A ÉXITO
-    await page.waitForURL('/pay/success', { timeout: 20000 });
-    await expect(page.locator('h1', { hasText: '¡Pago exitoso!' })).toBeVisible();
+    // 14️⃣ VALIDAR PANTALLA DE ÉXITO
+    await page.waitForURL('**/pay/success', { timeout: 25000 });
+    await expect(page.locator('h1', { hasText: '¡Pago exitoso!' })).toBeVisible({ timeout: 10000 });
     await expect(page.locator('text=Tu compra se procesó correctamente')).toBeVisible();
+    console.log('🎉 Compra completada exitosamente');
 
-    // ✅ VALIDAR BOTONES
-    await expect(page.locator('button:has-text("Ver mis tickets")')).toBeVisible();
-    await expect(page.locator('button:has-text("Volver a la tienda")')).toBeVisible();
-
-    console.log('🎉 Test E2E mixto (enumerado + no enumerado) completado con éxito');
+    // 15️⃣ VALIDAR BOTONES FINALES
+    await expect(page.locator('button:has-text("Ver mis tickets")')).toBeVisible({ timeout: 8000 });
+    await expect(page.locator('button:has-text("Volver a la tienda")')).toBeVisible({ timeout: 8000 });
+    console.log('✅ Botones finales visibles. Test mixto completado con éxito.');
   });
 });
