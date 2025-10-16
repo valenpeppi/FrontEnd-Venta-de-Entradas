@@ -54,9 +54,6 @@ const Pay: React.FC = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  // 🔧 Construye ticketGroups basado en sectorType (implícito desde el carrito):
-  // - No enumerado: SIN ids, SOLO quantity (usa idSector REAL).
-  // - Enumerado: CON ids (y quantity opcional).
   const buildTicketGroups = (): TicketGroup[] => {
     const map: Record<
       string,
@@ -64,12 +61,13 @@ const Pay: React.FC = () => {
     > = {};
 
     for (const item of cartItems) {
-      const idEvent = Number(item.eventId);
-      const idPlace = Number(item.idPlace);
+      const idEvent  = Number(item.eventId);
+      const idPlace  = Number(item.idPlace);
       const idSector = Number(item.idSector);
 
-      // si tu CartItem trae "enumerated" úsalo:
-      const hasSeatIds = Array.isArray(item.ticketIds) && item.ticketIds.length > 0;
+      const hasSeatIds =
+        Array.isArray(item.ticketIds) &&
+        item.ticketIds.length > 0;
 
       const key = `${idEvent}-${idPlace}-${idSector}`;
       if (!map[key]) {
@@ -77,14 +75,10 @@ const Pay: React.FC = () => {
       }
 
       if (hasSeatIds) {
-        // Enumerado
-        const cleanIds = Array.isArray(item.ticketIds)
-          ? item.ticketIds
-              .map((n: any) => Number(n))
-              .filter((n) => Number.isFinite(n) && n > 0)
-          : [];
+        const cleanIds = item.ticketIds!
+          .map(n => Number(n))
+          .filter(n => Number.isFinite(n) && n > 0);
 
-        // evitar duplicados dentro del mismo grupo
         const seen = new Set(map[key].ids);
         for (const id of cleanIds) {
           if (!seen.has(id)) {
@@ -92,9 +86,8 @@ const Pay: React.FC = () => {
             seen.add(id);
           }
         }
-        map[key].quantity += Number(item.quantity) || 0; // opcional
+        map[key].quantity += Number(item.quantity) || 0; 
       } else {
-        // No enumerado → solo quantity (sin ids)
         map[key].quantity += Number(item.quantity) || 0;
       }
     }
@@ -103,24 +96,22 @@ const Pay: React.FC = () => {
     for (const k of Object.keys(map)) {
       const g = map[k];
       if (g.ids.length > 0) {
-        // enumerado
+        // Enumerado
         groups.push({
           idEvent: g.idEvent,
           idPlace: g.idPlace,
           idSector: g.idSector,
           ids: g.ids,
-          quantity: g.quantity || g.ids.length,
+          quantity: Math.max(g.quantity, g.ids.length), // usa al menos la cantidad de ids
         });
-      } else {
-        // no enumerado
-        if (g.quantity > 0) {
-          groups.push({
-            idEvent: g.idEvent,
-            idPlace: g.idPlace,
-            idSector: g.idSector,
-            quantity: g.quantity,
-          });
-        }
+      } else if (g.quantity > 0) {
+        // No enumerado
+        groups.push({
+          idEvent: g.idEvent,
+          idPlace: g.idPlace,
+          idSector: g.idSector,
+          quantity: g.quantity,
+        });
       }
     }
 
@@ -128,29 +119,25 @@ const Pay: React.FC = () => {
   };
 
 
-  // Validación: para enumerado requerimos ids; para general requerimos quantity>0
   const validateCartForPayment = (): { valid: boolean; reason?: string } => {
     for (const item of cartItems) {
-      const idSector = Number(item.idSector);
-      const isGeneral = idSector === 0;
-
       if (item.idPlace == null || item.idSector == null) {
         return { valid: false, reason: 'Faltan datos del lugar o sector.' };
       }
 
-      if (isGeneral) {
+      const hasSeatIds = Array.isArray(item.ticketIds) && item.ticketIds.length > 0;
+
+      if (hasSeatIds) {
+        continue;
+      } else {
         if (!item.quantity || item.quantity <= 0) {
           return { valid: false, reason: 'Cantidad inválida para entradas generales.' };
-        }
-        // No pedimos ticketIds en no enumerado
-      } else {
-        if (!item.ticketIds || item.ticketIds.length === 0) {
-          return { valid: false, reason: 'Faltan asientos seleccionados para sector enumerado.' };
         }
       }
     }
     return { valid: true };
   };
+
 
   // MERCADO PAGO
   const handleMPPayment = async () => {

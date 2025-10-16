@@ -143,37 +143,38 @@ const EventDetailPage: React.FC = () => {
     let totalSelected = 0;
     const itemsToAdd: Array<{ ticket: Omit<CartItem, 'quantity'>; quantity: number }> = [];
 
-    if (summary.placeType.toLowerCase() === 'nonenumerated') {
-      totalSelected = generalQuantity;
-      if (totalSelected > 0) {
-        const tempTicketIds = Array.from({ length: totalSelected }, (_, i) => i + 1);
-        itemsToAdd.push({
-          ticket: {
-            id: `${summary.id}-general`,
-            eventId: String(summary.id),
-            eventName: summary.eventName,
-            date: summary.date,
-            location: summary.placeType,
-            placeName: summary.placeName,
-            sectorName: 'Entrada General',
-            price: summary.price || 0,
-            availableTickets: summary.availableTickets,
-            imageUrl: summary.imageUrl,
-            type: summary.type,
-            featured: false,
-            time:
-              new Date(summary.date).toLocaleTimeString('es-AR', {
-                hour: '2-digit',
-                minute: '2-digit',
-              }) + ' hs',
-            idPlace: summary.idPlace,
-            idSector: 0,
-            ticketIds: tempTicketIds,
-          },
-          quantity: totalSelected,
-        });
-      }
-    } else {
+  if (summary.placeType.toLowerCase() === 'nonenumerated') {
+    const nonEnumSector = sectors[0]; 
+    if (!nonEnumSector) {
+      setAppMessage('No se encontró el sector para este lugar.', 'error');
+      return;
+    }
+
+    totalSelected = generalQuantity;
+    if (totalSelected > 0) {
+      itemsToAdd.push({
+        ticket: {
+          id: `${summary.id}-${nonEnumSector.idSector}`,
+          eventId: String(summary.id),
+          eventName: summary.eventName,
+          date: summary.date,
+          location: summary.placeType,
+          placeName: summary.placeName,
+          sectorName: nonEnumSector.name ?? 'Entrada General',
+          price: summary.price ?? nonEnumSector.price,
+          availableTickets: summary.availableTickets,
+          imageUrl: summary.imageUrl,
+          type: summary.type,
+          featured: false,
+          time: new Date(summary.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ' hs',
+          idPlace: summary.idPlace,
+          idSector: nonEnumSector.idSector,  
+          ticketIds: [],                   
+        },
+        quantity: totalSelected,
+      });
+    }
+  }else {
       const nonEnum = sectors.filter((s) => !s.enumerated && s.selected && s.selected > 0);
       const enumSectors = sectors.filter((s) => s.enumerated && selectedSeatsMap[s.idSector]?.length);
 
@@ -183,10 +184,6 @@ const EventDetailPage: React.FC = () => {
 
       // No enumeradas
       nonEnum.forEach((sec) => {
-        const tempTicketIds = Array.from({ length: sec.selected || 0 }, (_, i) =>
-          `${summary.idPlace}-${sec.idSector}-temp-${i}`,
-        ).map((id) => parseInt(id.split('-').pop() || '0'));
-
         itemsToAdd.push({
           ticket: {
             id: `${summary.id}-${sec.idSector}`,
@@ -208,7 +205,7 @@ const EventDetailPage: React.FC = () => {
               }) + ' hs',
             idPlace: summary.idPlace,
             idSector: sec.idSector,
-            ticketIds: tempTicketIds,
+            ticketIds: [],          
           },
           quantity: sec.selected || 0,
         });

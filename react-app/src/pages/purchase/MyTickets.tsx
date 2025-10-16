@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../shared/context/AuthContext';
 import styles from './styles/MyTickets.module.css';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import React, { useEffect, useState, useMemo } from 'react';
 import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
 
 interface PurchasedTicket {
@@ -40,43 +39,6 @@ const MyTickets: React.FC = () => {
   const [tickets, setTickets] = useState<PurchasedTicket[]>([]);
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const isNonEnumeratedTicket = (tk: PurchasedTicket) =>
-    (tk.sectorType
-      ? tk.sectorType.toLowerCase() === 'nonenumerated'
-      : tk.seatNumber == null);
-
-  const isNonEnumeratedGroup = (g: TicketGroup) => {
-    if (g.sectorType) return g.sectorType.toLowerCase() === 'nonenumerated';
-    return g.tickets.every(t => t.seatNumber == null);
-  };
-
-  useEffect(() => {
-    const fetchTickets = async () => {
-      if (!isLoggedIn || !user?.dni) {
-        if (!isLoading) {
-          setError("Debes iniciar sesión para ver tus entradas.");
-          setIsFetching(false);
-        }
-        return;
-      }
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:3000/api/sales/my-tickets`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data: PurchasedTicket[] = response.data.data || [];
-        setTickets(data);
-      } catch (err) {
-        console.error("Error al obtener las entradas:", err);
-        setError("No se pudieron cargar tus entradas. Inténtalo de nuevo más tarde.");
-      } finally {
-        setIsFetching(false);
-      }
-    };
-
-    if (!isLoading) fetchTickets();
-  }, [isLoggedIn, user, isLoading]);
 
   const handleDownloadPDF = async (ticket: PurchasedTicket) => {
     const nonEnum = isNonEnumeratedTicket(ticket);
@@ -204,16 +166,31 @@ const MyTickets: React.FC = () => {
     pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}-${ticket.idSale}${nonEnum ? '' : `-${ticket.idTicket}`}.pdf`);
   };
 
-  // --- Agrupar tickets por (venta + evento + sector) ---
+  const isNonEnumeratedTicket = (tk: PurchasedTicket) => {
+    if (tk.sectorType) return tk.sectorType.toLowerCase() === 'nonenumerated';
+    return tk.seatNumber == null;
+  };
+
+  const isNonEnumeratedGroup = (g: TicketGroup) => {
+    if (g.sectorType) return g.sectorType.toLowerCase() === 'nonenumerated';
+    return g.tickets.every(t => t.seatNumber == null);
+  };
+
   const normalizeSectorName = (name: string) =>
-    (name || 'Sin sector').replace(/\s+/g, ' ').trim();
+    (name || 'Sin sector')
+      .replace(/Asiento\s*\d+/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
 
   const groupTicketsBySaleAndSector = (ts: PurchasedTicket[]): TicketGroup[] => {
     const map = new Map<string, TicketGroup>();
 
     for (const tk of ts) {
-      const sector = normalizeSectorName(tk.sectorName);
-      const key = `${tk.idSale}|${tk.eventId}|${sector}`;
+      const nonEnum = isNonEnumeratedTicket(tk);
+      const sectorNorm = normalizeSectorName(tk.sectorName);
+      const sectorKey = nonEnum ? (sectorNorm || 'Entrada General') : sectorNorm;
+
+      const key = `${tk.idSale}|${tk.eventId}|${nonEnum ? 'NONENUM' : 'ENUM'}|${sectorKey}`;
 
       let grp = map.get(key);
       if (!grp) {
@@ -224,13 +201,12 @@ const MyTickets: React.FC = () => {
           date: tk.date,
           time: tk.time,
           location: tk.location,
-          sectorName: sector,
-          sectorType: tk.sectorType,
+          sectorName: sectorKey,
+          sectorType: nonEnum ? 'nonEnumerated' : 'enumerated',
           tickets: [],
         };
         map.set(key, grp);
       }
-      if (tk.sectorType && !grp.sectorType) grp.sectorType = tk.sectorType;
       grp.tickets.push(tk);
     }
 
@@ -242,7 +218,6 @@ const MyTickets: React.FC = () => {
       });
     }
 
-    // Ordenar grupos por fecha/hora y luego por sector
     return Array.from(map.values()).sort((a, b) => {
       const da = new Date(a.date).getTime();
       const db = new Date(b.date).getTime();
@@ -252,15 +227,38 @@ const MyTickets: React.FC = () => {
     });
   };
 
-  if (isFetching) {
-    return (
-      <div className={styles.myTicketsContainer}>
-        <p>Cargando tus entradas...</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const fetchTickets = async () => {
+      if (!isLoggedIn || !user?.dni) {
+        if (!isLoading) {
+          setError("Debes iniciar sesión para ver tus entradas.");
+          setIsFetching(false);
+        }
+        return;
+      }
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`http://localhost:3000/api/sales/my-tickets`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data: PurchasedTicket[] = response.data.data || [];
+        setTickets(data);
+      } catch (err) {
+        console.error("Error al obtener las entradas:", err);
+        setError("No se pudieron cargar tus entradas. Inténtalo de nuevo más tarde.");
+      } finally {
+        setIsFetching(false);
+      }
+    };
 
-  const ticketGroups = groupTicketsBySaleAndSector(tickets);
+    if (!isLoading) fetchTickets();
+  }, [isLoggedIn, user, isLoading]);
+
+  const ticketGroups = useMemo(
+    () => groupTicketsBySaleAndSector(tickets),
+    [tickets]
+  );
+
 
   return (
     <div className={styles.myTicketsContainer}>
