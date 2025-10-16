@@ -54,14 +54,15 @@ const SectorList: React.FC<CustomSectorListProps> = ({
           ) : (
             <div className={styles.sectorInput}>
               <label htmlFor={`sector-${sec.idSector}`}>Cantidad</label>
-              <select
-                id={`sector-${sec.idSector}`}
-                value={sec.selected || 0}
-                onChange={(e) =>
-                  onQuantityChange(sec.idSector, parseInt(e.target.value), setAppMessage)
-                }
-                className={styles.quantitySelect}
-              >
+             <select
+                 id={`sector-${sec.idSector}`}
+                 data-testid={`quantity-select-${sec.idSector}`}
+                 value={sec.selected || 0}
+                 onChange={(e) =>
+                   onQuantityChange(sec.idSector, parseInt(e.target.value), setAppMessage)
+                 }
+                 className={styles.quantitySelect}
+               >
                 {[...Array(Math.min(6, sec.availableTickets) + 1).keys()].map((n) => (
                   <option key={n} value={n}>
                     {n}

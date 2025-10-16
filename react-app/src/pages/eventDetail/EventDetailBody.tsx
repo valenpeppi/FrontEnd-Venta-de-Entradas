@@ -5,7 +5,6 @@ import modalStyles from '../seatSelector/styles/SeatModal.module.css';
 import styles from './styles/EventDetailPage.module.css';
 import type { EventSummary, Sector, Seat, CartItem } from '../../shared/types';
 
-// 🖼️ Imágenes locales para fallback
 import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
 import bioceresArena from '../../assets/bioceres-arena.jpg';
 import elCirculo from '../../assets/el-circulo.png';
@@ -150,7 +149,8 @@ const EventDetailBody: React.FC<Props> = ({
               <div className={styles.sectorInfo}>
                 <h3 className={styles.sectorName}>Entrada General</h3>
                 <p>
-                  <span className={styles.detailLabel}>Precio:</span> ${summary.price?.toFixed(2)}
+                  <span className={styles.detailLabel}>Precio:</span> $
+                  {summary.price?.toFixed(2)}
                 </p>
                 <p>
                   <span className={styles.detailLabel}>Disponibles:</span>{' '}
@@ -161,6 +161,7 @@ const EventDetailBody: React.FC<Props> = ({
                 <label htmlFor="general-quantity">Cantidad</label>
                 <select
                   id="general-quantity"
+                  data-testid="general-quantity"
                   value={generalQuantity}
                   onChange={(e) =>
                     handleGeneralQuantityChange(parseInt(e.target.value), setAppMessage)
@@ -193,6 +194,7 @@ const EventDetailBody: React.FC<Props> = ({
             isModalClosing ? modalStyles.modalClosing : modalStyles.modalOpen
           }`}
           onClick={closeModal}
+          data-testid="seat-modal"
         >
           <div
             className={`${modalStyles.modalContent} ${
@@ -210,13 +212,16 @@ const EventDetailBody: React.FC<Props> = ({
               <div className={modalStyles.stage}>ESCENARIO</div>
               <div className={modalStyles.seatLegend}>
                 <div className={modalStyles.legendItem}>
-                  <span className={`${modalStyles.seatDemo} ${modalStyles.available}`}></span> Libres
+                  <span className={`${modalStyles.seatDemo} ${modalStyles.available}`}></span>{' '}
+                  Libres
                 </div>
                 <div className={modalStyles.legendItem}>
-                  <span className={`${modalStyles.seatDemo} ${modalStyles.occupied}`}></span> Ocupados
+                  <span className={`${modalStyles.seatDemo} ${modalStyles.occupied}`}></span>{' '}
+                  Ocupados
                 </div>
                 <div className={modalStyles.legendItem}>
-                  <span className={`${modalStyles.seatDemo} ${modalStyles.selected}`}></span> Seleccionados
+                  <span className={`${modalStyles.seatDemo} ${modalStyles.selected}`}></span>{' '}
+                  Seleccionados
                 </div>
               </div>
               <SeatSelector
@@ -233,6 +238,7 @@ const EventDetailBody: React.FC<Props> = ({
               <button
                 onClick={handleAddToCart}
                 className={`${modalStyles.btn} ${modalStyles.btnConfirm}`}
+                data-testid="add-to-cart"
               >
                 Agregar al carrito
               </button>
@@ -247,9 +253,12 @@ const EventDetailBody: React.FC<Props> = ({
         </div>
       )}
 
-      {/* 🛒 Botón final */}
       <div className={styles.actions}>
-        <button onClick={handleAddToCart} className={styles.btnConfirm}>
+        <button
+          onClick={handleAddToCart}
+          className={styles.btnConfirm}
+          data-testid="page-add-to-cart"
+        >
           Agregar al Carrito
         </button>
       </div>

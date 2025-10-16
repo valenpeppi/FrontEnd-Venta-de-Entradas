@@ -114,13 +114,13 @@
 }
 
 .seat.available.selected {
-  background: #b16dff;       
-  border-color: #372947;     
+  background: #48f56e;       
+  border-color: #007a1b;     
   color: #ffffff;           
-  box-shadow: 0 2px 6px rgba(209, 111, 255, 0.4);
+  box-shadow: 0 2px 6px 005e14(209, 111, 255, 0.4);
 }
 
 .seat.available.selected:hover {
-  background: #60388d;       
-  border-color: #d8b7ff;
+  background: #3fa555;       
+  border-color: #183a1f;
 }
