@@ -79,7 +79,6 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
       validateField(fieldName, formData[fieldName]);
     });
     
-    // # Cambio Clave: Lógica de validación síncrona para evitar race conditions.
     const hasErrors = formKeys.some(key => {
         let errorMsg = '';
         const value = formData[key];
@@ -125,7 +124,6 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         navigate('/login');
       }, 2000);
     } catch (error) {
-      // # Cambio Clave: Manejo de errores seguro para TypeScript.
       if (axios.isAxiosError(error)) {
         const errorMsg = error.response?.data?.message || 'Error de red o del servidor.';
         setServerError(errorMsg);
@@ -157,13 +155,12 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
                 password: 'Contraseña',
                 confirmPassword: 'Confirmar contraseña',
               };
-              const typeMap: Record<keyof typeof formData, string> = {
-                dni: 'text',
-                fullName: 'text',
-                email: 'email',
-                birthDate: 'date',
-                password: 'password',
-                confirmPassword: 'password',
+              
+              const getInputType = (field: keyof typeof formData) => {
+                if (field.toLowerCase().includes('password')) return 'password';
+                if (field === 'email') return 'email';
+                if (field === 'birthDate') return 'date';
+                return 'text';
               };
 
               return (
@@ -171,7 +168,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
                   <label htmlFor={fieldName} className={styles.registerLabel}>{labelMap[fieldName]}:</label>
                   <div className={styles.inputWrapper}>
                     <input
-                      type={typeMap[fieldName]}
+                      type={getInputType(fieldName)}
                       id={fieldName}
                       name={fieldName}
                       value={formData[fieldName]}
@@ -193,7 +190,6 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
           
           <div className={styles.captchaContainer}>
             <ReCAPTCHA
-              // # Cambio Clave: Se lee la clave desde las variables de entorno, eliminando fallbacks innecesarios.
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
               onChange={(value) => setCaptchaValue(value)}
             />

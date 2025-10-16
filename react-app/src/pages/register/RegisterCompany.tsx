@@ -32,11 +32,23 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     clearMessages();
   }, [clearMessages]);
 
+  // # Cambio Clave: Se crea un mapa para las etiquetas en español.
+  const labelMap: Record<keyof typeof formData, string> = {
+    companyName: 'Razón Social',
+    cuil: 'CUIL',
+    contactEmail: 'Email de Contacto',
+    password: 'Contraseña',
+    confirmPassword: 'Confirmar Contraseña',
+    phone: 'Teléfono',
+    address: 'Dirección',
+  };
+
   const validate = (name: string, value: string, currentFormData: typeof formData) => {
     let errorMsg = '';
     switch (name) {
       case 'companyName':
-        if (!value) errorMsg = 'El nombre de la empresa es requerido.';
+        // # Cambio Clave: Mensaje de error actualizado a "Razón Social".
+        if (!value) errorMsg = 'La Razón Social es requerida.';
         break;
       case 'cuil':
         if (!value) errorMsg = 'El CUIL es requerido.';
@@ -73,7 +85,6 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     if (touched[name]) {
       validate(name, value, newFormData);
     }
-    // Re-validate confirmPassword if password changes
     if (name === 'password' && touched.confirmPassword) {
       validate('confirmPassword', formData.confirmPassword, newFormData);
     }
@@ -84,7 +95,6 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     setTouched(prev => ({ ...prev, [name]: true }));
     validate(name, value, formData);
   };
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,7 +110,6 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         validate(key, formData[key as keyof typeof formData], formData);
     });
 
-
     if (!captchaValue) {
       setServerError('Por favor, verifica que no eres un robot.');
       return;
@@ -113,7 +122,6 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
       setServerError('Por favor, completa todos los campos correctamente.');
       return;
     }
-
 
     try {
       await axios.post('http://localhost:3000/api/auth/register-company', {
@@ -148,17 +156,18 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
               return (
                 <div className={styles.registerFormGroup} key={fieldKey}>
                   <label htmlFor={`register-${fieldKey}`} className={styles.registerLabel}>
-                    {fieldKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                    {labelMap[fieldKey]}
                   </label>
                   <div className={styles.inputWrapper}>
                     <input 
-                      type={fieldKey.includes('password') ? 'password' : 'text'}
+                      type={fieldKey.toLowerCase().includes('password') ? 'password' : 'text'}
                       id={`register-${fieldKey}`} 
                       name={fieldKey}
                       className={`${styles.registerInput} ${touched[fieldKey] && (errors[fieldKey] ? styles.inputError : styles.inputSuccess)}`}
                       value={formData[fieldKey]} 
                       onChange={handleChange} 
                       onBlur={handleBlur}
+                      placeholder={`Ingresa ${labelMap[fieldKey].toLowerCase()}`}
                       required 
                     />
                     {touched[fieldKey] && (
@@ -174,7 +183,6 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
 
           <div className={styles.captchaContainer}>
             <ReCAPTCHA
-              // # Cambio Clave: Se actualiza la sitekey para que se lea desde las variables de entorno.
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
               onChange={(value) => setCaptchaValue(value)}
             />
