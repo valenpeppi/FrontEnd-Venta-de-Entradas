@@ -28,9 +28,6 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const navigate = useNavigate();
   const { clearMessages } = useMessage();
 
-  // # Cambio Clave: Se corrige el array de dependencias a '[]'.
-  // Esto asegura que el efecto solo se ejecute UNA VEZ cuando el componente se monta,
-  // rompiendo el bucle infinito de renderizado que causaba el error.
   useEffect(() => {
     clearMessages();
   }, []);
