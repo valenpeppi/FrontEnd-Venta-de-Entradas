@@ -1,0 +1,188 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - navigation [ref=e6]:
+      - generic [ref=e7]:
+        - link "TicketApp Logo TicketApp" [ref=e8] [cursor=pointer]:
+          - /url: /
+          - img "TicketApp Logo" [ref=e9]
+          - generic [ref=e10]: TicketApp
+        - generic [ref=e11]:
+          - textbox "Buscar eventos..." [ref=e12]
+          - img
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Ayuda" [ref=e15] [cursor=pointer]:
+              - /url: /help
+          - listitem [ref=e16]:
+            - link "Mis Entradas" [ref=e17] [cursor=pointer]:
+              - /url: /myTickets
+        - link "Carrito de compras" [ref=e19] [cursor=pointer]:
+          - /url: /cart
+          - img "Carrito de compras" [ref=e20]
+        - generic [ref=e22]:
+          - generic [ref=e23]: Hola, gian
+          - button "Cerrar Sesión" [ref=e24] [cursor=pointer]
+    - main [ref=e25]:
+      - generic [ref=e26]:
+        - heading "Mis Entradas" [level=1] [ref=e27]
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - heading "Nicky Nicole" [level=2] [ref=e31]
+              - text: Miércoles 14 de enero de 2026
+            - generic [ref=e32]:
+              - generic [ref=e33]:
+                - paragraph [ref=e34]:
+                  - strong [ref=e35]: "Lugar:"
+                  - text: Estadio Gigante de Arroyito
+                - paragraph [ref=e36]:
+                  - strong [ref=e37]: "Sector:"
+                  - text: Popular (x1)
+                - paragraph [ref=e38]:
+                  - strong [ref=e39]: "Hora:"
+                  - text: 10:00 PM
+              - img "Código QR de la entrada" [ref=e41]
+            - button "Descargar PDFs" [ref=e43] [cursor=pointer]
+          - generic [ref=e44]:
+            - generic [ref=e45]:
+              - heading "Nicky Nicole" [level=2] [ref=e46]
+              - text: Miércoles 14 de enero de 2026
+            - generic [ref=e47]:
+              - generic [ref=e48]:
+                - paragraph [ref=e49]:
+                  - strong [ref=e50]: "Lugar:"
+                  - text: Estadio Gigante de Arroyito
+                - paragraph [ref=e51]:
+                  - strong [ref=e52]: "Sector:"
+                  - text: Popular (x1)
+                - paragraph [ref=e53]:
+                  - strong [ref=e54]: "Hora:"
+                  - text: 10:00 PM
+              - img "Código QR de la entrada" [ref=e56]
+            - button "Descargar PDFs" [ref=e58] [cursor=pointer]
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - heading "Nicky Nicole" [level=2] [ref=e61]
+              - text: Miércoles 14 de enero de 2026
+            - generic [ref=e62]:
+              - generic [ref=e63]:
+                - paragraph [ref=e64]:
+                  - strong [ref=e65]: "Lugar:"
+                  - text: Estadio Gigante de Arroyito
+                - paragraph [ref=e66]:
+                  - strong [ref=e67]: "Sector:"
+                  - text: Popular (x1)
+                - paragraph [ref=e68]:
+                  - strong [ref=e69]: "Hora:"
+                  - text: 10:00 PM
+              - img "Código QR de la entrada" [ref=e71]
+            - button "Descargar PDFs" [ref=e73] [cursor=pointer]
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - heading "Nicky Nicole" [level=2] [ref=e76]
+              - text: Miércoles 14 de enero de 2026
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - paragraph [ref=e79]:
+                  - strong [ref=e80]: "Lugar:"
+                  - text: Estadio Gigante de Arroyito
+                - paragraph [ref=e81]:
+                  - strong [ref=e82]: "Sector:"
+                  - text: Popular (x1)
+                - paragraph [ref=e83]:
+                  - strong [ref=e84]: "Hora:"
+                  - text: 10:00 PM
+              - img "Código QR de la entrada" [ref=e86]
+            - button "Descargar PDFs" [ref=e88] [cursor=pointer]
+          - generic [ref=e89]:
+            - generic [ref=e90]:
+              - heading "Nicky Nicole" [level=2] [ref=e91]
+              - text: Miércoles 14 de enero de 2026
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - paragraph [ref=e94]:
+                  - strong [ref=e95]: "Lugar:"
+                  - text: Estadio Gigante de Arroyito
+                - paragraph [ref=e96]:
+                  - strong [ref=e97]: "Sector:"
+                  - text: Tribuna Norte (x1)
+                - paragraph [ref=e98]:
+                  - strong [ref=e99]: "Asientos:"
+                  - text: "1"
+                - paragraph [ref=e100]:
+                  - strong [ref=e101]: "Hora:"
+                  - text: 10:00 PM
+              - img "Código QR de la entrada" [ref=e103]
+            - button "Descargar PDFs" [ref=e105] [cursor=pointer]
+    - contentinfo [ref=e107]:
+      - generic [ref=e108]:
+        - generic [ref=e109]:
+          - button "TicketApp Logo TicketApp" [ref=e110] [cursor=pointer]:
+            - img "TicketApp Logo" [ref=e111]
+            - generic [ref=e112]: TicketApp
+          - paragraph [ref=e113]: Encuentra los mejores eventos cerca de ti
+          - generic [ref=e114]:
+            - link "Facebook" [ref=e115] [cursor=pointer]:
+              - /url: https://facebook.com
+              - img "Facebook" [ref=e116]
+            - link "Twitter" [ref=e117] [cursor=pointer]:
+              - /url: https://twitter.com
+              - img "Twitter" [ref=e118]
+            - link "Instagram" [ref=e119] [cursor=pointer]:
+              - /url: https://instagram.com
+              - img "Instagram" [ref=e120]
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - heading "Eventos" [level=4] [ref=e123]
+            - list [ref=e124]:
+              - listitem [ref=e125]:
+                - button "Conciertos" [ref=e126] [cursor=pointer]
+              - listitem [ref=e127]:
+                - button "Eventos Deportivos" [ref=e128] [cursor=pointer]
+              - listitem [ref=e129]:
+                - button "Fiestas" [ref=e130] [cursor=pointer]
+              - listitem [ref=e131]:
+                - button "Exposiciones de Arte" [ref=e132] [cursor=pointer]
+              - listitem [ref=e133]:
+                - button "Festival" [ref=e134] [cursor=pointer]
+              - listitem [ref=e135]:
+                - button "Stand Ups" [ref=e136] [cursor=pointer]
+          - generic [ref=e137]:
+            - heading "Compañía" [level=4] [ref=e138]
+            - list [ref=e139]:
+              - listitem [ref=e140]:
+                - button "Sobre nosotros" [ref=e141] [cursor=pointer]
+              - listitem [ref=e142]:
+                - button "Contacto" [ref=e143] [cursor=pointer]
+          - generic [ref=e144]:
+            - heading "Ayuda" [level=4] [ref=e145]
+            - list [ref=e146]:
+              - listitem [ref=e147]:
+                - button "Centro de ayuda" [ref=e148] [cursor=pointer]
+              - listitem [ref=e149]:
+                - button "Privacidad" [ref=e150] [cursor=pointer]
+              - listitem [ref=e151]:
+                - button "Términos y condiciones" [ref=e152] [cursor=pointer]
+              - listitem [ref=e153]:
+                - button "Preguntas frecuentes" [ref=e154] [cursor=pointer]
+          - generic [ref=e155]:
+            - heading "Únete" [level=4] [ref=e156]
+            - list [ref=e157]:
+              - listitem [ref=e158]:
+                - button "Recibe ofertas exclusivas" [ref=e159] [cursor=pointer]
+              - listitem [ref=e160]:
+                - button "Sé un organizador" [ref=e161] [cursor=pointer]
+                - text: ¿Ya tienes una cuenta?
+                - button "Inicia sesión aquí" [ref=e162] [cursor=pointer]
+      - generic [ref=e164]:
+        - paragraph [ref=e165]: © 2025 TicketApp. Todos los derechos reservados.
+        - generic [ref=e166]:
+          - img "Visa" [ref=e167]
+          - img "Mastercard" [ref=e168]
+          - img "PayPal" [ref=e169]
+  - button "Abrir asistente TicketBot" [ref=e170] [cursor=pointer]:
+    - img [ref=e171]
+```
