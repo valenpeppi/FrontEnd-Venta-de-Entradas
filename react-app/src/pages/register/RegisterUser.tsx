@@ -74,13 +74,26 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     setServerError(null);
     setSuccessMessage(null);
 
-    // Validate all fields on submit
-    Object.keys(formData).forEach(key => {
-      const fieldName = key as keyof typeof formData;
+    const formKeys = Object.keys(formData) as (keyof typeof formData)[];
+    formKeys.forEach(fieldName => {
       validateField(fieldName, formData[fieldName]);
     });
+    
+    // # Cambio Clave: Lógica de validación síncrona para evitar race conditions.
+    const hasErrors = formKeys.some(key => {
+        let errorMsg = '';
+        const value = formData[key];
+        switch (key) {
+            case 'dni': if (!/^\d{7,8}$/.test(value)) errorMsg = '..'; break;
+            case 'fullName': if (value.trim().split(' ').length < 2) errorMsg = '..'; break;
+            case 'email': if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMsg = '..'; break;
+            case 'password': if (value.length < 4) errorMsg = '..'; break;
+            case 'confirmPassword': if (value !== formData.password) errorMsg = '..'; break;
+            case 'birthDate': if (!value || new Date(value) > new Date()) errorMsg = '..'; break;
+        }
+        return !!errorMsg;
+    });
 
-    const hasErrors = Object.values(errors).some(error => !!error);
     if (hasErrors || Object.values(formData).some(val => val === '')) {
       setServerError('Por favor, corrige los errores antes de continuar.');
       return;
@@ -111,9 +124,14 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         onRegisterSuccess();
         navigate('/login');
       }, 2000);
-    } catch (error: any) {
-      const errorMsg = error.response?.data?.message || 'Error de red o del servidor.';
-      setServerError(errorMsg);
+    } catch (error) {
+      // # Cambio Clave: Manejo de errores seguro para TypeScript.
+      if (axios.isAxiosError(error)) {
+        const errorMsg = error.response?.data?.message || 'Error de red o del servidor.';
+        setServerError(errorMsg);
+      } else {
+        setServerError('Ocurrió un error inesperado.');
+      }
     }
   };
 
@@ -130,52 +148,53 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         {successMessage && <div className={styles.registerSuccessMessage}>{successMessage}</div>}
         <form onSubmit={handleSubmit} className={styles.registerForm}>
           {Object.keys(formData).map(key => {
-             const fieldName = key as keyof typeof formData;
-             const labelMap: Record<keyof typeof formData, string> = {
+              const fieldName = key as keyof typeof formData;
+              const labelMap: Record<keyof typeof formData, string> = {
                 dni: 'DNI',
                 fullName: 'Nombre completo',
                 email: 'Email',
                 birthDate: 'Fecha de nacimiento',
                 password: 'Contraseña',
                 confirmPassword: 'Confirmar contraseña',
-             };
-             const typeMap: Record<keyof typeof formData, string> = {
+              };
+              const typeMap: Record<keyof typeof formData, string> = {
                 dni: 'text',
                 fullName: 'text',
                 email: 'email',
                 birthDate: 'date',
                 password: 'password',
                 confirmPassword: 'password',
-             };
+              };
 
-             return (
-               <div className={styles.registerFormGroup} key={fieldName}>
-                 <label htmlFor={fieldName} className={styles.registerLabel}>{labelMap[fieldName]}:</label>
-                 <div className={styles.inputWrapper}>
-                   <input
-                     type={typeMap[fieldName]}
-                     id={fieldName}
-                     name={fieldName}
-                     value={formData[fieldName]}
-                     onChange={handleChange}
-                     onBlur={handleBlur}
-                     className={getInputClass(fieldName)}
-                     placeholder={`Ingresa tu ${labelMap[fieldName].toLowerCase()}`}
-                   />
-                   {touched[fieldName] && (
-                     errors[fieldName] 
-                       ? <FaTimesCircle className={`${styles.inputIcon} ${styles.invalidIcon}`} />
-                       : <FaCheckCircle className={`${styles.inputIcon} ${styles.validIcon}`} />
-                   )}
-                 </div>
-                 {touched[fieldName] && errors[fieldName] && <span className={styles.errorMessage}>{errors[fieldName]}</span>}
-               </div>
-             );
+              return (
+                <div className={styles.registerFormGroup} key={fieldName}>
+                  <label htmlFor={fieldName} className={styles.registerLabel}>{labelMap[fieldName]}:</label>
+                  <div className={styles.inputWrapper}>
+                    <input
+                      type={typeMap[fieldName]}
+                      id={fieldName}
+                      name={fieldName}
+                      value={formData[fieldName]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={getInputClass(fieldName)}
+                      placeholder={`Ingresa tu ${labelMap[fieldName].toLowerCase()}`}
+                    />
+                    {touched[fieldName] && (
+                      errors[fieldName] 
+                        ? <FaTimesCircle className={`${styles.inputIcon} ${styles.invalidIcon}`} />
+                        : <FaCheckCircle className={`${styles.inputIcon} ${styles.validIcon}`} />
+                    )}
+                  </div>
+                  {touched[fieldName] && errors[fieldName] && <span className={styles.errorMessage}>{errors[fieldName]}</span>}
+                </div>
+              );
           })}
           
           <div className={styles.captchaContainer}>
             <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"}
+              // # Cambio Clave: Se lee la clave desde las variables de entorno, eliminando fallbacks innecesarios.
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
               onChange={(value) => setCaptchaValue(value)}
             />
           </div>
@@ -186,7 +205,7 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         </div>
         <div className={styles.back}>
           <button type="button" className={styles.backToLoginBtn} onClick={() => navigate('/')}>Volver</button>
-        </div>   
+        </div>  
       </div>
     </div>
   );

@@ -144,37 +144,38 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         {successMessage && <div className={styles.registerSuccessMessage}>{successMessage}</div>}
         <form onSubmit={handleSubmit} className={styles.registerForm} noValidate>
           {Object.keys(formData).map(key => {
-             const fieldKey = key as keyof typeof formData;
-             return (
-              <div className={styles.registerFormGroup} key={fieldKey}>
-                <label htmlFor={`register-${fieldKey}`} className={styles.registerLabel}>
-                  {fieldKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                </label>
-                <div className={styles.inputWrapper}>
-                  <input 
-                    type={fieldKey.includes('password') ? 'password' : 'text'}
-                    id={`register-${fieldKey}`} 
-                    name={fieldKey}
-                    className={`${styles.registerInput} ${touched[fieldKey] && (errors[fieldKey] ? styles.inputError : styles.inputSuccess)}`}
-                    value={formData[fieldKey]} 
-                    onChange={handleChange} 
-                    onBlur={handleBlur}
-                    required 
-                  />
-                  {touched[fieldKey] && (
-                    <div className={styles.validationIcon}>
-                      {errors[fieldKey] ? <FaExclamationCircle color="red" /> : <FaCheckCircle color="green" />}
-                    </div>
-                  )}
+              const fieldKey = key as keyof typeof formData;
+              return (
+                <div className={styles.registerFormGroup} key={fieldKey}>
+                  <label htmlFor={`register-${fieldKey}`} className={styles.registerLabel}>
+                    {fieldKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                  </label>
+                  <div className={styles.inputWrapper}>
+                    <input 
+                      type={fieldKey.includes('password') ? 'password' : 'text'}
+                      id={`register-${fieldKey}`} 
+                      name={fieldKey}
+                      className={`${styles.registerInput} ${touched[fieldKey] && (errors[fieldKey] ? styles.inputError : styles.inputSuccess)}`}
+                      value={formData[fieldKey]} 
+                      onChange={handleChange} 
+                      onBlur={handleBlur}
+                      required 
+                    />
+                    {touched[fieldKey] && (
+                      <div className={styles.validationIcon}>
+                        {errors[fieldKey] ? <FaExclamationCircle color="red" /> : <FaCheckCircle color="green" />}
+                      </div>
+                    )}
+                  </div>
+                  {touched[fieldKey] && errors[fieldKey] && <span className={styles.errorMessage}>{errors[fieldKey]}</span>}
                 </div>
-                {touched[fieldKey] && errors[fieldKey] && <span className={styles.errorMessage}>{errors[fieldKey]}</span>}
-              </div>
-             )
+              )
           })}
 
           <div className={styles.captchaContainer}>
             <ReCAPTCHA
-              sitekey="6LeIxAcpAAAAAMa2v_VTK-5A9jkyPLsESKVz_de-" // Clave de prueba para localhost
+              // # Cambio Clave: Se actualiza la sitekey para que se lea desde las variables de entorno.
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
               onChange={(value) => setCaptchaValue(value)}
             />
           </div>
@@ -196,3 +197,4 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
 };
 
 export default RegisterCompany;
+
