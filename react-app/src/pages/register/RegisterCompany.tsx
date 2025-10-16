@@ -28,11 +28,13 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
   const navigate = useNavigate();
   const { clearMessages } = useMessage();
 
+  // # Cambio Clave: Se corrige el array de dependencias a '[]'.
+  // Esto asegura que el efecto solo se ejecute UNA VEZ cuando el componente se monta,
+  // rompiendo el bucle infinito de renderizado que causaba el error.
   useEffect(() => {
     clearMessages();
-  }, [clearMessages]);
+  }, []);
 
-  // # Cambio Clave: Se crea un mapa para las etiquetas en español.
   const labelMap: Record<keyof typeof formData, string> = {
     companyName: 'Razón Social',
     cuil: 'CUIL',
@@ -47,7 +49,6 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     let errorMsg = '';
     switch (name) {
       case 'companyName':
-        // # Cambio Clave: Mensaje de error actualizado a "Razón Social".
         if (!value) errorMsg = 'La Razón Social es requerida.';
         break;
       case 'cuil':
