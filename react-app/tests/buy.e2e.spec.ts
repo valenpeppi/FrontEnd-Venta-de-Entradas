@@ -1,12 +1,30 @@
-import { test, expect, Route } from '@playwright/test';
+import { test, expect, Route,BrowserContext,Page  } from '@playwright/test';
 import { login } from './login';
 
 const FRONTEND_URL = 'http://localhost:5173';
-const EVENT_URL = `${FRONTEND_URL}/event/1`;
+const EVENT_URL = `${FRONTEND_URL}/event/2`;
 const API_BASE = 'http://localhost:3000';
 
 test.setTimeout(120_000);
 
+// Helper: siempre devuelve una Page viva (o lanza)
+function pickTargetPage(ctx: BrowserContext, primary: Page, popup: Page | null): Page {
+  // 1) Preferí el popup si existe y está vivo
+  if (popup && !popup.isClosed()) return popup;
+
+  // 2) Si la primaria sigue viva, usala
+  if (!primary.isClosed()) return primary;
+
+  // 3) Buscá otra pestaña viva (preferí una que ya esté en /myTickets)
+  const urlRegex = /\/(myTickets|my-tickets)(\/)?$/i;
+  const alive = ctx.pages().filter(p => !p.isClosed());
+  const preferred = alive.find(p => urlRegex.test(p.url()));
+  if (preferred) return preferred;
+
+  if (alive.length > 0) return alive[alive.length - 1];
+
+  throw new Error('No hay pestañas abiertas para continuar.');
+}
 test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async ({ page }) => {
   await login(page);
 
@@ -336,28 +354,28 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
     if (await approve.count()) await approve.click({ trial: true }).catch(() => {});
   }
 
-  // 6) Esperar redirect: /pay/processing o salto directo a /pay/success
+  // 6) Esperar redirect: /pay/processing o /pay/success (sin exigir el texto)
   const processingUrlRe = /\/pay\/processing\b/i;
   const successUrlRe    = /\/pay\/success\b/i;
 
-  await Promise.race([
-    page.waitForURL(processingUrlRe, { timeout: 60000 }),
-    page.waitForURL(successUrlRe,  { timeout: 60000 }),
+  // Carreras con timeouts defensivos (ninguna promesa queda viva)
+  const hitAfterPay = await Promise.race([
+    page.waitForURL(processingUrlRe, { timeout: 60_000 }).then(() => 'processing').catch(() => null),
+    page.waitForURL(successUrlRe,    { timeout: 60_000 }).then(() => 'success').catch(() => null),
   ]);
 
-  // Si caímos en /pay/processing, el texto es opcional: no hagamos fallar el test
-  if (processingUrlRe.test(page.url())) {
-    await page.getByText(/procesando tu pago/i).waitFor({ timeout: 5000 }).catch(() => {});
-    // la app debería redirigir a success sola
-    await page.waitForURL(successUrlRe, { timeout: 60000 });
+  // Si pasaste por /pay/processing, esperar el salto a /pay/success, pero sin chequear texto
+  if (hitAfterPay === 'processing') {
+    await page.waitForURL(successUrlRe, { timeout: 60_000 });
   }
+
 
   // 7) Verificar success
   await expect(
     page.getByRole('heading', { name: /pago exitoso|gracias|éxito/i })
   ).toBeVisible({ timeout: 20000 });
 
-  // 8) Ver mis tickets (button o link, misma tab o popup, y tolera cierre de la page actual)
+  // 8) Ver mis tickets (tolerante a link/botón, misma tab o popup)
   const goMyTickets = page
     .getByRole('button', { name: /ver mis tickets/i })
     .or(page.getByRole('link', { name: /ver mis tickets/i }))
@@ -365,42 +383,31 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
     .first();
 
   await goMyTickets.scrollIntoViewIfNeeded().catch(() => {});
-  await expect(goMyTickets).toBeVisible({ timeout: 15000 });
-  await expect(goMyTickets).toBeEnabled({ timeout: 15000 }).catch(() => {});
+  await expect(goMyTickets).toBeVisible({ timeout: 15_000 });
+  await expect(goMyTickets).toBeEnabled({ timeout: 15_000 }).catch(() => {});
 
   const ctx = page.context();
+  const urlRegex = /\/(myTickets|my-tickets)(\/)?$/i;
 
-  // Click y esperas en paralelo: popup, navegación de SPA o cierre de la pestaña
   const [maybePopup] = await Promise.all([
-    ctx.waitForEvent('page').catch(() => null),                     // si abre nueva pestaña
-    page.waitForURL('**/{myTickets,my-tickets}', { timeout: 15000 }).catch(() => null),
+    ctx.waitForEvent('page', { timeout: 3_000 }).catch(() => null),
+    page.waitForURL(urlRegex, { timeout: 3_000 }).catch(() => null),
     goMyTickets.click({ force: true }),
   ]);
 
-  // Elegir la “targetPage” robustamente
-  let targetPage = maybePopup ?? page;
+  // ⬇️ Narrowing real: esto SIEMPRE devuelve Page, nunca undefined
+  let targetPage: Page = pickTargetPage(ctx, page, maybePopup);
 
-  // Si la pestaña original se cerró, tomar la última que quedó abierta
-  if (targetPage.isClosed()) {
-    const pages = ctx.pages().filter(p => !p.isClosed());
-    targetPage = pages[pages.length - 1];
+  // Si aún no estamos en la ruta, ir directo
+  if (!urlRegex.test(targetPage.url())) {
+    await targetPage.goto(`${FRONTEND_URL}/myTickets`).catch(() =>
+      targetPage.goto(`${FRONTEND_URL}/my-tickets`).catch(() => {})
+    );
   }
 
-  // Si aún no estamos en la ruta, intentá detectar por heading o ir directo
-  const urlLooksOK = /\/(myTickets|my-tickets)(\/)?$/i.test(targetPage.url());
-  if (!urlLooksOK) {
-    const ticketsHeading = targetPage.getByRole('heading', { name: /mis entradas|mis tickets/i });
-    const headingShown = await ticketsHeading.count().then(c => c > 0);
-    if (!headingShown) {
-      await targetPage.goto(`${FRONTEND_URL}/myTickets`).catch(() =>
-        targetPage.goto(`${FRONTEND_URL}/my-tickets`).catch(() => {})
-      );
-    }
-  }
-
-  // Verificación final
   await expect(
     targetPage.getByRole('heading', { name: /mis entradas|mis tickets/i })
-  ).toBeVisible({ timeout: 20000 });
+  ).toBeVisible({ timeout: 20_000 });
+
 
 });
