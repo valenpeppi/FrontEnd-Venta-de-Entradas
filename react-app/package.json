@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "e2e": "playwright test tests/buy.e2e.spec.ts --headed",
+    "test:e2e": "playwright test tests/buy.e2e.spec.ts --headed",
     "test:unit": "vitest run src/pages/login/LoginUser.test.tsx"
 
   },
