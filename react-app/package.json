@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "e2e": "playwright test tests/buy.e2e.spec.ts --headed"
+    "e2e": "playwright test tests/buy.e2e.spec.ts --headed",
+    "test:unit": "vitest run src/pages/login/LoginUser.test.tsx"
+
   },
   "dependencies": {
     "@mercadopago/sdk-react": "^1.0.6",
