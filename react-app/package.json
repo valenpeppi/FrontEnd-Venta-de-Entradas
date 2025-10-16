@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "e2e": "playwright test tests/buy.e2e.spec.ts --headed"
   },
   "dependencies": {
     "@mercadopago/sdk-react": "^1.0.6",
