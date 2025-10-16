@@ -212,7 +212,7 @@ const Pay: React.FC = () => {
 
     try {
       const items = cartItems.map(item => ({
-        name: item.eventName,
+        name: `${item.eventName} — ${item.sectorName}`,
         amount: Math.round(item.price * 100),
         quantity: item.quantity,
       }));
