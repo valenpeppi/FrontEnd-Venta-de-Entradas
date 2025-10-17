@@ -57,7 +57,6 @@ export default function FeatureEventsPage() {
   const toggleFeature = async (id: number | string) => {
     const token = localStorage.getItem("token");
     
-    // Optimistic update
     setEvents(prevEvents => 
       prevEvents.map(e => 
         e.idEvent === id ? { ...e, featured: !e.featured } : e
@@ -71,7 +70,6 @@ export default function FeatureEventsPage() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
     } catch (e: any) {
-      // Revert on error
       setEvents(prevEvents => 
         prevEvents.map(e => 
           e.idEvent === id ? { ...e, featured: !e.featured } : e

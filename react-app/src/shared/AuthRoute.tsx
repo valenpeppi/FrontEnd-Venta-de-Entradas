@@ -27,7 +27,7 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
     return <Navigate to={to} state={{ from: location }} replace />;
   };
 
-  // Lógica para rutas de solo invitados (guestOnly)
+  // Lógica para rutas de solo invitados 
   if (guestOnly) {
     if (isLoggedIn) {
       const redirectTo = user?.role === 'admin' ? '/admin' : (user?.role === 'company' ? '/create-event' : '/');
@@ -36,7 +36,7 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
     return children;
   }
 
-  // Lógica para rutas protegidas por rol (allowedRoles)
+  // Lógica para rutas protegidas por rol 
   if (allowedRoles) {
     if (!isLoggedIn) {
       return <RedirectWithMessage to="/login" message="Debes iniciar sesión para acceder a esta página." type="error" />;
@@ -57,7 +57,6 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
     return children;
   }
 
-  // Si no es ni guestOnly ni tiene allowedRoles, es una ruta pública
   return children;
 };
 

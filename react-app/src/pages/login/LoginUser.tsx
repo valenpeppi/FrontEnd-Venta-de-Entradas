@@ -86,7 +86,6 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       if (data.user?.role === "admin") navigate("/admin");
       else navigate("/");
     } catch (err: any) {
-      // 💪 más tolerante con mocks o errores no Axios
       const message =
         err?.response?.data?.message ||
         err?.message ||

@@ -21,7 +21,6 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchEventTypes = async () => {
       try {
-        // La respuesta del backend no viene con una propiedad 'ok', accedemos a 'data' directamente.
         const response = await axios.get<EventType[]>(`${BASE_URL}/api/events/event-types`);
         setAllEventTypes(response.data);
       } catch (error) {
@@ -92,7 +91,6 @@ const HomePage: React.FC = () => {
   return (
     <div className={styles.homepage}>
       <main className={styles.homepageMain}>
-        {/* <h1 className={styles.homepageTitle}>Eventos destacados</h1> */}
         <Carousel
           tickets={featuredTickets}
           currentEventIndex={currentEventIndex}

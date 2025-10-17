@@ -93,7 +93,6 @@
   box-sizing: border-box;
 }
 
-/* Título */
 .eventCardTitle {
   font-size: 2.1rem;
   font-weight: 700;
@@ -103,7 +102,6 @@
   word-break: break-word;
 }
 
-/* Metadata */
 .eventCardMeta {
   display: flex;
   flex-direction: column;
@@ -123,7 +121,6 @@
   width: 1.2rem;
 }
 
-/* Footer */
 .eventCardFooter {
   display: flex;
   justify-content: space-between;
@@ -133,14 +130,12 @@
   font-size: 1.2rem;
 }
 
-/* Precio */
 .eventCardPrice {
   font-weight: 800;
   color: #059669;
   font-size: 1.4rem;
 }
 
-/* Botón Comprar */
 .btnPurchase {
   background-color: #4f46e5;
   color: white;
@@ -170,7 +165,7 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(79, 70, 229, 0.2);
 }
-/* Placeholder cuando no hay eventos */
+
 .eventCarouselEmpty {
   text-align: center;
   color: #6b7280;
@@ -178,7 +173,6 @@
   padding: 2rem;
 }
 
-/* Responsive: Mobile */
 @media (max-width: 768px) {
   .eventCarousel {
     padding: 0 1rem;

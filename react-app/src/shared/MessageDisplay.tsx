@@ -25,7 +25,6 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ message, type }) => {
     return null;
   }
 
-  // Corregido: Nombres de clase que coinciden con el CSS module
   const typeClass = styles[`messageContainer${type.charAt(0).toUpperCase() + type.slice(1)}`];
   const visibilityClass = isVisible ? styles.messageVisible : styles.messageHidden;
 

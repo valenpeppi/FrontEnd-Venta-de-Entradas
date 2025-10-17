@@ -5,7 +5,6 @@ import axios, { AxiosError } from 'axios';
 import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 
-// --- mocks necesarios ---
 vi.mock('axios');
 vi.mock('../../shared/context/MessageContext', () => ({
   useMessage: () => ({
@@ -14,7 +13,6 @@ vi.mock('../../shared/context/MessageContext', () => ({
   }),
 }));
 
-// mock de useNavigate de react-router-dom
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
@@ -24,7 +22,6 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-// 👉 Axios mockeado con typing compatible con Vitest
 const mockedAxios = axios as unknown as {
   post: ReturnType<typeof vi.fn>;
 };
@@ -38,7 +35,6 @@ describe('🔐 Componente LoginUser', () => {
   });
 
   
-  // 1️⃣ Validación campos vacíos
   it('muestra errores de validación si los campos están vacíos al enviar', async () => {
     render(
       <MemoryRouter>
@@ -54,7 +50,6 @@ describe('🔐 Componente LoginUser', () => {
   });
 
   
-  // 2️⃣ Email inválido
   it('valida formato de email incorrecto', async () => {
     render(
       <MemoryRouter>
@@ -70,7 +65,6 @@ describe('🔐 Componente LoginUser', () => {
   });
 
   
-  // 3️⃣ Login exitoso
   it('realiza login exitoso y llama a onLoginSuccess', async () => {
     const mockResponse = {
       data: {
@@ -107,7 +101,6 @@ describe('🔐 Componente LoginUser', () => {
   });
 
   
-  // 4️⃣ Error 401 desde backend
   it('muestra mensaje de error si el servidor devuelve 401', async () => {
     const fakeError = {
       isAxiosError: true,
@@ -139,7 +132,6 @@ describe('🔐 Componente LoginUser', () => {
   });
 
   
-  // 5️⃣ Error de red sin response
   it('muestra mensaje de error genérico si no hay respuesta del servidor', async () => {
     const networkError = new Error('Network Error');
     mockedAxios.post.mockRejectedValueOnce(networkError);
@@ -159,7 +151,6 @@ describe('🔐 Componente LoginUser', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Iniciar Sesión/i }));
 
-    // ✅ Acepta tanto el mensaje custom como el de Error nativo
     expect(
       await screen.findByText((content) =>
         /Error de red o del servidor/i.test(content) || /Network Error/i.test(content)
@@ -171,7 +162,6 @@ describe('🔐 Componente LoginUser', () => {
 
 
   
-  // 6️⃣ Si completa solo email o solo password → error general
   it('muestra error si falta uno de los campos requeridos', async () => {
     render(
       <MemoryRouter>
@@ -200,7 +190,6 @@ describe('🔐 Componente LoginUser', () => {
   });
 
   
-  // 7️⃣ Íconos de validación (visual feedback)
   it('muestra íconos de validación correctos al completar los campos', async () => {
     render(
       <MemoryRouter>
@@ -214,13 +203,11 @@ describe('🔐 Componente LoginUser', () => {
     fireEvent.change(emailInput, { target: { value: 'correo_invalido' } });
     fireEvent.blur(emailInput);
 
-    // ícono rojo
     expect(await screen.findByText(/Email inválido/i)).toBeInTheDocument();
 
     fireEvent.change(emailInput, { target: { value: 'user@mail.com' } });
     fireEvent.blur(emailInput);
 
-    // ícono verde (sin mensaje de error)
     await waitFor(() => {
       expect(screen.queryByText(/Email inválido/i)).toBeNull();
     });

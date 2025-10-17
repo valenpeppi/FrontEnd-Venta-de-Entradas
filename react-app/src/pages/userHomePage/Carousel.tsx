@@ -38,7 +38,6 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <div className={styles.eventCarousel}>
-      {/* Botón Izquierdo */}
       <button
         onClick={onPreviousEvent}
         className={`${styles.carouselNavigationBtn} ${styles.carouselNavigationBtnPrev}`}
@@ -47,8 +46,6 @@ const Carousel: React.FC<CarouselProps> = ({
       >
         <MdChevronLeft className={styles.carouselNavigationIcon} />
       </button>
-
-      {/* Contenido del Evento */}
       {currentEvent ? (
         <div className={styles.eventCard}>
           <img
@@ -101,8 +98,6 @@ const Carousel: React.FC<CarouselProps> = ({
       ) : (
         <p className={styles.eventCarouselEmpty}>No hay eventos disponibles.</p>
       )}
-
-      {/* Botón Derecho */}
       <button
         onClick={onNextEvent}
         className={`${styles.carouselNavigationBtn} ${styles.carouselNavigationBtnNext}`}

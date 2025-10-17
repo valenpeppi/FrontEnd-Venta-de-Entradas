@@ -4,7 +4,6 @@ import SeatSelector from '../seatSelector/SeatSelector';
 import modalStyles from '../seatSelector/styles/SeatModal.module.css';
 import styles from './styles/EventDetailPage.module.css';
 import type { EventSummary, Sector, Seat, CartItem } from '../../shared/types';
-
 import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
 import bioceresArena from '../../assets/bioceres-arena.jpg';
 import elCirculo from '../../assets/el-circulo.png';
@@ -45,7 +44,6 @@ const SECTOR_LAYOUT_CONFIG: Record<string, Record<string, number>> = {
   'El Circulo': { 'Sala Principal': 5, 'Tribuna Superior': 5 },
 };
 
-// 🖼️ Diccionario de imágenes locales
 const stadiumImages: Record<string, string> = {
   'Estadio Gigante de Arroyito': estadioArroyito,
   'Bioceres Arena': bioceresArena,
@@ -99,7 +97,6 @@ const EventDetailBody: React.FC<Props> = ({
 
   return (
     <div className={styles.eventDetailContainer}>
-      {/* 🏟️ Plano del estadio */}
       {summary.placeType.toLowerCase() !== 'nonenumerated' && (
         <div className={styles.stadiumPlanContainer}>
           <div className={styles.stadiumContent}>
@@ -134,8 +131,6 @@ const EventDetailBody: React.FC<Props> = ({
           </div>
         </div>
       )}
-
-      {/* 🎟️ Lista de sectores o entrada general */}
       <div ref={sectorListRef}>
         <h2 className={styles.sectionTitle}>
           {summary.placeType.toLowerCase() === 'nonenumerated'
@@ -186,8 +181,6 @@ const EventDetailBody: React.FC<Props> = ({
           />
         )}
       </div>
-
-      {/* 🪑 Modal de selección de asientos */}
       {isModalOpen && currentSelectedSector?.enumerated && (
         <div
           className={`${modalStyles.modalOverlay} ${

@@ -80,10 +80,8 @@ const CartPage = () => {
 
     const eventId = ticket.eventId;
 
-    // Validar si se puede agregar esta nueva cantidad
     const delta = newQuantity - ticket.quantity;
     if (delta <= 0) {
-      // Disminuir siempre es válido
       const wasUpdated = updateItemQuantity(groupIds[0], newQuantity);
       if (!wasUpdated) {
         setErrorMsg('Error al actualizar cantidad.');
@@ -125,7 +123,6 @@ const CartPage = () => {
           <div className={styles.cartItemsContainer}>
             {groupedItems.map((group, index) => (
               <div key={index} className={styles.cartItem}>
-                {/* Columna izquierda */}
                 <div className={styles.cartItemContent}>
                   <h3 className={styles.itemName}>{group.eventName}</h3>
 

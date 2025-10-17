@@ -142,7 +142,6 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 function CartProvider({ children }: CartProviderProps) {
   const [state, dispatch] = useReducer(cartReducer, { cartItems: [] });
 
-  // Detectar reinicio del servidor y limpiar token + carrito si cambió
   useEffect(() => {
     const checkBoot = async () => {
       try {
@@ -158,9 +157,8 @@ function CartProvider({ children }: CartProviderProps) {
         }
 
         if (localBoot !== serverBoot) {
-          // Reinicio detectado -> limpiar todo lo sensible
           localStorage.setItem('bootId', serverBoot);
-          localStorage.removeItem('token'); // Forzar login
+          localStorage.removeItem('token'); 
           localStorage.removeItem('ticket-cart');
           localStorage.removeItem('ticketGroups');
           localStorage.removeItem('dniClient');
@@ -175,7 +173,6 @@ function CartProvider({ children }: CartProviderProps) {
     checkBoot();
   }, []);
 
-  // Cargar carrito desde storage
   useEffect(() => {
     try {
       const storedCart = localStorage.getItem('ticket-cart');
@@ -187,7 +184,6 @@ function CartProvider({ children }: CartProviderProps) {
     }
   }, []);
 
-  // Persistir carrito
   useEffect(() => {
     try {
       if (state.cartItems.length > 0) {
@@ -230,9 +226,7 @@ function CartProvider({ children }: CartProviderProps) {
     return true;
   };
 
-  /**
-   * Límite de 6 entradas por evento (compradas + carrito + lo nuevo a agregar)
-   */
+
   const canAddTicketsToEvent = async (eventId: string | number, quantity: number): Promise<boolean> => {
     try {
       const token = localStorage.getItem('token');

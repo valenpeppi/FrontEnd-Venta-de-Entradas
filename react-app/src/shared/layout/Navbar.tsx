@@ -64,9 +64,8 @@ const Navbar: React.FC = () => {
   const confirmLogout = () => {
     logout();
 
-    clearCart(); //  limpia el estado del contexto inmediatamente
+    clearCart(); 
 
-    // 3) limpiar claves relacionadas en localStorage (por si quedaron)
     localStorage.removeItem('ticket-cart');
     localStorage.removeItem('ticketGroups');
     localStorage.removeItem('dniClient');

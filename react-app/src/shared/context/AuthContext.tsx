@@ -1,7 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react';
 
-// Se agregan las propiedades que faltaban al tipo User
 export interface User {
   name: string;
   surname?: string;
@@ -92,7 +91,6 @@ useEffect(() => {
         try {
           const user = JSON.parse(userString);
 
-          // Verifica el token con backend
           const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'}/api/auth/validate`, {
             headers: { Authorization: `Bearer ${token}` },
           });

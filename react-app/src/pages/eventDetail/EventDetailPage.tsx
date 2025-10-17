@@ -39,7 +39,6 @@ const EventDetailPage: React.FC = () => {
   const [isModalClosing, setIsModalClosing] = useState(false);
   const [seatTicketMap, setSeatTicketMap] = useState<Record<string, number>>({});
 
-  // Cargar evento y sectores
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -81,7 +80,6 @@ const EventDetailPage: React.FC = () => {
     fetchData();
   }, [id]);
 
-  // Cargar mapa de tickets (para enumerados)
   useEffect(() => {
     if (!summary) return;
     const fetchTicketMap = async () => {
@@ -96,7 +94,6 @@ const EventDetailPage: React.FC = () => {
     fetchTicketMap();
   }, [summary]);
 
-  // Cargar asientos del sector seleccionado
   useEffect(() => {
     if (selectedSector === null || !summary) return;
     const sec = sectors.find((s) => s.idSector === selectedSector);
@@ -111,7 +108,6 @@ const EventDetailPage: React.FC = () => {
       });
   }, [selectedSector, sectors, summary]);
 
-  // Modal
   const openSeatModal = (sectorId: number) => {
     setSelectedSector(sectorId);
     setIsModalOpen(true);
@@ -127,7 +123,6 @@ const EventDetailPage: React.FC = () => {
     }, 300);
   };
 
-  // Agregar al carrito (sin perder ninguna validación)
   const handleAddToCart = async () => {
     if (!summary) {
       setAppMessage('Error: No se ha cargado la información del evento.', 'error');

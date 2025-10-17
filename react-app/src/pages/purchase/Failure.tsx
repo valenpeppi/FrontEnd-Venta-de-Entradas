@@ -13,7 +13,6 @@ const Failure: React.FC = () => {
     localStorage.removeItem("saleConfirmed");
   }, []);
 
-  // Fallback: liberar reservas al entrar a Failure (cancel_url)
   useEffect(() => {
     const releaseReservations = async () => {
       try {
@@ -33,7 +32,6 @@ const Failure: React.FC = () => {
     releaseReservations();
   }, []);
 
-  // Restaurar carrito guardado localmente (ya lo tenías)
   useEffect(() => {
     if (cartItems.length === 0) {
       const stored = localStorage.getItem("ticket-cart");

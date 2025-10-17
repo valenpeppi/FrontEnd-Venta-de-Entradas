@@ -22,7 +22,6 @@
   background: linear-gradient(135deg, #4338ca, #6366f1);
 }
 
-/* ÍCONO CON PULSO */
 .iconPulse {
   animation: pulseGlow 2s infinite;
 }

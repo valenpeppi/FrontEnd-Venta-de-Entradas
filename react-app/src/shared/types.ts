@@ -75,7 +75,6 @@ export interface EventDetailActions {
 
 export interface EventDetailContextType extends EventDetailState, EventDetailActions {}
 
-// Tipos para componentes específicos
 export interface EventInfoProps {
   summary: EventSummary;
 }

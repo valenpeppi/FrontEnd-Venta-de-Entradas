@@ -15,13 +15,13 @@
   margin: 0 auto;
   padding: 0 1.5rem;
   gap: 2rem;
-  text-align: left; /* 🔹 fuerza alineación a la izquierda */
+  text-align: left; 
 }
 
 .footerBrandSection {
   flex: 1 1 250px;
   min-width: 200px;
-  text-align: left; /* 🔹 asegura izquierda */
+  text-align: left;
 }
 
 .footerBrand {

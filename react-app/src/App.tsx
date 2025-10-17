@@ -15,7 +15,6 @@ import Register from './pages/register/RegisterUser';
 import CreateEventPage from './pages/companyHomePage/CreateEventPage';
 import LoginCompany from './pages/login/LoginCompany';
 import RegisterCompany from './pages/register/RegisterCompany';
-import NewsLetter from './pages/support/NewsLetter';
 import { useAuth, type User } from './shared/context/AuthContext.tsx';
 import { useMessage } from './shared/context/MessageContext';
 import styles from './shared/styles/App.module.css';
@@ -75,7 +74,6 @@ const App: React.FC = () => {
         <Route path="/faq" element={<Layout><Faq /></Layout>} />
         <Route path="/event/:id" element={<Layout><EventDetailPage /></Layout>} />
         <Route path="/about" element={<Layout><About /></Layout>} />
-        <Route path="/newsletter" element={<NewsLetter />} />
         <Route path="/searchedEvents" element={<Layout><SearchedEvents /></Layout>} />
 
         {/* Rutas para Invitados (no logueados) */}

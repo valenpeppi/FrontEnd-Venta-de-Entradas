@@ -13,7 +13,6 @@ import paypalIcon from '../../assets/paypal.png';
 const Footer: React.FC = () => {
   const navigate = useNavigate();
 
-  // Función para ir al inicio al navegar
   const handleNavigate = (path: string) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     navigate(path);
@@ -81,11 +80,6 @@ const Footer: React.FC = () => {
           <div className={styles.footerLinksColumn}>
             <h4>Únete</h4>
             <ul className={styles.footerActionLinks}>
-              <li>
-                <button className={styles.footerLinks} onClick={() => handleNavigate('/newsletter')}>
-                  Recibe ofertas exclusivas
-                </button>
-              </li>
               <li>
                 <button onClick={() => handleNavigate('/registercompany')}>
                   Sé un organizador

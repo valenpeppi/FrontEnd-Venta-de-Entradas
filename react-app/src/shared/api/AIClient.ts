@@ -20,7 +20,6 @@ export const sendMessageToAI = async (message: string): Promise<string> => {
       precioMinimo: e.minPrice || e.price || 0,
     }));
 
-    // Prompt completo con contexto y eventos JSON
     const prompt = `
 Eres **TicketBot**, el asistente oficial y exclusivo de la plataforma **TicketApp**, una aplicación web desarrollada en React + Node/Express + Prisma + MySQL, cuyo propósito es permitir la compra de entradas para eventos en línea (recitales, partidos, obras de teatro, etc.).
 

@@ -38,11 +38,10 @@
     margin-bottom: 2rem;
 }
 
-/* --- Interactive Filter --- */
 .eventTypeFilterContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem; /* 12px */
+  gap: 0.75rem; 
   justify-content: center;
   margin: 2.5rem 0;
   padding-bottom: 2.5rem;
@@ -92,7 +91,6 @@
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* --- Animations --- */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -157,7 +155,6 @@
   animation-fill-mode: both; 
 }
 
-/* Stagger animation for cards */
 .eventTypeGallery .eventCardLink:nth-child(1) .eventCard { animation-delay: 0.05s; }
 .eventTypeGallery .eventCardLink:nth-child(2) .eventCard { animation-delay: 0.1s; }
 .eventTypeGallery .eventCardLink:nth-child(3) .eventCard { animation-delay: 0.15s; }

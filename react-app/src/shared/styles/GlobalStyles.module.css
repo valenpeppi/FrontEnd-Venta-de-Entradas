@@ -225,7 +225,6 @@
   margin-top: 30px;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .heroButtons {
     flex-direction: column;

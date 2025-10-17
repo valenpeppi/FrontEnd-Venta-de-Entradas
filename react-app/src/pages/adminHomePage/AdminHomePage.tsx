@@ -9,7 +9,7 @@ type PendingEvent = {
   date?: string;
   image?: string;
   idEventType?: number;
-  state?: string; // 'PENDING' | 'APPROVED' | 'REJECTED'
+  state?: string; 
   idOrganiser?: string;
 };
 
@@ -64,7 +64,6 @@ export default function AdminHomePage() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
     } catch (e: any) {
-      // revertir si hubo error
       setEvents(prev);
       alert(
         e?.response?.data?.message ||

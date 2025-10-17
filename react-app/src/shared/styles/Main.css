@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* Variables de color globales */
 
 :root {
   --primary-blue: #4f46e5; 
@@ -16,7 +15,6 @@
   --shadow-medium: rgba(0, 0, 0, 0.15);
 }
 
-/* Reset básico y estilos globales */
 body {
   margin: 0;
   padding: 0;
@@ -33,7 +31,6 @@ html, body, #root {
   width: 100%;
 }
 
-/* --- Jerarquía Tipográfica --- */
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 1rem 0;
   font-weight: 700;
@@ -78,8 +75,6 @@ a:hover {
   color: var(--dark-blue);
 }
 
-
-/* Media queries para responsividad de fuentes */
 @media (max-width: 768px) {
   body {
     font-size: 15px;

@@ -19,7 +19,6 @@ export const formatTime = (isoDate: string): string => {
     hour12: true,
   }).format(date);
 
-  // reemplazar "a. m." y "p. m." por AM y PM
   formatted = formatted.replace(/a\.?\s*m\.?/gi, 'AM').replace(/p\.?\s*m\.?/gi, 'PM');
 
   return formatted;

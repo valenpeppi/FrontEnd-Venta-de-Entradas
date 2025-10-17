@@ -71,7 +71,6 @@
   background: #fff1f2;
 }
 
-/* Masonry-like grid (responsive) */
 .masonry {
   list-style: none;
   margin: 0;
@@ -81,7 +80,6 @@
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
 }
 
-/* Card */
 .card {
   display: flex;
   flex-direction: column;
@@ -101,7 +99,6 @@
   border-color: #dbeafe;
 }
 
-/* Media */
 .mediaWrap {
   height: 180px;
   width: 100%;
@@ -165,7 +162,6 @@
   color: #7f1d1d;
 }
 
-/* Body */
 .body {
   padding: 14px;
   flex: 1 1 auto;
@@ -202,7 +198,6 @@
   text-overflow: ellipsis;
 }
 
-/* Actions */
 .actions {
   display: flex;
   justify-content: flex-end;

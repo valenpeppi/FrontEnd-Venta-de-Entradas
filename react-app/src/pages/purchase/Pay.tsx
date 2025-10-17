@@ -10,9 +10,7 @@ type TicketGroup = {
   idEvent: number;
   idPlace: number;
   idSector: number;
-  // Para enumerados
   ids?: number[];
-  // Para no enumerados (o también enumerados si te sirve)
   quantity?: number;
 };
 
@@ -54,9 +52,6 @@ const Pay: React.FC = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  // 🔧 Construye ticketGroups basado en sectorType (implícito desde el carrito):
-  // - No enumerado: SIN ids, SOLO quantity (usa idSector REAL).
-  // - Enumerado: CON ids (y quantity opcional).
   const buildTicketGroups = (): TicketGroup[] => {
     const map: Record<
       string,
@@ -68,7 +63,6 @@ const Pay: React.FC = () => {
       const idPlace = Number(item.idPlace);
       const idSector = Number(item.idSector);
 
-      // si tu CartItem trae "enumerated" úsalo:
       const hasSeatIds = Array.isArray(item.ticketIds) && item.ticketIds.length > 0;
 
       const key = `${idEvent}-${idPlace}-${idSector}`;
@@ -77,14 +71,12 @@ const Pay: React.FC = () => {
       }
 
       if (hasSeatIds) {
-        // Enumerado
         const cleanIds = Array.isArray(item.ticketIds)
           ? item.ticketIds
               .map((n: any) => Number(n))
               .filter((n) => Number.isFinite(n) && n > 0)
           : [];
 
-        // evitar duplicados dentro del mismo grupo
         const seen = new Set(map[key].ids);
         for (const id of cleanIds) {
           if (!seen.has(id)) {
@@ -92,9 +84,8 @@ const Pay: React.FC = () => {
             seen.add(id);
           }
         }
-        map[key].quantity += Number(item.quantity) || 0; // opcional
+        map[key].quantity += Number(item.quantity) || 0; 
       } else {
-        // No enumerado → solo quantity (sin ids)
         map[key].quantity += Number(item.quantity) || 0;
       }
     }
@@ -103,7 +94,6 @@ const Pay: React.FC = () => {
     for (const k of Object.keys(map)) {
       const g = map[k];
       if (g.ids.length > 0) {
-        // enumerado
         groups.push({
           idEvent: g.idEvent,
           idPlace: g.idPlace,
@@ -112,7 +102,6 @@ const Pay: React.FC = () => {
           quantity: g.quantity || g.ids.length,
         });
       } else {
-        // no enumerado
         if (g.quantity > 0) {
           groups.push({
             idEvent: g.idEvent,
@@ -127,8 +116,6 @@ const Pay: React.FC = () => {
     return groups;
   };
 
-
-  // Validación: para enumerado requerimos ids; para general requerimos quantity>0
   const validateCartForPayment = (): { valid: boolean; reason?: string } => {
     for (const item of cartItems) {
       const idSector = Number(item.idSector);
@@ -142,7 +129,6 @@ const Pay: React.FC = () => {
         if (!item.quantity || item.quantity <= 0) {
           return { valid: false, reason: 'Cantidad inválida para entradas generales.' };
         }
-        // No pedimos ticketIds en no enumerado
       } else {
         if (!item.ticketIds || item.ticketIds.length === 0) {
           return { valid: false, reason: 'Faltan asientos seleccionados para sector enumerado.' };
@@ -152,7 +138,6 @@ const Pay: React.FC = () => {
     return { valid: true };
   };
 
-  // MERCADO PAGO
   const handleMPPayment = async () => {
     if (!user || !user.dni || !user.mail) {
       alert('Debes iniciar sesión para pagar con Mercado Pago.');
@@ -197,7 +182,6 @@ const Pay: React.FC = () => {
     }
   };
 
-  // STRIPE
   const handleStripePayment = async () => {
     if (!user || !user.dni || !user.mail) {
       alert('Debes iniciar sesión con un usuario válido para pagar con Stripe.');
@@ -242,7 +226,6 @@ const Pay: React.FC = () => {
     }
   };
 
-  // Agrupamos items para mostrar en el resumen
   const groupedItems = cartItems.reduce((acc, item) => {
     const key = `${item.eventName}-${item.price}`;
     if (!acc[key]) {

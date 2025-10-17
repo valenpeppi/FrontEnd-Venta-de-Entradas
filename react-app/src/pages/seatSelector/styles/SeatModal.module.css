@@ -1,4 +1,3 @@
-/* Keyframes para las animaciones */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -19,7 +18,6 @@
   to { transform: translateY(30px); opacity: 0; }
 }
 
-/* Estilos del Overlay */
 .modalOverlay {
   position: fixed;
   top: 0;

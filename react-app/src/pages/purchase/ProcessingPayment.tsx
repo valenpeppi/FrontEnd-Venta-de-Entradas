@@ -26,8 +26,8 @@ const ProcessingPayment = () => {
     };
 
     const qs = new URLSearchParams(window.location.search);
-    const sessionId = qs.get("session_id");    // Stripe
-    const paymentId = qs.get("payment_id");    // MercadoPago
+    const sessionId = qs.get("session_id");    
+    const paymentId = qs.get("payment_id");    
 
     const confirmByStripeSession = async (sid: string) => {
       try {
@@ -61,7 +61,6 @@ const ProcessingPayment = () => {
         return;
       }
 
-      // 1) Confirmación fuerte por retorno del PSP
       if (sessionId) {
         const ok = await confirmByStripeSession(sessionId);
         if (ok) {
@@ -87,7 +86,6 @@ const ProcessingPayment = () => {
         }
       }
 
-      // 2) Polling al backend por si el webhook llega con delay
       setLoadingMessage("Verificando confirmación de venta...");
       const MAX_ATTEMPTS = 8;
       const DELAY_MS = 1500;
@@ -110,7 +108,6 @@ const ProcessingPayment = () => {
         await new Promise((res) => setTimeout(res, DELAY_MS));
       }
 
-      // 3) Si no se confirmó, liberamos y fallamos
       await releaseReservations();
       navigate("/pay/failure");
     };
