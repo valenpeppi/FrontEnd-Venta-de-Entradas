@@ -60,15 +60,29 @@ const EventDetailPage: React.FC = () => {
           ...summaryData,
           imageUrl: summaryData.imageUrl || '/ticket.png',
         });
+        const sectorsList: Sector[] = (sectorsRes.data?.data ?? []).map((s: any) => ({
+          // ids/base
+          idSector: Number(s.idSector),
+          idPlace: Number(s.idPlace ?? summaryData.idPlace),
+          name: String(s.name ?? 'Sector'),
+          enumerated:
+            typeof s.enumerated === 'boolean'
+              ? s.enumerated
+              : String(s.sectorType || '').toLowerCase() === 'enumerated',
+          availableTickets: Number(
+            s.availableTickets ?? s.available ?? s.capacity ?? 0
+          ),
+          price: Number(
+            s.price ??
+              s.eventSector?.price ??
+              summaryData.price ??
+              0
+          ),
+          // UI
+          selected: 0,
+        }));
 
-        if (summaryData.placeType.toLowerCase() !== 'nonenumerated') {
-          const sectorsList: Sector[] = (sectorsRes.data?.data ?? []).map((s: Sector) => ({
-            ...s,
-            selected: 0,
-            enumerated: s.enumerated,
-          }));
-          setSectors(sectorsList);
-        }
+        setSectors(sectorsList);
       } catch (err) {
         console.error('Error al cargar detalle del evento', err);
         setAppMessage('No se pudo cargar el evento', 'error');
@@ -78,10 +92,11 @@ const EventDetailPage: React.FC = () => {
         setLoadingLocal(false);
       }
     };
+
     fetchData();
   }, [id]);
 
-  // Cargar mapa de tickets (para enumerados)
+
   useEffect(() => {
     if (!summary) return;
     const fetchTicketMap = async () => {
@@ -127,7 +142,6 @@ const EventDetailPage: React.FC = () => {
     }, 300);
   };
 
-  // Agregar al carrito (sin perder ninguna validación)
   const handleAddToCart = async () => {
     if (!summary) {
       setAppMessage('Error: No se ha cargado la información del evento.', 'error');
@@ -146,17 +160,49 @@ const EventDetailPage: React.FC = () => {
     if (summary.placeType.toLowerCase() === 'nonenumerated') {
       totalSelected = generalQuantity;
       if (totalSelected > 0) {
-        const tempTicketIds = Array.from({ length: totalSelected }, (_, i) => i + 1);
+        let generalSector = sectors.find(
+          (s) => !s.enumerated && Number(s.idPlace) === Number(summary.idPlace)
+        );
+        if (!generalSector) {
+          try {
+            const { data } = await axios.get(
+              `${BASE_URL}/api/events/events/${summary.id}/sectors`
+            );
+            const fetched: Sector[] = (data?.data ?? []).map((s: any) => ({
+              idSector: Number(s.idSector),
+              idPlace: Number(s.idPlace ?? summary.idPlace),
+              name: String(s.name ?? 'Sector'),
+              enumerated:
+                typeof s.enumerated === 'boolean'
+                  ? s.enumerated
+                  : String(s.sectorType || '').toLowerCase() === 'enumerated',
+              availableTickets: Number(s.availableTickets ?? s.available ?? s.capacity ?? 0),
+              price: Number(s.price ?? s.eventSector?.price ?? summary.price ?? 0),
+              selected: 0,
+            }));
+            setSectors(fetched);
+            generalSector = fetched.find(
+              (s) => !s.enumerated && Number(s.idPlace) === Number(summary.idPlace)
+            );
+          } catch {
+          }
+        }
+
+        if (!generalSector) {
+          setAppMessage('No se encontró el sector general para este evento.', 'error');
+          return;
+        }
+
         itemsToAdd.push({
           ticket: {
-            id: `${summary.id}-general`,
+            id: `${summary.id}-general-${generalSector.idSector}`,
             eventId: String(summary.id),
             eventName: summary.eventName,
             date: summary.date,
             location: summary.placeType,
             placeName: summary.placeName,
             sectorName: 'Entrada General',
-            price: summary.price || 0,
+            price: Number(summary.price || generalSector.price || 0),
             availableTickets: summary.availableTickets,
             imageUrl: summary.imageUrl,
             type: summary.type,
@@ -167,24 +213,24 @@ const EventDetailPage: React.FC = () => {
                 minute: '2-digit',
               }) + ' hs',
             idPlace: summary.idPlace,
-            idSector: 0,
-            ticketIds: tempTicketIds,
+            idSector: generalSector.idSector,
+            ticketIds: [],
           },
           quantity: totalSelected,
         });
       }
     } else {
       const nonEnum = sectors.filter((s) => !s.enumerated && s.selected && s.selected > 0);
-      const enumSectors = sectors.filter((s) => s.enumerated && selectedSeatsMap[s.idSector]?.length);
+      const enumSectors = sectors.filter(
+        (s) => s.enumerated && selectedSeatsMap[s.idSector]?.length
+      );
 
       totalSelected =
         nonEnum.reduce((sum, s) => sum + (s.selected || 0), 0) +
         enumSectors.reduce((sum, s) => sum + (selectedSeatsMap[s.idSector] || []).length, 0);
-
-      // No enumeradas
       nonEnum.forEach((sec) => {
         const tempTicketIds = Array.from({ length: sec.selected || 0 }, (_, i) =>
-          `${summary.idPlace}-${sec.idSector}-temp-${i}`,
+          `${summary.idPlace}-${sec.idSector}-temp-${i}`
         ).map((id) => parseInt(id.split('-').pop() || '0'));
 
         itemsToAdd.push({
@@ -195,9 +241,9 @@ const EventDetailPage: React.FC = () => {
             date: summary.date,
             location: summary.placeType,
             placeName: summary.placeName,
-            sectorName: sec.name,
-            price: sec.price,
-            availableTickets: sec.availableTickets,
+            sectorName: sec.name, 
+            price: Number(sec.price),
+            availableTickets: Number(sec.availableTickets),
             imageUrl: summary.imageUrl,
             type: summary.type,
             featured: false,
@@ -228,7 +274,7 @@ const EventDetailPage: React.FC = () => {
               location: summary.placeType,
               placeName: summary.placeName,
               sectorName: `${sec.name} Asiento ${seatId}`,
-              price: sec.price,
+              price: Number(sec.price),
               availableTickets: 1,
               imageUrl: summary.imageUrl,
               type: summary.type,
@@ -257,7 +303,7 @@ const EventDetailPage: React.FC = () => {
     if (!allowed) {
       setAppMessage(
         'Solo puedes tener hasta 6 entradas en total para este evento (carrito + compradas).',
-        'error',
+        'error'
       );
       return;
     }
@@ -275,6 +321,7 @@ const EventDetailPage: React.FC = () => {
       setAppMessage('No puedes tener más de 6 entradas para este evento en tu carrito.', 'error');
     }
   };
+
 
   if (loadingLocal) {
     return (

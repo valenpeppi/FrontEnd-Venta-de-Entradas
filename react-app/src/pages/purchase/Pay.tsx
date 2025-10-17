@@ -54,9 +54,18 @@ const Pay: React.FC = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  // 🔧 Construye ticketGroups basado en sectorType (implícito desde el carrito):
-  // - No enumerado: SIN ids, SOLO quantity (usa idSector REAL).
-  // - Enumerado: CON ids (y quantity opcional).
+  const isEnumeratedItem = (item: any) => {
+    // si el nombre del sector trae "Asiento" lo tratamos como enumerado
+    if (/\bAsiento\b/i.test(item?.sectorName || '')) return true;
+    // si el id tiene el patrón idPlace-idSector-idSeat
+    return typeof item?.id === 'string' && /^\d+-\d+-\d+$/.test(item.id);
+  };
+
+  const parseSeatIdFromCartId = (cartId: string): number | null => {
+    const m = cartId.match(/^(\d+)-(\d+)-(\d+)$/);
+    return m ? Number(m[3]) : null;
+  };
+
   const buildTicketGroups = (): TicketGroup[] => {
     const map: Record<
       string,
@@ -67,43 +76,40 @@ const Pay: React.FC = () => {
       const idEvent = Number(item.eventId);
       const idPlace = Number(item.idPlace);
       const idSector = Number(item.idSector);
-
-      // si tu CartItem trae "enumerated" úsalo:
-      const hasSeatIds = Array.isArray(item.ticketIds) && item.ticketIds.length > 0;
+      if (!idEvent || !idPlace || !idSector) continue;
 
       const key = `${idEvent}-${idPlace}-${idSector}`;
-      if (!map[key]) {
-        map[key] = { idEvent, idPlace, idSector, ids: [], quantity: 0 };
-      }
+      if (!map[key]) map[key] = { idEvent, idPlace, idSector, ids: [], quantity: 0 };
 
-      if (hasSeatIds) {
-        // Enumerado
-        const cleanIds = Array.isArray(item.ticketIds)
-          ? item.ticketIds
-              .map((n: any) => Number(n))
-              .filter((n) => Number.isFinite(n) && n > 0)
+      const enumerated = isEnumeratedItem(item);
+
+      if (enumerated) {
+        // 1) ids que vengan en ticketIds
+        let ids: number[] = Array.isArray(item.ticketIds)
+          ? item.ticketIds.map(Number).filter((n) => Number.isFinite(n) && n > 0)
           : [];
 
-        // evitar duplicados dentro del mismo grupo
-        const seen = new Set(map[key].ids);
-        for (const id of cleanIds) {
-          if (!seen.has(id)) {
-            map[key].ids.push(id);
-            seen.add(id);
-          }
+        // 2) si no trajo ticketIds, intento parsear idSeat desde item.id
+        if (ids.length === 0 && typeof item.id === 'string') {
+          const parsed = parseSeatIdFromCartId(item.id);
+          if (Number.isFinite(parsed) && parsed! > 0) ids = [parsed!];
         }
-        map[key].quantity += Number(item.quantity) || 0; // opcional
+
+        // evitar duplicados
+        const seen = new Set(map[key].ids);
+        for (const id of ids) if (!seen.has(id)) { map[key].ids.push(id); seen.add(id); }
+
+        // quantity opcional para enumerados
+        map[key].quantity += Number(item.quantity) || 0;
       } else {
-        // No enumerado → solo quantity (sin ids)
+        // no enumerado → solo quantity
         map[key].quantity += Number(item.quantity) || 0;
       }
     }
 
     const groups: TicketGroup[] = [];
-    for (const k of Object.keys(map)) {
-      const g = map[k];
+    Object.values(map).forEach((g) => {
       if (g.ids.length > 0) {
-        // enumerado
         groups.push({
           idEvent: g.idEvent,
           idPlace: g.idPlace,
@@ -111,46 +117,50 @@ const Pay: React.FC = () => {
           ids: g.ids,
           quantity: g.quantity || g.ids.length,
         });
-      } else {
-        // no enumerado
-        if (g.quantity > 0) {
-          groups.push({
-            idEvent: g.idEvent,
-            idPlace: g.idPlace,
-            idSector: g.idSector,
-            quantity: g.quantity,
-          });
-        }
+      } else if (g.quantity > 0) {
+        groups.push({
+          idEvent: g.idEvent,
+          idPlace: g.idPlace,
+          idSector: g.idSector,
+          quantity: g.quantity,
+        });
       }
-    }
+    });
 
     return groups;
   };
 
 
-  // Validación: para enumerado requerimos ids; para general requerimos quantity>0
-  const validateCartForPayment = (): { valid: boolean; reason?: string } => {
-    for (const item of cartItems) {
-      const idSector = Number(item.idSector);
-      const isGeneral = idSector === 0;
 
-      if (item.idPlace == null || item.idSector == null) {
+    const validateCartForPayment = (): { valid: boolean; reason?: string } => {
+    for (const item of cartItems) {
+      if (item.idPlace == null || item.idSector == null || Number(item.idSector) <= 0) {
         return { valid: false, reason: 'Faltan datos del lugar o sector.' };
       }
 
-      if (isGeneral) {
+      const enumerated = isEnumeratedItem(item);
+
+      if (enumerated) {
+        // Aceptamos ticketIds o, si no hay, seatId parseado desde item.id
+        const ticketIds = Array.isArray(item.ticketIds) ? item.ticketIds : [];
+        const clean = ticketIds.map(Number).filter((n) => Number.isFinite(n) && n > 0);
+
+        let ok = clean.length > 0;
+        if (!ok && typeof item.id === 'string') {
+          const parsed = parseSeatIdFromCartId(item.id);
+          ok = Number.isFinite(parsed) && parsed! > 0;
+        }
+        if (!ok) return { valid: false, reason: 'Faltan asientos seleccionados para sector enumerado.' };
+      } else {
         if (!item.quantity || item.quantity <= 0) {
           return { valid: false, reason: 'Cantidad inválida para entradas generales.' };
-        }
-        // No pedimos ticketIds en no enumerado
-      } else {
-        if (!item.ticketIds || item.ticketIds.length === 0) {
-          return { valid: false, reason: 'Faltan asientos seleccionados para sector enumerado.' };
         }
       }
     }
     return { valid: true };
   };
+
+
 
   // MERCADO PAGO
   const handleMPPayment = async () => {

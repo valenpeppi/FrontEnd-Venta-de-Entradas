@@ -1,12 +1,13 @@
-export interface Sector {
-  idEvent: number;
+export type Sector = {
   idSector: number;
-  name: string;
-  price: number;
+  idPlace: number;
+  name: string;           
+  displayName?: string;   
+  enumerated: boolean;
   availableTickets: number;
+  price: number;
   selected?: number;
-  enumerated?: boolean;
-}
+};
 
 export interface EventSummary {
   id: number;

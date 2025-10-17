@@ -230,28 +230,44 @@ function CartProvider({ children }: CartProviderProps) {
     return true;
   };
 
-  /**
-   * Límite de 6 entradas por evento (compradas + carrito + lo nuevo a agregar)
-   */
-  const canAddTicketsToEvent = async (eventId: string | number, quantity: number): Promise<boolean> => {
+  const AXIOS_DEBUG = (err: any) => {
+    const status = err?.response?.status;
+    const data = err?.response?.data;
+    const url = err?.config?.url;
+    console.error('🛑 Error verificando cantidad total de entradas:',
+      { status, url, data, message: err?.message });
+  };
+
+  const canAddTicketsToEvent = async (
+    eventId: string | number,
+    quantity: number
+  ): Promise<boolean> => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) return false;
+      if (!token) {
+        return false;
+      }
 
       const eventIdStr = String(eventId);
       const currentInCart = state.cartItems
         .filter(item => String(item.eventId) === eventIdStr)
         .reduce((sum, item) => sum + item.quantity, 0);
 
-      const res = await axios.get(`${BASE_URL}/api/sales/my-tickets`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const { data } = await axios.get(
+        `${BASE_URL}/api/sales/my-tickets`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          timeout: 10000,
+        }
+      );
 
-      const alreadyBought = (res.data?.data || []).filter((t: any) => String(t.eventId) === eventIdStr).length;
+      const tickets = Array.isArray(data?.data) ? data.data : [];
+      const alreadyBought = tickets.filter((t: any) => String(t.eventId) === eventIdStr).length;
+
       const total = alreadyBought + currentInCart + quantity;
       return total <= 6;
-    } catch (err) {
-      console.error("🛑 Error verificando cantidad total de entradas:", err);
+    } catch (err: any) {
+      AXIOS_DEBUG(err);
       return false;
     }
   };
