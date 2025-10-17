@@ -10,9 +10,9 @@
     "preview": "vite preview",
     "test:e2e": "playwright test tests/buy.e2e.spec.ts --headed",
     "test:unit": "vitest run src/pages/login/LoginUser.test.tsx"
-
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.1.0",
     "@mercadopago/sdk-react": "^1.0.6",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.11.0",
