@@ -36,7 +36,7 @@
   <img src="https://img.shields.io/badge/Vitest-3.2.4-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" alt="Vitest Badge"/>
   <img src="https://img.shields.io/badge/Playwright-1.56.0-2EAD33?style=for-the-badge&logo=playwright&logoColor=white" alt="Playwright Badge"/>
   <img src="https://img.shields.io/badge/jsPDF-Tickets%20PDF-000000?style=for-the-badge" alt="jsPDF Badge"/>
-  <img src="https://img.shields.io/badge/Mercado%20Pago-SDK-00B1EA?style=for-the-badge&logo=mercadopago&logoColor=white" alt="MP Badge"/>
+  <img src="https://img.shields.io/badge/Mercado%20Pago-Checkout-00B1EA?style=for-the-badge&logo=mercadopago&logoColor=white" alt="MP Badge"/>
   <img src="https://img.shields.io/badge/Stripe-Checkout-635BFF?style=for-the-badge&logo=stripe&logoColor=white" alt="Stripe Badge"/>
   <img src="https://img.shields.io/badge/Google%20reCAPTCHA-Seguridad-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="reCAPTCHA Badge"/>
 </p>
