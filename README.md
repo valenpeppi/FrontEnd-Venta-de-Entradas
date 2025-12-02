@@ -1,4 +1,4 @@
-<h1>🎟️ TicketApp – FrontEnd (Venta de Entradas)</h1>
+<h1>🎟️ TicketApp – FrontEnd</h1>
 
 <p align="center">
   <a href="https://github.com/agussantinelli/FrontEnd-Venta-de-Entradas" target="_blank" style="text-decoration: none;">
