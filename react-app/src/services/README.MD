@@ -1,0 +1,1 @@
+Acá deberiamos ir desagregando los métodos de todos los componentes de pages.

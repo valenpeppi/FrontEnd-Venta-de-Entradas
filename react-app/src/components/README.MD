@@ -1,1 +1,1 @@
-Aca deberiamos ir desagregando los componentes para reutilizarlos.
+Aca deberÍamos ir desagregando los componentes para reutilizarlos.
