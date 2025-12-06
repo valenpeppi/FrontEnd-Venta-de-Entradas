@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import type { Ticket } from '../../shared/context/CartContext';
+import type { Ticket } from '../../types/cart';
 import styles from './styles/SearchedEvents.module.css';
 import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
 
@@ -82,12 +82,12 @@ const SearchedEvents: React.FC = () => {
 
       {loading ? (
         <div className={styles.loadingState}>
-            <div className={styles.loadingDots}>
-              <span className={styles.dot}></span>
-              <span className={styles.dot}></span>
-              <span className={styles.dot}></span>
-            </div>
-            <p className={styles.loadingStateText}>Cargando eventos...</p>
+          <div className={styles.loadingDots}>
+            <span className={styles.dot}></span>
+            <span className={styles.dot}></span>
+            <span className={styles.dot}></span>
+          </div>
+          <p className={styles.loadingStateText}>Cargando eventos...</p>
         </div>
       ) : results.length === 0 ? (
         <p className={styles.noResults}>No se encontraron eventos.</p>

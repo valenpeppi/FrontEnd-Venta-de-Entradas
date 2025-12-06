@@ -1,34 +1,10 @@
 import React, { createContext, useReducer, useContext } from 'react';
-import type { ReactNode } from 'react';
 
-interface Message {
-  text: string;
-  type: 'success' | 'error' | 'info';
-  id: string;
-}
 
-interface MessageState {
-  messages: Message[];
-}
-
-type MessageAction =
-  | { type: 'ADD_MESSAGE'; payload: { text: string; type: 'success' | 'error' | 'info'; id: string } }
-  | { type: 'REMOVE_MESSAGE'; payload: { id: string } }
-  | { type: 'CLEAR_MESSAGES' };
-
-interface MessageContextType {
-  messages: Message[];
-  addMessage: (text: string, type?: 'success' | 'error' | 'info') => void;
-  removeMessage: (id: string) => void;
-  clearMessages: () => void;
-  setAppMessage: (message: string | null, type?: 'success' | 'error' | 'info') => void;
-}
+import type { Message, MessageState, MessageAction, MessageContextType, MessageProviderProps } from '../../types/common';
 
 const MessageContext = createContext<MessageContextType | undefined>(undefined);
 
-interface MessageProviderProps {
-  children: ReactNode;
-}
 
 const messageReducer = (state: MessageState, action: MessageAction): MessageState => {
   switch (action.type) {
@@ -46,21 +22,21 @@ const messageReducer = (state: MessageState, action: MessageAction): MessageStat
         messages: [...state.messages, newMessage]
       };
     }
-    
+
     case 'REMOVE_MESSAGE': {
       return {
         ...state,
         messages: state.messages.filter(msg => msg.id !== action.payload.id)
       };
     }
-    
+
     case 'CLEAR_MESSAGES': {
       return {
         ...state,
         messages: []
       };
     }
-    
+
     default:
       return state;
   }
@@ -74,7 +50,7 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) =>
   const addMessage = (text: string, type: 'success' | 'error' | 'info' = 'info') => {
     const id = Date.now().toString();
     dispatch({ type: 'ADD_MESSAGE', payload: { text, type, id } });
-    
+
     setTimeout(() => {
       dispatch({ type: 'REMOVE_MESSAGE', payload: { id } });
     }, 3000);

@@ -7,11 +7,7 @@ import MessageDisplay from "../../shared/MessageDisplay";
 import styles from "./styles/LoginUser.module.css";
 import globalStyles from "../../shared/styles/GlobalStyles.module.css";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
-import type { User } from "../../shared/context/AuthContext.tsx";
-
-interface LoginProps {
-  onLoginSuccess: (user: User, token: string) => void;
-}
+import type { LoginProps } from "../../types/auth";
 
 const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -116,13 +112,12 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                   type="email"
                   id="email"
                   name="email"
-                  className={`${styles.loginInput} ${
-                    touched.email
-                      ? errors.email
-                        ? styles.inputError
-                        : styles.inputSuccess
-                      : ""
-                  }`}
+                  className={`${styles.loginInput} ${touched.email
+                    ? errors.email
+                      ? styles.inputError
+                      : styles.inputSuccess
+                    : ""
+                    }`}
                   value={formData.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -152,13 +147,12 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                   type="password"
                   id="password"
                   name="password"
-                  className={`${styles.loginInputPassword} ${
-                    touched.password
-                      ? errors.password
-                        ? styles.inputError
-                        : styles.inputSuccess
-                      : ""
-                  }`}
+                  className={`${styles.loginInputPassword} ${touched.password
+                    ? errors.password
+                      ? styles.inputError
+                      : styles.inputSuccess
+                    : ""
+                    }`}
                   value={formData.password}
                   onChange={handleChange}
                   onBlur={handleBlur}

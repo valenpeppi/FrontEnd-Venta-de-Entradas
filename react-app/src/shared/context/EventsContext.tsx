@@ -1,6 +1,6 @@
 import { createContext, useReducer, useEffect, useContext } from 'react';
-import type { ReactNode } from 'react';
-import type { Ticket } from './CartContext';
+
+import type { Ticket } from '../../types/cart';
 import axios from 'axios';
 import { formatLongDate, formatTime } from '../utils/dateFormatter';
 
@@ -20,9 +20,10 @@ interface EventsContextType {
   updateAvailableTickets: (id: string, quantity: number) => void;
 }
 
+import type { EventsProviderProps } from '../../types/events';
+
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
-interface EventsProviderProps { children: ReactNode; }
 
 const eventsReducer = (state: EventsState, action: EventsAction): EventsState => {
   switch (action.type) {

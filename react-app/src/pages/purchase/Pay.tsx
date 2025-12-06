@@ -6,35 +6,13 @@ import styles from './styles/Pay.module.css';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import axios from 'axios';
 
-type TicketGroup = {
-  idEvent: number;
-  idPlace: number;
-  idSector: number;
-  ids?: number[];
-  quantity?: number;
-};
+import type { PaymentTicketGroup as TicketGroup, GroupedByEvent } from '../../types/purchase.ts';
 
 const Pay: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useCart();
   const { user } = useAuth();
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
-
-  interface GroupedBySector {
-    sectorName: string;
-    totalQuantity: number;
-    totalPrice: number;
-    seatNumbers: string[];
-  }
-
-  interface GroupedByEvent {
-    eventId: string;
-    eventName: string;
-    date: string;
-    time: string;
-    placeName?: string;
-    sectors: GroupedBySector[];
-  }
 
   useEffect(() => {
     initMercadoPago('APP_USR-cd78e2e4-b7ee-4b1d-ad89-e90d69693f9c', {
@@ -73,8 +51,8 @@ const Pay: React.FC = () => {
       if (hasSeatIds) {
         const cleanIds = Array.isArray(item.ticketIds)
           ? item.ticketIds
-              .map((n: any) => Number(n))
-              .filter((n) => Number.isFinite(n) && n > 0)
+            .map((n: any) => Number(n))
+            .filter((n) => Number.isFinite(n) && n > 0)
           : [];
 
         const seen = new Set(map[key].ids);
@@ -84,7 +62,7 @@ const Pay: React.FC = () => {
             seen.add(id);
           }
         }
-        map[key].quantity += Number(item.quantity) || 0; 
+        map[key].quantity += Number(item.quantity) || 0;
       } else {
         map[key].quantity += Number(item.quantity) || 0;
       }
@@ -226,16 +204,18 @@ const Pay: React.FC = () => {
     }
   };
 
-  const groupedItems = cartItems.reduce((acc, item) => {
-    const key = `${item.eventName}-${item.price}`;
-    if (!acc[key]) {
-      acc[key] = { ...item, quantity: 0 };
-    }
-    acc[key].quantity += item.quantity;
-    return acc;
-  }, {} as Record<string, typeof cartItems[0]>);
+  /*
+    const groupedItems = cartItems.reduce((acc, item) => {
+      const key = `${item.eventName}-${item.price}`;
+      if (!acc[key]) {
+        acc[key] = { ...item, quantity: 0 };
+      }
+      acc[key].quantity += item.quantity;
+      return acc;
+    }, {} as Record<string, typeof cartItems[0]>);
+  */
 
-  const groupedArray = Object.values(groupedItems);
+  // const groupedArray = Object.values(groupedItems); // Unused
 
   const groupCartByEventSector = (): GroupedByEvent[] => {
     const eventMap = new Map<string, GroupedByEvent>();

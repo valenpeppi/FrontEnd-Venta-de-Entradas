@@ -1,22 +1,23 @@
 import React from 'react';
-import type { SeatSelectorProps } from '../../shared/types.ts';
+import type { SeatSelectorProps } from '../../types/events';
 import styles from './styles/SeatSelector.module.css';
+
 
 const SeatSelector: React.FC<SeatSelectorProps> = ({ seats, selectedSeats, onChange, setAppMessage, enumerated = false, columns }) => {
   const toggleSeat = (id: number) => {
     const seat = seats.find(s => s.id === id);
     if (!seat || seat.state !== 'available') {
-      return; 
+      return;
     }
 
     if (selectedSeats.includes(id)) {
       onChange(selectedSeats.filter(s => s !== id));
     } else {
       if (selectedSeats.length >= 6) {
-         if (setAppMessage) {
-            setAppMessage('No puedes seleccionar más de 6 asientos.', 'error');
-         }
-         return;
+        if (setAppMessage) {
+          setAppMessage('No puedes seleccionar más de 6 asientos.', 'error');
+        }
+        return;
       }
       onChange([...selectedSeats, id]);
     }

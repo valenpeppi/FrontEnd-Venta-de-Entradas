@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Ticket } from '../../shared/context/CartContext';
+
 import styles from './styles/Carousel.module.css';
 import GlobalStyles from '../../shared/styles/GlobalStyles.module.css';
 import {
@@ -11,12 +11,7 @@ import {
   MdChevronRight
 } from "react-icons/md";
 
-export interface CarouselProps {
-  tickets: Ticket[];
-  currentEventIndex: number;
-  onPreviousEvent: () => void;
-  onNextEvent: () => void;
-}
+import type { CarouselProps } from '../../types/events';
 
 const Carousel: React.FC<CarouselProps> = ({
   tickets,

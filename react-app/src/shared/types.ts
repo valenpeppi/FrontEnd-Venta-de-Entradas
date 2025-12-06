@@ -1,79 +1,10 @@
-export interface Sector {
-  idEvent: number;
-  idSector: number;
-  name: string;
-  price: number;
-  availableTickets: number;
-  selected?: number;
-  enumerated?: boolean;
-}
+// Re-export domain types
+export * from '../types/events';
+export * from '../types/cart';
 
-export interface EventSummary {
-  id: number;
-  idPlace: number; 
-  eventName: string;
-  imageUrl: string;
-  type: string;
-  date: string;
-  description?: string;
-  placeType: string;
-  placeName: string;
-  availableTickets: number;
-  agotado: boolean;
-  price?: number;
-}
-
-export interface Seat {
-  id: number;
-  label?: string;
-  state: 'available' | 'reserved' | 'sold'| 'selected';
-}
-
-export interface CartItem {
-  id: string;
-  eventId: string;
-  eventName: string;
-  date: string;
-  location: string;
-  placeName: string;
-  sectorName: string;
-  price: number;
-  availableTickets: number;
-  imageUrl: string;
-  type: string;
-  featured: boolean;
-  time: string;
-  quantity: number;
-  seats?: (string | number)[];
-  idPlace: number; 
-  idSector: number; 
-  ticketIds?: number[]; 
-}
-
-export interface EventDetailState {
-  summary: EventSummary | null;
-  sectors: Sector[];
-  loading: boolean;
-  generalQuantity: number;
-  selectedSector: number | null;
-  seats: Seat[];
-  selectedSeatsMap: Record<number, number[]>;
-}
-
-export interface EventDetailActions {
-  setSummary: (summary: EventSummary | null) => void;
-  setSectors: (sectors: Sector[]) => void;
-  setLoading: (loading: boolean) => void;
-  setGeneralQuantity: (quantity: number) => void;
-  setSelectedSector: (sectorId: number | null) => void;
-  setSeats: (seats: Seat[]) => void;
-  setSelectedSeatsMap: (map: Record<number, number[]>) => void;
-  handleSectorQuantityChange: (sectorId: number, newQuantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => void;
-  handleSeatsChange: (sectorId: number, seatsSel: number[]) => void;
-  handleGeneralQuantityChange: (newQuantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => void;
-}
-
-export interface EventDetailContextType extends EventDetailState, EventDetailActions {}
+// Component specific props (kept here or moved to component files eventually)
+// For now, we keep them here but they depend on the re-exported types
+import type { EventSummary, Sector, Seat } from '../types/events';
 
 export interface EventInfoProps {
   summary: EventSummary;

@@ -6,40 +6,8 @@ import styles from './styles/CreateEventPage.module.css';
 
 const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
-interface EventType {
-  idType: number;
-  name: string;
-}
-
-interface Place {
-  idPlace: number;
-  name: string;
-}
-
-interface Sector {
-  idSector: number;
-  name: string;
-}
-
-interface CreateEventState {
-  eventName: string;
-  description: string;
-  date: string;
-  time: string;
-  idEventType: string;
-  error: string | null;
-  image: File | null;
-  idPlace: string;
-  occupiedDates: string[];
-  sectorPrices: { [key: string]: string };
-}
-
-type CreateEventAction =
-  | { type: 'SET_FIELD'; payload: { field: keyof CreateEventState; value: any } }
-  | { type: 'SET_OCCUPIED_DATES'; payload: { dates: string[] } }
-  | { type: 'SET_ERROR'; payload: { error: string | null } }
-  | { type: 'RESET_FORM' }
-  | { type: 'SET_IMAGE'; payload: { image: File | null } };
+import type { EventType, Sector } from '../../types/events';
+import type { Place, CreateEventState, CreateEventAction } from '../../types/company';
 
 const createEventReducer = (state: CreateEventState, action: CreateEventAction): CreateEventState => {
   switch (action.type) {
@@ -113,8 +81,8 @@ const CreateEventPage: React.FC = () => {
       if (state.idPlace) {
         try {
           const [sectorsRes, datesRes] = await Promise.all([
-             axios.get<Sector[]>(`${BASE_URL}/api/places/${state.idPlace}/sectors`),
-             axios.get<{ data: string[] }>(`${BASE_URL}/api/events/available-dates/${state.idPlace}`)
+            axios.get<Sector[]>(`${BASE_URL}/api/places/${state.idPlace}/sectors`),
+            axios.get<{ data: string[] }>(`${BASE_URL}/api/events/available-dates/${state.idPlace}`)
           ]);
           setSectors(sectorsRes.data);
           dispatch({ type: 'SET_OCCUPIED_DATES', payload: { dates: datesRes.data.data } });
@@ -133,7 +101,7 @@ const CreateEventPage: React.FC = () => {
   const handleFieldChange = (field: keyof CreateEventState, value: any) => {
     dispatch({ type: 'SET_FIELD', payload: { field, value } });
   };
-  
+
   const handlePriceChange = (sectorId: number, price: string) => {
     dispatch({
       type: 'SET_FIELD',
@@ -143,7 +111,7 @@ const CreateEventPage: React.FC = () => {
       }
     });
   };
-  
+
   const handleImageChange = (file: File | null) => {
     dispatch({ type: 'SET_IMAGE', payload: { image: file } });
     if (imagePreview) {
@@ -156,7 +124,7 @@ const CreateEventPage: React.FC = () => {
       setImagePreview(null);
     }
   };
-  
+
   const handleDragEvents = (e: React.DragEvent<HTMLLabelElement>, isEntering: boolean) => {
     e.preventDefault();
     e.stopPropagation();
@@ -182,7 +150,7 @@ const CreateEventPage: React.FC = () => {
       dispatch({ type: 'SET_ERROR', payload: { error: 'Por favor, completá todos los campos.' } });
       return;
     }
-    
+
     const sectorsWithPrices = sectors.map(sector => ({
       idSector: sector.idSector,
       price: parseFloat(state.sectorPrices[sector.idSector] || '0')
@@ -190,7 +158,7 @@ const CreateEventPage: React.FC = () => {
 
     for (const item of sectorsWithPrices) {
       if (isNaN(item.price) || item.price <= 0) {
-        dispatch({ type: 'SET_ERROR', payload: { error: `El precio para el sector "${sectors.find(s=>s.idSector === item.idSector)?.name}" no es válido.` } });
+        dispatch({ type: 'SET_ERROR', payload: { error: `El precio para el sector "${sectors.find(s => s.idSector === item.idSector)?.name}" no es válido.` } });
         return;
       }
     }
@@ -222,7 +190,7 @@ const CreateEventPage: React.FC = () => {
       await axios.post(`${BASE_URL}/api/events/createEvent`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       setAppMessage('¡Evento creado exitosamente!', 'success');
       dispatch({ type: 'RESET_FORM' });
       navigate('/');
@@ -263,7 +231,7 @@ const CreateEventPage: React.FC = () => {
               rows={3} required maxLength={255}
             />
           </div>
-            <div className={styles.formGroup}>
+          <div className={styles.formGroup}>
             <label htmlFor="idPlace">Lugar del evento</label>
             <select
               id="idPlace" value={state.idPlace}
@@ -345,21 +313,21 @@ const CreateEventPage: React.FC = () => {
 
           <div className={styles.formGroup}>
             <label htmlFor="image">Foto del Evento</label>
-            <label 
-              htmlFor="image-upload" 
+            <label
+              htmlFor="image-upload"
               className={`${styles.fileInputContainer} ${isDragging ? styles.dragOver : ''}`}
               onDragEnter={(e) => handleDragEvents(e, true)}
               onDragOver={(e) => handleDragEvents(e, true)}
               onDragLeave={(e) => handleDragEvents(e, false)}
               onDrop={handleDrop}
             >
-              <input 
-                id="image-upload" 
+              <input
+                id="image-upload"
                 className={styles.fileInputButton}
-                type="file" 
-                accept="image/*" 
-                onChange={(e) => handleImageChange(e.target.files?.[0] || null)} 
-                required 
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleImageChange(e.target.files?.[0] || null)}
+                required
               />
               {imagePreview ? (
                 <img src={imagePreview} alt="Vista previa" className={styles.imagePreview} />

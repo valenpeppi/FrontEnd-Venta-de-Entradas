@@ -1,12 +1,9 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import type { ReactNode } from 'react';
-import type { EventDetailContextType, EventSummary, Sector, Seat } from '../types';
+
+import type { EventDetailContextType, EventSummary, Sector, Seat, EventDetailProviderProps } from '../../types/events';
 
 const EventDetailContext = createContext<EventDetailContextType | undefined>(undefined);
 
-interface EventDetailProviderProps {
-  children: ReactNode;
-}
 
 export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ children }) => {
   const [summary, setSummary] = useState<EventSummary | null>(null);

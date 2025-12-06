@@ -6,11 +6,9 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import styles from './styles/RegisterCompany.module.css';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
-interface RegisterProps {
-  onRegisterSuccess: () => void;
-}
+import type { RegisterCompanyProps } from '../../types/auth';
 
-const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
+const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) => {
   const [formData, setFormData] = useState({
     companyName: '',
     cuil: '',
@@ -98,14 +96,14 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     e.preventDefault();
     setServerError(null);
     setSuccessMessage(null);
-    
+
     setTouched({
       companyName: true, cuil: true, contactEmail: true, password: true,
       confirmPassword: true, phone: true, address: true
     });
 
     Object.keys(formData).forEach(key => {
-        validate(key, formData[key as keyof typeof formData], formData);
+      validate(key, formData[key as keyof typeof formData], formData);
     });
 
     if (!captchaValue) {
@@ -115,7 +113,7 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
 
     const hasErrors = Object.values(errors).some(error => error);
     const isFormIncomplete = Object.values(formData).some(value => !value);
-    
+
     if (hasErrors || isFormIncomplete) {
       setServerError('Por favor, completa todos los campos correctamente.');
       return;
@@ -150,33 +148,33 @@ const RegisterCompany: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
         {successMessage && <div className={styles.registerSuccessMessage}>{successMessage}</div>}
         <form onSubmit={handleSubmit} className={styles.registerForm} noValidate>
           {Object.keys(formData).map(key => {
-              const fieldKey = key as keyof typeof formData;
-              return (
-                <div className={styles.registerFormGroup} key={fieldKey}>
-                  <label htmlFor={`register-${fieldKey}`} className={styles.registerLabel}>
-                    {labelMap[fieldKey]}
-                  </label>
-                  <div className={styles.inputWrapper}>
-                    <input 
-                      type={fieldKey.toLowerCase().includes('password') ? 'password' : 'text'}
-                      id={`register-${fieldKey}`} 
-                      name={fieldKey}
-                      className={`${styles.registerInput} ${touched[fieldKey] && (errors[fieldKey] ? styles.inputError : styles.inputSuccess)}`}
-                      value={formData[fieldKey]} 
-                      onChange={handleChange} 
-                      onBlur={handleBlur}
-                      placeholder={`Ingresa ${labelMap[fieldKey].toLowerCase()}`}
-                      required 
-                    />
-                    {touched[fieldKey] && (
-                      <div className={styles.validationIcon}>
-                        {errors[fieldKey] ? <FaExclamationCircle color="red" /> : <FaCheckCircle color="green" />}
-                      </div>
-                    )}
-                  </div>
-                  {touched[fieldKey] && errors[fieldKey] && <span className={styles.errorMessage}>{errors[fieldKey]}</span>}
+            const fieldKey = key as keyof typeof formData;
+            return (
+              <div className={styles.registerFormGroup} key={fieldKey}>
+                <label htmlFor={`register-${fieldKey}`} className={styles.registerLabel}>
+                  {labelMap[fieldKey]}
+                </label>
+                <div className={styles.inputWrapper}>
+                  <input
+                    type={fieldKey.toLowerCase().includes('password') ? 'password' : 'text'}
+                    id={`register-${fieldKey}`}
+                    name={fieldKey}
+                    className={`${styles.registerInput} ${touched[fieldKey] && (errors[fieldKey] ? styles.inputError : styles.inputSuccess)}`}
+                    value={formData[fieldKey]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder={`Ingresa ${labelMap[fieldKey].toLowerCase()}`}
+                    required
+                  />
+                  {touched[fieldKey] && (
+                    <div className={styles.validationIcon}>
+                      {errors[fieldKey] ? <FaExclamationCircle color="red" /> : <FaCheckCircle color="green" />}
+                    </div>
+                  )}
                 </div>
-              )
+                {touched[fieldKey] && errors[fieldKey] && <span className={styles.errorMessage}>{errors[fieldKey]}</span>}
+              </div>
+            )
           })}
 
           <div className={styles.captchaContainer}>

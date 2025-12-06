@@ -1,40 +1,16 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
-import type { ReactNode } from 'react';
 
-export interface User {
-  name: string;
-  surname?: string;
-  mail?: string;
-  dni?: number;
-  role: string | null;
-}
+import type { User, AuthState, AuthContextType, AuthProviderProps } from '../../types/auth'; // Import from new types
+import { AuthService } from '../../services/AuthService';
 
-interface AuthState {
-  isLoggedIn: boolean;
-  user: User | null;
-  isLoading: boolean;
-}
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
 
 type AuthAction =
   | { type: 'INITIALIZE'; payload: { user: User | null } }
   | { type: 'LOGIN'; payload: { user: User } }
   | { type: 'LOGOUT' }
   | { type: 'UPDATE_USER'; payload: { name: string; role?: string } };
-
-interface AuthContextType {
-  isLoggedIn: boolean;
-  user: User | null;
-  isLoading: boolean;
-  login: (user: User, token: string) => void;
-  logout: () => void;
-  updateUser: (name: string, role?: string) => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
@@ -64,10 +40,10 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         ...state,
         user: state.user
           ? {
-              ...state.user,
-              name: action.payload.name,
-              role: action.payload.role || state.user.role,
-            }
+            ...state.user,
+            name: action.payload.name,
+            role: action.payload.role || state.user.role,
+          }
           : null,
       };
     default:
@@ -82,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoading: true,
   });
 
-useEffect(() => {
+  useEffect(() => {
     const validateToken = async () => {
       const token = localStorage.getItem('token');
       const userString = localStorage.getItem('user');
@@ -91,17 +67,17 @@ useEffect(() => {
         try {
           const user = JSON.parse(userString);
 
-          const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'}/api/auth/validate`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          // Use AuthService instead of direct fetch
+          await AuthService.validateToken();
+          // Note: validateToken in original code didn't use the return value user content except for "ok",
+          // it relied on local storage parsing.
+          // If AuthService.validateToken throws, we go to catch.
+          // If it returns, we assume valid.
+          // Original code: if (res.ok) dispatch... else logout.
+          // AuthService uses axios interceptor which rejects if 401.
 
-          if (res.ok) {
-            dispatch({ type: 'INITIALIZE', payload: { user } });
-          } else {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            dispatch({ type: 'LOGOUT' });
-          }
+          dispatch({ type: 'INITIALIZE', payload: { user } });
+
         } catch (e) {
           console.error("Error al validar token:", e);
           localStorage.removeItem('token');

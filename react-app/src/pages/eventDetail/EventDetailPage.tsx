@@ -4,7 +4,8 @@ import axios from 'axios';
 import { useCart } from '../../shared/context/CartContext';
 import { useMessage } from '../../shared/context/MessageContext';
 import { useEventDetail } from '../../shared/context/EventDetailContext';
-import type { Sector, CartItem } from '../../shared/types';
+import type { Sector } from '../../types/events';
+import type { CartItem } from '../../types/cart';
 import EventDetailHeader from './EventDetailHeader';
 import EventDetailBody from './EventDetailBody';
 import styles from './styles/EventDetailPage.module.css';
@@ -299,8 +300,6 @@ const EventDetailPage: React.FC = () => {
         handleSectorQuantityChange={handleSectorQuantityChange}
         handleGeneralQuantityChange={handleGeneralQuantityChange}
         handleSeatsChange={handleSeatsChange}
-        setSelectedSector={setSelectedSector}
-        setSeats={setSeats}
         handleAddToCart={handleAddToCart}
         openSeatModal={openSeatModal}
         closeModal={closeModal}

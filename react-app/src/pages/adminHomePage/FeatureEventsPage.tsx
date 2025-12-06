@@ -1,25 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import styles from "./styles/AdminHomePage.module.css"; 
+import styles from "./styles/AdminHomePage.module.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
 
 
-type Event = {
-  idEvent: number | string;
-  name: string;
-  description?: string;
-  date?: string;
-  image?: string;
-  idEventType?: number;
-  state?: string;
-  idOrganiser?: string;
-  featured: boolean;
-};
+import type { AdminEvent } from '../../types/admin';
 
 const BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:3000";
 
 export default function FeatureEventsPage() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<AdminEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [q, setQ] = useState("");
@@ -45,7 +35,7 @@ export default function FeatureEventsPage() {
       } catch (e: any) {
         setError(
           e?.response?.data?.message ||
-            "No se pudieron obtener los eventos."
+          "No se pudieron obtener los eventos."
         );
       } finally {
         setLoading(false);
@@ -56,9 +46,9 @@ export default function FeatureEventsPage() {
 
   const toggleFeature = async (id: number | string) => {
     const token = localStorage.getItem("token");
-    
-    setEvents(prevEvents => 
-      prevEvents.map(e => 
+
+    setEvents(prevEvents =>
+      prevEvents.map(e =>
         e.idEvent === id ? { ...e, featured: !e.featured } : e
       )
     );
@@ -70,14 +60,14 @@ export default function FeatureEventsPage() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
     } catch (e: any) {
-      setEvents(prevEvents => 
-        prevEvents.map(e => 
+      setEvents(prevEvents =>
+        prevEvents.map(e =>
           e.idEvent === id ? { ...e, featured: !e.featured } : e
         )
       );
       alert(
         e?.response?.data?.message ||
-          `No se pudo actualizar el estado de destacado.`
+        `No se pudo actualizar el estado de destacado.`
       );
     }
   };
@@ -121,12 +111,12 @@ export default function FeatureEventsPage() {
             <li key={ev.idEvent} className={styles.card}>
               <div className={styles.mediaWrap}>
                 {ev.image ? (
-                <img
-                  src={`${BASE_URL}${ev.image}`}
-                  alt={ev.name}
-                  className={styles.media}
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                />
+                  <img
+                    src={`${BASE_URL}${ev.image}`}
+                    alt={ev.name}
+                    className={styles.media}
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                  />
                 ) : (
                   <div className={styles.mediaPlaceholder} />
                 )}
@@ -155,7 +145,7 @@ export default function FeatureEventsPage() {
               </div>
             </li>
           ))}
-        </ul> 
+        </ul>
       )}
     </div>
   );

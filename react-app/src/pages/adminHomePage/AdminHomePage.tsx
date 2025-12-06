@@ -2,16 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import styles from "./styles/AdminHomePage.module.css";
 
-type PendingEvent = {
-  idEvent: number | string;
-  name: string;
-  description?: string;
-  date?: string;
-  image?: string;
-  idEventType?: number;
-  state?: string; 
-  idOrganiser?: string;
-};
+import type { PendingEvent } from '../../types/admin';
 
 const BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:3000";
 
@@ -42,7 +33,7 @@ export default function AdminHomePage() {
       } catch (e: any) {
         setError(
           e?.response?.data?.message ||
-            "No se pudieron obtener los eventos pendientes"
+          "No se pudieron obtener los eventos pendientes"
         );
       } finally {
         setLoading(false);
@@ -53,7 +44,7 @@ export default function AdminHomePage() {
 
   const act = async (id: number | string, action: "approve" | "reject") => {
     const token = localStorage.getItem("token");
-    
+
     const prev = events;
     setEvents((list) => list.filter((e) => e.idEvent !== id));
 
@@ -67,7 +58,7 @@ export default function AdminHomePage() {
       setEvents(prev);
       alert(
         e?.response?.data?.message ||
-          `No se pudo ${action === "approve" ? "aprobar" : "rechazar"}`
+        `No se pudo ${action === "approve" ? "aprobar" : "rechazar"}`
       );
     }
   };
@@ -116,12 +107,12 @@ export default function AdminHomePage() {
             <li key={ev.idEvent} className={styles.card}>
               <div className={styles.mediaWrap}>
                 {ev.image ? (
-                <img
-                  src={`${BASE_URL}${ev.image}`}
-                  alt={ev.name}
-                  className={styles.media}
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                />
+                  <img
+                    src={`${BASE_URL}${ev.image}`}
+                    alt={ev.name}
+                    className={styles.media}
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                  />
                 ) : (
                   <div className={styles.mediaPlaceholder} />
                 )}
@@ -161,7 +152,7 @@ export default function AdminHomePage() {
               </div>
             </li>
           ))}
-        </ul> 
+        </ul>
       )}
     </div>
   );

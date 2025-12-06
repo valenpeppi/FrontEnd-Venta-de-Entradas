@@ -7,14 +7,11 @@ import {
   MdConfirmationNumber,
 } from "react-icons/md";
 import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
-import type { EventSummary } from '../../shared/types';
+import type { EventDetailHeaderProps } from '../../types/events';
 import styles from './styles/EventDetailPage.module.css';
 
-interface Props {
-  summary: EventSummary;
-}
+const EventDetailHeader: React.FC<EventDetailHeaderProps> = ({ summary }) => (
 
-const EventDetailHeader: React.FC<Props> = ({ summary }) => (
   <div className={styles.eventSummaryCard}>
     <img
       src={summary.imageUrl || "/ticket.png"}

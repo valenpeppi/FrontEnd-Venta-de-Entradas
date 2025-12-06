@@ -1,16 +1,9 @@
-import React from 'react';
-import type { Sector } from '../../shared/types';
+import type { SectorListProps } from '../../types/events';
 import styles from './styles/SectorList.module.css';
 
-interface CustomSectorListProps {
-  sectors: Sector[];
-  onQuantityChange: (sectorId: number, quantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => void;
-  onSelectSeatsClick: (sectorId: number) => void;
-  setAppMessage?: (message: string, type: 'success' | 'error') => void;
-}
 
 
-const SectorList: React.FC<CustomSectorListProps> = ({
+const SectorList: React.FC<SectorListProps> = ({
   sectors,
   onQuantityChange,
   onSelectSeatsClick,
@@ -44,25 +37,25 @@ const SectorList: React.FC<CustomSectorListProps> = ({
 
           {sec.enumerated ? (
             <div className={styles.sectorInput}>
-                <button 
-                    onClick={() => onSelectSeatsClick(sec.idSector)}
-                    className={styles.selectSeatsBtn}
-                >
-                    Seleccionar Asientos
-                </button>
+              <button
+                onClick={() => onSelectSeatsClick(sec.idSector)}
+                className={styles.selectSeatsBtn}
+              >
+                Seleccionar Asientos
+              </button>
             </div>
           ) : (
             <div className={styles.sectorInput}>
               <label htmlFor={`sector-${sec.idSector}`}>Cantidad</label>
-             <select
-                 id={`sector-${sec.idSector}`}
-                 data-testid={`quantity-select-${sec.idSector}`}
-                 value={sec.selected || 0}
-                 onChange={(e) =>
-                   onQuantityChange(sec.idSector, parseInt(e.target.value), setAppMessage)
-                 }
-                 className={styles.quantitySelect}
-               >
+              <select
+                id={`sector-${sec.idSector}`}
+                data-testid={`quantity-select-${sec.idSector}`}
+                value={sec.selected || 0}
+                onChange={(e) =>
+                  onQuantityChange(sec.idSector, parseInt(e.target.value), setAppMessage)
+                }
+                className={styles.quantitySelect}
+              >
                 {[...Array(Math.min(6, sec.availableTickets) + 1).keys()].map((n) => (
                   <option key={n} value={n}>
                     {n}

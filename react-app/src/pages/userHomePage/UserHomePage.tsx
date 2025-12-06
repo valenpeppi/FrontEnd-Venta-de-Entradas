@@ -1,34 +1,29 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useEvents } from '../../shared/context/EventsContext';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import Carousel from './Carousel';
 import styles from './styles/UserHomePage.module.css';
-import type { Ticket } from '../../shared/context/CartContext';
-
-interface EventType {
-  idType: number;
-  name: string;
-}
+import type { Ticket } from '../../types/cart';
+import { EventService } from '../../services/EventService';
+import type { EventType } from '../../types/events';
 
 const HomePage: React.FC = () => {
   const { featuredTickets, approvedTickets } = useEvents();
   const [currentEventIndex, setCurrentEventIndex] = useState<number>(0);
   const [allEventTypes, setAllEventTypes] = useState<EventType[]>([]);
   const [selectedType, setSelectedType] = useState<string>('Todos');
-  const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
   useEffect(() => {
     const fetchEventTypes = async () => {
       try {
-        const response = await axios.get<EventType[]>(`${BASE_URL}/api/events/event-types`);
-        setAllEventTypes(response.data);
+        const data = await EventService.getEventTypes();
+        setAllEventTypes(data);
       } catch (error) {
         console.error("Error fetching event types:", error);
       }
     };
     fetchEventTypes();
-  }, [BASE_URL]);
+  }, []);
 
   useEffect(() => {
     if (featuredTickets.length > 0 && currentEventIndex >= featuredTickets.length) {
@@ -119,7 +114,7 @@ const HomePage: React.FC = () => {
         </div>
 
         <h2 className={styles.eventListTitle}>Todos los Eventos</h2>
-        
+
         <div className={styles.eventListContainer}>
           {Object.keys(eventsByType).length > 0 ? (
             Object.entries(eventsByType).map(([type, tickets]) => (

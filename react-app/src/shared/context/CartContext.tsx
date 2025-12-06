@@ -1,36 +1,9 @@
 import { createContext, useReducer, useEffect, useContext } from 'react';
-import type { ReactNode } from 'react';
+
 import axios from 'axios';
+import type { CartItem } from '../../types/cart';
 
 const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
-
-export interface Ticket {
-  id: string;
-  eventId: string;
-  eventName: string;
-  date: string;
-  time: string;
-  location: string;
-  placeName: string;
-  sectorName?: string;
-  price: number;
-  availableTickets: number;
-  imageUrl: string;
-  type: string;
-  featured: boolean;
-  agotado?: boolean;
-  description?: string;
-  quantity: number;
-  idTicket?: number;
-}
-
-export interface CartItem extends Ticket {
-  quantity: number;
-  seats?: (string | number)[];
-  ticketIds?: number[];
-  idPlace: number;
-  idSector: number;
-}
 
 interface CartState {
   cartItems: CartItem[];
@@ -53,11 +26,10 @@ interface CartContextType {
   canAddTicketsToEvent: (eventId: string | number, quantity: number) => Promise<boolean>;
 }
 
+import type { CartProviderProps } from '../../types/cart';
+
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-interface CartProviderProps {
-  children: ReactNode;
-}
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
@@ -158,7 +130,7 @@ function CartProvider({ children }: CartProviderProps) {
 
         if (localBoot !== serverBoot) {
           localStorage.setItem('bootId', serverBoot);
-          localStorage.removeItem('token'); 
+          localStorage.removeItem('token');
           localStorage.removeItem('ticket-cart');
           localStorage.removeItem('ticketGroups');
           localStorage.removeItem('dniClient');

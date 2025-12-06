@@ -3,40 +3,10 @@ import SectorList from '../seatSelector/SectorList';
 import SeatSelector from '../seatSelector/SeatSelector';
 import modalStyles from '../seatSelector/styles/SeatModal.module.css';
 import styles from './styles/EventDetailPage.module.css';
-import type { EventSummary, Sector, Seat, CartItem } from '../../shared/types';
+import type { Sector, EventDetailBodyProps } from '../../types/events';
 import estadioArroyito from '../../assets/estadio-gigante-arroyito.png';
 import bioceresArena from '../../assets/bioceres-arena.jpg';
 import elCirculo from '../../assets/el-circulo.png';
-
-interface Props {
-  summary: EventSummary;
-  sectors: Sector[];
-  seats: Seat[];
-  selectedSector: number | null;
-  selectedSeatsMap: Record<number, number[]>;
-  generalQuantity: number;
-  handleSectorQuantityChange: (
-    sectorId: number,
-    newQty: number,
-    setAppMessage?: (msg: string, t: 'success' | 'error') => void
-  ) => void;
-  handleGeneralQuantityChange: (
-    newQty: number,
-    setAppMessage?: (msg: string, t: 'success' | 'error') => void
-  ) => void;
-  handleSeatsChange: (sectorId: number, seatsSel: number[]) => void;
-  setSelectedSector: (sectorId: number | null) => void;
-  setSeats: (seats: Seat[]) => void;
-  handleAddToCart: () => Promise<void>;
-  openSeatModal: (sectorId: number) => void;
-  closeModal: () => void;
-  isModalOpen: boolean;
-  isModalClosing: boolean;
-  seatTicketMap: Record<string, number>;
-  setAppMessage: (msg: string, t: 'success' | 'error') => void;
-  canAddTicketsToEvent: (eventId: number, newCount: number) => Promise<boolean>;
-  addToCart: (ticket: Omit<CartItem, 'quantity'>, quantity: number) => boolean;
-}
 
 const SECTOR_LAYOUT_CONFIG: Record<string, Record<string, number>> = {
   'Estadio Gigante de Arroyito': { 'Tribuna Norte': 4, 'Tribuna Sur': 4 },
@@ -50,7 +20,8 @@ const stadiumImages: Record<string, string> = {
   'El Circulo': elCirculo,
 };
 
-const EventDetailBody: React.FC<Props> = ({
+const EventDetailBody: React.FC<EventDetailBodyProps> = ({
+
   summary,
   sectors,
   seats,
@@ -60,8 +31,6 @@ const EventDetailBody: React.FC<Props> = ({
   handleSectorQuantityChange,
   handleGeneralQuantityChange,
   handleSeatsChange,
-  setSelectedSector,
-  setSeats,
   handleAddToCart,
   openSeatModal,
   closeModal,
@@ -74,14 +43,14 @@ const EventDetailBody: React.FC<Props> = ({
   const getSectorOverlayClass = (sec: Sector) => {
     const name = sec.name.toLowerCase().trim();
     const nameToClass: Record<string, string> = {
-      'tribuna norte': styles.sectorTribunaNorte,
-      'tribuna sur': styles.sectorTribunaSur,
-      popular: styles.sectorPopular,
-      campo: styles.sectorCampo,
-      vip: styles.sectorVip,
-      general: styles.sectorGeneral,
-      'sala principal': styles.sectorSalaPrincipal,
-      'tribuna superior': styles.sectorTribunaSuperior,
+      'tribuna norte': styles['sectorTribunaNorte'],
+      'tribuna sur': styles['sectorTribunaSur'],
+      popular: styles['sectorPopular'],
+      campo: styles['sectorCampo'],
+      vip: styles['sectorVip'],
+      general: styles['sectorGeneral'],
+      'sala principal': styles['sectorSalaPrincipal'],
+      'tribuna superior': styles['sectorTribunaSuperior'],
     };
     const key = nameToClass[name] || `sector-${sec.idSector}`;
     const active = selectedSector === sec.idSector ? styles.activeSector : '';
@@ -183,16 +152,14 @@ const EventDetailBody: React.FC<Props> = ({
       </div>
       {isModalOpen && currentSelectedSector?.enumerated && (
         <div
-          className={`${modalStyles.modalOverlay} ${
-            isModalClosing ? modalStyles.modalClosing : modalStyles.modalOpen
-          }`}
+          className={`${modalStyles.modalOverlay} ${isModalClosing ? modalStyles.modalClosing : modalStyles.modalOpen
+            }`}
           onClick={closeModal}
           data-testid="seat-modal"
         >
           <div
-            className={`${modalStyles.modalContent} ${
-              isModalClosing ? modalStyles.modalClosing : modalStyles.modalOpen
-            }`}
+            className={`${modalStyles.modalContent} ${isModalClosing ? modalStyles.modalClosing : modalStyles.modalOpen
+              }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={modalStyles.modalHeader}>

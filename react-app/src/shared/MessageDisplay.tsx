@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles/MessageDisplay.module.css';
 
-interface MessageDisplayProps {
-  message: string | null;
-  type: 'success' | 'error' | 'info';
-}
+import type { MessageDisplayProps } from '../types/common';
 
 const MessageDisplay: React.FC<MessageDisplayProps> = ({ message, type }) => {
   const [isVisible, setIsVisible] = useState(false);

@@ -7,9 +7,7 @@ import styles from './styles/LoginCompany.module.css';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 
-interface LoginCompanyProps {
-  onLoginSuccess: (company: { companyName: string }, token: string) => void;
-}
+import type { LoginCompanyProps } from '../../types/auth';
 
 const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
   const [formData, setFormData] = useState({ contactEmail: '', password: '' });
@@ -62,7 +60,7 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
 
     const hasErrors = Object.values(errors).some(error => error);
     const isFormIncomplete = Object.values(formData).some(value => !value);
-    
+
     if (hasErrors || isFormIncomplete) {
       setServerError('Por favor, corrige los errores antes de continuar.');
       return;
@@ -116,13 +114,13 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
                 </div>
               )}
             </div>
-             {touched.contactEmail && errors.contactEmail && <span className={styles.errorMessage}>{errors.contactEmail}</span>}
+            {touched.contactEmail && errors.contactEmail && <span className={styles.errorMessage}>{errors.contactEmail}</span>}
           </div>
           <div className={styles.loginCompanyFieldPassword}>
             <label htmlFor="password" className={styles.loginCompanyLabel}>
               Contraseña
             </label>
-             <div className={styles.inputWrapper}>
+            <div className={styles.inputWrapper}>
               <input
                 type="password"
                 id="password"
@@ -133,7 +131,7 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
                 onBlur={handleBlur}
                 required
               />
-               {touched.password && (
+              {touched.password && (
                 <div className={styles.validationIcon}>
                   {errors.password ? <FaExclamationCircle color="red" /> : <FaCheckCircle color="green" />}
                 </div>

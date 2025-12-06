@@ -4,35 +4,10 @@ import axios from 'axios';
 import { useAuth } from '../../shared/context/AuthContext';
 import styles from './styles/MyTickets.module.css';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+
 import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
 
-interface PurchasedTicket {
-  id: string;
-  idSale: number;
-  eventId: number;
-  eventName: string;
-  date: string;
-  time: string;
-  location: string;
-  sectorName: string;
-  sectorType?: 'enumerated' | 'nonEnumerated' | string;
-  seatNumber?: number;
-  imageUrl: string;
-  idTicket: number;
-}
-
-interface TicketGroup {
-  idSale: number;
-  eventId: number;
-  eventName: string;
-  date: string;
-  time: string;
-  location: string;
-  sectorName: string;
-  sectorType?: 'enumerated' | 'nonEnumerated' | string;
-  tickets: PurchasedTicket[];
-}
+import type { PurchasedTicket, PurchasedTicketGroup } from '../../types/purchase';
 
 const MyTickets: React.FC = () => {
   const navigate = useNavigate();
@@ -42,11 +17,11 @@ const MyTickets: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const isNonEnumeratedTicket = (tk: PurchasedTicket) =>
-    (tk.sectorType
-      ? tk.sectorType.toLowerCase() === 'nonenumerated'
-      : tk.seatNumber == null);
+  (tk.sectorType
+    ? tk.sectorType.toLowerCase() === 'nonenumerated'
+    : tk.seatNumber == null);
 
-  const isNonEnumeratedGroup = (g: TicketGroup) => {
+  const isNonEnumeratedGroup = (g: PurchasedTicketGroup) => {
     if (g.sectorType) return g.sectorType.toLowerCase() === 'nonenumerated';
     return g.tickets.every(t => t.seatNumber == null);
   };
@@ -110,7 +85,7 @@ const MyTickets: React.FC = () => {
 
     const printLabel = (label: string, value: string | number) => {
       const xStart = 60;
-      const gap = 7; 
+      const gap = 7;
       const labelText = `${label}:`;
       const labelWidth = pdf.getTextWidth(labelText);
 
@@ -208,8 +183,8 @@ const MyTickets: React.FC = () => {
   const normalizeSectorName = (name: string) =>
     (name || 'Sin sector').replace(/\s+/g, ' ').trim();
 
-  const groupTicketsBySaleAndSector = (ts: PurchasedTicket[]): TicketGroup[] => {
-    const map = new Map<string, TicketGroup>();
+  const groupTicketsBySaleAndSector = (ts: PurchasedTicket[]): PurchasedTicketGroup[] => {
+    const map = new Map<string, PurchasedTicketGroup>();
 
     for (const tk of ts) {
       const sector = normalizeSectorName(tk.sectorName);
