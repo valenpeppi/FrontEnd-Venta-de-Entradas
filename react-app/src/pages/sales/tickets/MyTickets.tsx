@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { SalesService } from '../../../services/SalesService';
 import { useAuth } from '../../../shared/context/AuthContext';
 import styles from './styles/MyTickets.module.css';
-import jsPDF from 'jspdf';
+import { PdfService } from '../../../services/PdfService';
 
 import { formatLongDate, formatTime } from '../../../shared/utils/dateFormatter';
 
@@ -50,129 +50,9 @@ const MyTickets: React.FC = () => {
   }, [isLoggedIn, user, isLoading]);
 
   const handleDownloadPDF = async (ticket: PurchasedTicket) => {
-    const nonEnum = isNonEnumeratedTicket(ticket);
-
-    const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: 'a4' });
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    let y = 60;
-
-    pdf.setFontSize(24);
-    pdf.setFont('helvetica', 'bold');
-    pdf.setTextColor(79, 70, 229);
-    pdf.text('TicketApp - Entrada Oficial', pageWidth / 2, y, { align: 'center' });
-    y += 25;
-
-    pdf.setDrawColor(79, 70, 229);
-    pdf.setLineWidth(1);
-    pdf.line(40, y, pageWidth - 40, y);
-    y += 35;
-
-    pdf.setFontSize(18);
-    pdf.setFont('helvetica', 'bold');
-    pdf.setTextColor(0, 0, 0);
-    pdf.text(ticket.eventName, pageWidth / 2, y, { align: 'center' });
-    y += 20;
-
-    pdf.setDrawColor(79, 70, 229);
-    pdf.setLineWidth(0.8);
-    const titleWidth = pdf.getTextWidth(ticket.eventName);
-    pdf.line(pageWidth / 2 - titleWidth / 2 - 5, y, pageWidth / 2 + titleWidth / 2 + 5, y);
-    y += 30;
-
-    const printLabel = (label: string, value: string | number) => {
-      const xStart = 60;
-      const gap = 7;
-      const labelText = `${label}:`;
-      const labelWidth = pdf.getTextWidth(labelText);
-
-      pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor(79, 70, 229);
-      pdf.text(labelText, xStart, y);
-
-      pdf.setFont('helvetica', 'normal');
-      pdf.setTextColor(0, 0, 0);
-      pdf.text(String(value), xStart + labelWidth + gap, y);
-
-      y += 22;
-    };
-
-    printLabel('Fecha', formatLongDate(ticket.date));
-    printLabel('Hora', formatTime(ticket.date));
-    printLabel('Lugar', ticket.location);
-    printLabel('Sector', ticket.sectorName);
-
-    // En no enumeradas: NO mostrar Asiento ni ID Ticket
-    if (!nonEnum) {
-      printLabel('Asiento', ticket.seatNumber ?? 'Sin asignar');
-      printLabel('ID Ticket', ticket.idTicket);
-    }
-
-    y += 20;
-
-    pdf.setDrawColor(200, 200, 200);
-    pdf.setLineWidth(0.5);
-    pdf.line(40, y, pageWidth - 40, y);
-    y += 25;
-
-    if (ticket.imageUrl) {
-      try {
-        const imgData = await fetch(ticket.imageUrl)
-          .then(res => res.blob())
-          .then(blob => new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(blob);
-          }));
-
-        const imgWidth = pageWidth - 100;
-        const imgHeight = 160;
-        pdf.addImage(imgData, 'JPEG', 50, y, imgWidth, imgHeight);
-        y += imgHeight + 30;
-      } catch (error) {
-        console.warn('Error al cargar imagen para PDF:', error);
-      }
-    }
-
-    // QR: no exponer idTicket si no enumerada
-    const qrData = nonEnum
-      ? `venta:${ticket.idSale}-evento:${ticket.eventId}`
-      : `ticket:${ticket.idTicket}-venta:${ticket.idSale}`;
-
-    const qrImg = await fetch(`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(qrData)}`)
-      .then(res => res.blob())
-      .then(blob => new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
-      }));
-
-    pdf.addImage(qrImg, 'PNG', pageWidth / 2 - 70, y, 140, 140);
-    y += 170;
-
-    pdf.setDrawColor(79, 70, 229);
-    pdf.setLineWidth(0.8);
-    pdf.line(40, y, pageWidth - 40, y);
-    y += 40;
-
-    pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(16);
-    pdf.setTextColor(79, 70, 229);
-    pdf.text('¡Gracias por tu compra!', pageWidth / 2, y, { align: 'center' });
-    y += 25;
-
-    pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(13);
-    pdf.setTextColor(0, 0, 0);
-    if (user?.name) {
-      pdf.text(`Usuario: ${user.name}   DNI: ${user.dni}`, pageWidth / 2, y, { align: 'center' });
-      y += 20;
-    }
-
-    pdf.setFontSize(12);
-    pdf.setTextColor(90, 90, 90);
-    pdf.text('Conserva este PDF como comprobante oficial de tu entrada.', pageWidth / 2, y, { align: 'center' });
-
-    pdf.save(`entrada-${ticket.eventName.replace(/\s+/g, '-')}-${ticket.idSale}${nonEnum ? '' : `-${ticket.idTicket}`}.pdf`);
+    // Si no hay usuario (caso raro si ya cargó tickets), pasamos null o un objeto básico
+    const currentUser = user ? { name: user.name, dni: user.dni } : null;
+    await PdfService.generateTicketPdf(ticket, currentUser);
   };
 
   // --- Agrupar tickets por (venta + evento + sector) ---
