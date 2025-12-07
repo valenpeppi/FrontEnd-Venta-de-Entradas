@@ -10,10 +10,9 @@ import MyTickets from './pages/sales/tickets/MyTickets';
 import Help from './pages/support/Help';
 import EventDetailPage from './pages/events/detail/EventDetailPage';
 import About from './pages/support/About';
-import Login from './pages/auth/login/LoginUser';
+import LoginPage from './pages/auth/login/LoginPage';
 import Register from './pages/auth/register/RegisterUser';
 import CreateEventPage from './pages/events/create/CreateEventPage';
-import LoginCompany from './pages/auth/login/LoginCompany';
 import RegisterCompany from './pages/auth/register/RegisterCompany';
 import { useAuth } from './shared/context/AuthContext';
 import type { User } from './types/auth';
@@ -80,9 +79,14 @@ const App: React.FC = () => {
         <Route path="/searchedEvents" element={<Layout><SearchedEvents /></Layout>} />
 
         {/* Rutas para Invitados (no logueados) */}
-        <Route path="/login" element={<AuthRoute guestOnly><Login onLoginSuccess={handleLoginSuccess} /></AuthRoute>} />
+        <Route path="/login" element={<AuthRoute guestOnly><LoginPage onLoginSuccess={(userOrCompany, token) => {
+          if (userOrCompany.role === 'company') {
+            handleCompanyLoginSuccess({ companyName: userOrCompany.name, ...userOrCompany }, token);
+          } else {
+            handleLoginSuccess(userOrCompany, token);
+          }
+        }} /></AuthRoute>} />
         <Route path="/register" element={<AuthRoute guestOnly><Register onRegisterSuccess={handleRegisterSuccess} /></AuthRoute>} />
-        <Route path="/logincompany" element={<AuthRoute guestOnly><LoginCompany onLoginSuccess={handleCompanyLoginSuccess} /></AuthRoute>} />
         <Route path="/registercompany" element={<AuthRoute guestOnly><RegisterCompany onRegisterSuccess={handleCompanyRegisterSuccess} /></AuthRoute>} />
 
         {/* Rutas Protegidas para Usuarios */}

@@ -8,7 +8,7 @@ export const AuthService = {
         return response.data;
     },
 
-    login: async (credentials: any): Promise<{ user: User, token: string }> => {
+    login: async (credentials: any): Promise<{ token: string, user: any }> => {
         // Implement if used elsewhere, currently AuthContext has logic inside but we are refactoring.
         // AuthContext uses manual fetch. usage: fetch(`${import.meta.env.VITE_BACKEND_URL}.../api/auth/validate
         // We are replacing that one.

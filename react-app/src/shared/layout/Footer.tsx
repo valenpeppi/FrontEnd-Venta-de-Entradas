@@ -77,20 +77,7 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          <div className={styles.footerLinksColumn}>
-            <h4>Únete</h4>
-            <ul className={styles.footerActionLinks}>
-              <li>
-                <button onClick={() => handleNavigate('/registercompany')}>
-                  Sé un organizador
-                </button>
-                {' ¿Ya tienes una cuenta? '}
-                <button onClick={() => handleNavigate('/logincompany')}>
-                  Inicia sesión aquí
-                </button>
-              </li>
-            </ul>
-          </div>
+
         </div>
       </div>
 
