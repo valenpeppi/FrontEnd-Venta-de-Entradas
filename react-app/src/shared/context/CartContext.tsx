@@ -1,9 +1,10 @@
 import { createContext, useReducer, useEffect, useContext } from 'react';
 
-import axios from 'axios';
+import { SystemService } from '../../services/SystemService';
+import { SalesService } from '../../services/SalesService';
 import type { CartItem } from '../../types/cart';
 
-const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+
 
 interface CartState {
   cartItems: CartItem[];
@@ -117,7 +118,7 @@ function CartProvider({ children }: CartProviderProps) {
   useEffect(() => {
     const checkBoot = async () => {
       try {
-        const { data } = await axios.get(`${BASE_URL}/api/system/boot`);
+        const data = await SystemService.getBoot();
         const serverBoot = data?.bootId;
         const localBoot = localStorage.getItem('bootId');
 
@@ -209,9 +210,7 @@ function CartProvider({ children }: CartProviderProps) {
         .filter(item => String(item.eventId) === eventIdStr)
         .reduce((sum, item) => sum + item.quantity, 0);
 
-      const res = await axios.get(`${BASE_URL}/api/sales/my-tickets`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await SalesService.getMyTickets();
 
       const alreadyBought = (res.data?.data || []).filter((t: any) => String(t.eventId) === eventIdStr).length;
       const total = alreadyBought + currentInCart + quantity;

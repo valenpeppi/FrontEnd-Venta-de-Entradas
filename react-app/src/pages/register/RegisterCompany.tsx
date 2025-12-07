@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useMessage } from '../../shared/context/MessageContext';
-import axios from 'axios';
+import { AuthService } from '../../services/AuthService';
 import ReCAPTCHA from 'react-google-recaptcha';
 import styles from './styles/RegisterCompany.module.css';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
@@ -120,7 +120,7 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) 
     }
 
     try {
-      await axios.post('http://localhost:3000/api/auth/register-company', {
+      await AuthService.registerCompany({
         ...formData,
         captchaToken: captchaValue,
       });
@@ -130,13 +130,9 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) 
         onRegisterSuccess();
         navigate('/logincompany');
       }, 2000);
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response) {
-        const errorMessage = err.response.data?.message || 'Error al registrar la empresa.';
-        setServerError(errorMessage);
-      } else {
-        setServerError('Error de red o del servidor.');
-      }
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.message || 'Error al registrar la empresa.';
+      setServerError(errorMessage);
     }
   };
 

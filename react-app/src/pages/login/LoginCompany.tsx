@@ -2,7 +2,7 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useMessage } from '../../shared/context/MessageContext';
-import axios from 'axios';
+import { AuthService } from '../../services/AuthService';
 import styles from './styles/LoginCompany.module.css';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
@@ -68,22 +68,16 @@ const LoginCompany: React.FC<LoginCompanyProps> = ({ onLoginSuccess }) => {
 
 
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login-company', {
+      const data = await AuthService.loginCompany({
         contactEmail: formData.contactEmail,
         password: formData.password,
       });
 
-      const data = response.data;
       onLoginSuccess(data.company, data.token);
-
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error en login de organizador:', err);
-      if (axios.isAxiosError(err) && err.response) {
-        const errorMessage = err.response.data?.message || 'Email o contraseña de organizador incorrectos.';
-        setServerError(errorMessage);
-      } else {
-        setServerError('Error de red o del servidor.');
-      }
+      const errorMessage = err?.response?.data?.message || 'Email o contraseña de organizador incorrectos.';
+      setServerError(errorMessage);
     }
   };
 

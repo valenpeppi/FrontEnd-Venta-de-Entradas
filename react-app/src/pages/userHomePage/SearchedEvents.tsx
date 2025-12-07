@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import { EventService } from '../../services/EventService';
 import type { Ticket } from '../../types/cart';
 import styles from './styles/SearchedEvents.module.css';
 import { formatLongDate, formatTime } from '../../shared/utils/dateFormatter';
@@ -49,9 +49,7 @@ const SearchedEvents: React.FC = () => {
     const fetchSearchResults = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${BASE_URL}/api/events/search`, {
-          params: { query }
-        });
+        const response = await EventService.searchEvents(query);
 
         if (response.data?.ok) {
           const mapped = response.data.data.map(mapApiEventToTicket);

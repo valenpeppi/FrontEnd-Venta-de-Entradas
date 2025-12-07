@@ -1,7 +1,7 @@
 import { createContext, useReducer, useEffect, useContext } from 'react';
 
 import type { Ticket } from '../../types/cart';
-import axios from 'axios';
+import { EventService } from '../../services/EventService';
 import { formatLongDate, formatTime } from '../utils/dateFormatter';
 
 interface EventsState {
@@ -82,15 +82,15 @@ function EventsProvider({ children }: EventsProviderProps) {
     const fetchEvents = async () => {
       try {
         const [featuredRes, approvedRes] = await Promise.all([
-          axios.get(`${BASE_URL}/api/events/featured`),
-          axios.get(`${BASE_URL}/api/events/approved`),
+          EventService.getFeatured(),
+          EventService.getApproved(),
         ]);
 
         if (alive) {
-          const featuredTickets = (featuredRes.data?.data ?? []).map((ev: any) => mapApiEventToTicket(ev));
+          const featuredTickets = (featuredRes.data ?? []).map((ev: any) => mapApiEventToTicket(ev));
           dispatch({ type: 'SET_FEATURED_TICKETS', payload: { tickets: featuredTickets } });
 
-          const approvedTickets = (approvedRes.data?.data ?? []).map((ev: any) => mapApiEventToTicket(ev));
+          const approvedTickets = (approvedRes.data ?? []).map((ev: any) => mapApiEventToTicket(ev));
           dispatch({ type: 'SET_APPROVED_TICKETS', payload: { tickets: approvedTickets } });
         }
       } catch (err) {

@@ -1,10 +1,9 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMessage } from '../../shared/context/MessageContext';
-import axios from 'axios';
+import { EventService } from '../../services/EventService';
+import { PlaceService } from '../../services/PlaceService';
 import styles from './styles/CreateEventPage.module.css';
-
-const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
 import type { EventType, Sector } from '../../types/events';
 import type { Place, CreateEventState, CreateEventAction } from '../../types/company';
@@ -63,11 +62,11 @@ const CreateEventPage: React.FC = () => {
     const fetchInitialData = async () => {
       try {
         const [typesRes, placesRes] = await Promise.all([
-          axios.get<EventType[]>(`${BASE_URL}/api/events/event-types`),
-          axios.get<Place[]>(`${BASE_URL}/api/places/getPlaces`),
+          EventService.getEventTypes(),
+          PlaceService.getAllPlaces(),
         ]);
-        setTypes(typesRes.data);
-        setPlaces(placesRes.data);
+        setTypes(typesRes);
+        setPlaces(placesRes);
       } catch (e) {
         console.error("Error al cargar datos iniciales:", e);
         setAppMessage('No se pudieron cargar los datos para crear el evento.', 'error');
@@ -81,11 +80,11 @@ const CreateEventPage: React.FC = () => {
       if (state.idPlace) {
         try {
           const [sectorsRes, datesRes] = await Promise.all([
-            axios.get<Sector[]>(`${BASE_URL}/api/places/${state.idPlace}/sectors`),
-            axios.get<{ data: string[] }>(`${BASE_URL}/api/events/available-dates/${state.idPlace}`)
+            PlaceService.getPlaceSectors(state.idPlace),
+            PlaceService.getAvailableDates(state.idPlace)
           ]);
-          setSectors(sectorsRes.data);
-          dispatch({ type: 'SET_OCCUPIED_DATES', payload: { dates: datesRes.data.data } });
+          setSectors(sectorsRes);
+          dispatch({ type: 'SET_OCCUPIED_DATES', payload: { dates: datesRes } });
           dispatch({ type: 'SET_FIELD', payload: { field: 'sectorPrices', value: {} } });
         } catch (e) {
           console.error("Error al cargar sectores o fechas:", e);
@@ -180,30 +179,18 @@ const CreateEventPage: React.FC = () => {
     formData.append('image', state.image);
 
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setAppMessage('No estás autenticado. Por favor, inicia sesión de nuevo.', 'error');
-        navigate('/logincompany');
-        return;
-      }
 
-      await axios.post(`${BASE_URL}/api/events/createEvent`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+
+      await EventService.createEvent(formData);
 
       setAppMessage('¡Evento creado exitosamente!', 'success');
       dispatch({ type: 'RESET_FORM' });
       navigate('/');
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error al crear evento:', err);
-      if (axios.isAxiosError(err) && err.response) {
-        const errorMessage = (err.response.data as any)?.message || 'Error al crear el evento.';
-        dispatch({ type: 'SET_ERROR', payload: { error: errorMessage } });
-        setAppMessage(`Error: ${errorMessage}`, 'error');
-      } else {
-        dispatch({ type: 'SET_ERROR', payload: { error: 'Error de red o del servidor.' } });
-        setAppMessage('Error de red o del servidor.', 'error');
-      }
+      const errorMessage = (err?.response?.data as any)?.message || 'Error al crear el evento.';
+      dispatch({ type: 'SET_ERROR', payload: { error: errorMessage } });
+      setAppMessage(`Error: ${errorMessage}`, 'error');
     }
   };
 

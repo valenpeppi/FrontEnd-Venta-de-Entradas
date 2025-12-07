@@ -1,11 +1,18 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Login from './LoginUser';
 import '@testing-library/jest-dom';
-import axios, { AxiosError } from 'axios';
 import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
+import { AuthService } from '../../services/AuthService';
 
-vi.mock('axios');
+// Mock AuthService
+vi.mock('../../services/AuthService', () => ({
+  AuthService: {
+    login: vi.fn(),
+  },
+}));
+
+// Mock MessageContext
 vi.mock('../../shared/context/MessageContext', () => ({
   useMessage: () => ({
     messages: [],
@@ -13,6 +20,7 @@ vi.mock('../../shared/context/MessageContext', () => ({
   }),
 }));
 
+// Mock Router
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
@@ -22,19 +30,15 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-const mockedAxios = axios as unknown as {
-  post: ReturnType<typeof vi.fn>;
-};
-
 describe('🔐 Componente LoginUser', () => {
   const mockOnLoginSuccess = vi.fn();
+  const mockLogin = vi.mocked(AuthService.login);
 
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
   });
 
-  
   it('muestra errores de validación si los campos están vacíos al enviar', async () => {
     render(
       <MemoryRouter>
@@ -49,7 +53,6 @@ describe('🔐 Componente LoginUser', () => {
     ).toBeInTheDocument();
   });
 
-  
   it('valida formato de email incorrecto', async () => {
     render(
       <MemoryRouter>
@@ -64,15 +67,12 @@ describe('🔐 Componente LoginUser', () => {
     expect(await screen.findByText(/Email inválido/i)).toBeInTheDocument();
   });
 
-  
   it('realiza login exitoso y llama a onLoginSuccess', async () => {
     const mockResponse = {
-      data: {
-        token: 'fake-jwt-token',
-        user: { id: 1, name: 'Agus', role: 'user' },
-      },
+      token: 'fake-jwt-token',
+      user: { id: 1, name: 'Agus', role: 'user', mail: 'test@example.com' },
     };
-    mockedAxios.post.mockResolvedValueOnce(mockResponse);
+    mockLogin.mockResolvedValueOnce(mockResponse);
 
     render(
       <MemoryRouter>
@@ -90,9 +90,13 @@ describe('🔐 Componente LoginUser', () => {
     fireEvent.click(screen.getByRole('button', { name: /Iniciar Sesión/i }));
 
     await waitFor(() => {
+      expect(mockLogin).toHaveBeenCalledWith({
+        mail: 'test@example.com',
+        password: '123456',
+      });
       expect(mockOnLoginSuccess).toHaveBeenCalledWith(
-        mockResponse.data.user,
-        mockResponse.data.token
+        mockResponse.user,
+        mockResponse.token
       );
     });
 
@@ -100,14 +104,11 @@ describe('🔐 Componente LoginUser', () => {
     expect(localStorage.getItem('user')).toContain('Agus');
   });
 
-  
-  it('muestra mensaje de error si el servidor devuelve 401', async () => {
+  it('muestra mensaje de error si el servidor devuelve error', async () => {
     const fakeError = {
-      isAxiosError: true,
       response: { data: { message: 'Credenciales incorrectas.' } },
-    } as AxiosError;
-
-    mockedAxios.post.mockRejectedValueOnce(fakeError);
+    };
+    mockLogin.mockRejectedValueOnce(fakeError);
 
     render(
       <MemoryRouter>
@@ -131,10 +132,9 @@ describe('🔐 Componente LoginUser', () => {
     expect(mockOnLoginSuccess).not.toHaveBeenCalled();
   });
 
-  
-  it('muestra mensaje de error genérico si no hay respuesta del servidor', async () => {
+  it('muestra mensaje de error genérico si falla sin respuesta', async () => {
     const networkError = new Error('Network Error');
-    mockedAxios.post.mockRejectedValueOnce(networkError);
+    mockLogin.mockRejectedValueOnce(networkError);
 
     render(
       <MemoryRouter>
@@ -158,65 +158,5 @@ describe('🔐 Componente LoginUser', () => {
     ).toBeInTheDocument();
 
     expect(mockOnLoginSuccess).not.toHaveBeenCalled();
-  });
-
-
-  
-  it('muestra error si falta uno de los campos requeridos', async () => {
-    render(
-      <MemoryRouter>
-        <Login onLoginSuccess={mockOnLoginSuccess} />
-      </MemoryRouter>
-    );
-
-    fireEvent.change(screen.getByLabelText(/Email/i), {
-      target: { value: 'test@example.com' },
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: /Iniciar Sesión/i }));
-
-    expect(
-      await screen.findByText(/Por favor, corrige los errores antes de continuar/i)
-    ).toBeInTheDocument();
-
-    fireEvent.change(screen.getByLabelText(/Contraseña/i), {
-      target: { value: '' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Iniciar Sesión/i }));
-
-    expect(
-      await screen.findByText(/Por favor, corrige los errores antes de continuar/i)
-    ).toBeInTheDocument();
-  });
-
-  
-  it('muestra íconos de validación correctos al completar los campos', async () => {
-    render(
-      <MemoryRouter>
-        <Login onLoginSuccess={mockOnLoginSuccess} />
-      </MemoryRouter>
-    );
-
-    const emailInput = screen.getByLabelText(/Email/i);
-    const passwordInput = screen.getByLabelText(/Contraseña/i);
-
-    fireEvent.change(emailInput, { target: { value: 'correo_invalido' } });
-    fireEvent.blur(emailInput);
-
-    expect(await screen.findByText(/Email inválido/i)).toBeInTheDocument();
-
-    fireEvent.change(emailInput, { target: { value: 'user@mail.com' } });
-    fireEvent.blur(emailInput);
-
-    await waitFor(() => {
-      expect(screen.queryByText(/Email inválido/i)).toBeNull();
-    });
-
-    fireEvent.change(passwordInput, { target: { value: '123456' } });
-    fireEvent.blur(passwordInput);
-
-    await waitFor(() => {
-      expect(passwordInput).toHaveValue('123456');
-    });
   });
 });

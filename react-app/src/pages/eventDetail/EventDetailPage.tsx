@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { EventService } from '../../services/EventService';
 import { useCart } from '../../shared/context/CartContext';
 import { useMessage } from '../../shared/context/MessageContext';
 import { useEventDetail } from '../../shared/context/EventDetailContext';
@@ -10,7 +10,7 @@ import EventDetailHeader from './EventDetailHeader';
 import EventDetailBody from './EventDetailBody';
 import styles from './styles/EventDetailPage.module.css';
 
-const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+
 
 const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,10 +46,8 @@ const EventDetailPage: React.FC = () => {
         setLoading(true);
         setLoadingLocal(true);
 
-        const summaryRes = await axios.get(`${BASE_URL}/api/events/events/${id}`);
-        const sectorsRes = await axios.get(`${BASE_URL}/api/events/events/${id}/sectors`);
-
-        const summaryData = summaryRes.data?.data;
+        const summaryData = await EventService.getEventById(id!);
+        const sectorsData = await EventService.getEventSectors(id!);
         if (!summaryData) {
           setAppMessage('No se encontró el evento', 'error');
           navigate('/');
@@ -62,7 +60,7 @@ const EventDetailPage: React.FC = () => {
         });
 
         if (summaryData.placeType.toLowerCase() !== 'nonenumerated') {
-          const sectorsList: Sector[] = (sectorsRes.data?.data ?? []).map((s: Sector) => ({
+          const sectorsList: Sector[] = (sectorsData.data ?? []).map((s: Sector) => ({
             ...s,
             selected: 0,
             enumerated: s.enumerated,
@@ -85,8 +83,8 @@ const EventDetailPage: React.FC = () => {
     if (!summary) return;
     const fetchTicketMap = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/api/events/events/${summary.id}/tickets/map`);
-        setSeatTicketMap(res.data?.data || {});
+        const res = await EventService.getEventTicketMap(summary.id);
+        setSeatTicketMap(res.data || {});
       } catch (err) {
         console.error('❌ Error al cargar mapa de tickets', err);
         setSeatTicketMap({});
@@ -100,9 +98,8 @@ const EventDetailPage: React.FC = () => {
     const sec = sectors.find((s) => s.idSector === selectedSector);
     if (!sec || !sec.enumerated) return;
 
-    axios
-      .get(`${BASE_URL}/api/events/events/${summary.id}/sectors/${selectedSector}/seats`)
-      .then((res) => setSeats(res.data?.data ?? []))
+    EventService.getEventSeats(summary.id, selectedSector)
+      .then((res) => setSeats(res.data ?? []))
       .catch((err) => {
         console.error('Error al cargar asientos', err);
         setAppMessage('No se pudieron cargar los asientos para este sector.', 'error');

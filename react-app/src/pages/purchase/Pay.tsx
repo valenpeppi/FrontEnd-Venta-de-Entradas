@@ -4,7 +4,7 @@ import { useCart } from '../../shared/context/CartContext.tsx';
 import { useAuth } from '../../shared/context/AuthContext.tsx';
 import styles from './styles/Pay.module.css';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import axios from 'axios';
+import { PaymentService } from '../../services/PaymentService';
 
 import type { PaymentTicketGroup as TicketGroup, GroupedByEvent } from '../../types/purchase.ts';
 
@@ -138,7 +138,7 @@ const Pay: React.FC = () => {
 
       const ticketGroups = buildTicketGroups();
 
-      const { data } = await axios.post('http://localhost:3000/api/mp/checkout', {
+      const { data } = await PaymentService.mpCheckout({
         items,
         dniClient: user.dni,
         customerEmail: user.mail,
@@ -181,7 +181,7 @@ const Pay: React.FC = () => {
 
       const ticketGroups = buildTicketGroups();
 
-      const { data } = await axios.post('http://localhost:3000/api/stripe/checkout', {
+      const { data } = await PaymentService.stripeCheckout({
         items,
         ticketGroups,
         dniClient: user.dni,

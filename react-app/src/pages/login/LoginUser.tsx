@@ -1,8 +1,7 @@
-import type React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useMessage } from "../../shared/context/MessageContext";
-import axios from "axios";
+import { AuthService } from "../../services/AuthService";
 import MessageDisplay from "../../shared/MessageDisplay";
 import styles from "./styles/LoginUser.module.css";
 import globalStyles from "../../shared/styles/GlobalStyles.module.css";
@@ -68,12 +67,10 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", {
+      const data = await AuthService.login({
         mail: formData.email,
         password: formData.password,
       });
-
-      const data = response.data;
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 

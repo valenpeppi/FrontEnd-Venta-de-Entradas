@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { SalesService } from '../../services/SalesService';
 import { useAuth } from '../../shared/context/AuthContext';
 import styles from './styles/MyTickets.module.css';
 import jsPDF from 'jspdf';
@@ -36,11 +36,7 @@ const MyTickets: React.FC = () => {
         return;
       }
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:3000/api/sales/my-tickets`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data: PurchasedTicket[] = response.data.data || [];
+        const data: PurchasedTicket[] = (await SalesService.getMyTickets()).data || [];
         setTickets(data);
       } catch (err) {
         console.error("Error al obtener las entradas:", err);

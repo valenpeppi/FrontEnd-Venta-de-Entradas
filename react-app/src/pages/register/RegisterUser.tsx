@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import { AuthService } from "../../services/AuthService";
 import ReCAPTCHA from 'react-google-recaptcha';
 import styles from './styles/RegisterUser.module.css';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
@@ -106,7 +106,7 @@ const Register: React.FC<RegisterUserProps> = ({ onRegisterSuccess }) => {
     const surname = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
 
     try {
-      await axios.post(`http://localhost:3000/api/auth/register`, {
+      await AuthService.registerUser({
         dni: formData.dni,
         name,
         surname,
@@ -121,13 +121,9 @@ const Register: React.FC<RegisterUserProps> = ({ onRegisterSuccess }) => {
         onRegisterSuccess();
         navigate('/login');
       }, 2000);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errorMsg = error.response?.data?.message || 'Error de red o del servidor.';
-        setServerError(errorMsg);
-      } else {
-        setServerError('Ocurrió un error inesperado.');
-      }
+    } catch (error: any) {
+      const errorMsg = error?.response?.data?.message || 'Error de red o del servidor.';
+      setServerError(errorMsg);
     }
   };
 

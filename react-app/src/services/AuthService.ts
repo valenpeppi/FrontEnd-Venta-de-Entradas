@@ -22,12 +22,17 @@ export const AuthService = {
     },
 
     registerUser: async (userData: any) => {
-        const response = await api.post('/auth/register/user', userData);
+        const response = await api.post('/auth/register', userData);
         return response.data;
     },
 
     registerCompany: async (companyData: any) => {
-        const response = await api.post('/auth/register/company', companyData);
+        const response = await api.post('/auth/register-company', companyData);
+        return response.data;
+    },
+
+    loginCompany: async (credentials: any) => {
+        const response = await api.post('/auth/login-company', credentials);
         return response.data;
     }
 };
