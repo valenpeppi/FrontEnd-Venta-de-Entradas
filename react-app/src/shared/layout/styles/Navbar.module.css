@@ -454,112 +454,179 @@
 @media (max-width: 768px) {
   .navbarContainer {
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
+    /* Space between brand and toggle/cart */
     gap: 1rem;
+    position: relative;
+  }
+
+  .brandWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex: 1;
   }
 
   .navbarBrand {
-    width: 100%;
+    font-size: 1.8rem;
+    width: auto;
+    margin: 0;
+  }
+
+  .mobileMenuToggle {
+    display: flex;
+    align-items: center;
     justify-content: center;
-    margin-bottom: 0.5rem;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: #4f46e5;
+    cursor: pointer;
   }
 
   .navbarSearch {
     order: 3;
     width: 100%;
     justify-content: center;
+    margin-top: 10px;
   }
 
-  .navbarSearchInput {
-    width: 90%;
-    max-width: 300px;
+  .hiddenMobile {
+    display: none;
+  }
+
+  .navLinksContainer {
+    display: none;
+    /* Hidden by default on mobile */
+    flex-direction: column;
+    width: 100%;
+    order: 4;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    animation: slideDown 0.3s ease;
+  }
+
+  .navLinksContainer.mobileMenuOpen {
+    display: flex;
   }
 
   .navbarMenu {
-    order: 2;
-    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .navbarMenuItem {
     justify-content: center;
-    gap: 0.8rem;
-    margin-bottom: 0.5rem;
+    padding: 10px;
+    font-size: 1.1rem;
   }
 
   .navbarAuthSection {
-    order: 4;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+    justify-content: center;
+    width: 100%;
+    margin-left: 0;
+    flex-direction: column;
+  }
+
+  .userMenuContainer {
     width: 100%;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .userMenuTrigger {
+    width: 100%;
     justify-content: center;
-    gap: 0.8rem;
-    margin-left: 0;
   }
 
-  .navbarContainer {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, auto);
-    text-align: center;
+  .userDropdown {
+    position: static;
+    /* Relative to flow in mobile */
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    padding-top: 10px;
   }
 
-  .navbarCartContainer {
-    flex-shrink: 0;
+  .dropdownList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dropdownItem {
+    justify-content: center;
+  }
+
+  .navbarAuthButtons {
+    flex-direction: column;
+    width: 100%;
   }
 
   .navbarLoginBtn,
-  .navbarRegisterBtn,
-  .navbarLogoutBtn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
+  .navbarRegisterBtn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .navbarCartContainer {
+    /* If we want cart always visible separate from menu */
+    position: absolute;
+    right: 50px;
+    /* Space for hamburger */
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* Ensure hamburger has space */
+  .mobileMenuToggle {
+    margin-left: 10px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobileMenuToggle {
+    display: none;
+  }
+
+  .brandWrapper {
+    display: contents;
+    /* Allows children to participate in flex layout of container */
+  }
+
+  .navLinksContainer {
+    display: contents;
+    /* Allows children (menu and auth) to be part of the main flex container */
   }
 }
 
 @media (max-width: 480px) {
-  .navbar {
-    padding: 0.8rem;
-  }
-
   .navbarBrand {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
 
-  .navbarSearchInput {
-    padding: 0.4rem 1.8rem 0.4rem 2.5rem;
-    font-size: 0.9rem;
+  .image1 {
+    width: 40px;
+    height: 40px;
   }
 
-  .searchIcon {
-    left: 0.8rem;
-    width: 18px;
-    height: 18px;
-  }
-
-  .navbarMenuItem {
-    font-size: 0.9rem;
-  }
-
-  .navbarLoginBtn,
-  .navbarRegisterBtn,
-  .navbarLogoutBtn {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-  }
-
-  .navbarCart {
-    width: 25px;
-    height: 25px;
-  }
-
-  .cartCount {
-    top: -3px;
-    right: -10px;
-    width: 18px;
-    height: 18px;
-    font-size: 10px;
+  .navbarCartContainer {
+    right: 45px;
   }
 }
 
-.navbarBrand,
-.navbarSearch,
-.navbarMenu,
-.navbarAuthSection {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.brandWrapper,
+.navLinksContainer {
+  /* Base styles implied by contents or flex */
 }

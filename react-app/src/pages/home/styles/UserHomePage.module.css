@@ -11,6 +11,7 @@
     transform: scale(0.98);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -23,7 +24,8 @@
   padding: 1.5rem 2rem;
 }
 
-.homepageTitle, .eventListTitle {
+.homepageTitle,
+.eventListTitle {
   text-align: center;
   margin-bottom: 2.5rem;
   font-size: 2.2rem;
@@ -34,14 +36,14 @@
 }
 
 .eventListTitle {
-    margin-top: 3rem;
-    margin-bottom: 2rem;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
 }
 
 .eventTypeFilterContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem; 
+  gap: 0.75rem;
   justify-content: center;
   margin: 2.5rem 0;
   padding-bottom: 2.5rem;
@@ -51,11 +53,11 @@
 .eventTypeFilterButton {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem; 
-  padding: 0.625rem 1.25rem; 
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
   font-size: 0.95rem;
   font-weight: 600;
-  border-radius: 9999px; 
+  border-radius: 9999px;
   border: 1px solid transparent;
   background-color: var(--white);
   color: var(--text-light);
@@ -79,8 +81,8 @@
 
 .eventCount {
   background-color: rgba(0, 0, 0, 0.05);
-  color: inherit; 
-  padding: 0.125rem 0.5rem; 
+  color: inherit;
+  padding: 0.125rem 0.5rem;
   border-radius: 9999px;
   font-size: 0.8rem;
   font-weight: 700;
@@ -96,6 +98,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -152,15 +155,32 @@
   cursor: pointer;
   padding: 0.75rem;
   animation: fadeIn 0.5s ease-out;
-  animation-fill-mode: both; 
+  animation-fill-mode: both;
 }
 
-.eventTypeGallery .eventCardLink:nth-child(1) .eventCard { animation-delay: 0.05s; }
-.eventTypeGallery .eventCardLink:nth-child(2) .eventCard { animation-delay: 0.1s; }
-.eventTypeGallery .eventCardLink:nth-child(3) .eventCard { animation-delay: 0.15s; }
-.eventTypeGallery .eventCardLink:nth-child(4) .eventCard { animation-delay: 0.2s; }
-.eventTypeGallery .eventCardLink:nth-child(5) .eventCard { animation-delay: 0.25s; }
-.eventTypeGallery .eventCardLink:nth-child(6) .eventCard { animation-delay: 0.3s; }
+.eventTypeGallery .eventCardLink:nth-child(1) .eventCard {
+  animation-delay: 0.05s;
+}
+
+.eventTypeGallery .eventCardLink:nth-child(2) .eventCard {
+  animation-delay: 0.1s;
+}
+
+.eventTypeGallery .eventCardLink:nth-child(3) .eventCard {
+  animation-delay: 0.15s;
+}
+
+.eventTypeGallery .eventCardLink:nth-child(4) .eventCard {
+  animation-delay: 0.2s;
+}
+
+.eventTypeGallery .eventCardLink:nth-child(5) .eventCard {
+  animation-delay: 0.25s;
+}
+
+.eventTypeGallery .eventCardLink:nth-child(6) .eventCard {
+  animation-delay: 0.3s;
+}
 
 .eventCardLink:hover .eventCard {
   transform: scale(1.1);
@@ -205,20 +225,51 @@
 }
 
 @media (max-width: 768px) {
+  .homepageMain {
+    padding: 1rem;
+  }
+
+  .homepageTitle,
+  .eventListTitle {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+
+  .eventTypeFilterContainer {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    /* Scrollable filters on mobile */
+    justify-content: flex-start;
+    padding-bottom: 1.5rem;
+    -webkit-overflow-scrolling: touch;
+    margin: 1.5rem 0;
+  }
+
+  .eventTypeFilterButton {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
   .eventTypeSection {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 2rem;
   }
+
   .eventTypeTitle {
     text-align: center;
     padding-right: 0;
     width: 100%;
-  }
-  .eventTypeGallery {
-    justify-content: center;
+    font-size: 1.5rem;
   }
 
+  .eventTypeGallery {
+    justify-content: center;
+    gap: 1.5rem;
+  }
 }
 
 .loadingState {
@@ -256,9 +307,9 @@
     transform: translateY(0);
     opacity: 0.6;
   }
+
   to {
     transform: translateY(-10px);
     opacity: 1;
   }
 }
-

@@ -3,6 +3,7 @@
     transform: scale(0.98);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -10,9 +11,17 @@
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
 }
 
 .eventDetailContainer {
@@ -29,7 +38,7 @@
   flex-direction: column;
   background: #fff;
   border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   margin-bottom: 2rem;
 }
@@ -48,39 +57,39 @@
   background: #e5e7eb;
 }
 
-.eventInfo { 
-  padding: 1.5rem 2rem; 
+.eventInfo {
+  padding: 1.5rem 2rem;
 }
 
-.eventTitle { 
-  font-size: 2rem; 
-  font-weight: 700; 
-  color: #3730a3; 
-  margin-bottom: 1rem; 
+.eventTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3730a3;
+  margin-bottom: 1rem;
 }
 
-.eventDetails p { 
-  margin: 0.4rem 0; 
-  font-size: 1rem; 
+.eventDetails p {
+  margin: 0.4rem 0;
+  font-size: 1rem;
 }
 
-.detailLabel { 
-  font-weight: 600; 
-  color: #4b5563; 
+.detailLabel {
+  font-weight: 600;
+  color: #4b5563;
 }
 
-.sectionTitle { 
-  font-size: 1.5rem; 
-  font-weight: 700; 
-  margin-bottom: 1rem; 
-  color: #111827; 
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #111827;
 }
 
 /* Plano del Estadio */
 .stadiumPlanContainer {
   position: relative;
   width: 100%;
-  height: auto;            
+  height: auto;
   margin: 1rem 0 1.5rem 0;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -104,124 +113,134 @@
 
 .stadiumImage {
   width: 100%;
-  height: auto;         
-  object-fit: contain;    
+  height: auto;
+  object-fit: contain;
   display: block;
 }
 
-.sectorArea { 
-  position: absolute; 
-  cursor: pointer; 
-  border: 2px solid transparent; 
-  transition: box-shadow 150ms ease, transform 150ms ease, background-color 0.2s ease; 
+.sectorArea {
+  position: absolute;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: box-shadow 150ms ease, transform 150ms ease, background-color 0.2s ease;
 }
-.sectorArea:hover { 
-  transform: translateY(-1px); 
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12); 
+
+.sectorArea:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 /* Gigante de Arroyito */
-.sectorTribunaNorte { 
-    top: 23%; 
-    left: 32.75%; 
-    width: 10%; 
-    height: 63.5%; 
-    background: rgba(88,115,209,0.35); }
+.sectorTribunaNorte {
+  top: 23%;
+  left: 32.75%;
+  width: 10%;
+  height: 63.5%;
+  background: rgba(88, 115, 209, 0.35);
+}
 
-.sectorTribunaSur { 
-    top: 23%; 
-    left: 78%;
-    width: 10%; 
-    height: 63.5%; 
-    background: rgba(236,72,72,0.35); }
+.sectorTribunaSur {
+  top: 23%;
+  left: 78%;
+  width: 10%;
+  height: 63.5%;
+  background: rgba(236, 72, 72, 0.35);
+}
 
-.sectorPopular { 
-    top: 89%; 
-    left: 33%; 
-    width: 55%; 
-    height: 8.25%; 
-    background: rgba(234,179,8,0.35); }
+.sectorPopular {
+  top: 89%;
+  left: 33%;
+  width: 55%;
+  height: 8.25%;
+  background: rgba(234, 179, 8, 0.35);
+}
 
-.sectorCampo { 
-    top: 23%; 
-    left: 45%; 
-    width: 31%; 
-    height: 63.5%; 
-    background: rgba(16,185,129,0.35); }
+.sectorCampo {
+  top: 23%;
+  left: 45%;
+  width: 31%;
+  height: 63.5%;
+  background: rgba(16, 185, 129, 0.35);
+}
 
 /* Bioceres Arena */
-.sectorVip { 
-    top: 31%; 
-    left: 35.5%; 
-    width: 60%; 
-    height: 16%; 
-    background: rgba(88, 115, 209, 0.4); }
-    
-.sectorGeneral { 
-    top: 50.75%; 
-    left: 35.5%; 
-    width: 60%; 
-    height: 40%; 
-    background: rgba(236, 72, 72, 0.4); }
+.sectorVip {
+  top: 31%;
+  left: 35.5%;
+  width: 60%;
+  height: 16%;
+  background: rgba(88, 115, 209, 0.4);
+}
+
+.sectorGeneral {
+  top: 50.75%;
+  left: 35.5%;
+  width: 60%;
+  height: 40%;
+  background: rgba(236, 72, 72, 0.4);
+}
 
 /* El Círculo */
-.sectorSalaPrincipal { 
-    top: 28%; 
-    left: 33%; 
-    width: 58.5%; 
-    height: 39.5%; 
-    background: rgba(88,115,209,0.35); }
-
-.sectorTribunaSuperior { 
-    top: 70%; 
-    left: 33%; 
-    width: 58.5%; 
-    height: 17%; 
-    background: rgba(236, 72, 72, 0.4); }
-
-.sectorList { 
-  display: grid; 
-  grid-template-columns: repeat(2, minmax(0, 1fr)); 
-  gap: 1.5rem; 
-  align-items: stretch; 
+.sectorSalaPrincipal {
+  top: 28%;
+  left: 33%;
+  width: 58.5%;
+  height: 39.5%;
+  background: rgba(88, 115, 209, 0.35);
 }
 
-.centeredList { 
-  grid-template-columns: minmax(250px, 400px); 
-  justify-content: center; 
+.sectorTribunaSuperior {
+  top: 70%;
+  left: 33%;
+  width: 58.5%;
+  height: 17%;
+  background: rgba(236, 72, 72, 0.4);
 }
 
-.sectorCard { 
-  background: #fff; 
-  border: 1px solid #e5e7eb; 
-  border-radius: 0.75rem; 
-  padding: 1.2rem; 
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease; 
-  height: 100%; 
-  display: flex; 
-  flex-direction: column; 
-}
-.sectorCard:hover { 
-  transform: translateY(-2px); 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+.sectorList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
-.activeCard { 
-  border-color: #10b981; 
+.centeredList {
+  grid-template-columns: minmax(250px, 400px);
+  justify-content: center;
+}
+
+.sectorCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sectorCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.activeCard {
+  border-color: #10b981;
   box-shadow: 0 0 0 2px #10b981;
   animation: pulse 1.5s infinite;
 }
 
-.sectorName { 
-  font-size: 1.2rem; 
-  font-weight: 600; 
-  margin-bottom: 0.5rem; 
-  color: #1f2937; 
+.sectorName {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1f2937;
 }
 
-.sectorInfo p { 
-  margin: 0.4rem 0; 
+.sectorInfo p {
+  margin: 0.4rem 0;
 }
 
 .sectorInput {
@@ -231,64 +250,68 @@
   margin-top: auto;
 }
 
-.sectorInput label { 
-  font-size: 0.9rem; 
-  font-weight: 600; 
-  color: #374151; 
+.sectorInput label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
 }
 
-.quantitySelect { 
-  width: 100px; 
-  padding: 0.5rem; 
-  border: 1px solid #d1d5db; 
-  border-radius: 0.5rem; 
-  font-size: 1rem; 
-  background-color: #fff; 
-  cursor: pointer; 
+.quantitySelect {
+  width: 100px;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background-color: #fff;
+  cursor: pointer;
 }
 
 /* Acciones y Botones */
-.actions { 
-  margin-top: 2rem; 
-  display: flex; 
-  justify-content: center; 
+.actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
 }
 
-.btnConfirm { 
-  background: #10b981; 
-  color: #fff; 
-  font-weight: 600; 
-  padding: 0.9rem 2rem; 
-  border-radius: 0.5rem; 
-  border: none; 
-  cursor: pointer; 
-  font-size: 1.1rem; 
-  transition: background 0.2s; 
+.btnConfirm {
+  background: #10b981;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.9rem 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.2s;
 }
-.btnConfirm:hover { 
-  background: #059669; 
+
+.btnConfirm:hover {
+  background: #059669;
 }
-.btnConfirm:disabled { 
-  background: #9ca3af; 
-  cursor: not-allowed; 
+
+.btnConfirm:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
 }
 
 /* Media Queries */
-@media (max-width: 992px) { 
-  .sectorList { 
-    grid-template-columns: 1fr; 
-  } 
+@media (max-width: 992px) {
+  .sectorList {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
-  .eventDetailCard { 
-    flex-direction: column; 
+  .eventDetailCard {
+    flex-direction: column;
   }
-  .eventImageContainer { 
-    height: 200px; 
+
+  .eventImageContainer {
+    height: 200px;
   }
-  .eventTitle { 
-    font-size: 1.6rem; 
+
+  .eventTitle {
+    font-size: 1.6rem;
   }
 }
 
@@ -370,8 +393,40 @@
     transform: translateY(0);
     opacity: 0.6;
   }
+
   to {
     transform: translateY(-10px);
     opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .eventSummaryCard {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .eventSummaryCard .eventImage {
+    width: 100%;
+    max-width: 400px;
+    /* Prevent it from being too huge on tablets */
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  .eventInfo {
+    width: 100%;
+    align-items: flex-start;
+    /* Or center if desired */
+  }
+
+  .eventTitle {
+    font-size: 1.5rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .infoRow {
+    font-size: 0.95rem;
   }
 }

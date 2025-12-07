@@ -165,6 +165,48 @@
     color: #dc2626;
 }
 
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 15px;
+        align-items: flex-start;
+    }
+
+    .card {
+        padding: 25px 20px;
+        max-width: 100%;
+        border-radius: 16px;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
+    }
+
+    .actionBtn {
+        width: 100%;
+        /* Full width buttons on mobile usually look better */
+        justify-content: center;
+        padding: 12px 20px !important;
+    }
+
+    .editActions {
+        flex-direction: column-reverse;
+        /* Stack buttons, cancel at bottom usually safer or top? Standard is vertical stack */
+        gap: 10px;
+    }
+
+    .cancelBtn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 .actionBtn {
     white-space: nowrap;
     padding: 12px 30px !important;

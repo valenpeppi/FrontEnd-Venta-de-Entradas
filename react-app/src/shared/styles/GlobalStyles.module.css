@@ -1,11 +1,11 @@
 :root {
-  --primary-blue: #4f46e5; 
+  --primary-blue: #4f46e5;
   --secondary-blue: #b2acff;
-  --dark-blue: #3730a3; 
+  --dark-blue: #3730a3;
   --danger-red: #dc2626;
-  --background-gray: #f8fafc; 
+  --background-gray: #f8fafc;
   --text-dark: #1f2937;
-  --text-light: #6b7280; 
+  --text-light: #6b7280;
   --white: #ffffff;
   --border-light: #e5e7eb;
   --shadow-light: rgba(0, 0, 0, 0.1);
@@ -38,7 +38,7 @@
 .glowBtn:hover {
   background: var(--secondary-blue);
   color: var(--white);
-  box-shadow: 
+  box-shadow:
     0 0 10px var(--secondary-blue),
     0 0 20px var(--secondary-blue),
     0 0 40px var(--secondary-blue);
@@ -63,7 +63,7 @@
 .glowBtnInverse:hover {
   background: var(--white);
   color: var(--primary-blue);
-  box-shadow: 
+  box-shadow:
     0 0 10px var(--secondary-blue),
     0 0 20px var(--secondary-blue),
     0 0 40px var(--secondary-blue);
@@ -88,8 +88,8 @@
 .littleGlowBtn:hover {
   background: var(--secondary-blue);
   color: var(--white);
-  box-shadow: 
-    0 0 8px var(--secondary-blue),  
+  box-shadow:
+    0 0 8px var(--secondary-blue),
     0 0 15px var(--secondary-blue),
     0 0 30px var(--secondary-blue);
 }
@@ -113,7 +113,7 @@
 .littleGlowBtnInverse:hover {
   background: var(--white);
   color: var(--primary-blue);
-  box-shadow: 
+  box-shadow:
     0 0 8px var(--secondary-blue),
     0 0 15px var(--secondary-blue),
     0 0 30px var(--secondary-blue);
@@ -138,7 +138,7 @@
 .littleGlowBtnDanger:hover {
   background: var(--danger-red);
   color: var(--white);
-  box-shadow: 
+  box-shadow:
     0 0 8px var(--danger-red),
     0 0 15px var(--danger-red),
     0 0 30px var(--danger-red);
@@ -204,8 +204,8 @@
   font-family: 'Inter', sans-serif;
 }
 
-.formGroup input:focus ~ label,
-.formGroup input:not(:placeholder-shown) ~ label {
+.formGroup input:focus~label,
+.formGroup input:not(:placeholder-shown)~label {
   top: -8px;
   font-size: 13px;
   color: var(--primary-blue);
@@ -231,25 +231,43 @@
     align-items: center;
     gap: 15px;
   }
-  
+
   .glowBtn,
   .glowBtnInverse {
     padding: 10px 25px;
     font-size: 1rem;
+    width: 100%;
+    /* Full width on mobile often looks better */
+    max-width: 300px;
   }
-  
+
   .littleGlowBtn,
   .littleGlowBtnInverse,
   .littleGlowBtnDanger {
-    padding: 6px 16px;
+    padding: 8px 16px;
     font-size: 0.85rem;
   }
-  
+
   .formCard {
     padding: 30px 20px;
-    margin: 20px;
+    margin: 0;
+    /* Remove margin, use container padding */
+    width: 100%;
+    max-width: 100%;
+    /* Allow full width */
+    box-shadow: none;
+    /* Often cleaner on mobile */
+    border-radius: 0;
+    /* Or keep small radius */
   }
-  
+
+  .mainContainer {
+    padding: 20px 15px;
+    /* Less padding */
+    align-items: flex-start;
+    /* Prevent vertical centering issues on small screens */
+  }
+
   .formCard h2 {
     font-size: 1.5rem;
   }
@@ -259,25 +277,17 @@
   .heroButtons {
     gap: 12px;
   }
-  
+
   .glowBtn,
   .glowBtnInverse {
-    padding: 8px 20px;
-    font-size: 0.9rem;
+    padding: 10px 20px;
+    font-size: 0.95rem;
   }
-  
-  .littleGlowBtn,
-  .littleGlowBtnInverse,
-  .littleGlowBtnDanger {
-    padding: 5px 14px;
-    font-size: 0.8rem;
-  }
-  
+
   .formCard {
     padding: 25px 15px;
-    margin: 15px;
   }
-  
+
   .formCard h2 {
     font-size: 1.3rem;
   }

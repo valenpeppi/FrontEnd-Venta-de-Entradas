@@ -113,3 +113,32 @@
     opacity: 0.9;
     transform: translateY(-2px);
 }
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        /* Force single column on mobile if < 300px available space, or just generally safer */
+        gap: 1.5rem;
+    }
+
+    .emptyState {
+        padding: 2rem 1rem;
+        margin-top: 3rem;
+    }
+
+    .emptyIcon {
+        font-size: 3rem;
+    }
+
+    .emptyTitle {
+        font-size: 1.5rem;
+    }
+}
