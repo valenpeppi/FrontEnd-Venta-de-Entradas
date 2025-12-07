@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Layout from './shared/layout/Layout';
 import HomePage from './pages/home/UserHomePage';
 import SearchedEvents from './pages/events/search/SearchedEvents';
@@ -38,6 +38,7 @@ const App: React.FC = () => {
   const { login } = useAuth();
   const { setAppMessage } = useMessage();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLoginSuccess = (user: User, token: string) => {
     login(user, token);
@@ -46,7 +47,8 @@ const App: React.FC = () => {
     if (user.role === 'admin') {
       navigate('/admin');
     } else {
-      navigate('/');
+      const from = location.state?.from?.pathname || '/';
+      navigate(from);
     }
   };
 

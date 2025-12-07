@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './styles/Navbar.module.css';
 import logoTicket from '../../assets/ticket.png';
 import cartIcon from '../../assets/cart.png';
@@ -16,6 +16,7 @@ const Navbar: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { cartCount, clearCart } = useCart();
   const { isLoggedIn, user, logout } = useAuth();
@@ -73,7 +74,7 @@ const Navbar: React.FC = () => {
     localStorage.removeItem('saleConfirmed');
 
     setShowLogoutConfirm(false);
-    navigate('/login');
+    navigate('/');
   };
 
   const cancelLogout = () => {
@@ -165,7 +166,7 @@ const Navbar: React.FC = () => {
             </div>
           ) : (
             <div className={styles.navbarAuthButtons}>
-              <Link to="/login" className={styles.navbarLoginBtn}>Iniciar Sesión</Link>
+              <Link to="/login" state={{ from: location }} className={styles.navbarLoginBtn}>Iniciar Sesión</Link>
               <Link to="/register" className={styles.navbarRegisterBtn}>Registrarse</Link>
             </div>
           )}
