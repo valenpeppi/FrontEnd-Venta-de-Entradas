@@ -79,8 +79,6 @@ const HomePage: React.FC = () => {
         <p className={styles.loadingStateText}>Cargando eventos...</p>
       </div>
     );
-
-
   }
 
   return (
@@ -154,6 +152,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
-
-

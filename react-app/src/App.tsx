@@ -30,6 +30,8 @@ import Success from './pages/sales/checkout/Success';
 import ProcessingPayment from './pages/sales/checkout/ProcessingPayment';
 import Failure from './pages/sales/checkout/Failure';
 import ChatAssistant from './pages/support/ChatAssistant';
+import FatalErrorPage from './shared/error/FatalErrorPage';
+
 
 
 
@@ -97,6 +99,9 @@ const App: React.FC = () => {
 
         {/* Rutas Protegidas para Empresas */}
         <Route path="/create-event" element={<AuthRoute allowedRoles={['company']}><Layout><CreateEventPage /></Layout></AuthRoute>} />
+
+        {/* Ruta para visualizar la página de error (Solo desarrollo/demo) */}
+        <Route path="/test-error" element={<FatalErrorPage error={new Error("Este es un error de prueba simulado para verificar el diseño.")} resetErrorBoundary={() => window.location.href = '/'} />} />
       </Routes>
       <ChatAssistant />
     </div>
