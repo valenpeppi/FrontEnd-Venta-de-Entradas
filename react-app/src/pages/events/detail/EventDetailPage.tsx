@@ -57,14 +57,12 @@ const EventDetailPage: React.FC = () => {
           imageUrl: summaryData.imageUrl || '/ticket.png',
         });
 
-        if (summaryData.placeType.toLowerCase() !== 'nonenumerated') {
-          const sectorsList: Sector[] = (Array.isArray(sectorsData) ? sectorsData : []).map((s: Sector) => ({
-            ...s,
-            selected: 0,
-            enumerated: s.enumerated,
-          }));
-          setSectors(sectorsList);
-        }
+        const sectorsList: Sector[] = (Array.isArray(sectorsData) ? sectorsData : []).map((s: Sector) => ({
+          ...s,
+          selected: 0,
+          enumerated: s.enumerated,
+        }));
+        setSectors(sectorsList);
       } catch (err) {
         console.error('Error al cargar detalle del evento', err);
         setAppMessage('No se pudo cargar el evento', 'error');
@@ -159,7 +157,7 @@ const EventDetailPage: React.FC = () => {
                 minute: '2-digit',
               }) + ' hs',
             idPlace: summary.idPlace,
-            idSector: 0,
+            idSector: sectors.length > 0 ? sectors[0].idSector : 0,
             ticketIds: tempTicketIds,
           },
           quantity: totalSelected,
