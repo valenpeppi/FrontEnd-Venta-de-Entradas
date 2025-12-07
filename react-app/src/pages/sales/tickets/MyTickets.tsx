@@ -36,7 +36,7 @@ const MyTickets: React.FC = () => {
         return;
       }
       try {
-        const data: PurchasedTicket[] = (await SalesService.getMyTickets()).data || [];
+        const data: PurchasedTicket[] = await SalesService.getMyTickets();
         setTickets(data);
       } catch (err) {
         console.error("Error al obtener las entradas:", err);
