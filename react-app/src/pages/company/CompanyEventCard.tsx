@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import styles from './CompanyEventCard.module.css';
+import styles from './styles/CompanyEventCard.module.css';
 import { FaCalendarAlt, FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import ConfirmationModal from '../../../shared/components/ConfirmationModal';
+import ConfirmationModal from '../../shared/components/ConfirmationModal';
 
 interface CompanyEventCardProps {
     event: {
