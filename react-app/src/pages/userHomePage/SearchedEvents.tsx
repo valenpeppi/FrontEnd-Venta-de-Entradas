@@ -49,10 +49,10 @@ const SearchedEvents: React.FC = () => {
     const fetchSearchResults = async () => {
       setLoading(true);
       try {
-        const response = await EventService.searchEvents(query);
+        const results = await EventService.searchEvents(query);
 
-        if (response.data?.ok) {
-          const mapped = response.data.data.map(mapApiEventToTicket);
+        if (Array.isArray(results)) {
+          const mapped = results.map(mapApiEventToTicket);
           setResults(mapped);
         } else {
           setResults([]);

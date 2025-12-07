@@ -215,7 +215,7 @@ function CartProvider({ children }: CartProviderProps) {
 
       const res = await SalesService.getMyTickets();
 
-      const alreadyBought = (res.data?.data || []).filter((t: any) => String(t.eventId) === eventIdStr).length;
+      const alreadyBought = (res || []).filter((t: any) => String(t.eventId) === eventIdStr).length;
       const total = alreadyBought + currentInCart + quantity;
       return total <= 6;
     } catch (err) {

@@ -5,12 +5,12 @@ import type { PendingEvent, AdminEvent } from '../types/admin';
 export const AdminService = {
     getPendingEvents: async (): Promise<PendingEvent[]> => {
         const response = await api.get('/events/pending');
-        return response.data?.data ?? [];
+        return (Array.isArray(response.data) ? response.data : response.data?.data) ?? [];
     },
 
     getAllEvents: async (): Promise<AdminEvent[]> => {
         const response = await api.get('/events/all');
-        return response.data?.data ?? [];
+        return (Array.isArray(response.data) ? response.data : response.data?.data) ?? [];
     },
 
     approveEvent: async (id: number | string) => {
