@@ -26,15 +26,9 @@ const Navbar: React.FC = () => {
     if (term.length > 0) {
       try {
         const results = await EventService.searchEvents(term);
-        // EventService.searchEvents returns the array directly based on my previous check, or I check file again. 
-        // File 1115 said: return response.data;
-        // Search endpoint returns { ok: true, data: [...] }
-        // So EventService.searchEvents returns { ok: true, data: [...] } ?
-        // Let's check api usage in EventService.
-        // Line 54: return response.data;
-        // So it returns the FULL body.
-        if (results.ok) {
-          setSearchResults(results.data.slice(0, 5));
+
+        if (Array.isArray(results)) {
+          setSearchResults(results.slice(0, 5));
           setShowDropdown(true);
         }
       } catch (err) {

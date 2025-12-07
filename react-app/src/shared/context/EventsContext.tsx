@@ -87,10 +87,10 @@ function EventsProvider({ children }: EventsProviderProps) {
         ]);
 
         if (alive) {
-          const featuredTickets = (featuredRes.data ?? []).map((ev: any) => mapApiEventToTicket(ev));
+          const featuredTickets = (featuredRes ?? []).map((ev: any) => mapApiEventToTicket(ev));
           dispatch({ type: 'SET_FEATURED_TICKETS', payload: { tickets: featuredTickets } });
 
-          const approvedTickets = (approvedRes.data ?? []).map((ev: any) => mapApiEventToTicket(ev));
+          const approvedTickets = (approvedRes ?? []).map((ev: any) => mapApiEventToTicket(ev));
           dispatch({ type: 'SET_APPROVED_TICKETS', payload: { tickets: approvedTickets } });
         }
       } catch (err) {
