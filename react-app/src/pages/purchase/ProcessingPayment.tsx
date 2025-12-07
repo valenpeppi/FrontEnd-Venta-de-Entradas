@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../shared/context/CartContext";
-import axios from "axios";
+import { PaymentService } from "../../services/PaymentService";
 import styles from "./styles/Pay.module.css";
 
 const ProcessingPayment = () => {
@@ -19,22 +19,20 @@ const ProcessingPayment = () => {
         if (!Array.isArray(ticketGroups) || ticketGroups.length === 0) return;
 
         console.log("🔄 Liberando reservas (fallback front)...", ticketGroups);
-        await axios.post("http://localhost:3000/api/stripe/release", { ticketGroups });
+        await PaymentService.releaseReservations(ticketGroups);
       } catch (e) {
         console.warn("⚠️ No se pudieron liberar reservas desde el front (fallback).", e);
       }
     };
 
     const qs = new URLSearchParams(window.location.search);
-    const sessionId = qs.get("session_id");    
-    const paymentId = qs.get("payment_id");    
+    const sessionId = qs.get("session_id");
+    const paymentId = qs.get("payment_id");
 
     const confirmByStripeSession = async (sid: string) => {
       try {
         setLoadingMessage("Confirmando pago con Stripe...");
-        const { data } = await axios.get("http://localhost:3000/api/stripe/confirm-session", {
-          params: { session_id: sid },
-        });
+        const data = await PaymentService.confirmStripeSession(sid);
         return !!data?.confirmed;
       } catch {
         return false;
@@ -44,9 +42,7 @@ const ProcessingPayment = () => {
     const confirmByMercadoPago = async (pid: string) => {
       try {
         setLoadingMessage("Confirmando pago con Mercado Pago...");
-        const { data } = await axios.get("http://localhost:3000/api/mp/confirm-payment", {
-          params: { payment_id: pid },
-        });
+        const data = await PaymentService.confirmMercadoPagoPayment(pid);
         return !!data?.confirmed;
       } catch {
         return false;
@@ -92,10 +88,8 @@ const ProcessingPayment = () => {
 
       for (let i = 1; i <= MAX_ATTEMPTS; i++) {
         try {
-          const { data } = await axios.get(
-            `http://localhost:3000/api/sales/check?dniClient=${dniClient}`
-          );
-        if (data?.confirmed) {
+          const data = await PaymentService.checkSaleStatus(dniClient);
+          if (data?.confirmed) {
             setLoadingMessage("¡Venta confirmada!");
             clearCart();
             localStorage.removeItem("ticket-cart");
@@ -104,7 +98,7 @@ const ProcessingPayment = () => {
             navigate("/pay/success");
             return;
           }
-        } catch {}
+        } catch { }
         await new Promise((res) => setTimeout(res, DELAY_MS));
       }
 

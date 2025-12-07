@@ -82,6 +82,7 @@ const EventDetailPage: React.FC = () => {
   useEffect(() => {
     if (!summary) return;
     const fetchTicketMap = async () => {
+      if (!summary?.id) return;
       try {
         const res = await EventService.getEventTicketMap(summary.id);
         setSeatTicketMap(res.data || {});

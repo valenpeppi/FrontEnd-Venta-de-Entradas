@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import { useState, useEffect, useMemo } from 'react';
+import { AdminService } from "../../services/AdminService";
 import styles from "./styles/AdminHomePage.module.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
-
 
 import type { AdminEvent } from '../../types/admin';
 
@@ -27,11 +26,8 @@ export default function FeatureEventsPage() {
       setLoading(true);
       setError(null);
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`${BASE_URL}/api/events/all`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setEvents(res.data?.data ?? []);
+        const data = await AdminService.getAllEvents();
+        setEvents(data);
       } catch (e: any) {
         setError(
           e?.response?.data?.message ||
@@ -45,8 +41,6 @@ export default function FeatureEventsPage() {
   }, []);
 
   const toggleFeature = async (id: number | string) => {
-    const token = localStorage.getItem("token");
-
     setEvents(prevEvents =>
       prevEvents.map(e =>
         e.idEvent === id ? { ...e, featured: !e.featured } : e
@@ -54,11 +48,7 @@ export default function FeatureEventsPage() {
     );
 
     try {
-      await axios.patch(
-        `${BASE_URL}/api/events/${id}/feature`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await AdminService.toggleFeature(id);
     } catch (e: any) {
       setEvents(prevEvents =>
         prevEvents.map(e =>

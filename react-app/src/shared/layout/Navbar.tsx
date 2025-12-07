@@ -4,6 +4,7 @@ import styles from './styles/Navbar.module.css';
 import logoTicket from '../../assets/ticket.png';
 import cartIcon from '../../assets/cart.png';
 import { useCart } from '../../shared/context/CartContext';
+import { EventService } from '../../services/EventService';
 import { useAuth } from '../../shared/context/AuthContext';
 import GradientText from './GradientText';
 import { FiSearch } from 'react-icons/fi';
@@ -24,10 +25,16 @@ const Navbar: React.FC = () => {
 
     if (term.length > 0) {
       try {
-        const res = await fetch(`http://localhost:3000/api/events/search?query=${encodeURIComponent(term)}`);
-        const json = await res.json();
-        if (json.ok) {
-          setSearchResults(json.data.slice(0, 5));
+        const results = await EventService.searchEvents(term);
+        // EventService.searchEvents returns the array directly based on my previous check, or I check file again. 
+        // File 1115 said: return response.data;
+        // Search endpoint returns { ok: true, data: [...] }
+        // So EventService.searchEvents returns { ok: true, data: [...] } ?
+        // Let's check api usage in EventService.
+        // Line 54: return response.data;
+        // So it returns the FULL body.
+        if (results.ok) {
+          setSearchResults(results.data.slice(0, 5));
           setShowDropdown(true);
         }
       } catch (err) {
@@ -64,7 +71,7 @@ const Navbar: React.FC = () => {
   const confirmLogout = () => {
     logout();
 
-    clearCart(); 
+    clearCart();
 
     localStorage.removeItem('ticket-cart');
     localStorage.removeItem('ticketGroups');

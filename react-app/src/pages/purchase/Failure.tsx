@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../shared/context/CartContext";
 import { MdCancel } from "react-icons/md";
-import axios from "axios";
+import { PaymentService } from "../../services/PaymentService";
 import styles from "./styles/Pay.module.css";
 
 const Failure: React.FC = () => {
@@ -23,7 +23,7 @@ const Failure: React.FC = () => {
         if (!Array.isArray(ticketGroups) || ticketGroups.length === 0) return;
 
         console.log("🔄 Liberando reservas (cancel_url)...", ticketGroups);
-        await axios.post("http://localhost:3000/api/stripe/release", { ticketGroups });
+        await PaymentService.releaseReservations(ticketGroups);
       } catch (e) {
         console.warn("⚠️ No se pudieron liberar reservas en Failure.", e);
       }
