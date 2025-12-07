@@ -57,6 +57,7 @@ export interface EventDetailActions {
     handleSectorQuantityChange: (sectorId: number, newQuantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => void;
     handleSeatsChange: (sectorId: number, seatsSel: number[]) => void;
     handleGeneralQuantityChange: (newQuantity: number, setAppMessage?: (message: string, type: 'success' | 'error') => void) => void;
+    resetEventDetail: () => void;
 }
 
 export interface EventDetailContextType extends EventDetailState, EventDetailActions { }

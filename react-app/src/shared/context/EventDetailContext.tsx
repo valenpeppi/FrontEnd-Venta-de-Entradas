@@ -47,6 +47,16 @@ export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ childr
     setGeneralQuantity(newQuantity);
   }, []);
 
+  const resetEventDetail = useCallback(() => {
+    setSummary(null);
+    setSectors([]);
+    setLoading(true);
+    setGeneralQuantity(0);
+    setSelectedSector(null);
+    setSeats([]);
+    setSelectedSeatsMap({});
+  }, []);
+
   const value: EventDetailContextType = {
     summary,
     sectors,
@@ -65,6 +75,7 @@ export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ childr
     handleSectorQuantityChange,
     handleSeatsChange,
     handleGeneralQuantityChange,
+    resetEventDetail,
   };
 
   return (

@@ -31,6 +31,7 @@ const EventDetailPage: React.FC = () => {
     handleSectorQuantityChange,
     handleGeneralQuantityChange,
     handleSeatsChange,
+    resetEventDetail,
   } = useEventDetail();
 
   const [loadingLocal, setLoadingLocal] = useState(true);
@@ -73,6 +74,10 @@ const EventDetailPage: React.FC = () => {
       }
     };
     fetchData();
+
+    return () => {
+      resetEventDetail();
+    };
   }, [id]);
 
   useEffect(() => {
