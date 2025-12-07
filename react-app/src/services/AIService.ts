@@ -1,26 +1,28 @@
-import axios from "axios";
+import api from "./api";
+import axios from "axios"; // Keep axios for isCancel check
 
-export const sendMessageToAI = async (message: string): Promise<string> => {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000);
+export const AIService = {
+    sendMessage: async (message: string): Promise<string> => {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 30000);
 
-  try {
-    const eventsResponse = await axios.get("http://localhost:3000/api/events/approved");
-    const events = eventsResponse.data?.data ?? [];
+        try {
+            const eventsResponse = await api.get("/events/approved");
+            const events = eventsResponse.data?.data ?? [];
 
-    const structuredEvents = events.slice(0, 10).map((e: any) => ({
-      nombre: e.name,
-      lugar: e.placeName,
-      tipo: e.eventType?.name || "Evento",
-      fecha: new Date(e.date).toLocaleDateString("es-AR"),
-      hora: new Date(e.date).toLocaleTimeString("es-AR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      precioMinimo: e.minPrice || e.price || 0,
-    }));
+            const structuredEvents = events.slice(0, 10).map((e: any) => ({
+                nombre: e.name,
+                lugar: e.placeName,
+                tipo: e.eventType?.name || "Evento",
+                fecha: new Date(e.date).toLocaleDateString("es-AR"),
+                hora: new Date(e.date).toLocaleTimeString("es-AR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                }),
+                precioMinimo: e.minPrice || e.price || 0,
+            }));
 
-    const prompt = `
+            const prompt = `
 Eres **TicketBot**, el asistente oficial y exclusivo de la plataforma **TicketApp**, una aplicación web desarrollada en React + Node/Express + Prisma + MySQL, cuyo propósito es permitir la compra de entradas para eventos en línea (recitales, partidos, obras de teatro, etc.).
 
 Tu objetivo es ayudar al usuario en todas las acciones relacionadas con TicketApp.
@@ -95,26 +97,26 @@ Por ejemplo: “Bizarrap se presenta en el Bioceres Arena el 12 de diciembre de 
 El usuario escribió: "${message}"
 `;
 
-    // Enviar el prompt al backend IA (Gemma)
-    const response = await axios.post(
-      "http://localhost:3000/api/ai",
-      { message: prompt },
-      {
-        signal: controller.signal,
-        timeout: 30000,
-      }
-    );
+            const response = await api.post(
+                "/ai",
+                { message: prompt },
+                {
+                    signal: controller.signal,
+                    timeout: 30000,
+                }
+            );
 
-    return response.data.reply || "⚠️ El asistente no respondió correctamente.";
-  } catch (error: any) {
-    if (axios.isCancel(error) || error.name === "AbortError") {
-      console.warn("⚠️ Timeout alcanzado en conexión con el asistente.");
-      return "⚠️ El asistente está tardando más de lo esperado. Intentalo nuevamente en unos segundos.";
+            return response.data.reply || "⚠️ El asistente no respondió correctamente.";
+        } catch (error: any) {
+            if (axios.isCancel(error) || error.name === "AbortError") {
+                console.warn("⚠️ Timeout alcanzado en conexión con el asistente.");
+                return "⚠️ El asistente está tardando más de lo esperado. Intentalo nuevamente en unos segundos.";
+            }
+
+            console.error("❌ Error al conectar con el backend IA:", error.message);
+            return "⚠️ Hubo un problema al comunicarme con el asistente.";
+        } finally {
+            clearTimeout(timeout);
+        }
     }
-
-    console.error("❌ Error al conectar con el backend IA:", error.message);
-    return "⚠️ Hubo un problema al comunicarme con el asistente.";
-  } finally {
-    clearTimeout(timeout);
-  }
 };

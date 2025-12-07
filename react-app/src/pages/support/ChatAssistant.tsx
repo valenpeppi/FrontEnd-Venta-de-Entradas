@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { sendMessageToAI } from "../../shared/api/AIClient";
+import { AIService } from "../../services/AIService";
 import { BsRobot } from "react-icons/bs";
 import { MdClose, MdConfirmationNumber } from "react-icons/md";
 import styles from "./styles/ChatAssistant.module.css";
@@ -55,7 +55,7 @@ const ChatAssistant: React.FC = () => {
     setLoading(true);
 
     try {
-      const reply = await sendMessageToAI(input);
+      const reply = await AIService.sendMessage(input);
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = { sender: "ai", text: reply };
