@@ -90,6 +90,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     validateToken();
+
+    // Listen for global logout events (from api interceptor 401s)
+    const handleGlobalLogout = () => {
+      logout();
+    };
+
+    window.addEventListener('auth:logout', handleGlobalLogout);
+
+    return () => {
+      window.removeEventListener('auth:logout', handleGlobalLogout);
+    };
   }, []);
 
 
