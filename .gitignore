@@ -26,6 +26,8 @@ pnpm-debug.log*
 # Ignorar los reportes de cobertura de tests.
 coverage/
 .nyc_output/
+test-results/
+playwright-report/
 
 # Ignorar configuraciones específicas de editores de código para evitar conflictos.
 .vscode/*
