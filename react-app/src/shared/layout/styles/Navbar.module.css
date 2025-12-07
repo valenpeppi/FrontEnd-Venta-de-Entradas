@@ -1,12 +1,12 @@
 .navbar {
-    background: linear-gradient(to right, #e0f2fe, #c7d2fe);
-    box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
-    padding: 1.25rem 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 40;
+  background: linear-gradient(to right, #e0f2fe, #c7d2fe);
+  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+  padding: 1.25rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 40;
 }
-  
+
 .navbarContainer {
   max-width: 1280px;
   margin: 0 auto;
@@ -56,7 +56,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  box-shadow: 0 0 5px rgba(0,0,0,0.4);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
   border: 1.5px solid #fff;
   z-index: 2;
   pointer-events: none;
@@ -96,7 +96,7 @@
   font-weight: 500;
   transition: color 0.2s;
   text-decoration: none;
-  padding: 0 0.75rem; 
+  padding: 0 0.75rem;
   display: inline-flex;
   align-items: center;
 }
@@ -111,34 +111,147 @@
   gap: 0.8rem;
 }
 
-.navbarUserSection {
+/* User Dropdown Styles */
+.userMenuContainer {
+  position: relative;
+}
+
+.userMenuTrigger {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-}
-
-.navbarUsername {
-  color: #1f2937;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.navbarLogoutBtn {
+  gap: 10px;
   background: transparent;
-  color: #666;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 0;
-  box-shadow: none;
-  transition: color 0.2s;
-  outline: none;
+  border: 1px solid transparent;
+  padding: 4px 12px 4px 4px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.userMenuTrigger:hover,
+.userMenuTrigger:focus {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: #cbd5e1;
+}
+
+.userAvatar {
+  width: 32px;
+  height: 32px;
+  background: #4f46e5;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.userName {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.chevron {
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+.userDropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 240px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 100;
+  animation: slideDown 0.2s ease-out;
+  border: 1px solid #f1f5f9;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownHeader {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 8px;
+}
+
+.dropdownRole {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #4f46e5;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dropdownEmail {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 4px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdownList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  color: #334155;
+  text-decoration: none;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+  width: 100%;
+  background: none;
   border: none;
+  text-align: left;
   cursor: pointer;
 }
 
-.navbarLogoutBtn:hover {
-  color: #333;
-  background: transparent;
+.dropdownItem:hover {
+  background: #f8fafc;
+  color: #4f46e5;
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 8px 0;
+}
+
+.logoutItem {
+  color: #ef4444;
+}
+
+.logoutItem:hover {
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .navbarAuthButtons {
@@ -200,7 +313,7 @@
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 18px; 
+  font-size: 18px;
   pointer-events: none;
 }
 
@@ -378,17 +491,20 @@
     gap: 0.8rem;
     margin-left: 0;
   }
+
   .navbarContainer {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(4, auto);
     text-align: center;
   }
-  
+
   .navbarCartContainer {
     flex-shrink: 0;
   }
 
-  .navbarLoginBtn, .navbarRegisterBtn, .navbarLogoutBtn {
+  .navbarLoginBtn,
+  .navbarRegisterBtn,
+  .navbarLogoutBtn {
     padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
   }
@@ -418,7 +534,9 @@
     font-size: 0.9rem;
   }
 
-  .navbarLoginBtn, .navbarRegisterBtn, .navbarLogoutBtn {
+  .navbarLoginBtn,
+  .navbarRegisterBtn,
+  .navbarLogoutBtn {
     padding: 0.3rem 0.6rem;
     font-size: 0.8rem;
   }
@@ -445,4 +563,3 @@
   justify-content: center;
   align-items: center;
 }
-

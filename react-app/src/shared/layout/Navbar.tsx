@@ -7,7 +7,7 @@ import { useCart } from '../../shared/context/CartContext';
 import { EventService } from '../../services/EventService';
 import { useAuth } from '../../shared/context/AuthContext';
 import GradientText from './GradientText';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiUser, FiLogOut, FiChevronDown, FiSettings, FiList, FiPlusCircle } from 'react-icons/fi';
 
 
 const Navbar: React.FC = () => {
@@ -15,6 +15,8 @@ const Navbar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -61,6 +63,7 @@ const Navbar: React.FC = () => {
 
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true);
+    setShowUserMenu(false);
   };
 
   const confirmLogout = () => {
@@ -79,6 +82,15 @@ const Navbar: React.FC = () => {
 
   const cancelLogout = () => {
     setShowLogoutConfirm(false);
+  };
+
+  const toggleUserMenu = () => {
+    setShowUserMenu(!showUserMenu);
+  };
+
+  const closeUserMenu = () => {
+    // Small timeout to allow clicks on links to register before closing
+    setTimeout(() => setShowUserMenu(false), 200);
   };
 
   const isAdmin = user?.role === 'admin';
@@ -140,9 +152,9 @@ const Navbar: React.FC = () => {
               <li><Link to="/create-event" className={styles.navbarMenuItem}>Crear Evento</Link></li>
             </>
           ) : null}
-          <>
+          {isAdmin && (
             <li><Link to="/admin" className={styles.navbarMenuItem}>Eventos</Link></li>
-          </>
+          )}
         </ul>
 
         {isLoggedIn && user?.role === 'user' && (
@@ -158,11 +170,74 @@ const Navbar: React.FC = () => {
 
         <div className={styles.navbarAuthSection}>
           {isLoggedIn ? (
-            <div className={styles.navbarUserSection}>
-              <span className={styles.navbarUsername}>Hola, {user?.name}</span>
-              <button onClick={handleLogoutClick} className={styles.navbarLogoutBtn}>
-                Cerrar Sesión
+            <div className={styles.userMenuContainer} onBlur={closeUserMenu}>
+              <button
+                className={styles.userMenuTrigger}
+                onClick={toggleUserMenu}
+                aria-expanded={showUserMenu}
+              >
+                <div className={styles.userAvatar}>
+                  {user?.name?.charAt(0).toUpperCase()}
+                </div>
+                <span className={styles.userName}>Hola, {user?.name}</span>
+                <FiChevronDown className={`${styles.chevron} ${showUserMenu ? styles.rotate : ''}`} />
               </button>
+
+              {showUserMenu && (
+                <div className={styles.userDropdown}>
+                  <div className={styles.dropdownHeader}>
+                    <p className={styles.dropdownRole}>{user?.role === 'company' ? 'Organizador' : user?.role === 'admin' ? 'Administrador' : 'Usuario'}</p>
+                    <p className={styles.dropdownEmail}>{user?.mail || 'usuario@email.com'}</p>
+                  </div>
+
+                  <ul className={styles.dropdownList}>
+                    <li>
+                      <Link to="/profile" className={styles.dropdownItem}>
+                        <FiUser /> Editar mi perfil
+                      </Link>
+                    </li>
+
+                    {user?.role === 'user' && (
+                      <li>
+                        <Link to="/myTickets" className={styles.dropdownItem}>
+                          <FiList /> Mis Entradas
+                        </Link>
+                      </li>
+                    )}
+
+                    {user?.role === 'company' && (
+                      <>
+                        <li>
+                          <Link to="/company/my-events" className={styles.dropdownItem}>
+                            <FiList /> Mis Eventos
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/create-event" className={styles.dropdownItem}>
+                            <FiPlusCircle /> Crear Evento
+                          </Link>
+                        </li>
+                      </>
+                    )}
+
+                    {user?.role === 'admin' && (
+                      <li>
+                        <Link to="/admin" className={styles.dropdownItem}>
+                          <FiSettings /> Panel Admin
+                        </Link>
+                      </li>
+                    )}
+
+                    <li className={styles.dropdownDivider}></li>
+
+                    <li>
+                      <button onClick={handleLogoutClick} className={`${styles.dropdownItem} ${styles.logoutItem}`}>
+                        <FiLogOut /> Cerrar Sesión
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
           ) : (
             <div className={styles.navbarAuthButtons}>

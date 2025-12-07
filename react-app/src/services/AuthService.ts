@@ -1,6 +1,5 @@
 
 import api from './api';
-import type { User } from '../types/auth'; // Importing from new location
 
 export const AuthService = {
     validateToken: async () => {
@@ -33,6 +32,16 @@ export const AuthService = {
 
     loginCompany: async (credentials: any) => {
         const response = await api.post('/auth/login-company', credentials);
+        return response.data;
+    },
+
+    updateUser: async (userData: { name: string; surname?: string }) => {
+        const response = await api.put('/auth/profile', userData);
+        return response.data;
+    },
+
+    deleteAccount: async () => {
+        const response = await api.delete('/auth/profile');
         return response.data;
     }
 };

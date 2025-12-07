@@ -193,6 +193,9 @@ const Register: React.FC<RegisterUserProps> = ({ onRegisterSuccess }) => {
         <div className={styles.registerLoginLink}>
           ¿Ya tienes una cuenta? <Link to="/login" className={styles.registerLink}>Inicia sesión aquí</Link>
         </div>
+        <div className={styles.registerLoginLink} style={{ marginTop: '10px' }}>
+          ¿Quieres ser organizador? <Link to="/register-company" className={styles.registerLink}>Crea una cuenta aquí</Link>
+        </div>
         <div className={styles.back}>
           <button type="button" className={styles.backToLoginBtn} onClick={() => navigate('/')}>Volver</button>
         </div>

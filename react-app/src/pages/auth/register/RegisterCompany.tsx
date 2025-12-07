@@ -128,7 +128,7 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) 
       setSuccessMessage('¡Registro exitoso! Serás redirigido para iniciar sesión.');
       setTimeout(() => {
         onRegisterSuccess();
-        navigate('/logincompany');
+        navigate('/login');
       }, 2000);
     } catch (err: any) {
       const errorMessage = err?.response?.data?.message || 'Error al registrar la empresa.';

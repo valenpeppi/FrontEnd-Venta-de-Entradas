@@ -31,6 +31,7 @@ import ProcessingPayment from './pages/sales/checkout/ProcessingPayment';
 import Failure from './pages/sales/checkout/Failure';
 import ChatAssistant from './pages/support/ChatAssistant';
 import FatalErrorPage from './shared/error/FatalErrorPage';
+import ProfilePage from './pages/profile/ProfilePage';
 
 
 
@@ -110,6 +111,9 @@ const App: React.FC = () => {
 
         {/* Ruta para visualizar la página de error (Solo desarrollo/demo) */}
         <Route path="/test-error" element={<FatalErrorPage error={new Error("Este es un error de prueba simulado para verificar el diseño.")} resetErrorBoundary={() => window.location.href = '/'} />} />
+
+        {/* Perfil de Usuario Generico */}
+        <Route path="/profile" element={<AuthRoute><Layout><ProfilePage /></Layout></AuthRoute>} />
       </Routes>
       <ChatAssistant />
     </div>
