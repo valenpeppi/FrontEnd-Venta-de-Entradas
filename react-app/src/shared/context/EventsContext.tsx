@@ -75,7 +75,7 @@ const mapApiEventToTicket = (ev: any): Ticket => {
 
 function EventsProvider({ children }: EventsProviderProps) {
   const [state, dispatch] = useReducer(eventsReducer, { featuredTickets: [], approvedTickets: [] });
-  const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+
 
   useEffect(() => {
     let alive = true;
@@ -99,7 +99,7 @@ function EventsProvider({ children }: EventsProviderProps) {
     };
     fetchEvents();
     return () => { alive = false; };
-  }, [BASE_URL]);
+  }, []);
 
 
   const updateAvailableTickets = (id: string, quantity: number) =>

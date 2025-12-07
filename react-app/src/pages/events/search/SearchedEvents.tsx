@@ -18,7 +18,7 @@ const SearchedEvents: React.FC = () => {
   const [results, setResults] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const query = searchParams.get('query') || '';
-  const BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+
 
   const mapApiEventToTicket = (ev: any): Ticket => {
     let minPrice = ev.minPrice ?? ev.price ?? 0;
@@ -70,7 +70,7 @@ const SearchedEvents: React.FC = () => {
       setResults([]);
       setLoading(false);
     }
-  }, [query, BASE_URL]);
+  }, [query]);
 
   return (
     <div className={styles.container}>

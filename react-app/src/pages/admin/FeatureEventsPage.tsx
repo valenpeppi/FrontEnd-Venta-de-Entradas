@@ -5,7 +5,7 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 
 import type { AdminEvent } from '../../types/admin';
 
-const BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 export default function FeatureEventsPage() {
   const [events, setEvents] = useState<AdminEvent[]>([]);

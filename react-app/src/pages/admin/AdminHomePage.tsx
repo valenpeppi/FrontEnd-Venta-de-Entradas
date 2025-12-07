@@ -4,7 +4,7 @@ import styles from "./styles/AdminHomePage.module.css";
 
 import type { PendingEvent } from '../../types/admin';
 
-const BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 export default function AdminHomePage() {
   const [events, setEvents] = useState<PendingEvent[]>([]);
