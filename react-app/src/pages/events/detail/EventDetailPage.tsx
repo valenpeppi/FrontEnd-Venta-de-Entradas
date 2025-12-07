@@ -9,6 +9,7 @@ import type { CartItem } from '../../../types/cart';
 import EventDetailHeader from './EventDetailHeader';
 import EventDetailBody from './EventDetailBody';
 import styles from './styles/EventDetailPage.module.css';
+import ticketPlaceholder from '../../../assets/ticket.png';
 
 const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,7 +56,7 @@ const EventDetailPage: React.FC = () => {
 
         setSummary({
           ...summaryData,
-          imageUrl: summaryData.imageUrl || '/ticket.png',
+          imageUrl: summaryData.imageUrl || ticketPlaceholder,
         });
 
         const sectorsList: Sector[] = (Array.isArray(sectorsData) ? sectorsData : []).map((s: Sector) => ({

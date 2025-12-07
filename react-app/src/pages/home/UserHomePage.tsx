@@ -6,6 +6,7 @@ import styles from './styles/UserHomePage.module.css';
 import type { Ticket } from '../../types/cart';
 import { EventService } from '../../services/EventService';
 import type { EventType } from '../../types/events';
+import ticketPlaceholder from '../../assets/ticket.png';
 
 const HomePage: React.FC = () => {
   const { featuredTickets, approvedTickets } = useEvents();
@@ -130,7 +131,7 @@ const HomePage: React.FC = () => {
                           src={ticket.imageUrl}
                           alt={(ticket as any).eventName}
                           className={styles.eventCardImg}
-                          onError={e => { (e.currentTarget as HTMLImageElement).src = '/ticket.png'; }}
+                          onError={e => { (e.currentTarget as HTMLImageElement).src = ticketPlaceholder; }}
                         />
                         <div className={styles.eventCardTitle}>{(ticket as any).eventName}</div>
                         {ticket.agotado && (
