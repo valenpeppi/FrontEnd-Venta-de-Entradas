@@ -132,10 +132,13 @@ const Navbar: React.FC = () => {
         )}
 
         <ul className={styles.navbarMenu}>
-          {!isAdmin && <li><Link to="/help" className={styles.navbarMenuItem}>Ayuda</Link></li>}
+          {!isAdmin && user?.role !== 'company' && <li><Link to="/help" className={styles.navbarMenuItem}>Ayuda</Link></li>}
           {isLoggedIn && user?.role === 'user' && <li><Link to="/myTickets" className={styles.navbarMenuItem}>Mis Entradas</Link></li>}
           {isLoggedIn && user?.role === 'company' && (
-            <li><Link to="/create-event" className={styles.navbarMenuItem}>Crear Evento</Link></li>
+            <>
+              <li><Link to="/company/my-events" className={styles.navbarMenuItem}>Mis Eventos</Link></li>
+              <li><Link to="/create-event" className={styles.navbarMenuItem}>Crear Evento</Link></li>
+            </>
           )}
           {isAdmin && (
             <>

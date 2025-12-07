@@ -65,5 +65,10 @@ export const EventService = {
             },
         });
         return response.data;
+    },
+
+    getCompanyEvents: async (): Promise<any[]> => {
+        const response = await api.get('/events/company');
+        return (Array.isArray(response.data) ? response.data : response.data?.data) ?? [];
     }
 };

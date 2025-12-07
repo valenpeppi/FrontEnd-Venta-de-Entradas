@@ -1,0 +1,70 @@
+.container {
+    padding: 2rem;
+    min-height: 80vh;
+    background-color: #f8fafc;
+    /* Light background to match theme */
+    color: #1f2937;
+    /* Dark text */
+}
+
+.header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+    /* Solid dark color instead of gradient on white */
+}
+
+.subtitle {
+    color: #6b7280;
+    /* Lighter gray for subtitle */
+    font-size: 1.1rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.loading,
+.error,
+.empty {
+    text-align: center;
+    margin-top: 4rem;
+    font-size: 1.2rem;
+    color: #6b7280;
+}
+
+.error {
+    color: #dc2626;
+}
+
+.createButtonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.createButton {
+    background: linear-gradient(90deg, #4f46e5, #4338ca);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+}
+
+.createButton:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}

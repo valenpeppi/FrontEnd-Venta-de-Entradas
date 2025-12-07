@@ -13,6 +13,7 @@ import About from './pages/support/About';
 import LoginPage from './pages/auth/login/LoginPage';
 import Register from './pages/auth/register/RegisterUser';
 import CreateEventPage from './pages/events/create/CreateEventPage';
+import MyEventsPage from './pages/company/MyEventsPage';
 import RegisterCompany from './pages/auth/register/RegisterCompany';
 import { useAuth } from './shared/context/AuthContext';
 import type { User } from './types/auth';
@@ -105,6 +106,7 @@ const App: React.FC = () => {
 
         {/* Rutas Protegidas para Empresas */}
         <Route path="/create-event" element={<AuthRoute allowedRoles={['company']}><Layout><CreateEventPage /></Layout></AuthRoute>} />
+        <Route path="/company/my-events" element={<AuthRoute allowedRoles={['company']}><Layout><MyEventsPage /></Layout></AuthRoute>} />
 
         {/* Ruta para visualizar la página de error (Solo desarrollo/demo) */}
         <Route path="/test-error" element={<FatalErrorPage error={new Error("Este es un error de prueba simulado para verificar el diseño.")} resetErrorBoundary={() => window.location.href = '/'} />} />
