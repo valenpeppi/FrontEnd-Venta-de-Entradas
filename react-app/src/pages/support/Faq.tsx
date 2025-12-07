@@ -50,3 +50,5 @@ const Faq: React.FC = () => {
 
 export default Faq;
 
+
+
