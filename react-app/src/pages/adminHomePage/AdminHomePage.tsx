@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import { AdminService } from "../../services/AdminService";
 import styles from "./styles/AdminHomePage.module.css";
 
 import type { PendingEvent } from '../../types/admin';
@@ -25,11 +25,8 @@ export default function AdminHomePage() {
       setLoading(true);
       setError(null);
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`${BASE_URL}/api/events/pending`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setEvents(res.data?.data ?? []);
+        const data = await AdminService.getPendingEvents();
+        setEvents(data);
       } catch (e: any) {
         setError(
           e?.response?.data?.message ||
@@ -43,17 +40,15 @@ export default function AdminHomePage() {
   }, []);
 
   const act = async (id: number | string, action: "approve" | "reject") => {
-    const token = localStorage.getItem("token");
-
     const prev = events;
     setEvents((list) => list.filter((e) => e.idEvent !== id));
 
     try {
-      await axios.patch(
-        `${BASE_URL}/api/events/${id}/${action}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      if (action === 'approve') {
+        await AdminService.approveEvent(id);
+      } else {
+        await AdminService.rejectEvent(id);
+      }
     } catch (e: any) {
       setEvents(prev);
       alert(
