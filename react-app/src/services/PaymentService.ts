@@ -2,12 +2,12 @@ import api from './api';
 
 export const PaymentService = {
     mpCheckout: async (data: any) => {
-        const response = await api.post('/mp/create-preference', data);
+        const response = await api.post('/mp/checkout', data);
         return response.data;
     },
 
     stripeCheckout: async (data: any) => {
-        const response = await api.post('/stripe/create-checkout-session', data);
+        const response = await api.post('/stripe/checkout', data);
         return response.data;
     },
 

@@ -25,7 +25,7 @@ export const EventService = {
 
     getEventSectors: async (id: string | number): Promise<any> => {
         const response = await api.get(`/events/events/${id}/sectors`);
-        return (Array.isArray(response.data) ? response.data : response.data?.data) ?? response.data;
+        return (Array.isArray(response.data) ? response.data : response.data?.data) ?? [];
     },
 
     getEventTicketMap: async (id: string | number): Promise<any> => {
@@ -36,7 +36,7 @@ export const EventService = {
 
     getEventSeats: async (eventId: string | number, sectorId: number): Promise<any> => {
         const response = await api.get(`/events/events/${eventId}/sectors/${sectorId}/seats`);
-        return (Array.isArray(response.data) ? response.data : response.data?.data) ?? response.data;
+        return (Array.isArray(response.data) ? response.data : response.data?.data) ?? [];
     },
 
     getFeatured: async () => {

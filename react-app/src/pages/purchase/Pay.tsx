@@ -138,7 +138,7 @@ const Pay: React.FC = () => {
 
       const ticketGroups = buildTicketGroups();
 
-      const { data } = await PaymentService.mpCheckout({
+      const data = await PaymentService.mpCheckout({
         items,
         dniClient: user.dni,
         customerEmail: user.mail,
@@ -181,7 +181,7 @@ const Pay: React.FC = () => {
 
       const ticketGroups = buildTicketGroups();
 
-      const { data } = await PaymentService.stripeCheckout({
+      const data = await PaymentService.stripeCheckout({
         items,
         ticketGroups,
         dniClient: user.dni,

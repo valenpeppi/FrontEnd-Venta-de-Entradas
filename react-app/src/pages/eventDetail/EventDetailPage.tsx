@@ -58,7 +58,7 @@ const EventDetailPage: React.FC = () => {
         });
 
         if (summaryData.placeType.toLowerCase() !== 'nonenumerated') {
-          const sectorsList: Sector[] = (sectorsData ?? []).map((s: Sector) => ({
+          const sectorsList: Sector[] = (Array.isArray(sectorsData) ? sectorsData : []).map((s: Sector) => ({
             ...s,
             selected: 0,
             enumerated: s.enumerated,
