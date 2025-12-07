@@ -165,19 +165,15 @@
     color: #dc2626;
 }
 
-.editBtn {
+.actionBtn {
     white-space: nowrap;
-    padding: 10px 20px !important;
-    /* Reducing padding override */
-    display: flex !important;
-    /* Enforcing flex */
-    flex-direction: row !important;
-    /* Enforcing row explicitly */
+    padding: 12px 30px !important;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
     width: auto;
-    /* Prevent full width if set elsewhere */
-    min-width: 200px;
-    /* Setting a reasonable minimum width per request 'mas largo' but balanced */
+    min-width: fit-content;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
 }

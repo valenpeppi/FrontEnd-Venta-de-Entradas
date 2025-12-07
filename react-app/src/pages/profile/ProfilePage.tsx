@@ -121,7 +121,7 @@ const ProfilePage: React.FC = () => {
                         {!isEditing ? (
                             <button
                                 type="button"
-                                className={`${globalStyles.glowBtn} ${styles.editBtn}`}
+                                className={`${globalStyles.glowBtn} ${styles.actionBtn}`}
                                 onClick={() => setIsEditing(true)}
                             >
                                 <FiEdit2 /> Editar Información
@@ -142,7 +142,7 @@ const ProfilePage: React.FC = () => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className={globalStyles.glowBtn}
+                                    className={`${globalStyles.glowBtn} ${styles.actionBtn}`}
                                     disabled={loading}
                                 >
                                     {loading ? 'Guardando...' : <><FiSave /> Guardar Cambios</>}
