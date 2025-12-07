@@ -70,5 +70,19 @@ export const EventService = {
     getCompanyEvents: async (): Promise<any[]> => {
         const response = await api.get('/events/company');
         return (Array.isArray(response.data) ? response.data : response.data?.data) ?? [];
+    },
+
+    deleteEvent: async (id: number) => {
+        const response = await api.delete(`/events/${id}`);
+        return response.data;
+    },
+
+    updateEvent: async (id: number, eventData: FormData) => {
+        const response = await api.put(`/events/${id}`, eventData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
     }
 };

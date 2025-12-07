@@ -23,6 +23,7 @@ export interface EventSummary {
     availableTickets: number;
     agotado: boolean;
     price?: number;
+    idEventType: number;
 }
 
 export interface Seat {

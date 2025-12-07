@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { EventService } from '../../services/EventService';
 import CompanyEventCard from './components/CompanyEventCard';
 import styles from './MyEventsPage.module.css';
+import { useMessage } from '../../shared/context/MessageContext';
 
 const MyEventsPage: React.FC = () => {
+    const { setAppMessage } = useMessage();
     const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -25,6 +27,19 @@ const MyEventsPage: React.FC = () => {
         fetchEvents();
     }, []);
 
+    const handleDeleteEvent = async (id: number) => {
+        try {
+            await EventService.deleteEvent(id);
+            setEvents(events.filter(e => e.idEvent !== id));
+            // Optional: Success message
+            // setAppMessage('Evento eliminado correctamente', 'success'); 
+        } catch (err: any) {
+            console.error('Error deleting event:', err);
+            const msg = err?.response?.data?.message || 'Error al eliminar el evento.';
+            setAppMessage(msg, 'error');
+        }
+    };
+
     if (loading) return <div className={styles.loading}>Cargando eventos...</div>;
     if (error) return <div className={styles.error}>{error}</div>;
 
@@ -37,7 +52,7 @@ const MyEventsPage: React.FC = () => {
 
             {events.length === 0 ? (
                 <div className={styles.empty}>
-                    <p>Aún no has creado ningún evento.</p>
+                    <p>Todavía no creaste ningún evento.</p>
                     <div className={styles.createButtonContainer}>
                         <Link to="/create-event" className={styles.createButton}>
                             Crear mi primer evento
@@ -47,7 +62,11 @@ const MyEventsPage: React.FC = () => {
             ) : (
                 <div className={styles.grid}>
                     {events.map((event) => (
-                        <CompanyEventCard key={event.idEvent} event={event} />
+                        <CompanyEventCard
+                            key={event.idEvent}
+                            event={event}
+                            onDelete={handleDeleteEvent}
+                        />
                     ))}
                 </div>
             )}

@@ -134,12 +134,12 @@ const Navbar: React.FC = () => {
         <ul className={styles.navbarMenu}>
           {!isAdmin && user?.role !== 'company' && <li><Link to="/help" className={styles.navbarMenuItem}>Ayuda</Link></li>}
           {isLoggedIn && user?.role === 'user' && <li><Link to="/myTickets" className={styles.navbarMenuItem}>Mis Entradas</Link></li>}
-          {isLoggedIn && user?.role === 'company' && (
+          {(isLoggedIn && user?.role === 'company') || (isLoggedIn && user?.role === 'admin') ? (
             <>
               <li><Link to="/company/my-events" className={styles.navbarMenuItem}>Mis Eventos</Link></li>
               <li><Link to="/create-event" className={styles.navbarMenuItem}>Crear Evento</Link></li>
             </>
-          )}
+          ) : null}
           {isAdmin && (
             <>
               <li><Link to="/admin" className={styles.navbarMenuItem}>Aprobar Eventos</Link></li>
