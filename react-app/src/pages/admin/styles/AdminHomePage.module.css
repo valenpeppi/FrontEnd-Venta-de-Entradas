@@ -26,6 +26,43 @@
   font-size: 1.9rem;
   letter-spacing: -0.3px;
   color: var(--text);
+  text-align: center;
+}
+
+/* Filter Tabs */
+.filterTabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.tabBtn {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.tabBtn:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.activeTab {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.activeTab:hover {
+  background: #2563eb;
+  color: white;
 }
 
 .adminTools {
@@ -89,8 +126,9 @@
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
-  min-height: 360px; 
+  min-height: 380px;
   transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  position: relative;
 }
 
 .card:hover {
@@ -116,13 +154,11 @@
 .mediaPlaceholder {
   width: 100%;
   height: 100%;
-  background: repeating-linear-gradient(
-    45deg,
-    #f1f5f9,
-    #f1f5f9 12px,
-    #e2e8f0 12px,
-    #e2e8f0 24px
-  );
+  background: repeating-linear-gradient(45deg,
+      #f1f5f9,
+      #f1f5f9 12px,
+      #e2e8f0 12px,
+      #e2e8f0 24px);
 }
 
 .badges {
@@ -134,33 +170,59 @@
 }
 
 .badge {
-  padding: 4px 10px;
-  font-size: 0.78rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
   font-weight: 600;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.85);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .badgePending {
-  border-color: #fcd34d;
-  background: #fef9c3;
-  color: #92400e;
+  background-color: #f59e0b;
 }
 
 .badgeApproved {
-  border-color: #86efac;
-  background: #dcfce7;
-  color: #14532d;
+  background-color: #10b981;
 }
 
 .badgeRejected {
-  border-color: #fecaca;
-  background: #fee2e2;
-  color: #7f1d1d;
+  background-color: #ef4444;
 }
+
+/* Feature Button */
+.featureBtn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ccc;
+  transition: all 0.2s;
+  font-size: 1.2rem;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.featureBtn:hover {
+  transform: scale(1.1);
+  color: #fbbf24;
+}
+
+.featured {
+  color: #fbbf24;
+}
+
 
 .body {
   padding: 14px;
@@ -170,14 +232,15 @@
   justify-content: space-between;
 }
 
- p {
+p {
   margin: 0.25rem 0;
   font-size: 0.95rem;
   color: #4b5563;
   letter-spacing: 0.2px;
 }
+
 .title {
-  margin: 0 0 2px; 
+  margin: 0 0 2px;
   font-size: 1.06rem;
   color: var(--text);
   font-weight: 700;
@@ -212,11 +275,16 @@
   appearance: none;
   border: 1px solid var(--line);
   background: #fff;
-  padding: 8px 12px;
+  padding: 8px 16px;
+  /* Slightly bigger padding */
   border-radius: 999px;
   font-size: 0.92rem;
   cursor: pointer;
   transition: transform 80ms ease, box-shadow 120ms ease, border-color 120ms ease, background 120ms ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* Spacing for icon */
 }
 
 .btn:hover {
@@ -248,41 +316,6 @@
 .btnReject:hover {
   border-color: #f87171;
   background: #fecaca;
-}
-
-.featureBtn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.85);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  border: 1px solid var(--line);
-  color: #94a3b8;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: all 150ms ease;
-}
-
-.featureBtn:hover {
-  transform: scale(1.1);
-  border-color: #f59e0b;
-}
-
-.featureBtn.featured {
-  background-color: #f59e0b;
-  border-color: #f59e0b;
-  color: #ffffff;
-}
-
-.featureBtn i {
-  font-size: 1rem;
 }
 
 .visuallyHidden {
@@ -331,6 +364,7 @@
     transform: translateY(0);
     opacity: 0.6;
   }
+
   to {
     transform: translateY(-10px);
     opacity: 1;

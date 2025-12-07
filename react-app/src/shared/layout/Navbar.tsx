@@ -140,12 +140,9 @@ const Navbar: React.FC = () => {
               <li><Link to="/create-event" className={styles.navbarMenuItem}>Crear Evento</Link></li>
             </>
           ) : null}
-          {isAdmin && (
-            <>
-              <li><Link to="/admin" className={styles.navbarMenuItem}>Aprobar Eventos</Link></li>
-              <li><Link to="/feature-events" className={styles.navbarMenuItem}>Destacar Eventos</Link></li>
-            </>
-          )}
+          <>
+            <li><Link to="/admin" className={styles.navbarMenuItem}>Eventos</Link></li>
+          </>
         </ul>
 
         {isLoggedIn && user?.role === 'user' && (

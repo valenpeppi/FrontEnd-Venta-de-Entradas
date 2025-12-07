@@ -1,47 +1,76 @@
 import { useEffect, useMemo, useState } from "react";
 import { AdminService } from "../../services/AdminService";
 import styles from "./styles/AdminHomePage.module.css";
+import globalStyles from "../../shared/styles/GlobalStyles.module.css";
+import { FaStar, FaRegStar, FaCheck, FaTimes } from "react-icons/fa";
 
-import type { PendingEvent } from '../../types/admin';
+import type { AdminEvent } from '../../types/admin';
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
+type FilterType = 'all' | 'pending' | 'approved' | 'rejected' | 'featured';
+
 export default function AdminHomePage() {
-  const [events, setEvents] = useState<PendingEvent[]>([]);
+  const [events, setEvents] = useState<AdminEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [q, setQ] = useState("");
+  const [filter, setFilter] = useState<FilterType>('all');
 
   const filtered = useMemo(() => {
+    let result = events;
+
+    // 1. Text Search
     const v = q.trim().toLowerCase();
-    if (!v) return events;
-    return events.filter((e) =>
-      [e.name, e.description].some((t) => (t || "").toLowerCase().includes(v))
-    );
-  }, [q, events]);
+    if (v) {
+      result = result.filter((e) =>
+        [e.name, e.description].some((t) => (t || "").toLowerCase().includes(v))
+      );
+    }
+
+    // 2. Status/Feature Filter
+    switch (filter) {
+      case 'pending':
+        return result.filter(e => e.state === 'Pending');
+      case 'approved':
+        return result.filter(e => e.state === 'Approved');
+      case 'rejected':
+        return result.filter(e => e.state === 'Rejected');
+      case 'featured':
+        return result.filter(e => e.featured);
+      case 'all':
+      default:
+        return result;
+    }
+  }, [q, events, filter]);
 
   useEffect(() => {
-    const fetchPending = async () => {
+    const fetchEvents = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await AdminService.getPendingEvents();
+        const data = await AdminService.getAllEvents();
         setEvents(data);
       } catch (e: any) {
         setError(
           e?.response?.data?.message ||
-          "No se pudieron obtener los eventos pendientes"
+          "No se pudieron obtener los eventos."
         );
       } finally {
         setLoading(false);
       }
     };
-    fetchPending();
+    fetchEvents();
   }, []);
 
-  const act = async (id: number | string, action: "approve" | "reject") => {
-    const prev = events;
-    setEvents((list) => list.filter((e) => e.idEvent !== id));
+  const handleAction = async (id: number | string, action: "approve" | "reject") => {
+    // Optimistic update
+    setEvents(prev => prev.map(e => {
+      if (e.idEvent === id) {
+        return { ...e, state: action === 'approve' ? 'Approved' : 'Rejected' };
+      }
+      return e;
+    }));
 
     try {
       if (action === 'approve') {
@@ -50,13 +79,48 @@ export default function AdminHomePage() {
         await AdminService.rejectEvent(id);
       }
     } catch (e: any) {
-      setEvents(prev);
+      // Revert on error could be complex if we don't remember prev state, 
+      // but simplistic revert is to fetch all again or show error.
       alert(
         e?.response?.data?.message ||
         `No se pudo ${action === "approve" ? "aprobar" : "rechazar"}`
       );
     }
   };
+
+  const toggleFeature = async (id: number | string) => {
+    setEvents(prevEvents =>
+      prevEvents.map(e =>
+        e.idEvent === id ? { ...e, featured: !e.featured } : e
+      )
+    );
+
+    try {
+      await AdminService.toggleFeature(id);
+    } catch (e: any) {
+      // Revert on error
+      setEvents(prevEvents =>
+        prevEvents.map(e =>
+          e.idEvent === id ? { ...e, featured: !e.featured } : e
+        )
+      );
+      alert(
+        e?.response?.data?.message ||
+        `No se pudo actualizar el estado de destacado.`
+      );
+    }
+  };
+
+  // Calculate counts
+  const counts = useMemo(() => {
+    return {
+      all: events.length,
+      pending: events.filter(e => e.state === 'Pending').length,
+      approved: events.filter(e => e.state === 'Approved').length,
+      rejected: events.filter(e => e.state === 'Rejected').length,
+      featured: events.filter(e => e.featured).length,
+    };
+  }, [events]);
 
   if (loading)
     return (
@@ -80,22 +144,56 @@ export default function AdminHomePage() {
   return (
     <div className={styles.adminContainer}>
       <header className={styles.adminHeader}>
-        <h1>Eventos pendientes</h1>
+        <h1>Panel de Administración</h1>
+
+        <div className={styles.filterTabs}>
+          <button
+            className={`${filter === 'all' ? globalStyles.littleGlowBtnInverse : globalStyles.littleGlowBtn}`}
+            onClick={() => setFilter('all')}
+          >
+            Todos <span className={styles.tabCount}>{counts.all}</span>
+          </button>
+          <button
+            className={`${filter === 'pending' ? globalStyles.littleGlowBtnInverse : globalStyles.littleGlowBtn}`}
+            onClick={() => setFilter('pending')}
+          >
+            Pendientes <span className={styles.tabCount}>{counts.pending}</span>
+          </button>
+          <button
+            className={`${filter === 'approved' ? globalStyles.littleGlowBtnInverse : globalStyles.littleGlowBtn}`}
+            onClick={() => setFilter('approved')}
+          >
+            Aprobados <span className={styles.tabCount}>{counts.approved}</span>
+          </button>
+          <button
+            className={`${filter === 'featured' ? globalStyles.littleGlowBtnInverse : globalStyles.littleGlowBtn}`}
+            onClick={() => setFilter('featured')}
+          >
+            Destacados <span className={styles.tabCount}>{counts.featured}</span>
+          </button>
+          <button
+            className={`${filter === 'rejected' ? globalStyles.littleGlowBtnInverse : globalStyles.littleGlowBtn}`}
+            onClick={() => setFilter('rejected')}
+          >
+            Rechazados <span className={styles.tabCount}>{counts.rejected}</span>
+          </button>
+        </div>
+
         <div className={styles.adminTools}>
           <input
             className={styles.adminSearch}
-            placeholder="Buscar por nombre o descripción…"
+            placeholder="Buscar por nombre..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
           <span className={styles.adminCounter}>
-            {filtered.length} resultado(s)
+            {filtered.length} evento(s)
           </span>
         </div>
       </header>
 
       {filtered.length === 0 ? (
-        <div className={styles.adminStatus}>No hay eventos pendientes.</div>
+        <div className={styles.adminStatus}>No hay eventos en esta categoría.</div>
       ) : (
         <ul className={styles.masonry}>
           {filtered.map((ev) => (
@@ -111,9 +209,21 @@ export default function AdminHomePage() {
                 ) : (
                   <div className={styles.mediaPlaceholder} />
                 )}
+
+                <button
+                  className={`${styles.featureBtn} ${ev.featured ? styles.featured : ''}`}
+                  onClick={() => toggleFeature(ev.idEvent)}
+                  title={ev.featured ? 'Quitar de destacados' : 'Destacar evento'}
+                >
+                  {ev.featured ? <FaStar /> : <FaRegStar />}
+                </button>
+
                 <div className={styles.badges}>
-                  <span className={`${styles.badge} ${styles.badgePending}`}>
-                    {ev.state || "PENDING"}
+                  <span className={`${styles.badge} ${ev.state === 'Approved' ? styles.badgeApproved :
+                    ev.state === 'Rejected' ? styles.badgeRejected :
+                      styles.badgePending
+                    }`}>
+                    {ev.state}
                   </span>
                 </div>
               </div>
@@ -130,20 +240,34 @@ export default function AdminHomePage() {
               </div>
 
               <div className={styles.actions}>
-                <button
-                  className={`${styles.btn} ${styles.btnReject}`}
-                  onClick={() => act(ev.idEvent, "reject")}
-                  title="Rechazar evento"
-                >
-                  Rechazar
-                </button>
-                <button
-                  className={`${styles.btn} ${styles.btnApprove}`}
-                  onClick={() => act(ev.idEvent, "approve")}
-                  title="Aprobar evento"
-                >
-                  Aprobar
-                </button>
+                {ev.state === 'Pending' && (
+                  <>
+                    <button
+                      className={`${styles.btn} ${styles.btnApprove}`}
+                      onClick={() => handleAction(ev.idEvent, "approve")}
+                      title="Aprobar"
+                    >
+                      <FaCheck /> Aprobar
+                    </button>
+                    <button
+                      className={`${styles.btn} ${styles.btnReject}`}
+                      onClick={() => handleAction(ev.idEvent, "reject")}
+                      title="Rechazar"
+                    >
+                      <FaTimes /> Rechazar
+                    </button>
+                  </>
+                )}
+                {/* Removed Reject button for Approved events */}
+                {ev.state === 'Rejected' && (
+                  <button
+                    className={`${styles.btn} ${styles.btnApprove}`}
+                    onClick={() => handleAction(ev.idEvent, "approve")}
+                    title="Re-aprobar"
+                  >
+                    <FaCheck /> Aprobar
+                  </button>
+                )}
               </div>
             </li>
           ))}
@@ -152,5 +276,3 @@ export default function AdminHomePage() {
     </div>
   );
 }
-
-

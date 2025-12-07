@@ -21,7 +21,6 @@ import type { User } from './types/auth';
 import { useMessage } from './shared/context/MessageContext';
 import styles from './shared/styles/App.module.css';
 import globalStyles from './shared/styles/GlobalStyles.module.css';
-import FeatureEventsPage from './pages/admin/FeatureEventsPage';
 import AuthRoute from './shared/AuthRoute';
 import Contact from './pages/support/Contact';
 import Privacy from './pages/support/Privacy';
@@ -103,7 +102,6 @@ const App: React.FC = () => {
 
         {/* Rutas Protegidas para Administradores */}
         <Route path="/admin" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminHomePage /></Layout></AuthRoute>} />
-        <Route path="/feature-events" element={<AuthRoute allowedRoles={['admin']}><Layout><FeatureEventsPage /></Layout></AuthRoute>} />
 
         {/* Rutas Protegidas para Empresas y Admin */}
         <Route path="/create-event" element={<AuthRoute allowedRoles={['company', 'admin']}><Layout><CreateEventPage /></Layout></AuthRoute>} />
