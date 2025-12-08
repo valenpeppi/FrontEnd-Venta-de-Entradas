@@ -92,7 +92,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 if (response.user.role === 'admin' || response.user.role === 'ADMIN') {
                     navigate('/admin-dashboard');
                 } else if (response.user.role === 'company' || response.user.role === 'COMPANY') {
-                    navigate('/company/my-events');
+                    navigate('/company/dashboard');
                 } else {
                     navigate('/');
                 }
