@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { EventService } from '../../services/EventService';
-import CompanyEventCard from './CompanyEventCard';
+import CompanyEventCard from '../../shared/components/CompanyEventCard';
 import styles from './styles/MyEventsPage.module.css';
 import { useMessage } from '../../shared/context/MessageContext';
 import { useAuth } from '../../shared/context/AuthContext';

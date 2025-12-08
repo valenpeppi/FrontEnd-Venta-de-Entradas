@@ -1,0 +1,93 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom right, #e0f2fe, #c7d2fe);
+    font-family: 'Inter', sans-serif;
+    color: #1f2937;
+    padding: 1rem;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    animation: scaleIn 0.4s ease-out forwards;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.98);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4338ca;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.footer {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+}
+
+.linkWrapper {
+    color: #4b5563;
+    font-size: 0.95rem;
+}
+
+.link {
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.link:hover {
+    text-decoration: underline;
+    color: #3730a3;
+}
+
+.backWrapper {
+    margin-top: 0.5rem;
+}
+
+.backButton {
+    display: inline-block;
+    width: 100%;
+    background: #f3f4f6;
+    color: #374151;
+    font-weight: 600;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.backButton:hover {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+@media (min-width: 640px) {
+    .card {
+        padding: 2.5rem;
+    }
+}

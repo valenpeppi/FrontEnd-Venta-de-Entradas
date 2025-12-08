@@ -116,7 +116,7 @@ const EditEventPage: React.FC = () => {
         const fetchSectorsAndDates = async () => {
             if (state.idPlace) {
                 try {
-                    const [sectorsRes, datesRes] = await Promise.all([
+                    const [, datesRes] = await Promise.all([
                         PlaceService.getPlaceSectors(state.idPlace),
                         PlaceService.getAvailableDates(state.idPlace)
                     ]);

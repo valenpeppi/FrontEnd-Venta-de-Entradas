@@ -3,6 +3,7 @@
     transform: scale(0.98);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -14,6 +15,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -58,7 +60,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  opacity: 0; 
+  opacity: 0;
   animation: fadeInUp 0.5s ease-out forwards;
 }
 
@@ -139,6 +141,7 @@
   color: #ef4444;
   margin-top: 0.5rem;
 }
+
 .icon {
   color: var(--primary-blue);
   font-size: 1.2rem;
@@ -160,46 +163,5 @@
 
   .image {
     height: 150px;
-  }
-}
-
-.loadingState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 40vh;
-}
-
-.loadingDots {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.dot {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: blueviolet;
-  animation: bounce 0.6s infinite alternate;
-}
-
-.dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes bounce {
-  from {
-    transform: translateY(0);
-    opacity: 0.6;
-  }
-  to {
-    transform: translateY(-10px);
-    opacity: 1;
   }
 }

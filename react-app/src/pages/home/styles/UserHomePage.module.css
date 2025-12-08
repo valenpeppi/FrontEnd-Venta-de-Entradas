@@ -203,19 +203,7 @@
   line-height: 1.3;
 }
 
-.loadingState {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  flex-direction: column;
-}
 
-.loadingStateText {
-  color: #6b7280;
-  font-size: 1.25rem;
-  margin-top: 1rem;
-}
 
 .eventTypeEmpty {
   width: 100%;

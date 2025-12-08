@@ -16,10 +16,7 @@ const MyTickets: React.FC = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const isNonEnumeratedTicket = (tk: PurchasedTicket) =>
-  (tk.sectorType
-    ? tk.sectorType.toLowerCase() === 'nonenumerated'
-    : tk.seatNumber == null);
+
 
   const isNonEnumeratedGroup = (g: PurchasedTicketGroup) => {
     if (g.sectorType) return g.sectorType.toLowerCase() === 'nonenumerated';

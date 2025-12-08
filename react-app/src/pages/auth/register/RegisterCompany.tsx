@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMessage } from '../../../shared/context/MessageContext';
 import { AuthService } from '../../../services/AuthService';
 import ReCAPTCHA from 'react-google-recaptcha';
+import Input from '../../../shared/components/Input';
+import Button from '../../../shared/components/Button';
+import AuthLayout from '../../../shared/components/AuthLayout';
 import styles from './styles/RegisterCompany.module.css';
-import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 import type { RegisterCompanyProps } from '../../../types/auth';
 
@@ -23,12 +25,14 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) 
   const [serverError, setServerError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
   const { clearMessages } = useMessage();
 
   useEffect(() => {
     clearMessages();
-  }, []);
+  }, [clearMessages]);
 
   const labelMap: Record<keyof typeof formData, string> = {
     companyName: 'Razón Social',
@@ -106,7 +110,7 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) 
       validate(key, formData[key as keyof typeof formData], formData);
     });
 
-    if (!captchaValue) {
+    if (import.meta.env.VITE_RECAPTCHA_SITE_KEY && !captchaValue) {
       setServerError('Por favor, verifica que no eres un robot.');
       return;
     }
@@ -118,6 +122,8 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) 
       setServerError('Por favor, completa todos los campos correctamente.');
       return;
     }
+
+    setIsLoading(true);
 
     try {
       await AuthService.registerCompany({
@@ -133,66 +139,62 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) 
     } catch (err: any) {
       const errorMessage = err?.response?.data?.message || 'Error al registrar la empresa.';
       setServerError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className={styles.registerContainer}>
-      <div className={styles.registerCard}>
-        <h2 className={styles.registerTitle}>Registrar Empresa</h2>
-        {serverError && <div className={styles.registerErrorMessage}>{serverError}</div>}
-        {successMessage && <div className={styles.registerSuccessMessage}>{successMessage}</div>}
-        <form onSubmit={handleSubmit} className={styles.registerForm} noValidate>
-          {Object.keys(formData).map(key => {
-            const fieldKey = key as keyof typeof formData;
-            return (
-              <div className={styles.registerFormGroup} key={fieldKey}>
-                <label htmlFor={`register-${fieldKey}`} className={styles.registerLabel}>
-                  {labelMap[fieldKey]}
-                </label>
-                <div className={styles.inputWrapper}>
-                  <input
-                    type={fieldKey.toLowerCase().includes('password') ? 'password' : 'text'}
-                    id={`register-${fieldKey}`}
-                    name={fieldKey}
-                    className={`${styles.registerInput} ${touched[fieldKey] && (errors[fieldKey] ? styles.inputError : styles.inputSuccess)}`}
-                    value={formData[fieldKey]}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder={`Ingresa ${labelMap[fieldKey].toLowerCase()}`}
-                    required
-                  />
-                  {touched[fieldKey] && (
-                    <div className={styles.validationIcon}>
-                      {errors[fieldKey] ? <FaExclamationCircle color="red" /> : <FaCheckCircle color="green" />}
-                    </div>
-                  )}
-                </div>
-                {touched[fieldKey] && errors[fieldKey] && <span className={styles.errorMessage}>{errors[fieldKey]}</span>}
-              </div>
-            )
-          })}
+    <AuthLayout
+      title="Registrar Empresa"
+      footerText="¿Ya tienes una cuenta?"
+      footerLinkText="Inicia sesión aquí"
+      footerLinkTo="/login"
+      backButton
+    >
+      {serverError && <div className={styles.registerErrorMessage}>{serverError}</div>}
+      {successMessage && <div className={styles.registerSuccessMessage}>{successMessage}</div>}
 
-          <div className={styles.captchaContainer}>
+      <form onSubmit={handleSubmit} className={styles.registerForm} noValidate>
+        {Object.keys(formData).map(key => {
+          const fieldKey = key as keyof typeof formData;
+          const label = labelMap[fieldKey];
+          return (
+            <Input
+              key={fieldKey}
+              id={`register-${fieldKey}`}
+              name={fieldKey}
+              type={fieldKey.toLowerCase().includes('password') ? 'password' : 'text'}
+              label={label || fieldKey}
+              value={formData[fieldKey]}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={errors[fieldKey] || undefined}
+              touched={touched[fieldKey]}
+              placeholder={`Ingresa ${label ? label.toLowerCase() : fieldKey}`}
+              required
+            />
+          )
+        })}
+
+        <div className={styles.captchaContainer}>
+          {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
             <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""}
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
               onChange={(value) => setCaptchaValue(value)}
             />
-          </div>
+          ) : (
+            <p className={styles.captchaWarning}>
+              ⚠ ReCAPTCHA no configurado (modo desarrollo)
+            </p>
+          )}
+        </div>
 
-          <button type="submit" className={styles.registerButton}>
-            Registrar Empresa
-          </button>
-          <div className={styles.registerLoginLink}>
-            ¿Ya tienes una cuenta de organizador?{' '}
-            <Link to="/logincompany" className={styles.registerLink}>
-              Inicia sesión aquí
-            </Link>
-          </div>
-        </form>
-        <button onClick={() => navigate(-1)} className={styles.backButton}>Volver</button>
-      </div>
-    </div>
+        <Button type="submit" fullWidth isLoading={isLoading}>
+          Registrar Empresa
+        </Button>
+      </form>
+    </AuthLayout>
   );
 };
 

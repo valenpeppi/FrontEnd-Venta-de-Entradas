@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import LoadingSpinner from '../../../shared/components/LoadingSpinner';
+import EventCard from '../../../shared/components/EventCard';
+import { useSearchParams } from 'react-router-dom';
 import { EventService } from '../../../services/EventService';
 import type { Ticket } from '../../../types/cart';
 import styles from './styles/SearchedEvents.module.css';
 import { formatLongDate, formatTime } from '../../../shared/utils/dateFormatter';
-
-import {
-  MdLocationOn,
-  MdCalendarToday,
-  MdCategory,
-  MdAttachMoney,
-  MdAccessTime
-} from 'react-icons/md';
 
 const SearchedEvents: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -79,20 +73,13 @@ const SearchedEvents: React.FC = () => {
       </h2>
 
       {loading ? (
-        <div className={styles.loadingState}>
-          <div className={styles.loadingDots}>
-            <span className={styles.dot}></span>
-            <span className={styles.dot}></span>
-            <span className={styles.dot}></span>
-          </div>
-          <p className={styles.loadingStateText}>Cargando eventos...</p>
-        </div>
+        <LoadingSpinner text="Cargando eventos..." />
       ) : results.length === 0 ? (
         <p className={styles.noResults}>No se encontraron eventos.</p>
       ) : (
         <div className={styles.grid}>
           {results.map((ticket, index) => (
-            <EventCard key={ticket.id} ticket={ticket} index={index} />
+            <EventCard key={ticket.id} ticket={{ ...ticket, agotado: ticket.agotado ?? false }} index={index} />
           ))}
         </div>
       )}
@@ -101,60 +88,6 @@ const SearchedEvents: React.FC = () => {
 };
 
 export default SearchedEvents;
-
-const EventCard: React.FC<{ ticket: Ticket; index: number }> = ({ ticket, index }) => {
-  const navigate = useNavigate();
-
-  return (
-    <div className={styles.card} style={{ animationDelay: `${index * 80}ms` }}>
-      <img
-        src={ticket.imageUrl}
-        alt={ticket.eventName}
-        className={styles.image}
-        onError={(e) => {
-          (e.currentTarget as HTMLImageElement).src = '/ticket.png';
-        }}
-      />
-      <div className={styles.content}>
-        <h3 className={styles.cardTitle}>{ticket.eventName}</h3>
-
-        <p className={styles.infoRow}>
-          <MdLocationOn className={styles.icon} />
-          <span>{ticket.location}</span>
-        </p>
-
-        <p className={styles.infoRow}>
-          <MdCalendarToday className={styles.icon} />
-          <span>{ticket.date}</span>
-        </p>
-
-        <p className={styles.infoRow}>
-          <MdAccessTime className={styles.icon} />
-          <span>{ticket.time}</span>
-        </p>
-
-
-        <p className={styles.infoRow}>
-          <MdCategory className={styles.icon} />
-          <span>{ticket.type}</span>
-        </p>
-
-        <p className={styles.infoRow}>
-          <MdAttachMoney className={styles.icon} />
-          <span>Desde ${ticket.price.toLocaleString()}</span>
-        </p>
-
-        <button
-          onClick={() => navigate(`/event/${ticket.eventId}`)}
-          className={`${styles.button} ${ticket.agotado ? styles.disabledButton : ''}`}
-          disabled={ticket.agotado}
-        >
-          {ticket.agotado ? 'Agotado' : 'Comprar'}
-        </button>
-      </div>
-    </div>
-  );
-};
 
 
 

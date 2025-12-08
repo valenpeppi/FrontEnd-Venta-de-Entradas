@@ -15,7 +15,7 @@
   margin: 0 auto;
   padding: 0 1.5rem;
   gap: 2rem;
-  text-align: left; 
+  text-align: left;
 }
 
 .footerBrandSection {
@@ -32,6 +32,10 @@
   color: #4f46e5;
   text-decoration: none;
   margin-bottom: 1rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
 .footerLogo {
@@ -66,7 +70,7 @@
   flex-wrap: wrap;
   gap: 2rem;
   flex: 2 1 600px;
-  text-align: left; 
+  text-align: left;
 }
 
 .footerLinksColumn {
@@ -91,15 +95,22 @@
   margin-bottom: 0.75rem;
 }
 
-.footerLinksColumn ul li a {
+.footerLinksColumn ul li button {
+  background: none;
+  border: none;
+  padding: 0;
   color: #6b7280;
-  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
   font-size: 0.95rem;
+  text-align: left;
   transition: color 0.2s;
+  text-decoration: none;
 }
 
-.footerLinksColumn ul li a:hover {
+.footerLinksColumn ul li button:hover {
   color: #4f46e5;
+  text-decoration: underline;
 }
 
 .footerActionLinks li a {

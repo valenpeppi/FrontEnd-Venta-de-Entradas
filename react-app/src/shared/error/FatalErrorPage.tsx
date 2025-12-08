@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import styles from './styles/FatalErrorPage.module.css';
 
 interface FatalErrorPageProps {
@@ -11,17 +10,13 @@ interface FatalErrorPageProps {
  * Página que se muestra cuando ocurre un crash irrecuperable en la aplicación.
  */
 const FatalErrorPage: React.FC<FatalErrorPageProps> = ({ error, resetErrorBoundary }) => {
-    const navigate = useNavigate();
-
     const handleRetry = () => {
         // Si tenemos una función de reset (del ErrorBoundary), la usamos
         if (resetErrorBoundary) {
             resetErrorBoundary();
-            navigate('/'); // Intentar volver al home
-        } else {
-            // Fallback: recargar la página completa
-            window.location.href = '/';
         }
+        // Fallback: recargar la página completa o ir al home sin usar router
+        window.location.href = '/';
     };
 
     return (

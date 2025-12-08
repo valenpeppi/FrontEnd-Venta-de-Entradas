@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import LoadingSpinner from '../../shared/components/LoadingSpinner';
 import { useEvents } from '../../shared/context/EventsContext';
 import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
@@ -70,16 +71,7 @@ const HomePage: React.FC = () => {
   }, [filteredTickets]);
 
   if (approvedTickets.length === 0 && allEventTypes.length === 0) {
-    return (
-      <div className={styles.loadingState}>
-        <div className={styles.loadingDots}>
-          <span className={styles.dot}></span>
-          <span className={styles.dot}></span>
-          <span className={styles.dot}></span>
-        </div>
-        <p className={styles.loadingStateText}>Cargando eventos...</p>
-      </div>
-    );
+    return <LoadingSpinner text="Cargando eventos..." />;
   }
 
   return (
