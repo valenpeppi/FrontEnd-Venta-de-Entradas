@@ -10,8 +10,12 @@ import visaIcon from '../../assets/visa.png';
 import mastercardIcon from '../../assets/mastercard.png';
 import paypalIcon from '../../assets/paypal.png';
 
+import { useAuth } from '../../shared/context/AuthContext';
+
 const Footer: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
 
   const handleNavigate = (path: string) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -63,7 +67,7 @@ const Footer: React.FC = () => {
             <h4>Compañía</h4>
             <ul>
               <li><button onClick={() => handleNavigate('/about')}>Sobre nosotros</button></li>
-              <li><button onClick={() => handleNavigate('/contact')}>Contacto</button></li>
+              {!isAdmin && <li><button onClick={() => handleNavigate('/contact')}>Contacto</button></li>}
             </ul>
           </div>
 
