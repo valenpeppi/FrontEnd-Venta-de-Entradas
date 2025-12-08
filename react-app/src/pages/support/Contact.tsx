@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SupportLayout from '../../shared/components/SupportLayout';
 import styles from './styles/Contact.module.css';
 import { FaEnvelope, FaPhone } from 'react-icons/fa';
@@ -9,6 +10,7 @@ import { useMessage } from '../../shared/context/MessageContext';
 const Contact: React.FC = () => {
   const { user } = useAuth();
   const { setAppMessage } = useMessage();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
     email: '',
@@ -36,6 +38,7 @@ const Contact: React.FC = () => {
       });
       setAppMessage('Mensaje enviado con éxito. Te responderemos pronto.', 'success');
       setFormData({ title: '', email: user?.email || user?.mail || user?.contactEmail || '', description: '' });
+      setTimeout(() => navigate('/'), 1500);
     } catch (error) {
       console.error('Error sending message:', error);
       setAppMessage('Error al enviar el mensaje. Inténtalo de nuevo.', 'error');
