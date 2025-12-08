@@ -6,6 +6,7 @@ import SearchedEvents from './pages/events/search/SearchedEvents';
 import CartPage from './pages/sales/checkout/CartPage';
 import Pay from './pages/sales/checkout/Pay';
 import AdminPanel from './pages/admin/AdminPanel';
+import { AdminMessages } from './pages/admin/AdminMessages';
 
 import MyTickets from './pages/sales/tickets/MyTickets';
 import Help from './pages/support/Help';
@@ -110,6 +111,7 @@ const App: React.FC = () => {
 
         {/* Rutas Protegidas para Administradores */}
         <Route path="/admin/dashboard" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminPanel /></Layout></AuthRoute>} />
+        <Route path="/admin/messages" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminMessages /></Layout></AuthRoute>} />
 
         {/* Rutas Protegidas para Empresas */}
         <Route path="/company/dashboard" element={<AuthRoute allowedRoles={['company']}><Layout><CompanyDashboardPage /></Layout></AuthRoute>} />

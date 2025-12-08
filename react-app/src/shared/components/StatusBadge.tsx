@@ -19,7 +19,12 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label }) => {
                 return styles.rejected;
             case 'pending':
             case 'pendiente':
+            case 'unread':
                 return styles.pending;
+            case 'answered':
+            case 'respondido':
+                return styles.approved;
+            case 'exhausted':
             case 'agotado':
             case 'sold out':
                 return styles.soldOut;

@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { MessageService } from '../../services/MessageService';
 import type { Message } from '../../types/message';
-import styles from './styles/AdminPanel.module.css';
+import styles from './styles/AdminMessages.module.css';
 import StatusBadge from "../../shared/components/StatusBadge";
 import EmptyState from "../../shared/components/EmptyState";
-import { FaInbox, FaReply, FaTimes, FaCheck } from 'react-icons/fa';
+import { FaInbox, FaReply, FaTimes, FaCheck, FaUser } from 'react-icons/fa';
 
 export const AdminMessages: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'unread': return 'No Leído';
+            case 'answered': return 'Respondido';
+            case 'rejected': return 'Rechazado';
+            default: return status;
+        }
+    };
 
     useEffect(() => {
         loadMessages();
@@ -19,7 +28,9 @@ export const AdminMessages: React.FC = () => {
         setLoading(true);
         try {
             const data = await MessageService.getMessages();
-            setMessages(data);
+            // Sort by Date DESC
+            const sorted = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            setMessages(sorted);
         } catch (err) {
             setError('Error al cargar mensajes.');
         } finally {
@@ -28,11 +39,11 @@ export const AdminMessages: React.FC = () => {
     };
 
     const handleReply = async (id: number) => {
-        const responseText = prompt("Escribe tu respuesta:");
+        const responseText = prompt("Escribe tu respuesta para el usuario:");
         if (!responseText) return;
 
         try {
-            // Optimistic
+            // Optimistic update
             setMessages(prev => prev.map(m => m.idMessage === id ? { ...m, state: 'answered', response: responseText } : m));
             await MessageService.replyMessage(id, responseText);
         } catch (e) {
@@ -56,13 +67,17 @@ export const AdminMessages: React.FC = () => {
     if (error) return <div className={styles.error}>{error}</div>;
 
     return (
-        <div className={styles.adminContainer} style={{ marginTop: '0' }}>
-            <header className={styles.adminHeader}>
-                <h1>Bandeja de Entrada</h1>
+        <div className={styles.container}>
+            <header className={styles.header}>
+                <h1>Mensajes de Usuarios</h1>
             </header>
 
             {messages.length === 0 ? (
-                <EmptyState title="No hay mensajes" description="Tu bandeja de entrada está vacía." icon={<FaInbox />} />
+                <EmptyState
+                    title="Bandeja Vacía"
+                    description="No tiene mensajes pendientes de revisión."
+                    icon={<FaInbox />}
+                />
             ) : (
                 <div className={styles.messagesList}>
                     {messages.map(msg => (
@@ -70,34 +85,39 @@ export const AdminMessages: React.FC = () => {
                             <div className={styles.messageHeader}>
                                 <div className={styles.messageMeta}>
                                     <h3 className={styles.messageTitle}>{msg.title}</h3>
-                                    <span className={styles.messageSender}>{msg.senderEmail}</span>
-                                    <span className={styles.messageDate}>{new Date(msg.date).toLocaleDateString()}</span>
+                                    <div className={styles.senderInfo}>
+                                        <FaUser size={12} />
+                                        <span className={styles.senderEmail}>{msg.senderEmail}</span>
+                                        <span>•</span>
+                                        <span className={styles.messageDate}>{new Date(msg.date).toLocaleDateString()} {new Date(msg.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    </div>
                                 </div>
-                                <StatusBadge status={msg.state} />
+                                <StatusBadge status={msg.state} label={getStatusLabel(msg.state)} />
                             </div>
-                            <p className={styles.messageBody}>{msg.description}</p>
+
+                            <div className={styles.messageBody}>
+                                {msg.description}
+                            </div>
 
                             {msg.response && (
-                                <div style={{ background: '#f0fdf4', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', border: '1px solid #bbf7d0' }}>
-                                    <strong>Tu respuesta:</strong>
-                                    <p style={{ margin: '0.5rem 0 0', color: '#166534' }}>{msg.response}</p>
+                                <div className={styles.responseBox}>
+                                    <span className={styles.responseLabel}>Tu Respuesta</span>
+                                    <p className={styles.responseText}>{msg.response}</p>
                                 </div>
                             )}
 
-                            <div className={styles.messageActions}>
+                            <div className={styles.actions}>
                                 {msg.state === 'unread' && (
                                     <>
                                         <button
-                                            className={`${styles.btn} ${styles.btnApprove}`}
+                                            className={`${styles.btn} ${styles.btnReply}`}
                                             onClick={() => handleReply(msg.idMessage)}
-                                            title="Responder"
                                         >
                                             <FaReply /> Responder
                                         </button>
                                         <button
                                             className={`${styles.btn} ${styles.btnReject}`}
                                             onClick={() => handleReject(msg.idMessage)}
-                                            title="Rechazar"
                                         >
                                             <FaTimes /> Rechazar
                                         </button>
@@ -105,11 +125,10 @@ export const AdminMessages: React.FC = () => {
                                 )}
                                 {msg.state === 'rejected' && (
                                     <button
-                                        className={`${styles.btn} ${styles.btnApprove}`}
+                                        className={`${styles.btn} ${styles.btnReply}`}
                                         onClick={() => handleReply(msg.idMessage)}
-                                        title="Reconsiderar y Responder"
                                     >
-                                        <FaCheck /> Responder
+                                        <FaCheck /> Reconsiderar
                                     </button>
                                 )}
                             </div>

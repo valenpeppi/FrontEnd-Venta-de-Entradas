@@ -163,7 +163,10 @@ const Navbar: React.FC = () => {
             {!isAdmin && user?.role !== 'company' && <li><Link to="/help" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Ayuda</Link></li>}
             {isLoggedIn && user?.role === 'user' && <li><Link to="/myTickets" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mis Entradas</Link></li>}
             {isAdmin && (
-              <li><Link to="/admin/dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Dashboard</Link></li>
+              <>
+                <li><Link to="/admin/dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Dashboard</Link></li>
+                <li><Link to="/admin/messages" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mensajes</Link></li>
+              </>
             )}
             {(isLoggedIn && user?.role === 'company') || (isLoggedIn && user?.role === 'admin') ? (
               <>

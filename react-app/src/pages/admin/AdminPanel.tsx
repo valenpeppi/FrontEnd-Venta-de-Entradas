@@ -20,6 +20,25 @@ export default function AdminPanel() {
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<FilterType>('all');
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await AdminService.getAllEvents();
+        setEvents(data);
+      } catch (e: any) {
+        setError(
+          e?.response?.data?.message ||
+          "No se pudieron obtener los eventos."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
+
   const filtered = useMemo(() => {
     let result = events;
 
@@ -46,25 +65,6 @@ export default function AdminPanel() {
         return result;
     }
   }, [q, events, filter]);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await AdminService.getAllEvents();
-        setEvents(data);
-      } catch (e: any) {
-        setError(
-          e?.response?.data?.message ||
-          "No se pudieron obtener los eventos."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchEvents();
-  }, []);
 
   const handleAction = async (id: number | string, action: "approve" | "reject") => {
     // Optimistic update
@@ -143,9 +143,8 @@ export default function AdminPanel() {
   return (
     <div className={styles.adminContainer}>
       <AdminDashboardPage />
-      <header className={styles.adminHeader}>
-        <h1>Gestión de Eventos</h1>
 
+      <header className={styles.adminHeader}>
         <div className={styles.filterTabs}>
           <button
             className={`${filter === 'all' ? globalStyles.littleGlowBtnInverse : globalStyles.littleGlowBtn}`}
@@ -258,7 +257,6 @@ export default function AdminPanel() {
                     </button>
                   </>
                 )}
-                {/* Removed Reject button for Approved events */}
                 {ev.state === 'Rejected' && (
                   <button
                     className={`${styles.btn} ${styles.btnApprove}`}
