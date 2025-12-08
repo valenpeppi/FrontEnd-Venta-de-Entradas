@@ -5,7 +5,8 @@ import HomePage from './pages/home/UserHomePage';
 import SearchedEvents from './pages/events/search/SearchedEvents';
 import CartPage from './pages/sales/checkout/CartPage';
 import Pay from './pages/sales/checkout/Pay';
-import AdminHomePage from './pages/admin/AdminHomePage';
+import AdminPanel from './pages/admin/AdminPanel';
+
 import MyTickets from './pages/sales/tickets/MyTickets';
 import Help from './pages/support/Help';
 import EventDetailPage from './pages/events/detail/EventDetailPage';
@@ -47,7 +48,7 @@ const App: React.FC = () => {
     setAppMessage(`¡Inicio de sesión exitoso como ${user.name}!`);
 
     if (user.role === 'admin') {
-      navigate('/admin');
+      navigate('/admin-dashboard');
     } else {
       const from = location.state?.from?.pathname || '/';
       navigate(from);
@@ -102,7 +103,7 @@ const App: React.FC = () => {
         <Route path="/pay/failure" element={<AuthRoute allowedRoles={['user']}><Layout><Failure /></Layout></AuthRoute>} />
 
         {/* Rutas Protegidas para Administradores */}
-        <Route path="/admin" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminHomePage /></Layout></AuthRoute>} />
+        <Route path="/admin-dashboard" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminPanel /></Layout></AuthRoute>} />
 
         {/* Rutas Protegidas para Empresas y Admin */}
         <Route path="/create-event" element={<AuthRoute allowedRoles={['company', 'admin']}><Layout><CreateEventPage /></Layout></AuthRoute>} />

@@ -14,9 +14,9 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
   const { setAppMessage } = useMessage();
   const location = useLocation();
 
-  
+
   if (isLoading) {
-    return null; 
+    return null;
   }
 
 
@@ -30,7 +30,7 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
   // Lógica para rutas de solo invitados 
   if (guestOnly) {
     if (isLoggedIn) {
-      const redirectTo = user?.role === 'admin' ? '/admin' : (user?.role === 'company' ? '/create-event' : '/');
+      const redirectTo = user?.role === 'admin' ? '/admin-dashboard' : (user?.role === 'company' ? '/create-event' : '/');
       return <RedirectWithMessage to={redirectTo} message="Ya has iniciado sesión." type="info" />;
     }
     return children;
@@ -53,7 +53,7 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
       }
       return <RedirectWithMessage to="/" message={roleMessage} type="error" />;
     }
-    
+
     return children;
   }
 

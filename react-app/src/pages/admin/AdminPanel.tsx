@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { AdminService } from "../../services/AdminService";
-import styles from "./styles/AdminHomePage.module.css";
+import styles from "./styles/AdminPanel.module.css";
 import globalStyles from "../../shared/styles/GlobalStyles.module.css";
 import { FaStar, FaRegStar, FaCheck, FaTimes, FaInbox } from "react-icons/fa";
 import StatusBadge from "../../shared/components/StatusBadge";
 import EmptyState from "../../shared/components/EmptyState";
+import AdminDashboardPage from "./AdminDashboardPage";
 
 import type { AdminEvent } from '../../types/admin';
 
@@ -12,7 +13,7 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 type FilterType = 'all' | 'pending' | 'approved' | 'rejected' | 'featured';
 
-export default function AdminHomePage() {
+export default function AdminPanel() {
   const [events, setEvents] = useState<AdminEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -141,8 +142,9 @@ export default function AdminHomePage() {
 
   return (
     <div className={styles.adminContainer}>
+      <AdminDashboardPage />
       <header className={styles.adminHeader}>
-        <h1>Panel de Administración</h1>
+        <h1>Gestión de Eventos</h1>
 
         <div className={styles.filterTabs}>
           <button

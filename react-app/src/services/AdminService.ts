@@ -26,5 +26,10 @@ export const AdminService = {
     toggleFeature: async (id: number | string) => {
         const response = await api.patch(`/events/${id}/feature`);
         return response.data;
+    },
+
+    getDashboardStats: async () => {
+        const response = await api.get('/sales/stats');
+        return response.data;
     }
 };

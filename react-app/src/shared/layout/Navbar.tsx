@@ -109,7 +109,7 @@ const Navbar: React.FC = () => {
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
         <div className={styles.brandWrapper}>
-          <Link to={isAdmin ? "/admin" : "/"} className={styles.navbarBrand} onClick={closeMobileMenu}>
+          <Link to={isAdmin ? "/admin-dashboard" : "/"} className={styles.navbarBrand} onClick={closeMobileMenu}>
             <img src={logoTicket} alt="TicketApp Logo" className={styles.image1} />
             <GradientText>TicketApp</GradientText>
           </Link>
@@ -162,15 +162,16 @@ const Navbar: React.FC = () => {
           <ul className={styles.navbarMenu}>
             {!isAdmin && user?.role !== 'company' && <li><Link to="/help" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Ayuda</Link></li>}
             {isLoggedIn && user?.role === 'user' && <li><Link to="/myTickets" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mis Entradas</Link></li>}
+            {isAdmin && (
+              <li><Link to="/admin-dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Dashboard</Link></li>
+            )}
             {(isLoggedIn && user?.role === 'company') || (isLoggedIn && user?.role === 'admin') ? (
               <>
                 <li><Link to="/company/my-events" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mis Eventos</Link></li>
                 <li><Link to="/create-event" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Crear Evento</Link></li>
               </>
             ) : null}
-            {isAdmin && (
-              <li><Link to="/admin" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Eventos</Link></li>
-            )}
+
           </ul>
 
           <div className={styles.navbarAuthSection}>
@@ -227,7 +228,7 @@ const Navbar: React.FC = () => {
 
                       {user?.role === 'admin' && (
                         <li>
-                          <Link to="/admin" className={styles.dropdownItem} onClick={closeMobileMenu}>
+                          <Link to="/admin-dashboard" className={styles.dropdownItem} onClick={closeMobileMenu}>
                             <FiSettings /> Panel Admin
                           </Link>
                         </li>
