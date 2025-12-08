@@ -6,6 +6,8 @@ import styles from './styles/MyTickets.module.css';
 import { PdfService } from '../../../services/PdfService';
 
 import { formatLongDate, formatTime } from '../../../shared/utils/dateFormatter';
+import EmptyState from '../../../shared/components/EmptyState';
+import { FaTicketAlt } from 'react-icons/fa';
 
 import type { PurchasedTicket, PurchasedTicketGroup } from '../../../types/purchase';
 
@@ -169,15 +171,18 @@ const MyTickets: React.FC = () => {
         </div>
       ) : (
         !isFetching && !error && (
-          <div className={styles.noTickets}>
-            <p>No tienes ninguna entrada comprada.</p>
+          <EmptyState
+            title="No tienes ninguna entrada comprada."
+            description="Explora los eventos disponibles y asegura tu lugar."
+            icon={<FaTicketAlt size={48} color="#9ca3af" />}
+          >
             <button
               onClick={() => navigate('/')}
               className={`${styles.btn} ${styles.btnPrimary}`}
             >
               Explorar eventos
             </button>
-          </div>
+          </EmptyState>
         )
       )}
     </div>

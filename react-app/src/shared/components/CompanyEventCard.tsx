@@ -3,6 +3,7 @@ import styles from './styles/CompanyEventCard.module.css';
 import { FaCalendarAlt, FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../../shared/components/ConfirmationModal';
+import StatusBadge from '../../shared/components/StatusBadge';
 
 interface CompanyEventCardProps {
     event: {
@@ -29,14 +30,6 @@ const CompanyEventCard: React.FC<CompanyEventCardProps> = ({ event, onDelete }) 
         month: 'long',
         day: 'numeric',
     });
-
-    const getStatusClass = (status: string) => {
-        switch (status) {
-            case 'Approved': return styles.approved;
-            case 'Rejected': return styles.rejected;
-            default: return styles.pending;
-        }
-    };
 
     const getStatusLabel = (status: string) => {
         switch (status) {
@@ -91,9 +84,7 @@ const CompanyEventCard: React.FC<CompanyEventCardProps> = ({ event, onDelete }) 
                     </span>
 
                     <div className={styles.statusContainer}>
-                        <span className={`${styles.badge} ${getStatusClass(event.state)}`}>
-                            {getStatusLabel(event.state)}
-                        </span>
+                        <StatusBadge status={event.state || 'Pending'} label={getStatusLabel(event.state || 'Pending')} />
                     </div>
 
                     <div className={styles.stats}>

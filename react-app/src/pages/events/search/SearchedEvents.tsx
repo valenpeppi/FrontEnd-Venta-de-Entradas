@@ -6,13 +6,14 @@ import { EventService } from '../../../services/EventService';
 import type { Ticket } from '../../../types/cart';
 import styles from './styles/SearchedEvents.module.css';
 import { formatLongDate, formatTime } from '../../../shared/utils/dateFormatter';
+import { FaSearch } from 'react-icons/fa';
+import EmptyState from '../../../shared/components/EmptyState';
 
 const SearchedEvents: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [results, setResults] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const query = searchParams.get('query') || '';
-
 
   const mapApiEventToTicket = (ev: any): Ticket => {
     let minPrice = ev.minPrice ?? ev.price ?? 0;
@@ -75,7 +76,12 @@ const SearchedEvents: React.FC = () => {
       {loading ? (
         <LoadingSpinner text="Cargando eventos..." />
       ) : results.length === 0 ? (
-        <p className={styles.noResults}>No se encontraron eventos.</p>
+        <EmptyState
+          title="No se encontraron eventos"
+          description="Intenta con otros términos de búsqueda."
+          icon={<FaSearch />}
+          compact
+        />
       ) : (
         <div className={styles.grid}>
           {results.map((ticket, index) => (

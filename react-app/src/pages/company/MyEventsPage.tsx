@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { EventService } from '../../services/EventService';
 import CompanyEventCard from '../../shared/components/CompanyEventCard';
+import EmptyState from '../../shared/components/EmptyState';
 import styles from './styles/MyEventsPage.module.css';
 import { useMessage } from '../../shared/context/MessageContext';
 import { useAuth } from '../../shared/context/AuthContext';
+import { FaCalendarPlus } from 'react-icons/fa';
 
 const MyEventsPage: React.FC = () => {
     const { setAppMessage } = useMessage();
@@ -51,16 +53,20 @@ const MyEventsPage: React.FC = () => {
     if (error) {
         return (
             <div className={styles.error}>
-                <p>{error}</p>
-                {(error.includes('sesión') || error.includes('permisos')) && (
-                    <button
-                        onClick={() => { logout(); window.location.href = '/login'; }}
-                        className={styles.createButton}
-                        style={{ marginTop: '1rem', display: 'inline-block' }}
-                    >
-                        Iniciar Sesión nuevamente
-                    </button>
-                )}
+                <EmptyState
+                    title="Error de sesión"
+                    description={error || undefined}
+                    compact
+                >
+                    {(error.includes('sesión') || error.includes('permisos')) && (
+                        <button
+                            onClick={() => { logout(); window.location.href = '/login'; }}
+                            className={styles.createButton}
+                        >
+                            Iniciar Sesión nuevamente
+                        </button>
+                    )}
+                </EmptyState>
             </div>
         );
     }
@@ -73,19 +79,15 @@ const MyEventsPage: React.FC = () => {
             </div>
 
             {events.length === 0 ? (
-                <div className={styles.emptyState}>
-                    <div className={styles.emptyIcon}>🎉</div>
-                    <h2 className={styles.emptyTitle}>¡Aún no tienes eventos creados!</h2>
-                    <p className={styles.emptyDescription}>
-                        Parece que todavía no has organizado ningún evento.<br />
-                        ¡Es el momento perfecto para empezar! Crea tu primer evento y compártelo con el mundo.
-                    </p>
-                    <div className={styles.createButtonContainer}>
-                        <Link to="/create-event" className={styles.createButton}>
-                            Crear mi primer evento
-                        </Link>
-                    </div>
-                </div>
+                <EmptyState
+                    title="¡Aún no tienes eventos creados!"
+                    description="Parece que todavía no has organizado ningún evento. ¡Es el momento perfecto para empezar!"
+                    icon={<FaCalendarPlus size={50} color="#9ca3af" />}
+                >
+                    <Link to="/create-event" className={styles.createButton}>
+                        Crear mi primer evento
+                    </Link>
+                </EmptyState>
             ) : (
                 <div className={styles.grid}>
                     {events.map((event) => (

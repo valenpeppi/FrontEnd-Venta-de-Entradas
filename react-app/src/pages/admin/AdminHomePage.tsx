@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { AdminService } from "../../services/AdminService";
 import styles from "./styles/AdminHomePage.module.css";
 import globalStyles from "../../shared/styles/GlobalStyles.module.css";
-import { FaStar, FaRegStar, FaCheck, FaTimes } from "react-icons/fa";
+import { FaStar, FaRegStar, FaCheck, FaTimes, FaInbox } from "react-icons/fa";
+import StatusBadge from "../../shared/components/StatusBadge";
+import EmptyState from "../../shared/components/EmptyState";
 
 import type { AdminEvent } from '../../types/admin';
 
@@ -79,8 +81,6 @@ export default function AdminHomePage() {
         await AdminService.rejectEvent(id);
       }
     } catch (e: any) {
-      // Revert on error could be complex if we don't remember prev state, 
-      // but simplistic revert is to fetch all again or show error.
       alert(
         e?.response?.data?.message ||
         `No se pudo ${action === "approve" ? "aprobar" : "rechazar"}`
@@ -98,7 +98,6 @@ export default function AdminHomePage() {
     try {
       await AdminService.toggleFeature(id);
     } catch (e: any) {
-      // Revert on error
       setEvents(prevEvents =>
         prevEvents.map(e =>
           e.idEvent === id ? { ...e, featured: !e.featured } : e
@@ -111,7 +110,6 @@ export default function AdminHomePage() {
     }
   };
 
-  // Calculate counts
   const counts = useMemo(() => {
     return {
       all: events.length,
@@ -137,7 +135,7 @@ export default function AdminHomePage() {
   if (error)
     return (
       <div className={styles.adminContainer}>
-        <div className={`${styles.adminStatus} ${styles.error}`}>{error}</div>
+        <EmptyState title="Error" description={error} compact />
       </div>
     );
 
@@ -193,7 +191,12 @@ export default function AdminHomePage() {
       </header>
 
       {filtered.length === 0 ? (
-        <div className={styles.adminStatus}>No hay eventos en esta categoría.</div>
+        <EmptyState
+          title="No se encontraron eventos"
+          description="Intenta cambiar los filtros o la búsqueda."
+          icon={<FaInbox />}
+          compact
+        />
       ) : (
         <ul className={styles.masonry}>
           {filtered.map((ev) => (
@@ -219,12 +222,7 @@ export default function AdminHomePage() {
                 </button>
 
                 <div className={styles.badges}>
-                  <span className={`${styles.badge} ${ev.state === 'Approved' ? styles.badgeApproved :
-                    ev.state === 'Rejected' ? styles.badgeRejected :
-                      styles.badgePending
-                    }`}>
-                    {ev.state}
-                  </span>
+                  <StatusBadge status={ev.state} />
                 </div>
               </div>
 
