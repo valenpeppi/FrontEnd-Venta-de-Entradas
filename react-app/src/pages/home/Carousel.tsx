@@ -51,6 +51,9 @@ const Carousel: React.FC<CarouselProps> = ({
           />
           <div className={styles.eventCardDetailsWrapper}>
             <div className={styles.eventCardContent}>
+              {currentEvent.type && (
+                <span className={styles.eventCardType}>{currentEvent.type}</span>
+              )}
               <h3 className={styles.eventCardTitle}>{currentEvent.eventName}</h3>
               <div className={styles.eventCardMeta}>
                 {currentEvent.description && (

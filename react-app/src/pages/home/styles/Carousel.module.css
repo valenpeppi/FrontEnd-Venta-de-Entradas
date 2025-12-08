@@ -3,6 +3,7 @@
     opacity: 0;
     transform: translateX(50px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -49,12 +50,17 @@
   transform: translateY(-50%) scale(0.95);
 }
 
-.carouselNavigationBtnPrev { left: 0; }
-.carouselNavigationBtnNext { right: 0; }
+.carouselNavigationBtnPrev {
+  left: 0;
+}
+
+.carouselNavigationBtnNext {
+  right: 0;
+}
 
 .carouselNavigationIcon {
   font-size: 1.8rem;
-  color: #4f46e5; 
+  color: #4f46e5;
   pointer-events: none;
   transition: color 0.2s ease, transform 0.2s ease;
 }
@@ -100,6 +106,19 @@
   line-height: 1.2;
   margin-bottom: 1rem;
   word-break: break-word;
+}
+
+.eventCardType {
+  display: inline-block;
+  background-color: #e0e7ff;
+  color: #4338ca;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.8rem;
 }
 
 .eventCardMeta {
@@ -160,6 +179,7 @@
   cursor: not-allowed;
   box-shadow: none;
 }
+
 .btnPurchase:hover {
   background-color: #3730a3;
   transform: translateY(-2px);
