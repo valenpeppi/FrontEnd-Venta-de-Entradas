@@ -19,5 +19,10 @@ export const MessageService = {
     rejectMessage: async (id: number) => {
         const response = await api.put(`/messages/${id}/reject`);
         return response.data;
+    },
+
+    discardMessage: async (id: number) => {
+        const response = await api.put(`/messages/${id}/discard`);
+        return response.data;
     }
 };

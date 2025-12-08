@@ -4,7 +4,7 @@ import type { Message } from '../../types/message';
 import styles from './styles/AdminMessages.module.css';
 import StatusBadge from "../../shared/components/StatusBadge";
 import EmptyState from "../../shared/components/EmptyState";
-import { FaInbox, FaReply, FaTimes, FaCheck, FaUser, FaPaperPlane } from 'react-icons/fa';
+import { FaInbox, FaReply, FaCheck, FaUser, FaPaperPlane, FaTimes } from 'react-icons/fa';
 
 export const AdminMessages: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
@@ -20,6 +20,7 @@ export const AdminMessages: React.FC = () => {
             case 'unread': return 'No Leído';
             case 'answered': return 'Respondido';
             case 'rejected': return 'Rechazado';
+            case 'discarded': return 'Descartado';
             default: return status;
         }
     };
@@ -32,8 +33,14 @@ export const AdminMessages: React.FC = () => {
         setLoading(true);
         try {
             const data = await MessageService.getMessages();
-            // Sort by Date DESC
-            const sorted = data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            // Sort: Unread > Answered > Rejected, then by Date DESC
+            const sorted = data.sort((a, b) => {
+                const priority = { 'unread': 1, 'answered': 2, 'rejected': 3 } as Record<string, number>;
+                const pA = priority[a.state] || 99;
+                const pB = priority[b.state] || 99;
+                if (pA !== pB) return pA - pB;
+                return new Date(b.date).getTime() - new Date(a.date).getTime();
+            });
             setMessages(sorted);
         } catch (err) {
             setError('Error al cargar mensajes.');
@@ -67,13 +74,14 @@ export const AdminMessages: React.FC = () => {
         }
     };
 
-    const handleReject = async (id: number) => {
-        if (!confirm("¿Seguro que quieres rechazar este mensaje?")) return;
+    const handleDiscard = async (id: number) => {
+        // Instant discard, remove from list
         try {
-            setMessages(prev => prev.map(m => m.idMessage === id ? { ...m, state: 'rejected' } : m));
-            await MessageService.rejectMessage(id);
+            // Optimistically remove the message from the list
+            setMessages(prev => prev.filter(m => m.idMessage !== id));
+            await MessageService.discardMessage(id);
         } catch (e) {
-            alert('Error al rechazar mensaje');
+            alert('Error al descartar mensaje');
             loadMessages();
         }
     };
@@ -97,6 +105,15 @@ export const AdminMessages: React.FC = () => {
                 <div className={styles.messagesList}>
                     {messages.map(msg => (
                         <div key={msg.idMessage} className={styles.messageCard}>
+                            {/* Discard Button (X) - Always visible to remove card */}
+                            <button
+                                className={styles.closeBtn}
+                                onClick={() => handleDiscard(msg.idMessage)}
+                                title="Descartar y ocultar mensaje"
+                            >
+                                <FaTimes size={16} />
+                            </button>
+
                             <div className={styles.messageHeader}>
                                 <div className={styles.messageMeta}>
                                     <h3 className={styles.messageTitle}>{msg.title}</h3>
@@ -114,7 +131,7 @@ export const AdminMessages: React.FC = () => {
                                 {msg.description}
                             </div>
 
-                            {/* Response Display (if exists and not editing) */}
+                            {/* Response Display */}
                             {msg.response && replyingId !== msg.idMessage && (
                                 <div className={styles.responseBox}>
                                     <span className={styles.responseLabel}>Tu Respuesta</span>
@@ -147,20 +164,12 @@ export const AdminMessages: React.FC = () => {
                             {replyingId !== msg.idMessage && (
                                 <div className={styles.actions}>
                                     {msg.state === 'unread' && (
-                                        <>
-                                            <button
-                                                className={`${styles.btn} ${styles.btnReply}`}
-                                                onClick={() => startReply(msg.idMessage)}
-                                            >
-                                                <FaReply /> Responder
-                                            </button>
-                                            <button
-                                                className={`${styles.btn} ${styles.btnReject}`}
-                                                onClick={() => handleReject(msg.idMessage)}
-                                            >
-                                                <FaTimes /> Rechazar
-                                            </button>
-                                        </>
+                                        <button
+                                            className={`${styles.btn} ${styles.btnReply}`}
+                                            onClick={() => startReply(msg.idMessage)}
+                                        >
+                                            <FaReply /> Responder
+                                        </button>
                                     )}
                                     {msg.state === 'answered' && (
                                         <button

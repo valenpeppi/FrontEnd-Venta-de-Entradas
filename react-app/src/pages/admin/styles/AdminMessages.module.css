@@ -36,6 +36,27 @@
         0 4px 6px -1px rgba(0, 0, 0, 0.05),
         0 10px 15px -3px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.closeBtn:hover {
+    background: #f1f5f9;
+    color: #ef4444;
+    transform: scale(1.1);
 }
 
 .messageCard:hover {
@@ -53,6 +74,8 @@
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-right: 2rem;
+    /* Make space for close button */
 }
 
 .messageMeta {
