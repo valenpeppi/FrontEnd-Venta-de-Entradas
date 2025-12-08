@@ -90,7 +90,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 onLoginSuccess(response.user, response.token);
                 // Navigation is usually handled by parent or verify here if specific
                 if (response.user.role === 'admin' || response.user.role === 'ADMIN') {
-                    navigate('/admin-dashboard');
+                    navigate('/admin/dashboard');
                 } else if (response.user.role === 'company' || response.user.role === 'COMPANY') {
                     navigate('/company/dashboard');
                 } else {

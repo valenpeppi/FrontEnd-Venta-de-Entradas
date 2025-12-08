@@ -163,7 +163,7 @@ const Navbar: React.FC = () => {
             {!isAdmin && user?.role !== 'company' && <li><Link to="/help" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Ayuda</Link></li>}
             {isLoggedIn && user?.role === 'user' && <li><Link to="/myTickets" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mis Entradas</Link></li>}
             {isAdmin && (
-              <li><Link to="/admin-dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Dashboard</Link></li>
+              <li><Link to="/admin/dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Dashboard</Link></li>
             )}
             {(isLoggedIn && user?.role === 'company') || (isLoggedIn && user?.role === 'admin') ? (
               <>
@@ -234,7 +234,7 @@ const Navbar: React.FC = () => {
 
                       {user?.role === 'admin' && (
                         <li>
-                          <Link to="/admin-dashboard" className={styles.dropdownItem} onClick={closeMobileMenu}>
+                          <Link to="/admin/dashboard" className={styles.dropdownItem} onClick={closeMobileMenu}>
                             <FiSettings /> Panel Admin
                           </Link>
                         </li>

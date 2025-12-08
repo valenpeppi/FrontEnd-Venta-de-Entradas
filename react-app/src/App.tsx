@@ -104,7 +104,7 @@ const App: React.FC = () => {
         <Route path="/pay/failure" element={<AuthRoute allowedRoles={['user']}><Layout><Failure /></Layout></AuthRoute>} />
 
         {/* Rutas Protegidas para Administradores */}
-        <Route path="/admin-dashboard" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminPanel /></Layout></AuthRoute>} />
+        <Route path="/admin/dashboard" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminPanel /></Layout></AuthRoute>} />
 
         {/* Rutas Protegidas para Empresas */}
         <Route path="/company/dashboard" element={<AuthRoute allowedRoles={['company']}><Layout><CompanyDashboardPage /></Layout></AuthRoute>} />
