@@ -10,7 +10,7 @@ type AuthAction =
   | { type: 'INITIALIZE'; payload: { user: User | null } }
   | { type: 'LOGIN'; payload: { user: User } }
   | { type: 'LOGOUT' }
-  | { type: 'UPDATE_USER'; payload: { name: string; role?: string } };
+  | { type: 'UPDATE_USER'; payload: Partial<User> };
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
@@ -41,8 +41,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         user: state.user
           ? {
             ...state.user,
-            name: action.payload.name,
-            role: action.payload.role || state.user.role,
+            ...action.payload,
           }
           : null,
       };
@@ -116,8 +115,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const updateUser = (name: string, role?: string) => {
-    dispatch({ type: 'UPDATE_USER', payload: { name, role } });
+  const updateUser = (userData: Partial<User>) => {
+    dispatch({ type: 'UPDATE_USER', payload: userData });
   };
 
   return (

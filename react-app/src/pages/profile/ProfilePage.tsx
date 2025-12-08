@@ -18,12 +18,18 @@ const ProfilePage: React.FC = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
+    const [birthDate, setBirthDate] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (user) {
             setName(user.name || '');
             setSurname(user.surname || '');
+            setPhone(user.phone || '');
+            setAddress(user.address || '');
+            setBirthDate(user.birthDate ? String(user.birthDate).split('T')[0] : '');
         }
     }, [user]);
 
@@ -35,8 +41,21 @@ const ProfilePage: React.FC = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await AuthService.updateUser({ name, surname });
-            updateUser(name); // Update local context
+            const updateData: any = { name };
+            if (user.role === 'company') {
+                updateData.phone = phone;
+                updateData.address = address;
+            } else {
+                updateData.surname = surname;
+                updateData.birthDate = birthDate;
+            }
+
+            await AuthService.updateUser(updateData);
+
+            // Update local context manually with new data
+            // Note: updateUser context helper now accepts generic Partial<User>
+            updateUser(updateData);
+
             setAppMessage('Perfil actualizado correctamente', 'success');
             setIsEditing(false);
         } catch (error) {
@@ -75,9 +94,10 @@ const ProfilePage: React.FC = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
+                    {/* Common Fields */}
                     <div className={styles.formGroup}>
                         <label className={styles.label}>
-                            <FiUser className={styles.icon} /> Nombre
+                            <FiUser className={styles.icon} /> Nombre {user.role === 'company' ? 'Empresa' : ''}
                         </label>
                         <input
                             type="text"
@@ -89,19 +109,88 @@ const ProfilePage: React.FC = () => {
                         />
                     </div>
 
+                    {/* User Specific Fields */}
                     {user.role !== 'company' && (
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>
-                                <FiUser className={styles.icon} /> Apellido
-                            </label>
-                            <input
-                                type="text"
-                                className={isEditing ? styles.input : styles.inputDisabled}
-                                value={surname}
-                                onChange={(e) => setSurname(e.target.value)}
-                                disabled={!isEditing}
-                            />
-                        </div>
+                        <>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>
+                                    <FiUser className={styles.icon} /> Apellido
+                                </label>
+                                <input
+                                    type="text"
+                                    className={isEditing ? styles.input : styles.inputDisabled}
+                                    value={surname}
+                                    onChange={(e) => setSurname(e.target.value)}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>
+                                    <FiUser className={styles.icon} /> Fecha de Nacimiento
+                                </label>
+                                <input
+                                    type="date"
+                                    className={isEditing ? styles.input : styles.inputDisabled}
+                                    value={birthDate} // Format YYYY-MM-DD
+                                    onChange={(e) => setBirthDate(e.target.value)}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>
+                                    <FiUser className={styles.icon} /> DNI
+                                </label>
+                                <input
+                                    type="text"
+                                    className={styles.inputDisabled}
+                                    value={user.dni || ''}
+                                    disabled
+                                />
+                                <span className={styles.helperText}>El DNI no se puede modificar</span>
+                            </div>
+                        </>
+                    )}
+
+                    {/* Company Specific Fields */}
+                    {user.role === 'company' && (
+                        <>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>
+                                    Teléfono
+                                </label>
+                                <input
+                                    type="text"
+                                    className={isEditing ? styles.input : styles.inputDisabled}
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>
+                                    Dirección
+                                </label>
+                                <input
+                                    type="text"
+                                    className={isEditing ? styles.input : styles.inputDisabled}
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>
+                                    CUIL
+                                </label>
+                                <input
+                                    type="text"
+                                    className={styles.inputDisabled}
+                                    value={user.cuil || ''}
+                                    disabled
+                                />
+                                <span className={styles.helperText}>El CUIL no se puede modificar</span>
+                            </div>
+                        </>
                     )}
 
                     <div className={styles.formGroup}>
@@ -111,7 +200,7 @@ const ProfilePage: React.FC = () => {
                         <input
                             type="email"
                             className={styles.inputDisabled}
-                            value={user.mail || ''} // Handle both potential properties
+                            value={user.email || user.mail || user.contactEmail || ''}
                             disabled
                         />
                         <span className={styles.helperText}>El email no se puede modificar</span>
@@ -133,8 +222,12 @@ const ProfilePage: React.FC = () => {
                                     className={styles.cancelBtn}
                                     onClick={() => {
                                         setIsEditing(false);
+                                        // Reset fields
                                         setName(user.name || '');
                                         setSurname(user.surname || '');
+                                        setPhone(user.phone || '');
+                                        setAddress(user.address || '');
+                                        setBirthDate(user.birthDate ? String(user.birthDate).split('T')[0] : '');
                                     }}
                                     disabled={loading}
                                 >

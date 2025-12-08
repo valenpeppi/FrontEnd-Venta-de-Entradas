@@ -3,8 +3,17 @@ export interface User {
     name: string;
     surname?: string;
     mail?: string;
+    email?: string; // Alias for mail/contactEmail
     dni?: number;
     role: string | null;
+    type?: 'user' | 'company';
+    idOrganiser?: number;
+    contactEmail?: string;
+    companyName?: string;
+    phone?: string;
+    address?: string;
+    cuil?: string;
+    birthDate?: string | Date;
 }
 
 export interface AuthState {
@@ -19,7 +28,7 @@ export interface AuthContextType {
     isLoading: boolean;
     login: (user: User, token: string) => void;
     logout: () => void;
-    updateUser: (name: string, role?: string) => void;
+    updateUser: (userData: Partial<User>) => void;
 }
 
 import type { ReactNode } from 'react';
