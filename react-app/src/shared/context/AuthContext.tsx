@@ -67,15 +67,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const user = JSON.parse(userString);
 
           // Use AuthService instead of direct fetch
-          await AuthService.validateToken();
-          // Note: validateToken in original code didn't use the return value user content except for "ok",
-          // it relied on local storage parsing.
-          // If AuthService.validateToken throws, we go to catch.
-          // If it returns, we assume valid.
-          // Original code: if (res.ok) dispatch... else logout.
-          // AuthService uses axios interceptor which rejects if 401.
+          const data = await AuthService.validateToken();
 
-          dispatch({ type: 'INITIALIZE', payload: { user } });
+          if (data && data.valid && data.user) {
+            const freshUser = data.user;
+            // Update local storage with fresh data
+            localStorage.setItem('user', JSON.stringify(freshUser));
+            dispatch({ type: 'INITIALIZE', payload: { user: freshUser } });
+          } else {
+            // Fallback to local storage if response structure is unexpected but no error thrown
+            // (Unlikely given the controller, but safe)
+            dispatch({ type: 'INITIALIZE', payload: { user } });
+          }
 
         } catch (e) {
           console.error("Error al validar token:", e);

@@ -60,8 +60,13 @@ const App: React.FC = () => {
     setAppMessage('¡Registro exitoso! Por favor, inicia sesión.');
   };
 
-  const handleCompanyLoginSuccess = (company: { companyName: string }, token: string) => {
-    login({ name: company.companyName, role: 'company' }, token);
+  const handleCompanyLoginSuccess = (company: any, token: string) => {
+    const companyUser: User = {
+      ...company,
+      name: company.name || company.companyName, // Ensure name is set
+      role: 'company'
+    };
+    login(companyUser, token);
     setAppMessage(`¡Inicio de sesión exitoso como organizador ${company.companyName}!`);
     navigate('/company/dashboard');
   };
@@ -87,7 +92,7 @@ const App: React.FC = () => {
         {/* Rutas para Invitados (no logueados) */}
         <Route path="/login" element={<AuthRoute guestOnly><LoginPage onLoginSuccess={(userOrCompany, token) => {
           if (userOrCompany.role === 'company') {
-            handleCompanyLoginSuccess({ companyName: userOrCompany.name, ...userOrCompany }, token);
+            handleCompanyLoginSuccess(userOrCompany, token);
           } else {
             handleLoginSuccess(userOrCompany, token);
           }
