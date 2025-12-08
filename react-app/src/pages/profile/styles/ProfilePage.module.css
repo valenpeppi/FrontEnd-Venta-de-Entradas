@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     padding: 60px 20px;
-    background-color: #f8fafc;
     min-height: calc(100vh - 80px);
     /* Approx height minus navbar */
 }
