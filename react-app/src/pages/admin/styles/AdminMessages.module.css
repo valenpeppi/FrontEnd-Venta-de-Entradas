@@ -120,6 +120,55 @@
     line-height: 1.5;
 }
 
+/* Reply Form */
+.replyForm {
+    margin-top: 1.5rem;
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.replyTextarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    /* Important so padding fits */
+}
+
+.replyTextarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
 .actions {
     display: flex;
     gap: 1rem;
@@ -152,6 +201,30 @@
     transform: translateY(-1px);
     box-shadow: 0 6px 8px rgba(15, 23, 42, 0.3);
 }
+
+.btnSend {
+    background: #16a34a;
+    color: white;
+    padding: 0.6rem 1.5rem;
+}
+
+.btnSend:hover {
+    background: #15803d;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(22, 163, 74, 0.2);
+}
+
+.btnCancel {
+    background: transparent;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+}
+
+.btnCancel:hover {
+    background: #f1f5f9;
+    color: #475569;
+}
+
 
 .btnReject {
     background: #fee2e2;

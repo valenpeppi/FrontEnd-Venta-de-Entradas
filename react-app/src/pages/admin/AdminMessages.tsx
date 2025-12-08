@@ -4,12 +4,16 @@ import type { Message } from '../../types/message';
 import styles from './styles/AdminMessages.module.css';
 import StatusBadge from "../../shared/components/StatusBadge";
 import EmptyState from "../../shared/components/EmptyState";
-import { FaInbox, FaReply, FaTimes, FaCheck, FaUser } from 'react-icons/fa';
+import { FaInbox, FaReply, FaTimes, FaCheck, FaUser, FaPaperPlane } from 'react-icons/fa';
 
 export const AdminMessages: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    // Reply state
+    const [replyingId, setReplyingId] = useState<number | null>(null);
+    const [replyText, setReplyText] = useState('');
 
     const getStatusLabel = (status: string) => {
         switch (status) {
@@ -29,7 +33,7 @@ export const AdminMessages: React.FC = () => {
         try {
             const data = await MessageService.getMessages();
             // Sort by Date DESC
-            const sorted = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            const sorted = data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
             setMessages(sorted);
         } catch (err) {
             setError('Error al cargar mensajes.');
@@ -38,14 +42,25 @@ export const AdminMessages: React.FC = () => {
         }
     };
 
-    const handleReply = async (id: number) => {
-        const responseText = prompt("Escribe tu respuesta para el usuario:");
-        if (!responseText) return;
+    const startReply = (id: number) => {
+        setReplyingId(id);
+        const currentMsg = messages.find(m => m.idMessage === id);
+        setReplyText(currentMsg?.response || '');
+    };
+
+    const cancelReply = () => {
+        setReplyingId(null);
+        setReplyText('');
+    };
+
+    const submitReply = async (id: number) => {
+        if (!replyText.trim()) return;
 
         try {
             // Optimistic update
-            setMessages(prev => prev.map(m => m.idMessage === id ? { ...m, state: 'answered', response: responseText } : m));
-            await MessageService.replyMessage(id, responseText);
+            setMessages(prev => prev.map(m => m.idMessage === id ? { ...m, state: 'answered', response: replyText } : m));
+            setReplyingId(null); // Close form
+            await MessageService.replyMessage(id, replyText);
         } catch (e) {
             alert('Error al responder mensaje');
             loadMessages(); // Revert
@@ -99,39 +114,73 @@ export const AdminMessages: React.FC = () => {
                                 {msg.description}
                             </div>
 
-                            {msg.response && (
+                            {/* Response Display (if exists and not editing) */}
+                            {msg.response && replyingId !== msg.idMessage && (
                                 <div className={styles.responseBox}>
                                     <span className={styles.responseLabel}>Tu Respuesta</span>
                                     <p className={styles.responseText}>{msg.response}</p>
                                 </div>
                             )}
 
-                            <div className={styles.actions}>
-                                {msg.state === 'unread' && (
-                                    <>
+                            {/* Reply Form */}
+                            {replyingId === msg.idMessage && (
+                                <div className={styles.replyForm}>
+                                    <textarea
+                                        className={styles.replyTextarea}
+                                        placeholder="Escribe tu respuesta aquí..."
+                                        value={replyText}
+                                        onChange={(e) => setReplyText(e.target.value)}
+                                        autoFocus
+                                    />
+                                    <div className={styles.formActions}>
+                                        <button className={`${styles.btn} ${styles.btnCancel}`} onClick={cancelReply}>
+                                            Cancelar
+                                        </button>
+                                        <button className={`${styles.btn} ${styles.btnSend}`} onClick={() => submitReply(msg.idMessage)}>
+                                            <FaPaperPlane /> Enviar Respuesta
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Actions Buttons (Hide if replying) */}
+                            {replyingId !== msg.idMessage && (
+                                <div className={styles.actions}>
+                                    {msg.state === 'unread' && (
+                                        <>
+                                            <button
+                                                className={`${styles.btn} ${styles.btnReply}`}
+                                                onClick={() => startReply(msg.idMessage)}
+                                            >
+                                                <FaReply /> Responder
+                                            </button>
+                                            <button
+                                                className={`${styles.btn} ${styles.btnReject}`}
+                                                onClick={() => handleReject(msg.idMessage)}
+                                            >
+                                                <FaTimes /> Rechazar
+                                            </button>
+                                        </>
+                                    )}
+                                    {msg.state === 'answered' && (
                                         <button
                                             className={`${styles.btn} ${styles.btnReply}`}
-                                            onClick={() => handleReply(msg.idMessage)}
+                                            onClick={() => startReply(msg.idMessage)}
+                                            style={{ backgroundColor: '#e2e8f0', color: '#475569', boxShadow: 'none' }}
                                         >
-                                            <FaReply /> Responder
+                                            <FaReply /> Editar Respuesta
                                         </button>
+                                    )}
+                                    {msg.state === 'rejected' && (
                                         <button
-                                            className={`${styles.btn} ${styles.btnReject}`}
-                                            onClick={() => handleReject(msg.idMessage)}
+                                            className={`${styles.btn} ${styles.btnReply}`}
+                                            onClick={() => startReply(msg.idMessage)}
                                         >
-                                            <FaTimes /> Rechazar
+                                            <FaCheck /> Reconsiderar
                                         </button>
-                                    </>
-                                )}
-                                {msg.state === 'rejected' && (
-                                    <button
-                                        className={`${styles.btn} ${styles.btnReply}`}
-                                        onClick={() => handleReply(msg.idMessage)}
-                                    >
-                                        <FaCheck /> Reconsiderar
-                                    </button>
-                                )}
-                            </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
