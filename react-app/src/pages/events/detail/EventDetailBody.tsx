@@ -4,21 +4,7 @@ import SeatSelector from '../seats/SeatSelector';
 import modalStyles from '../seats/styles/SeatModal.module.css';
 import styles from './styles/EventDetailPage.module.css';
 import type { Sector, EventDetailBodyProps } from '../../../types/events';
-import estadioArroyito from '../../../assets/estadio-gigante-arroyito.png';
-import bioceresArena from '../../../assets/bioceres-arena.jpg';
-import elCirculo from '../../../assets/el-circulo.png';
-
-const SECTOR_LAYOUT_CONFIG: Record<string, Record<string, number>> = {
-  'Estadio Gigante de Arroyito': { 'Tribuna Norte': 4, 'Tribuna Sur': 4 },
-  'Bioceres Arena': { VIP: 10 },
-  'El Circulo': { 'Sala Principal': 5, 'Tribuna Superior': 5 },
-};
-
-const stadiumImages: Record<string, string> = {
-  'Estadio Gigante de Arroyito': estadioArroyito,
-  'Bioceres Arena': bioceresArena,
-  'El Circulo': elCirculo,
-};
+import { SECTOR_LAYOUT_CONFIG, STADIUM_IMAGES } from '../../../shared/data/stadiums';
 
 const EventDetailBody: React.FC<EventDetailBodyProps> = ({
 
@@ -71,7 +57,7 @@ const EventDetailBody: React.FC<EventDetailBodyProps> = ({
           <div className={styles.stadiumContent}>
             <div className={styles.imageFrame}>
               <img
-                src={stadiumImages[summary.placeName] || '/ticket.png'}
+                src={STADIUM_IMAGES[summary.placeName] || '/ticket.png'}
                 alt={`Plano del estadio ${summary.placeName}`}
                 className={styles.stadiumImage}
                 onError={(e) => {
