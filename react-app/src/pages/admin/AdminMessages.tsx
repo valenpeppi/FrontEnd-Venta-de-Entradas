@@ -29,19 +29,21 @@ export const AdminMessages: React.FC = () => {
         loadMessages();
     }, []);
 
+    const sortMessages = (data: Message[]) => {
+        return data.sort((a, b) => {
+            const priority = { 'unread': 1, 'answered': 2, 'rejected': 3 } as Record<string, number>;
+            const pA = priority[a.state] || 99;
+            const pB = priority[b.state] || 99;
+            if (pA !== pB) return pA - pB;
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+    };
+
     const loadMessages = async () => {
         setLoading(true);
         try {
             const data = await MessageService.getMessages();
-            // Sort: Unread > Answered > Rejected, then by Date DESC
-            const sorted = data.sort((a, b) => {
-                const priority = { 'unread': 1, 'answered': 2, 'rejected': 3 } as Record<string, number>;
-                const pA = priority[a.state] || 99;
-                const pB = priority[b.state] || 99;
-                if (pA !== pB) return pA - pB;
-                return new Date(b.date).getTime() - new Date(a.date).getTime();
-            });
-            setMessages(sorted);
+            setMessages(sortMessages(data));
         } catch (err) {
             setError('Error al cargar mensajes.');
         } finally {
@@ -74,10 +76,23 @@ export const AdminMessages: React.FC = () => {
         }
     };
 
-    const handleDiscard = async (id: number) => {
-        // Instant discard, remove from list
+    const handleReject = async (id: number) => {
+        // Reject: Set state to rejected, kept in list (moved to bottom by sort)
         try {
-            // Optimistically remove the message from the list
+            setMessages(prev => {
+                const updated = prev.map(m => m.idMessage === id ? { ...m, state: 'rejected' } : m);
+                return sortMessages(updated);
+            });
+            await MessageService.rejectMessage(id);
+        } catch (e) {
+            alert('Error al rechazar mensaje');
+            loadMessages();
+        }
+    };
+
+    const handleDiscard = async (id: number) => {
+        // Discard: Remove from list entirely
+        try {
             setMessages(prev => prev.filter(m => m.idMessage !== id));
             await MessageService.discardMessage(id);
         } catch (e) {
@@ -105,14 +120,16 @@ export const AdminMessages: React.FC = () => {
                 <div className={styles.messagesList}>
                     {messages.map(msg => (
                         <div key={msg.idMessage} className={styles.messageCard}>
-                            {/* Discard Button (X) - Always visible to remove card */}
-                            <button
-                                className={styles.closeBtn}
-                                onClick={() => handleDiscard(msg.idMessage)}
-                                title="Descartar y ocultar mensaje"
-                            >
-                                <FaTimes size={16} />
-                            </button>
+                            {/* Discard Button (X) - Only for Answered or Rejected */}
+                            {(msg.state === 'answered' || msg.state === 'rejected') && (
+                                <button
+                                    className={styles.closeBtn}
+                                    onClick={() => handleDiscard(msg.idMessage)}
+                                    title="Descartar y ocultar mensaje"
+                                >
+                                    <FaTimes size={16} />
+                                </button>
+                            )}
 
                             <div className={styles.messageHeader}>
                                 <div className={styles.messageMeta}>
@@ -164,12 +181,20 @@ export const AdminMessages: React.FC = () => {
                             {replyingId !== msg.idMessage && (
                                 <div className={styles.actions}>
                                     {msg.state === 'unread' && (
-                                        <button
-                                            className={`${styles.btn} ${styles.btnReply}`}
-                                            onClick={() => startReply(msg.idMessage)}
-                                        >
-                                            <FaReply /> Responder
-                                        </button>
+                                        <>
+                                            <button
+                                                className={`${styles.btn} ${styles.btnReply}`}
+                                                onClick={() => startReply(msg.idMessage)}
+                                            >
+                                                <FaReply /> Responder
+                                            </button>
+                                            <button
+                                                className={`${styles.btn} ${styles.btnReject}`}
+                                                onClick={() => handleReject(msg.idMessage)}
+                                            >
+                                                <FaTimes /> Rechazar
+                                            </button>
+                                        </>
                                     )}
                                     {msg.state === 'answered' && (
                                         <button
