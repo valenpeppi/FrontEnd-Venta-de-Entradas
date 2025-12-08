@@ -1,10 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import SupportLayout from '../../shared/components/SupportLayout';
 import styles from './styles/Faq.module.css';
 
 const Faq: React.FC = () => {
-  const navigate = useNavigate();
-
   const faqs = [
     {
       question: '¿Cómo puedo comprar entradas?',
@@ -29,26 +27,17 @@ const Faq: React.FC = () => {
   ];
 
   return (
-    <div className={styles.faqPage}>
-      <div className={styles.faqContainer}>
-        <h1 className={styles.faqTitle}>Preguntas Frecuentes</h1>
-        <div className={styles.faqList}>
-          {faqs.map((faq, index) => (
-            <details key={index} className={styles.faqItem}>
-              <summary className={styles.faqQuestion}>{faq.question}</summary>
-              <p className={styles.faqAnswer}>{faq.answer}</p>
-            </details>
-          ))}
-        </div>
-        <button onClick={() => navigate(-1)} className={styles.backButton}>
-          Volver
-        </button>
+    <SupportLayout title="Preguntas Frecuentes">
+      <div className={styles.faqList}>
+        {faqs.map((faq, index) => (
+          <details key={index} className={styles.faqItem}>
+            <summary className={styles.faqQuestion}>{faq.question}</summary>
+            <p className={styles.faqAnswer}>{faq.answer}</p>
+          </details>
+        ))}
       </div>
-    </div>
+    </SupportLayout>
   );
 };
 
 export default Faq;
-
-
-
