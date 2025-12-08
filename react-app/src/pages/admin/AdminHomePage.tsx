@@ -222,7 +222,7 @@ export default function AdminHomePage() {
                 </button>
 
                 <div className={styles.badges}>
-                  <StatusBadge status={ev.state} />
+                  <StatusBadge status={ev.state || 'Pending'} />
                 </div>
               </div>
 

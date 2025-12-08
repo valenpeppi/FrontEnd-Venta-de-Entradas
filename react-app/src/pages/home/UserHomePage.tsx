@@ -10,7 +10,7 @@ import type { EventType } from '../../types/events';
 import ticketPlaceholder from '../../assets/ticket.png';
 
 const HomePage: React.FC = () => {
-  const { featuredTickets, approvedTickets } = useEvents();
+  const { featuredEvents, approvedEvents } = useEvents();
   const [currentEventIndex, setCurrentEventIndex] = useState<number>(0);
   const [allEventTypes, setAllEventTypes] = useState<EventType[]>([]);
   const [selectedType, setSelectedType] = useState<string>('Todos');
@@ -28,49 +28,49 @@ const HomePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (featuredTickets.length > 0 && currentEventIndex >= featuredTickets.length) {
+    if (featuredEvents.length > 0 && currentEventIndex >= featuredEvents.length) {
       setCurrentEventIndex(0);
     }
-  }, [featuredTickets, currentEventIndex]);
+  }, [featuredEvents, currentEventIndex]);
 
   const goToPreviousEvent = () => {
-    if (featuredTickets.length === 0) return;
+    if (featuredEvents.length === 0) return;
     setCurrentEventIndex(prevIndex =>
-      prevIndex === 0 ? featuredTickets.length - 1 : prevIndex - 1
+      prevIndex === 0 ? featuredEvents.length - 1 : prevIndex - 1
     );
   };
 
   const goToNextEvent = () => {
-    if (featuredTickets.length === 0) return;
+    if (featuredEvents.length === 0) return;
     setCurrentEventIndex(prevIndex =>
-      prevIndex === featuredTickets.length - 1 ? 0 : prevIndex + 1
+      prevIndex === featuredEvents.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const eventCounts = useMemo(() => {
     const counts: { [key: string]: number } = {};
-    for (const ticket of approvedTickets) {
-      counts[ticket.type] = (counts[ticket.type] || 0) + 1;
+    for (const event of approvedEvents) {
+      counts[event.type] = (counts[event.type] || 0) + 1;
     }
     return counts;
-  }, [approvedTickets]);
+  }, [approvedEvents]);
 
-  const filteredTickets = selectedType === 'Todos'
-    ? approvedTickets
-    : approvedTickets.filter(ticket => ticket.type === selectedType);
+  const filteredEvents = selectedType === 'Todos'
+    ? approvedEvents
+    : approvedEvents.filter(event => event.type === selectedType);
 
   const eventsByType = useMemo(() => {
     const groups: { [key: string]: Ticket[] } = {};
-    filteredTickets.forEach(ticket => {
-      if (!groups[ticket.type]) {
-        groups[ticket.type] = [];
+    filteredEvents.forEach(event => {
+      if (!groups[event.type]) {
+        groups[event.type] = [];
       }
-      groups[ticket.type].push(ticket);
+      groups[event.type].push(event);
     });
     return groups;
-  }, [filteredTickets]);
+  }, [filteredEvents]);
 
-  if (approvedTickets.length === 0 && allEventTypes.length === 0) {
+  if (approvedEvents.length === 0 && allEventTypes.length === 0) {
     return <LoadingSpinner text="Cargando eventos..." />;
   }
 
@@ -78,7 +78,7 @@ const HomePage: React.FC = () => {
     <div className={styles.homepage}>
       <main className={styles.homepageMain}>
         <Carousel
-          tickets={featuredTickets}
+          tickets={featuredEvents}
           currentEventIndex={currentEventIndex}
           onPreviousEvent={goToPreviousEvent}
           onNextEvent={goToNextEvent}
@@ -90,7 +90,7 @@ const HomePage: React.FC = () => {
             className={`${styles.eventTypeFilterButton} ${selectedType === 'Todos' ? styles.active : ''}`}
           >
             Todos
-            <span className={styles.eventCount}>{approvedTickets.length}</span>
+            <span className={styles.eventCount}>{approvedEvents.length}</span>
           </button>
           {allEventTypes.map(type => (
             <button
@@ -108,25 +108,25 @@ const HomePage: React.FC = () => {
 
         <div className={styles.eventListContainer}>
           {Object.keys(eventsByType).length > 0 ? (
-            Object.entries(eventsByType).map(([type, tickets]) => (
+            Object.entries(eventsByType).map(([type, events]) => (
               <div key={type} className={styles.eventTypeSection}>
                 <h2 className={styles.eventTypeTitle}>{type.charAt(0).toUpperCase() + type.slice(1)}</h2>
                 <div className={styles.eventTypeGallery}>
-                  {tickets.map(ticket => (
+                  {events.map(event => (
                     <Link
-                      to={`/event/${ticket.id}`}
-                      key={ticket.id}
+                      to={`/event/${event.id}`}
+                      key={event.id}
                       className={styles.eventCardLink}
                     >
                       <div className={styles.eventCard}>
                         <img
-                          src={ticket.imageUrl}
-                          alt={(ticket as any).eventName}
+                          src={event.imageUrl}
+                          alt={event.eventName}
                           className={styles.eventCardImg}
                           onError={e => { (e.currentTarget as HTMLImageElement).src = ticketPlaceholder; }}
                         />
-                        <div className={styles.eventCardTitle}>{(ticket as any).eventName}</div>
-                        {ticket.agotado && (
+                        <div className={styles.eventCardTitle}>{event.eventName}</div>
+                        {event.agotado && (
                           <div className={styles.eventCardSoldOut}>Agotado</div>
                         )}
                       </div>
