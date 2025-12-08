@@ -109,7 +109,7 @@ const Navbar: React.FC = () => {
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
         <div className={styles.brandWrapper}>
-          <Link to="/" className={styles.navbarBrand} onClick={closeMobileMenu}>
+          <Link to={isAdmin ? "/admin" : "/"} className={styles.navbarBrand} onClick={closeMobileMenu}>
             <img src={logoTicket} alt="TicketApp Logo" className={styles.image1} />
             <GradientText>TicketApp</GradientText>
           </Link>

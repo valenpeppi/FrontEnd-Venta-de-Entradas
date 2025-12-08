@@ -151,15 +151,17 @@ const ProfilePage: React.FC = () => {
                         )}
                     </div>
 
-                    <div className={styles.dangerZone}>
-                        <button
-                            type="button"
-                            className={styles.deleteAccountBtn}
-                            onClick={() => setIsDeleteModalOpen(true)}
-                        >
-                            Eliminar Cuenta
-                        </button>
-                    </div>
+                    {user.role !== 'admin' && (
+                        <div className={styles.dangerZone}>
+                            <button
+                                type="button"
+                                className={styles.deleteAccountBtn}
+                                onClick={() => setIsDeleteModalOpen(true)}
+                            >
+                                Eliminar Cuenta
+                            </button>
+                        </div>
+                    )}
                 </form>
             </div>
 
