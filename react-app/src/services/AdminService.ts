@@ -31,5 +31,10 @@ export const AdminService = {
     getDashboardStats: async () => {
         const response = await api.get('/sales/stats');
         return response.data;
+    },
+
+    getCompanyStats: async () => {
+        const response = await api.get('/sales/company-stats');
+        return response.data;
     }
 };

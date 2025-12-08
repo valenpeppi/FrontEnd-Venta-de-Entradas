@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AdminService } from '../../services/AdminService';
 import LoadingSpinner from '../../shared/components/LoadingSpinner';
+import StatsCard from '../../shared/components/StatsCard';
 import { FaMoneyBillWave, FaTicketAlt, FaCalendarCheck, FaChartLine } from 'react-icons/fa';
 import styles from './styles/AdminDashboardPage.module.css';
 
@@ -49,47 +50,30 @@ const AdminDashboardPage: React.FC = () => {
             </header>
 
             <div className={styles.statsGrid}>
-                <div className={styles.statCard}>
-                    <div className={`${styles.iconContainer} ${styles.blue}`}>
-                        <FaMoneyBillWave />
-                    </div>
-                    <div className={styles.statInfo}>
-                        <span className={styles.statLabel}>Ingresos Hoy</span>
-                        <span className={styles.statValue}>
-                            ${stats?.revenueToday.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-                        </span>
-                    </div>
-                </div>
-
-                <div className={styles.statCard}>
-                    <div className={`${styles.iconContainer} ${styles.green}`}>
-                        <FaTicketAlt />
-                    </div>
-                    <div className={styles.statInfo}>
-                        <span className={styles.statLabel}>Tickets Vendidos</span>
-                        <span className={styles.statValue}>{stats?.ticketsToday}</span>
-                    </div>
-                </div>
-
-                <div className={styles.statCard}>
-                    <div className={`${styles.iconContainer} ${styles.purple}`}>
-                        <FaChartLine />
-                    </div>
-                    <div className={styles.statInfo}>
-                        <span className={styles.statLabel}>Ventas Realizadas</span>
-                        <span className={styles.statValue}>{stats?.salesToday}</span>
-                    </div>
-                </div>
-
-                <div className={styles.statCard}>
-                    <div className={`${styles.iconContainer} ${styles.orange}`}>
-                        <FaCalendarCheck />
-                    </div>
-                    <div className={styles.statInfo}>
-                        <span className={styles.statLabel}>Eventos Pendientes</span>
-                        <span className={styles.statValue}>{stats?.pendingEvents}</span>
-                    </div>
-                </div>
+                <StatsCard
+                    title="Ingresos Hoy"
+                    value={`$${stats?.revenueToday.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`}
+                    icon={FaMoneyBillWave}
+                    iconColorClass="blue"
+                />
+                <StatsCard
+                    title="Tickets Vendidos"
+                    value={stats?.ticketsToday || 0}
+                    icon={FaTicketAlt}
+                    iconColorClass="green"
+                />
+                <StatsCard
+                    title="Ventas Realizadas"
+                    value={stats?.salesToday || 0}
+                    icon={FaChartLine}
+                    iconColorClass="purple"
+                />
+                <StatsCard
+                    title="Eventos Pendientes"
+                    value={stats?.pendingEvents || 0}
+                    icon={FaCalendarCheck}
+                    iconColorClass="orange"
+                />
             </div>
         </div>
     );

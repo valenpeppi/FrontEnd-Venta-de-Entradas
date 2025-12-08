@@ -1,0 +1,126 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    min-height: 80vh;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 2.5rem;
+    color: #1e293b;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.errorCard {
+    background: #fef2f2;
+    color: #ef4444;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #fee2e2;
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    color: #334155;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.actionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.actionCard {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.actionCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
+}
+
+.actionCard h3 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.25rem;
+}
+
+.actionCard p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.iconContainer {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin-bottom: 5px;
+}
+
+.orange {
+    background: #fff7ed;
+    color: #f97316;
+}
+
+.indigo {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.teal {
+    background: #f0fdfa;
+    color: #0d9488;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+}

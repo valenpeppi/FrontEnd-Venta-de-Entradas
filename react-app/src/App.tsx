@@ -17,6 +17,7 @@ import CreateEventPage from './pages/events/create/CreateEventPage';
 import EditEventPage from './pages/events/edit/EditEventPage';
 import MyEventsPage from './pages/company/MyEventsPage';
 import RegisterCompany from './pages/auth/register/RegisterCompany';
+import CompanyDashboardPage from './pages/company/CompanyDashboardPage';
 import { useAuth } from './shared/context/AuthContext';
 import type { User } from './types/auth';
 import { useMessage } from './shared/context/MessageContext';
@@ -62,7 +63,7 @@ const App: React.FC = () => {
   const handleCompanyLoginSuccess = (company: { companyName: string }, token: string) => {
     login({ name: company.companyName, role: 'company' }, token);
     setAppMessage(`¡Inicio de sesión exitoso como organizador ${company.companyName}!`);
-    navigate('/company/my-events');
+    navigate('/company/dashboard');
   };
 
   const handleCompanyRegisterSuccess = () => {
@@ -105,10 +106,11 @@ const App: React.FC = () => {
         {/* Rutas Protegidas para Administradores */}
         <Route path="/admin-dashboard" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminPanel /></Layout></AuthRoute>} />
 
-        {/* Rutas Protegidas para Empresas y Admin */}
+        {/* Rutas Protegidas para Empresas */}
+        <Route path="/company/dashboard" element={<AuthRoute allowedRoles={['company']}><Layout><CompanyDashboardPage /></Layout></AuthRoute>} />
+        <Route path="/company/my-events" element={<AuthRoute allowedRoles={['company', 'admin']}><Layout><MyEventsPage /></Layout></AuthRoute>} />
         <Route path="/create-event" element={<AuthRoute allowedRoles={['company', 'admin']}><Layout><CreateEventPage /></Layout></AuthRoute>} />
         <Route path="/edit-event/:id" element={<AuthRoute allowedRoles={['company', 'admin']}><Layout><EditEventPage /></Layout></AuthRoute>} />
-        <Route path="/company/my-events" element={<AuthRoute allowedRoles={['company', 'admin']}><Layout><MyEventsPage /></Layout></AuthRoute>} />
 
         {/* Ruta para visualizar la página de error (Solo desarrollo/demo) */}
         <Route path="/test-error" element={<FatalErrorPage error={new Error("Este es un error de prueba simulado para verificar el diseño.")} resetErrorBoundary={() => window.location.href = '/'} />} />

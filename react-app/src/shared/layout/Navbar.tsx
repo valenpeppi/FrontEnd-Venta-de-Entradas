@@ -7,7 +7,7 @@ import { useCart } from '../../shared/context/CartContext';
 import { EventService } from '../../services/EventService';
 import { useAuth } from '../../shared/context/AuthContext';
 import GradientText from './GradientText';
-import { FiSearch, FiUser, FiLogOut, FiChevronDown, FiSettings, FiList, FiPlusCircle, FiMenu, FiX } from 'react-icons/fi';
+import { FiSearch, FiUser, FiLogOut, FiChevronDown, FiSettings, FiList, FiPlusCircle, FiMenu, FiX, FiPieChart } from 'react-icons/fi';
 
 
 const Navbar: React.FC = () => {
@@ -109,7 +109,7 @@ const Navbar: React.FC = () => {
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
         <div className={styles.brandWrapper}>
-          <Link to={isAdmin ? "/admin-dashboard" : "/"} className={styles.navbarBrand} onClick={closeMobileMenu}>
+          <Link to={"/"} className={styles.navbarBrand} onClick={closeMobileMenu}>
             <img src={logoTicket} alt="TicketApp Logo" className={styles.image1} />
             <GradientText>TicketApp</GradientText>
           </Link>
@@ -163,10 +163,11 @@ const Navbar: React.FC = () => {
             {!isAdmin && user?.role !== 'company' && <li><Link to="/help" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Ayuda</Link></li>}
             {isLoggedIn && user?.role === 'user' && <li><Link to="/myTickets" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mis Entradas</Link></li>}
             {isAdmin && (
-              <li><Link to="/admin-dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Panel de control</Link></li>
+              <li><Link to="/admin-dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Dashboard</Link></li>
             )}
             {(isLoggedIn && user?.role === 'company') || (isLoggedIn && user?.role === 'admin') ? (
               <>
+                {user?.role === 'company' && <li><Link to="/company/dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Dashboard</Link></li>}
                 <li><Link to="/company/my-events" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mis Eventos</Link></li>
                 <li><Link to="/create-event" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Crear Evento</Link></li>
               </>
@@ -213,6 +214,11 @@ const Navbar: React.FC = () => {
 
                       {user?.role === 'company' && (
                         <>
+                          <li>
+                            <Link to="/company/dashboard" className={styles.dropdownItem} onClick={closeMobileMenu}>
+                              <FiPieChart /> Dashboard
+                            </Link>
+                          </li>
                           <li>
                             <Link to="/company/my-events" className={styles.dropdownItem} onClick={closeMobileMenu}>
                               <FiList /> Mis Eventos
