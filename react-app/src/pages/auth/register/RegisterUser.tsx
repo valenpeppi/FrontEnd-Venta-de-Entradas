@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthService } from "@/services/AuthService";
 import ReCAPTCHA from 'react-google-recaptcha';
 import Input from '@/shared/components/Input';
@@ -27,6 +27,13 @@ const Register: React.FC<RegisterUserProps> = ({ onRegisterSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.email) {
+      setFormData(prev => ({ ...prev, email: location.state.email }));
+    }
+  }, [location.state]);
 
   const validateField = (name: keyof typeof formData, value: string) => {
     let errorMsg = '';

@@ -21,7 +21,7 @@ export const AuthService = {
     },
 
     googleLogin: async (token: string): Promise<{ token: string, user: any }> => {
-        const response = await api.post('/auth/google', { token });
+        const response = await api.post('/auth/google', { credential: token });
         return response.data;
     },
 

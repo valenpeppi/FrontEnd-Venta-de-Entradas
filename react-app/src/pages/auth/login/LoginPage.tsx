@@ -127,9 +127,17 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                     navigate('/');
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Google Login Error:', error);
-            setServerError('Error al iniciar sesión con Google.');
+            if (error.response?.status === 404 && error.response?.data?.code === 'USER_NOT_FOUND') {
+                const email = error.response.data.email;
+                setServerError('Usuario no registrado. Redirigiendo al registro...');
+                setTimeout(() => {
+                    navigate('/register', { state: { email } });
+                }, 2000);
+            } else {
+                setServerError('Error al iniciar sesión con Google.');
+            }
         } finally {
             setLoading(false);
         }
