@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { AdminService } from "../../services/AdminService";
-import styles from "./styles/AdminPanel.module.css";
-import globalStyles from "../../shared/styles/GlobalStyles.module.css";
+import { AdminService } from "@/services/AdminService";
+import styles from "@/pages/admin/styles/AdminPanel.module.css";
+import globalStyles from "@/shared/styles/GlobalStyles.module.css";
 import { FaStar, FaRegStar, FaCheck, FaTimes, FaInbox } from "react-icons/fa";
-import StatusBadge from "../../shared/components/StatusBadge";
-import EmptyState from "../../shared/components/EmptyState";
-import AdminDashboardPage from "./AdminDashboardPage";
+import StatusBadge from "@/shared/components/StatusBadge";
+import EmptyState from "@/shared/components/EmptyState";
+import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
 
-import type { AdminEvent } from '../../types/admin';
+import type { AdminEvent } from '@/types/admin';
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { MessageService } from '../../services/MessageService';
-import type { Message } from '../../types/message';
-import styles from './styles/AdminMessages.module.css';
-import StatusBadge from "../../shared/components/StatusBadge";
-import EmptyState from "../../shared/components/EmptyState";
+import { MessageService } from '@/services/MessageService';
+import type { Message } from '@/types/message';
+import styles from '@/pages/admin/styles/AdminMessages.module.css';
+import StatusBadge from "@/shared/components/StatusBadge";
+import EmptyState from "@/shared/components/EmptyState";
 import { FaInbox, FaReply, FaCheck, FaUser, FaPaperPlane, FaTimes } from 'react-icons/fa';
 
 export const AdminMessages: React.FC = () => {

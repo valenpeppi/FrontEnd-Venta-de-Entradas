@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './styles/FatalErrorPage.module.css';
+import styles from '@/shared/error/styles/FatalErrorPage.module.css';
 
 interface FatalErrorPageProps {
     error?: Error;

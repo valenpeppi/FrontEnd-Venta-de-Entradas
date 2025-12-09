@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import SupportLayout from '../../shared/components/SupportLayout';
-import styles from './styles/Help.module.css';
+import SupportLayout from '@/shared/components/SupportLayout';
+import styles from '@/pages/support/styles/Help.module.css';
 import { FaQuestionCircle, FaEnvelope, FaInfoCircle } from 'react-icons/fa';
 
 const Help: React.FC = () => {

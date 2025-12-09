@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import styles from './styles/SupportLayout.module.css';
+import styles from '@/shared/components/styles/SupportLayout.module.css';
 
 interface SupportLayoutProps {
     children: ReactNode;

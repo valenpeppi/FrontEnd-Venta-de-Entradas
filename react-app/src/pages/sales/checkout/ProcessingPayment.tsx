@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from '../../../shared/context/CartContext';
-import { PaymentService } from '../../../services/PaymentService';
-import styles from './styles/Pay.module.css';
+import { useCart } from '@/shared/context/CartContext';
+import { PaymentService } from '@/services/PaymentService';
+import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 
 const ProcessingPayment = () => {
   const navigate = useNavigate();

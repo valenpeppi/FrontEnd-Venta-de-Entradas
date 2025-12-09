@@ -1,6 +1,6 @@
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import FatalErrorPage from './FatalErrorPage';
+import FatalErrorPage from '@/shared/error/FatalErrorPage';
 
 interface GlobalErrorBoundaryProps {
     children: React.ReactNode;

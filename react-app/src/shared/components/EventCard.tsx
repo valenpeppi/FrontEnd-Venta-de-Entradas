@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './styles/EventCard.module.css';
+import styles from '@/shared/components/styles/EventCard.module.css';
 import {
     MdLocationOn,
     MdCalendarToday,

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import { useEvents } from '../../shared/context/EventsContext';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
+import { useEvents } from '@/shared/context/EventsContext';
 import { Link } from 'react-router-dom';
-import Carousel from './Carousel';
-import styles from './styles/UserHomePage.module.css';
-import type { Ticket } from '../../types/cart';
-import { EventService } from '../../services/EventService';
-import type { EventType } from '../../types/events';
-import ticketPlaceholder from '../../assets/ticket.png';
+import Carousel from '@/pages/home/Carousel';
+import styles from '@/pages/home/styles/UserHomePage.module.css';
+import type { Ticket } from '@/types/cart';
+import { EventService } from '@/services/EventService';
+import type { EventType } from '@/types/events';
+import ticketPlaceholder from '@/assets/ticket.png';
 
 const HomePage: React.FC = () => {
   const { featuredEvents, approvedEvents } = useEvents();

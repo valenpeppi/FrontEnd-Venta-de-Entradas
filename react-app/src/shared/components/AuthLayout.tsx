@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './styles/AuthLayout.module.css';
+import styles from '@/shared/components/styles/AuthLayout.module.css';
 
 interface AuthLayoutProps {
     children: ReactNode;

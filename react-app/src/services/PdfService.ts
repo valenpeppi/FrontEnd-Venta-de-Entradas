@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import axios from 'axios';
-import { formatLongDate, formatTime } from '../shared/utils/dateFormatter';
-import type { PurchasedTicket } from '../types/purchase';
+import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
+import type { PurchasedTicket } from '@/types/purchase';
 
 // Definimos una interfaz minima para el usuario si no existe una compartida
 interface UserInfo {

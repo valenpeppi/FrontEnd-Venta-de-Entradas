@@ -1,6 +1,6 @@
 import React from 'react';
-import SupportLayout from '../../shared/components/SupportLayout';
-import styles from './styles/Faq.module.css';
+import SupportLayout from '@/shared/components/SupportLayout';
+import styles from '@/pages/support/styles/Faq.module.css';
 
 const Faq: React.FC = () => {
   const faqs = [

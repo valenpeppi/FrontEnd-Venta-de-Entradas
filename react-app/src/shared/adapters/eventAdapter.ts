@@ -1,5 +1,5 @@
-import type { Ticket } from '../../types/cart';
-import { formatLongDate, formatTime } from '../utils/dateFormatter';
+import type { Ticket } from '@/types/cart';
+import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
 
 export const mapApiEventToTicket = (ev: any): Ticket => {
     let minPrice = ev.minPrice ?? ev.price ?? 0;

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './styles/StatusBadge.module.css';
+import styles from '@/shared/components/styles/StatusBadge.module.css';
 
 interface StatusBadgeProps {
     status: string; // 'Approved', 'Rejected', 'Pending', or others

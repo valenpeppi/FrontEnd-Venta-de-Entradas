@@ -1,6 +1,6 @@
 import React from 'react';
-import type { SeatSelectorProps } from '../../../types/events';
-import styles from './styles/SeatSelector.module.css';
+import type { SeatSelectorProps } from '@/types/events';
+import styles from '@/pages/events/seats/styles/SeatSelector.module.css';
 
 
 const SeatSelector: React.FC<SeatSelectorProps> = ({ seats, selectedSeats, onChange, setAppMessage, enumerated = false, columns }) => {

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthService } from '../../../services/AuthService';
-import { useMessage } from '../../../shared/context/MessageContext';
-import MessageDisplay from '../../../shared/MessageDisplay';
-import Input from '../../../shared/components/Input';
-import Button from '../../../shared/components/Button';
-import AuthLayout from '../../../shared/components/AuthLayout';
-import styles from './styles/LoginPage.module.css';
+import { AuthService } from '@/services/AuthService';
+import { useMessage } from '@/shared/context/MessageContext';
+import MessageDisplay from '@/shared/MessageDisplay';
+import Input from '@/shared/components/Input';
+import Button from '@/shared/components/Button';
+import AuthLayout from '@/shared/components/AuthLayout';
+import styles from '@/pages/auth/login/styles/LoginPage.module.css';
 
 interface LoginPageProps {
     onLoginSuccess: (userHelper: any, token: string) => void;

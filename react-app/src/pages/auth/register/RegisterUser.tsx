@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthService } from "../../../services/AuthService";
+import { AuthService } from "@/services/AuthService";
 import ReCAPTCHA from 'react-google-recaptcha';
-import Input from '../../../shared/components/Input';
-import Button from '../../../shared/components/Button';
-import AuthLayout from '../../../shared/components/AuthLayout';
-import styles from './styles/RegisterUser.module.css';
+import Input from '@/shared/components/Input';
+import Button from '@/shared/components/Button';
+import AuthLayout from '@/shared/components/AuthLayout';
+import styles from '@/pages/auth/register/styles/RegisterUser.module.css';
 
-import type { RegisterUserProps } from '../../../types/auth';
+import type { RegisterUserProps } from '@/types/auth';
 
 const Register: React.FC<RegisterUserProps> = ({ onRegisterSuccess }) => {
   const [formData, setFormData] = useState({

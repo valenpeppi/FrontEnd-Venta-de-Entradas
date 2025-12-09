@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import LoadingSpinner from '../../../shared/components/LoadingSpinner';
-import EventCard from '../../../shared/components/EventCard';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
+import EventCard from '@/shared/components/EventCard';
 import { useSearchParams } from 'react-router-dom';
-import { EventService } from '../../../services/EventService';
-import type { Ticket } from '../../../types/cart';
-import styles from './styles/SearchedEvents.module.css';
-import { formatLongDate, formatTime } from '../../../shared/utils/dateFormatter';
+import { EventService } from '@/services/EventService';
+import type { Ticket } from '@/types/cart';
+import styles from '@/pages/events/search/styles/SearchedEvents.module.css';
+import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
 import { FaSearch } from 'react-icons/fa';
-import EmptyState from '../../../shared/components/EmptyState';
+import EmptyState from '@/shared/components/EmptyState';
 
 const SearchedEvents: React.FC = () => {
   const [searchParams] = useSearchParams();

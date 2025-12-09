@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from '../../../shared/context/CartContext';
-import { PaymentService } from '../../../services/PaymentService';
+import { useCart } from '@/shared/context/CartContext';
+import { PaymentService } from '@/services/PaymentService';
 import { MdCancel } from "react-icons/md";
-import styles from './styles/Pay.module.css';
+import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 
 const Failure: React.FC = () => {
   const navigate = useNavigate();

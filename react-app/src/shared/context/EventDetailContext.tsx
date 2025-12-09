@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
-import type { EventDetailContextType, EventSummary, Sector, Seat, EventDetailProviderProps } from '../../types/events';
+import type { EventDetailContextType, EventSummary, Sector, Seat, EventDetailProviderProps } from '@/types/events';
 
 const EventDetailContext = createContext<EventDetailContextType | undefined>(undefined);
 

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../../shared/context/CartContext';
-import styles from './styles/CarritoPage.module.css';
-import { formatLongDate, formatTime } from '../../../shared/utils/dateFormatter';
+import { useCart } from '@/shared/context/CartContext';
+import styles from '@/pages/sales/checkout/styles/CarritoPage.module.css';
+import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
 
 import {
   MdCalendarToday,

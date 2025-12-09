@@ -1,6 +1,6 @@
 
-import api from './api';
-import type { EventType, EventSummary } from '../types/events';
+import api from '@/services/api';
+import type { EventType, EventSummary } from '@/types/events';
 
 export const EventService = {
     getEventTypes: async (): Promise<EventType[]> => {

@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { AIService } from "../../services/AIService";
+import { AIService } from "@/services/AIService";
 import { BsRobot } from "react-icons/bs";
 import { MdClose, MdConfirmationNumber } from "react-icons/md";
-import styles from "./styles/ChatAssistant.module.css";
+import styles from "@/pages/support/styles/ChatAssistant.module.css";
 
 const MarkdownMessage = React.memo(({ text }: { text: string }) => (
   <div className={styles.markdown}>

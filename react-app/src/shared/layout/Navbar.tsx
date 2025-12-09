@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import styles from './styles/Navbar.module.css';
-import logoTicket from '../../assets/ticket.png';
-import cartIcon from '../../assets/cart.png';
-import { useCart } from '../../shared/context/CartContext';
-import { EventService } from '../../services/EventService';
-import { useAuth } from '../../shared/context/AuthContext';
-import GradientText from './GradientText';
+import styles from '@/shared/layout/styles/Navbar.module.css';
+import logoTicket from '@/assets/ticket.png';
+import cartIcon from '@/assets/cart.png';
+import { useCart } from '@/shared/context/CartContext';
+import { EventService } from '@/services/EventService';
+import { useAuth } from '@/shared/context/AuthContext';
+import GradientText from '@/shared/layout/GradientText';
 import { FiSearch, FiUser, FiLogOut, FiChevronDown, FiSettings, FiList, FiPlusCircle, FiMenu, FiX, FiPieChart } from 'react-icons/fi';
 
 

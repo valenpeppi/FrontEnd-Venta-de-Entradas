@@ -1,11 +1,11 @@
 import React from 'react';
 import type { ReactNode } from 'react';
-import Navbar from './Navbar';
-import Footer from './Footer';
-import MessageDisplay from '../MessageDisplay';
-import { useMessage } from '../../shared/context/MessageContext';
+import Navbar from '@/shared/layout/Navbar';
+import Footer from '@/shared/layout/Footer';
+import MessageDisplay from '@/shared/MessageDisplay';
+import { useMessage } from '@/shared/context/MessageContext';
 import { useLocation } from "react-router-dom"; 
-import styles from './styles/Layout.module.css';
+import styles from '@/shared/layout/styles/Layout.module.css';
 
 interface LayoutProps {
   children: ReactNode;

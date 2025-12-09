@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import styles from './styles/Carousel.module.css';
-import GlobalStyles from '../../shared/styles/GlobalStyles.module.css';
+import styles from '@/pages/home/styles/Carousel.module.css';
+import GlobalStyles from '@/shared/styles/GlobalStyles.module.css';
 import {
   MdAccessTime,
   MdCalendarToday,
@@ -11,7 +11,7 @@ import {
   MdChevronRight
 } from "react-icons/md";
 
-import type { CarouselProps } from '../../types/events';
+import type { CarouselProps } from '@/types/events';
 
 const Carousel: React.FC<CarouselProps> = ({
   tickets,

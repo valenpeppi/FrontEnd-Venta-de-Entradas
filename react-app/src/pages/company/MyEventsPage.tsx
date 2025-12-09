@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { EventService } from '../../services/EventService';
-import CompanyEventCard from '../../shared/components/CompanyEventCard';
-import EmptyState from '../../shared/components/EmptyState';
-import styles from './styles/MyEventsPage.module.css';
-import { useMessage } from '../../shared/context/MessageContext';
-import { useAuth } from '../../shared/context/AuthContext';
+import { EventService } from '@/services/EventService';
+import CompanyEventCard from '@/shared/components/CompanyEventCard';
+import EmptyState from '@/shared/components/EmptyState';
+import styles from '@/pages/company/styles/MyEventsPage.module.css';
+import { useMessage } from '@/shared/context/MessageContext';
+import { useAuth } from '@/shared/context/AuthContext';
 import { FaCalendarPlus } from 'react-icons/fa';
 
 const MyEventsPage: React.FC = () => {

@@ -1,12 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMessage } from '../../../shared/context/MessageContext';
-import { EventService } from '../../../services/EventService';
-import { PlaceService } from '../../../services/PlaceService';
-import styles from './styles/CreateEventPage.module.css';
+import { useMessage } from '@/shared/context/MessageContext';
+import { EventService } from '@/services/EventService';
+import { PlaceService } from '@/services/PlaceService';
+import styles from '@/pages/events/create/styles/CreateEventPage.module.css';
 
-import type { EventType, Sector } from '../../../types/events';
-import type { Place, CreateEventState, CreateEventAction } from '../../../types/company';
+import type { EventType, Sector } from '@/types/events';
+import type { Place, CreateEventState, CreateEventAction } from '@/types/company';
 
 const createEventReducer = (state: CreateEventState, action: CreateEventAction): CreateEventState => {
   switch (action.type) {

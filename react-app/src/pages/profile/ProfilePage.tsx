@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../shared/context/AuthContext';
-import { AuthService } from '../../services/AuthService';
-import { useMessage } from '../../shared/context/MessageContext';
-import styles from './styles/ProfilePage.module.css';
-import globalStyles from '../../shared/styles/GlobalStyles.module.css';
+import { useAuth } from '@/shared/context/AuthContext';
+import { AuthService } from '@/services/AuthService';
+import { useMessage } from '@/shared/context/MessageContext';
+import styles from '@/pages/profile/styles/ProfilePage.module.css';
+import globalStyles from '@/shared/styles/GlobalStyles.module.css';
 import { FiUser, FiMail, FiSave, FiEdit2 } from 'react-icons/fi';
-import ConfirmationModal from '../../shared/components/ConfirmationModal';
+import ConfirmationModal from '@/shared/components/ConfirmationModal';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage: React.FC = () => {

@@ -1,8 +1,8 @@
 import { createContext, useReducer, useEffect, useContext } from 'react';
 
-import { SystemService } from '../../services/SystemService';
-import { SalesService } from '../../services/SalesService';
-import type { CartItem } from '../../types/cart';
+import { SystemService } from '@/services/SystemService';
+import { SalesService } from '@/services/SalesService';
+import type { CartItem } from '@/types/cart';
 
 
 
@@ -27,7 +27,7 @@ interface CartContextType {
   canAddTicketsToEvent: (eventId: string | number, quantity: number) => Promise<boolean>;
 }
 
-import type { CartProviderProps } from '../../types/cart';
+import type { CartProviderProps } from '@/types/cart';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 

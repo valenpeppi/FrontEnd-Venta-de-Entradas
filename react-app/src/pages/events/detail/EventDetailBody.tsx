@@ -1,16 +1,16 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SectorList from '../seats/SectorList';
-import SeatSelector from '../seats/SeatSelector';
-import modalStyles from '../seats/styles/SeatModal.module.css';
-import styles from './styles/EventDetailPage.module.css';
-import type { Sector } from '../../../types/events';
-import type { CartItem } from '../../../types/cart';
-import { SECTOR_LAYOUT_CONFIG, STADIUM_IMAGES } from '../../../shared/data/stadiums';
-import { useEventDetail } from '../../../shared/context/EventDetailContext';
-import { useCart } from '../../../shared/context/CartContext';
-import { useMessage } from '../../../shared/context/MessageContext';
-import { EventService } from '../../../services/EventService';
+import SectorList from '@/pages/events/seats/SectorList';
+import SeatSelector from '@/pages/events/seats/SeatSelector';
+import modalStyles from '@/pages/events/seats/styles/SeatModal.module.css';
+import styles from '@/pages/events/detail/styles/EventDetailPage.module.css';
+import type { Sector } from '@/types/events';
+import type { CartItem } from '@/types/cart';
+import { SECTOR_LAYOUT_CONFIG, STADIUM_IMAGES } from '@/shared/data/stadiums';
+import { useEventDetail } from '@/shared/context/EventDetailContext';
+import { useCart } from '@/shared/context/CartContext';
+import { useMessage } from '@/shared/context/MessageContext';
+import { EventService } from '@/services/EventService';
 
 const EventDetailBody: React.FC = () => {
   const navigate = useNavigate();

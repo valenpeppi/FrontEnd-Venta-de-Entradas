@@ -1,5 +1,5 @@
-import type { SectorListProps } from '../../../types/events';
-import styles from './styles/SectorList.module.css';
+import type { SectorListProps } from '@/types/events';
+import styles from '@/pages/events/seats/styles/SectorList.module.css';
 
 
 

@@ -6,9 +6,9 @@ import {
   MdAudiotrack,
   MdConfirmationNumber,
 } from "react-icons/md";
-import { formatLongDate, formatTime } from '../../../shared/utils/dateFormatter';
-import { useEventDetail } from '../../../shared/context/EventDetailContext';
-import styles from './styles/EventDetailPage.module.css';
+import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
+import { useEventDetail } from '@/shared/context/EventDetailContext';
+import styles from '@/pages/events/detail/styles/EventDetailPage.module.css';
 
 const EventDetailHeader: React.FC = () => {
   const { summary } = useEventDetail();

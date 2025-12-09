@@ -1,4 +1,4 @@
-import api from './api';
+import api from '@/services/api';
 
 export const MessageService = {
     createMessage: async (data: { title: string; description: string; senderEmail: string; }) => {

@@ -1,4 +1,4 @@
-import styles from './styles/GradientText.module.css';
+import styles from '@/shared/layout/styles/GradientText.module.css';
 import type { ReactNode } from 'react';
 
 interface GradientTextProps {

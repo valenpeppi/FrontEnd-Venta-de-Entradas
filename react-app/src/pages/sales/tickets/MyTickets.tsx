@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SalesService } from '../../../services/SalesService';
-import { useAuth } from '../../../shared/context/AuthContext';
-import styles from './styles/MyTickets.module.css';
-import { PdfService } from '../../../services/PdfService';
+import { SalesService } from '@/services/SalesService';
+import { useAuth } from '@/shared/context/AuthContext';
+import styles from '@/pages/sales/tickets/styles/MyTickets.module.css';
+import { PdfService } from '@/services/PdfService';
 
-import { formatLongDate, formatTime } from '../../../shared/utils/dateFormatter';
-import EmptyState from '../../../shared/components/EmptyState';
+import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
+import EmptyState from '@/shared/components/EmptyState';
 import { FaTicketAlt } from 'react-icons/fa';
 
-import type { PurchasedTicket, PurchasedTicketGroup } from '../../../types/purchase';
+import type { PurchasedTicket, PurchasedTicketGroup } from '@/types/purchase';
 
 const MyTickets: React.FC = () => {
   const navigate = useNavigate();

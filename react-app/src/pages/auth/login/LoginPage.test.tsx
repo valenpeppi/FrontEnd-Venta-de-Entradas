@@ -1,9 +1,9 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import LoginPage from './LoginPage';
+import LoginPage from '@/pages/auth/login/LoginPage';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import { AuthService } from '../../../services/AuthService';
+import { AuthService } from '@/services/AuthService';
 
 // Mock AuthService
 vi.mock('../../../services/AuthService', () => ({

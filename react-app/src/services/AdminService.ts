@@ -1,6 +1,6 @@
 
-import api from './api';
-import type { PendingEvent, AdminEvent } from '../types/admin';
+import api from '@/services/api';
+import type { PendingEvent, AdminEvent } from '@/types/admin';
 
 export const AdminService = {
     getPendingEvents: async (): Promise<PendingEvent[]> => {

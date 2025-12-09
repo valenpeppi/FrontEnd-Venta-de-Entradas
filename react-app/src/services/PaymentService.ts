@@ -1,4 +1,4 @@
-import api from './api';
+import api from '@/services/api';
 
 export const PaymentService = {
     mpCheckout: async (data: any) => {

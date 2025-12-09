@@ -1,6 +1,6 @@
 import React from 'react';
 import type { IconType } from 'react-icons';
-import styles from './styles/StatsCard.module.css';
+import styles from '@/shared/components/styles/StatsCard.module.css';
 
 interface StatsCardProps {
     title: string;

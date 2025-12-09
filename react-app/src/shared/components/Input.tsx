@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './styles/Input.module.css';
+import styles from '@/shared/components/styles/Input.module.css';
 import { FaCheckCircle, FaExclamationCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {

@@ -1,7 +1,7 @@
 import { createContext, useReducer, useEffect, useContext } from 'react';
-import type { Ticket } from '../../types/cart';
-import { EventService } from '../../services/EventService';
-import { mapApiEventToTicket } from '../adapters/eventAdapter';
+import type { Ticket } from '@/types/cart';
+import { EventService } from '@/services/EventService';
+import { mapApiEventToTicket } from '@/shared/adapters/eventAdapter';
 
 interface EventsState {
   featuredEvents: Ticket[];
@@ -19,7 +19,7 @@ interface EventsContextType {
   updateAvailableTickets: (id: string, quantity: number) => void;
 }
 
-import type { EventsProviderProps } from '../../types/events';
+import type { EventsProviderProps } from '@/types/events';
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 

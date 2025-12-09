@@ -1,6 +1,6 @@
-import api from './api';
-import type { Place } from '../types/company';
-import type { Sector } from '../types/events';
+import api from '@/services/api';
+import type { Place } from '@/types/company';
+import type { Sector } from '@/types/events';
 
 export const PlaceService = {
     getAllPlaces: async (): Promise<Place[]> => {

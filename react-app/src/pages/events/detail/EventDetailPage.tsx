@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { EventService } from '../../../services/EventService';
-import { useMessage } from '../../../shared/context/MessageContext';
-import { useEventDetail } from '../../../shared/context/EventDetailContext';
-import type { Sector } from '../../../types/events';
-import EventDetailHeader from './EventDetailHeader';
-import EventDetailBody from './EventDetailBody';
-import styles from './styles/EventDetailPage.module.css';
-import ticketPlaceholder from '../../../assets/ticket.png';
+import { EventService } from '@/services/EventService';
+import { useMessage } from '@/shared/context/MessageContext';
+import { useEventDetail } from '@/shared/context/EventDetailContext';
+import type { Sector } from '@/types/events';
+import EventDetailHeader from '@/pages/events/detail/EventDetailHeader';
+import EventDetailBody from '@/pages/events/detail/EventDetailBody';
+import styles from '@/pages/events/detail/styles/EventDetailPage.module.css';
+import ticketPlaceholder from '@/assets/ticket.png';
 
 const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

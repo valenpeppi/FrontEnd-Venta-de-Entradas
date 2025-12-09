@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import styles from './styles/EmptyState.module.css';
+import styles from '@/shared/components/styles/EmptyState.module.css';
 
 interface EmptyStateProps {
     title: string;

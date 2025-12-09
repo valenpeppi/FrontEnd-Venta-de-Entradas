@@ -1,4 +1,4 @@
-import type { CartItem, Ticket } from './cart';
+import type { CartItem, Ticket } from '@/types/cart';
 
 export interface Sector {
     idEvent: number;

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SupportLayout from '../../shared/components/SupportLayout';
-import styles from './styles/Contact.module.css';
-import { FaEnvelope, FaPhone } from 'react-icons/fa';
-import { useAuth } from '../../shared/context/AuthContext';
-import { MessageService } from '../../services/MessageService';
-import { useMessage } from '../../shared/context/MessageContext';
+import SupportLayout from '@/shared/components/SupportLayout';
+import styles from '@/pages/support/styles/Contact.module.css';
+import { useAuth } from '@/shared/context/AuthContext';
+import { MessageService } from '@/services/MessageService';
+import { useMessage } from '@/shared/context/MessageContext';
 
 const Contact: React.FC = () => {
   const { user } = useAuth();

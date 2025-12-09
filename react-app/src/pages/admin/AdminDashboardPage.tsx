@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { AdminService } from '../../services/AdminService';
-import LoadingSpinner from '../../shared/components/LoadingSpinner';
-import StatsCard from '../../shared/components/StatsCard';
+import { AdminService } from '@/services/AdminService';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
+import StatsCard from '@/shared/components/StatsCard';
 import { FaMoneyBillWave, FaTicketAlt, FaCalendarCheck, FaChartLine } from 'react-icons/fa';
-import styles from './styles/AdminDashboardPage.module.css';
+import styles from '@/pages/admin/styles/AdminDashboardPage.module.css';
 
 interface DashboardStats {
     salesToday: number;

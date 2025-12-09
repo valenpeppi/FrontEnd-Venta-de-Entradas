@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../../shared/context/CartContext.tsx';
-import { useAuth } from '../../../shared/context/AuthContext.tsx';
-import styles from './styles/Pay.module.css';
+import { useCart } from '@/shared/context/CartContext.tsx';
+import { useAuth } from '@/shared/context/AuthContext.tsx';
+import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import { PaymentService } from '../../../services/PaymentService';
+import { PaymentService } from '@/services/PaymentService';
 
-import type { PaymentTicketGroup as TicketGroup, GroupedByEvent } from '../../../types/purchase.ts';
+import type { PaymentTicketGroup as TicketGroup, GroupedByEvent } from '@/types/purchase.ts';
 
 const Pay: React.FC = () => {
   const navigate = useNavigate();

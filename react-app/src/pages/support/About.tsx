@@ -1,5 +1,5 @@
 import React from 'react';
-import SupportLayout from '../../shared/components/SupportLayout';
+import SupportLayout from '@/shared/components/SupportLayout';
 
 const About: React.FC = () => {
   return (

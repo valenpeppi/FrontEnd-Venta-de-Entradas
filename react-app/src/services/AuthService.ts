@@ -1,5 +1,5 @@
 
-import api from './api';
+import api from '@/services/api';
 
 export const AuthService = {
     validateToken: async () => {

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import styles from './styles/CompanyEventCard.module.css';
+import styles from '@/shared/components/styles/CompanyEventCard.module.css';
 import { FaCalendarAlt, FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import ConfirmationModal from '../../shared/components/ConfirmationModal';
-import StatusBadge from '../../shared/components/StatusBadge';
+import ConfirmationModal from '@/shared/components/ConfirmationModal';
+import StatusBadge from '@/shared/components/StatusBadge';
 
 interface CompanyEventCardProps {
     event: {
