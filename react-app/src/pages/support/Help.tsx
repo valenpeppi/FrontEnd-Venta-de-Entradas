@@ -4,8 +4,19 @@ import SupportLayout from '@/shared/components/SupportLayout';
 import styles from '@/pages/support/styles/Help.module.css';
 import { FaQuestionCircle, FaEnvelope, FaInfoCircle } from 'react-icons/fa';
 
+import { useAuth } from '@/shared/context/AuthContext';
+
 const Help: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleProfileClick = () => {
+    if (user) {
+      navigate('/profile');
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <SupportLayout
@@ -34,7 +45,7 @@ const Help: React.FC = () => {
             <span className={styles.helpLink}>Leer más</span>
           </div>
           {/* New Card: Chat Assistant */}
-          <div className={styles.helpCard} onClick={() => navigate('/profile')}>
+          <div className={styles.helpCard} onClick={handleProfileClick}>
             <FaQuestionCircle className={styles.helpIcon} />
             <h3>Mi Perfil</h3>
             <p>Gestiona tus datos personales y preferencias de cuenta.</p>
