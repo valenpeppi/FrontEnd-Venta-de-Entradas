@@ -7,6 +7,7 @@ import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import AuthLayout from '@/shared/components/AuthLayout';
 import styles from '@/pages/auth/login/styles/LoginPage.module.css';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 interface LoginPageProps {
     onLoginSuccess: (userHelper: any, token: string) => void;
@@ -111,6 +112,29 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         }
     };
 
+    const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+        try {
+            setLoading(true);
+            const response = await AuthService.googleLogin(credentialResponse.credential);
+            if (response && response.token && response.user) {
+                onLoginSuccess(response.user, response.token);
+
+                if (response.user.role === 'admin' || response.user.role === 'ADMIN') {
+                    navigate('/admin/dashboard');
+                } else if (response.user.role === 'company' || response.user.role === 'COMPANY') {
+                    navigate('/company/dashboard');
+                } else {
+                    navigate('/');
+                }
+            }
+        } catch (error) {
+            console.error('Google Login Error:', error);
+            setServerError('Error al iniciar sesión con Google.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <AuthLayout
             title="Iniciar Sesión"
@@ -171,6 +195,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                     <Link to="/registercompany" className={styles.loginLink}>
                         Creá tu cuenta
                     </Link>
+                </div>
+
+                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+                        <GoogleLogin
+                            onSuccess={handleGoogleLoginSuccess}
+                            onError={() => setServerError('Ocurrió un error al iniciar sesión con Google.')}
+                        />
+                    </GoogleOAuthProvider>
                 </div>
             </form>
         </AuthLayout>
