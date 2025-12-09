@@ -1,0 +1,144 @@
+import React, { useState, useEffect } from 'react';
+import styles from './styles/PasswordStrengthBar.module.css';
+
+interface PasswordStrengthBarProps {
+  password: string;
+}
+
+interface PasswordEvaluation {
+  strength: 'weak' | 'medium' | 'strong';
+  score: number;
+  feedback: string[];
+}
+
+// Función local para evaluar la fortaleza de la contraseña (sin depender del backend)
+const evaluatePasswordStrength = (pwd: string): PasswordEvaluation => {
+  let score = 0;
+  const feedback: string[] = [];
+
+  if (!pwd) {
+    return { strength: 'weak', score: 0, feedback: ['La contraseña no puede estar vacía'] };
+  }
+
+  // Check length
+  if (pwd.length >= 8) {
+    score += 30;
+  } else {
+    feedback.push(`Mínimo 8 caracteres (${pwd.length}/8)`);
+  }
+
+  // Check lowercase
+  if (/[a-z]/.test(pwd)) {
+    score += 20;
+  } else {
+    feedback.push('Incluye minúsculas (a-z)');
+  }
+
+  // Check uppercase
+  if (/[A-Z]/.test(pwd)) {
+    score += 20;
+  } else {
+    feedback.push('Incluye mayúsculas (A-Z)');
+  }
+
+  // Check numbers
+  if (/\d/.test(pwd)) {
+    score += 15;
+  } else {
+    feedback.push('Incluye números (0-9)');
+  }
+
+  // Check special characters
+  if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) {
+    score += 15;
+  }
+
+  // Determine strength level
+  let strength: 'weak' | 'medium' | 'strong' = 'weak';
+  if (score >= 70) {
+    strength = 'strong';
+  } else if (score >= 50) {
+    strength = 'medium';
+  }
+
+  return { strength, score, feedback };
+};
+
+const PasswordStrengthBar: React.FC<PasswordStrengthBarProps> = ({ password }) => {
+  const [evaluation, setEvaluation] = useState<PasswordEvaluation | null>(null);
+
+  useEffect(() => {
+    if (!password) {
+      setEvaluation(null);
+      return;
+    }
+
+    // Evalúa localmente sin necesidad del backend
+    const result = evaluatePasswordStrength(password);
+    setEvaluation(result);
+  }, [password]);
+
+  if (!password || !evaluation) {
+    return null;
+  }
+
+  const getStrengthColor = (strength: string) => {
+    switch (strength) {
+      case 'weak':
+        return '#ef4444'; // red
+      case 'medium':
+        return '#f59e0b'; // amber
+      case 'strong':
+        return '#10b981'; // green
+      default:
+        return '#d1d5db'; // gray
+    }
+  };
+
+  const getStrengthLabel = (strength: string) => {
+    switch (strength) {
+      case 'weak':
+        return 'Débil';
+      case 'medium':
+        return 'Media';
+      case 'strong':
+        return 'Fuerte';
+      default:
+        return '';
+    }
+  };
+
+  return (
+    <div className={styles.strengthContainer}>
+      <div className={styles.barContainer}>
+        <div
+          className={styles.bar}
+          style={{
+            width: `${evaluation.score}%`,
+            backgroundColor: getStrengthColor(evaluation.strength),
+          }}
+        />
+      </div>
+      <span
+        className={styles.strengthLabel}
+        style={{ color: getStrengthColor(evaluation.strength) }}
+      >
+        {getStrengthLabel(evaluation.strength)}
+      </span>
+      {evaluation.feedback.length > 0 && (
+        <ul className={styles.feedbackList}>
+          {evaluation.feedback.map((item, index) => (
+            <li key={index} className={styles.feedbackItem}>
+              {item}
+            </li>
+          ))}
+        </ul>
+      )}
+      {evaluation.strength === 'strong' && evaluation.feedback.length === 0 && (
+        <p className={styles.successMessage}>✓ Contraseña muy fuerte</p>
+      )}
+    </div>
+  );
+};
+
+export default PasswordStrengthBar;

@@ -5,6 +5,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import AuthLayout from '@/shared/components/AuthLayout';
+import PasswordStrengthBar from '@/shared/components/PasswordStrengthBar';
 import styles from '@/pages/auth/register/styles/RegisterUser.module.css';
 
 import type { RegisterUserProps } from '@/types/auth';
@@ -48,7 +49,10 @@ const Register: React.FC<RegisterUserProps> = ({ onRegisterSuccess }) => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMsg = 'Email inválido.';
         break;
       case 'password':
-        if (value.length < 4) errorMsg = 'La contraseña debe tener al menos 4 caracteres.';
+        if (value.length < 8) errorMsg = 'La contraseña debe tener al menos 8 caracteres.';
+        else if (!/[a-z]/.test(value)) errorMsg = 'Debe incluir minúsculas.';
+        else if (!/[A-Z]/.test(value)) errorMsg = 'Debe incluir mayúsculas.';
+        else if (!/\d/.test(value)) errorMsg = 'Debe incluir números.';
         break;
       case 'confirmPassword':
         if (value !== formData.password) errorMsg = 'Las contraseñas no coinciden.';
@@ -172,19 +176,23 @@ const Register: React.FC<RegisterUserProps> = ({ onRegisterSuccess }) => {
           const fieldName = key as keyof typeof formData;
           const label = labelMap[fieldName];
           return (
-            <Input
-              key={fieldName}
-              id={fieldName}
-              name={fieldName}
-              type={getInputType(fieldName)}
-              label={label || fieldName}
-              value={formData[fieldName]}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={errors[fieldName]}
-              touched={touched[fieldName]}
-              placeholder={`Ingresa tu ${(label || fieldName).toLowerCase()}`}
-            />
+            <div key={fieldName}>
+              <Input
+                id={fieldName}
+                name={fieldName}
+                type={getInputType(fieldName)}
+                label={label || fieldName}
+                value={formData[fieldName]}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors[fieldName]}
+                touched={touched[fieldName]}
+                placeholder={`Ingresa tu ${(label || fieldName).toLowerCase()}`}
+              />
+              {fieldName === 'password' && formData.password && (
+                <PasswordStrengthBar password={formData.password} />
+              )}
+            </div>
           );
         })}
 

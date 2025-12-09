@@ -48,5 +48,10 @@ export const AuthService = {
     deleteAccount: async () => {
         const response = await api.delete('/auth/profile');
         return response.data;
+    },
+
+    checkPasswordStrength: async (password: string) => {
+        const response = await api.post('/auth/check-password-strength', { password });
+        return response.data;
     }
 };

@@ -6,6 +6,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import AuthLayout from '@/shared/components/AuthLayout';
+import PasswordStrengthBar from '@/shared/components/PasswordStrengthBar';
 import styles from '@/pages/auth/register/styles/RegisterCompany.module.css';
 
 import type { RegisterCompanyProps } from '@/types/auth';
@@ -60,7 +61,10 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) 
         break;
       case 'password':
         if (!value) errorMsg = 'La contraseña es requerida.';
-        else if (value.length < 4) errorMsg = 'La contraseña debe tener al menos 4 caracteres.';
+        else if (value.length < 8) errorMsg = 'La contraseña debe tener al menos 8 caracteres.';
+        else if (!/[a-z]/.test(value)) errorMsg = 'Debe incluir minúsculas.';
+        else if (!/[A-Z]/.test(value)) errorMsg = 'Debe incluir mayúsculas.';
+        else if (!/\d/.test(value)) errorMsg = 'Debe incluir números.';
         break;
       case 'confirmPassword':
         if (!value) errorMsg = 'Debes confirmar la contraseña.';
@@ -160,20 +164,24 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) 
           const fieldKey = key as keyof typeof formData;
           const label = labelMap[fieldKey];
           return (
-            <Input
-              key={fieldKey}
-              id={`register-${fieldKey}`}
-              name={fieldKey}
-              type={fieldKey.toLowerCase().includes('password') ? 'password' : 'text'}
-              label={label || fieldKey}
-              value={formData[fieldKey]}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={errors[fieldKey] || undefined}
-              touched={touched[fieldKey]}
-              placeholder={`Ingresa ${label ? label.toLowerCase() : fieldKey}`}
-              required
-            />
+            <div key={fieldKey}>
+              <Input
+                id={`register-${fieldKey}`}
+                name={fieldKey}
+                type={fieldKey.toLowerCase().includes('password') ? 'password' : 'text'}
+                label={label || fieldKey}
+                value={formData[fieldKey]}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors[fieldKey] || undefined}
+                touched={touched[fieldKey]}
+                placeholder={`Ingresa ${label ? label.toLowerCase() : fieldKey}`}
+                required
+              />
+              {fieldKey === 'password' && formData.password && (
+                <PasswordStrengthBar password={formData.password} />
+              )}
+            </div>
           )
         })}
 
