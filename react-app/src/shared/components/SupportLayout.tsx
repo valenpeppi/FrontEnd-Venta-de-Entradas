@@ -5,9 +5,10 @@ interface SupportLayoutProps {
     children: ReactNode;
     title: string;
     subtitle?: string;
+    transparent?: boolean;
 }
 
-const SupportLayout: React.FC<SupportLayoutProps> = ({ children, title, subtitle }) => {
+const SupportLayout: React.FC<SupportLayoutProps> = ({ children, title, subtitle, transparent = false }) => {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
@@ -15,7 +16,7 @@ const SupportLayout: React.FC<SupportLayoutProps> = ({ children, title, subtitle
                     <h1 className={styles.title}>{title}</h1>
                     {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
                 </div>
-                <div className={styles.contentCard}>
+                <div className={transparent ? styles.transparentContent : styles.contentCard}>
                     {children}
                 </div>
             </div>

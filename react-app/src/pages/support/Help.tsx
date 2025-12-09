@@ -11,6 +11,7 @@ const Help: React.FC = () => {
     <SupportLayout
       title="Centro de Ayuda"
       subtitle="Encuentra respuestas a tus preguntas y contáctanos si necesitas más ayuda."
+      transparent
     >
       <div className={styles.helpSection}>
         <div className={styles.helpGrid}>
@@ -23,14 +24,21 @@ const Help: React.FC = () => {
           <div className={styles.helpCard} onClick={() => navigate('/contact')}>
             <FaEnvelope className={styles.helpIcon} />
             <h3>Contacto</h3>
-            <p>¿No encuentras lo que buscas? Contáctanos directamente por correo o teléfono.</p>
-            <span className={styles.helpLink}>Ver Opciones de Contacto</span>
+            <p>¿Tienes un problema específico? Envíanos un mensaje y te responderemos a la brevedad.</p>
+            <span className={styles.helpLink}>Contactar Soporte</span>
           </div>
           <div className={styles.helpCard} onClick={() => navigate('/about')}>
             <FaInfoCircle className={styles.helpIcon} />
             <h3>Sobre TicketApp</h3>
             <p>Conoce más sobre nuestra misión y quiénes somos.</p>
             <span className={styles.helpLink}>Leer más</span>
+          </div>
+          {/* New Card: Chat Assistant */}
+          <div className={styles.helpCard} onClick={() => navigate('/profile')}>
+            <FaQuestionCircle className={styles.helpIcon} />
+            <h3>Mi Perfil</h3>
+            <p>Gestiona tus datos personales y preferencias de cuenta.</p>
+            <span className={styles.helpLink}>Ir a mi Perfil</span>
           </div>
         </div>
       </div>

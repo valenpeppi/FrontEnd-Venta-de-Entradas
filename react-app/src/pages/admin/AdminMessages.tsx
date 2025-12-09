@@ -80,7 +80,7 @@ export const AdminMessages: React.FC = () => {
         // Reject: Set state to rejected, kept in list (moved to bottom by sort)
         try {
             setMessages(prev => {
-                const updated = prev.map(m => m.idMessage === id ? { ...m, state: 'rejected' } : m);
+                const updated: Message[] = prev.map(m => m.idMessage === id ? { ...m, state: 'rejected' } : m);
                 return sortMessages(updated);
             });
             await MessageService.rejectMessage(id);
