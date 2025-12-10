@@ -18,6 +18,8 @@ import CreateEventPage from '@/pages/events/create/CreateEventPage';
 import EditEventPage from '@/pages/events/edit/EditEventPage';
 import MyEventsPage from '@/pages/company/MyEventsPage';
 import RegisterCompany from '@/pages/auth/register/RegisterCompany';
+import ForgotPasswordPage from '@/pages/auth/forgot-password/ForgotPasswordPage';
+import ResetPasswordPage from '@/pages/auth/reset-password/ResetPasswordPage';
 import CompanyDashboardPage from '@/pages/company/CompanyDashboardPage';
 import { useAuth } from '@/shared/context/AuthContext';
 import type { User } from '@/types/auth';
@@ -25,6 +27,7 @@ import { useMessage } from '@/shared/context/MessageContext';
 import styles from '@/shared/styles/App.module.css';
 import globalStyles from '@/shared/styles/GlobalStyles.module.css';
 import AuthRoute from '@/shared/AuthRoute';
+import RestrictCompanyRoute from '@/shared/RestrictCompanyRoute';
 import Contact from '@/pages/support/Contact';
 import Privacy from '@/pages/support/Privacy';
 import Terms from '@/pages/support/Terms';
@@ -80,15 +83,15 @@ const App: React.FC = () => {
     <div className={`${styles.appRoot} ${globalStyles.appRoot}`}>
       <Routes>
         {/* Rutas Públicas */}
-        <Route path="/" element={<Layout><HomePage /></Layout>} />
+        <Route path="/" element={<RestrictCompanyRoute><Layout><HomePage /></Layout></RestrictCompanyRoute>} />
         <Route path="/help" element={<Layout><Help /></Layout>} />
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
         <Route path="/privacy" element={<Layout><Privacy /></Layout>} />
         <Route path="/terms" element={<Layout><Terms /></Layout>} />
         <Route path="/faq" element={<Layout><Faq /></Layout>} />
-        <Route path="/event/:id" element={<Layout><EventDetailPage /></Layout>} />
+        <Route path="/event/:id" element={<RestrictCompanyRoute><Layout><EventDetailPage /></Layout></RestrictCompanyRoute>} />
         <Route path="/about" element={<Layout><About /></Layout>} />
-        <Route path="/searchedEvents" element={<Layout><SearchedEvents /></Layout>} />
+        <Route path="/searchedEvents" element={<RestrictCompanyRoute><Layout><SearchedEvents /></Layout></RestrictCompanyRoute>} />
 
         {/* Rutas para Invitados (no logueados) */}
         <Route path="/login" element={<AuthRoute guestOnly><LoginPage onLoginSuccess={(userOrCompany, token) => {
@@ -100,6 +103,8 @@ const App: React.FC = () => {
         }} /></AuthRoute>} />
         <Route path="/register" element={<AuthRoute guestOnly><Register onRegisterSuccess={handleRegisterSuccess} /></AuthRoute>} />
         <Route path="/registercompany" element={<AuthRoute guestOnly><RegisterCompany onRegisterSuccess={handleCompanyRegisterSuccess} /></AuthRoute>} />
+        <Route path="/forgot-password" element={<AuthRoute guestOnly><ForgotPasswordPage /></AuthRoute>} />
+        <Route path="/auth/reset-password" element={<AuthRoute guestOnly><ResetPasswordPage /></AuthRoute>} />
 
         {/* Rutas Protegidas para Usuarios */}
         <Route path="/cart" element={<AuthRoute allowedRoles={['user']}><Layout><CartPage /></Layout></AuthRoute>} />

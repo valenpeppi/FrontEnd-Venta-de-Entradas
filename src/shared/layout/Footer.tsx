@@ -51,17 +51,19 @@ const Footer: React.FC = () => {
         </div>
 
         <div className={styles.footerLinks}>
-          <div className={styles.footerLinksColumn}>
-            <h4>Eventos</h4>
-            <ul>
-              <li><button onClick={() => handleNavigate('/searchedEvents?query=concierto')}>Conciertos</button></li>
-              <li><button onClick={() => handleNavigate('/searchedEvents?query=evento%20deportivo')}>Eventos Deportivos</button></li>
-              <li><button onClick={() => handleNavigate('/searchedEvents?query=fiesta')}>Fiestas</button></li>
-              <li><button onClick={() => handleNavigate('/searchedEvents?query=arte')}>Exposiciones de Arte</button></li>
-              <li><button onClick={() => handleNavigate('/searchedEvents?query=festival')}>Festival</button></li>
-              <li><button onClick={() => handleNavigate('/searchedEvents?query=stand%20up')}>Stand Ups</button></li>
-            </ul>
-          </div>
+          {user?.role !== 'company' && (
+            <div className={styles.footerLinksColumn}>
+              <h4>Eventos</h4>
+              <ul>
+                <li><button onClick={() => handleNavigate('/searchedEvents?query=concierto')}>Conciertos</button></li>
+                <li><button onClick={() => handleNavigate('/searchedEvents?query=evento%20deportivo')}>Eventos Deportivos</button></li>
+                <li><button onClick={() => handleNavigate('/searchedEvents?query=fiesta')}>Fiestas</button></li>
+                <li><button onClick={() => handleNavigate('/searchedEvents?query=arte')}>Exposiciones de Arte</button></li>
+                <li><button onClick={() => handleNavigate('/searchedEvents?query=festival')}>Festival</button></li>
+                <li><button onClick={() => handleNavigate('/searchedEvents?query=stand%20up')}>Stand Ups</button></li>
+              </ul>
+            </div>
+          )}
 
           <div className={styles.footerLinksColumn}>
             <h4>Compañía</h4>
