@@ -1,10 +1,16 @@
 .navbar {
-  background: linear-gradient(to right, #e0f2fe, #c7d2fe);
-  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
-  padding: 1.25rem 2rem;
+  background: #ffffff;
+  border-bottom: 1px solid #f3f4f6;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
+  padding: 0.8rem 2rem;
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: 50;
+  transition: box-shadow 0.3s ease;
+}
+
+.navbar:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .navbarContainer {
@@ -12,102 +18,103 @@
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 2rem;
+}
+
+.brandWrapper {
+  display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
 .navbarBrand {
   display: flex;
   align-items: center;
-  font-size: 2.2rem;
-  font-weight: bold;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: #4f46e5;
   text-decoration: none;
+  letter-spacing: -0.5px;
 }
 
-.navbarBrand:hover {
-  color: #3730a3;
-  text-decoration: none;
+.image1 {
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+  vertical-align: middle;
 }
 
-.navbarCartContainer {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.navbarCart {
-  width: 30px;
-  height: 30px;
-  display: block;
-}
-
-.cartCount {
-  position: absolute;
-  top: -6px;
-  right: -18px;
-  width: 22px;
-  height: 22px;
-  background-color: #e74c3c;
-  color: white;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-  border: 1.5px solid #fff;
-  z-index: 2;
-  pointer-events: none;
-}
-
+/* --- SUPER SEARCH BAR STYLES --- */
 .navbarSearch {
   display: flex;
   align-items: center;
   position: relative;
+  flex: 1;
+  max-width: 450px;
+  margin: 0 auto;
+  transition: max-width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.navbarSearch:focus-within {
+  max-width: 600px;
 }
 
 .navbarSearchInput {
-  padding: 0.75rem 2.5rem 0.75rem 3rem;
-  border: 1px solid transparent;
-  border-radius: 9999px;
+  width: 100%;
+  padding: 0.85rem 1.25rem 0.85rem 3.2rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 99px;
   outline: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 0.95rem;
-  width: 350px;
-  background-color: #f3f4f6;
+  transition: all 0.25s ease-out;
+  font-size: 1rem;
+  background-color: #f9fafb;
   color: #1f2937;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.navbarSearchInput::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
 }
 
 .navbarSearchInput:hover {
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border-color: #e5e7eb;
+  background-color: #fff;
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .navbarSearchInput:focus {
-  background-color: #ffffff;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
-  width: 350px;
+  background-color: #fff;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15), 0 4px 12px rgba(79, 70, 229, 0.1);
+  transform: translateY(-1px);
 }
 
 .searchIcon {
   position: absolute;
-  left: 1rem;
+  left: 1.2rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #6b7280;
+  color: #9ca3af;
   pointer-events: none;
-  font-size: 1.1rem;
-  transition: color 0.2s;
+  font-size: 1.25rem;
+  transition: color 0.2s, transform 0.2s;
   z-index: 10;
 }
 
-.navbarSearchContainer:focus-within .searchIcon {
-  color: #6366f1;
+.navbarSearch:focus-within .searchIcon {
+  color: #4f46e5;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* --- END SEARCH BAR --- */
+
+.navLinksContainer {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
 .navbarMenu {
@@ -122,67 +129,61 @@
 .navbarMenuItem {
   color: #4b5563;
   font-weight: 500;
-  transition: color 0.2s;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
   text-decoration: none;
-  padding: 0 0.75rem;
-  display: inline-flex;
-  align-items: center;
+  padding: 0.5rem;
 }
 
 .navbarMenuItem:hover {
-  color: #4338ca;
+  color: #4f46e5;
 }
 
 .navbarAuthSection {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-}
-
-/* User Dropdown Styles */
-.userMenuContainer {
-  position: relative;
+  gap: 1rem;
 }
 
 .userMenuTrigger {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: transparent;
-  border: 1px solid transparent;
-  padding: 4px 12px 4px 4px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  padding: 5px 12px 5px 5px;
   border-radius: 999px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.userMenuTrigger:hover,
-.userMenuTrigger:focus {
-  background: rgba(255, 255, 255, 0.5);
-  border-color: #cbd5e1;
+.userMenuTrigger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: #d1d5db;
 }
 
 .userAvatar {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   background: #4f46e5;
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 0.9rem;
 }
 
 .userName {
   font-weight: 600;
   color: #374151;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .chevron {
-  color: #64748b;
+  color: #9ca3af;
   transition: transform 0.2s ease;
 }
 
@@ -192,34 +193,23 @@
 
 .userDropdown {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 15px);
   right: 0;
-  width: 240px;
+  width: 250px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  padding: 8px;
+  box-shadow: 0 10px 40px -5px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem;
   z-index: 100;
-  animation: slideDown 0.2s ease-out;
-  border: 1px solid #f1f5f9;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  border: 1px solid #f3f4f6;
+  animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dropdownHeader {
-  padding: 12px 16px;
-  border-bottom: 1px solid #f1f5f9;
-  margin-bottom: 8px;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .dropdownRole {
@@ -232,29 +222,23 @@
 
 .dropdownEmail {
   font-size: 0.85rem;
-  color: #64748b;
+  color: #6b7280;
   margin: 4px 0 0 0;
-  white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.dropdownList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .dropdownItem {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  color: #334155;
+  gap: 12px;
+  padding: 0.75rem 1rem;
+  color: #4b5563;
   text-decoration: none;
   font-size: 0.95rem;
   border-radius: 8px;
-  transition: background 0.2s;
+  transition: all 0.2s;
   width: 100%;
   background: none;
   border: none;
@@ -263,386 +247,240 @@
 }
 
 .dropdownItem:hover {
-  background: #f8fafc;
+  background: #eff6ff;
   color: #4f46e5;
-}
-
-.dropdownDivider {
-  height: 1px;
-  background: #f1f5f9;
-  margin: 8px 0;
-}
-
-.logoutItem {
-  color: #ef4444;
-}
-
-.logoutItem:hover {
-  background: #fef2f2;
-  color: #dc2626;
-}
-
-.navbarAuthButtons {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
 }
 
 .navbarLoginBtn {
-  background: #4f46e5;
-  color: #fff;
+  color: #4b5563;
   font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
-  transition: background 0.2s;
-  outline: none;
-  border: none;
-  cursor: pointer;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  transition: color 0.2s;
   text-decoration: none;
+  font-size: 0.95rem;
 }
 
 .navbarLoginBtn:hover {
-  background: #3730a3;
-  color: #8880f7;
-  text-decoration: none;
+  color: #111827;
 }
 
 .navbarRegisterBtn {
-  background: transparent;
-  color: #4f46e5;
+  background: #4f46e5;
+  color: white;
   font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  border: 2px solid #4f46e5;
-  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-  outline: none;
-  cursor: pointer;
+  padding: 0.6rem 1.5rem;
+  border-radius: 999px;
+  transition: all 0.2s;
   text-decoration: none;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3);
 }
 
 .navbarRegisterBtn:hover {
-  background: #4f46e5;
-  color: #fff;
-  border-color: #4f46e5;
-  text-decoration: none;
+  background: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
 }
 
-.image1 {
-  width: 55px;
-  height: 55px;
-  margin-right: 12px;
-  vertical-align: middle;
+.navbarCartContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
+.navbarCart {
+  width: 26px;
+  height: 26px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
 
+.navbarCart:hover {
+  opacity: 1;
+}
 
-
-.searchDropdownContainer {
+.cartCount {
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 30;
-  max-height: 200px;
-  overflow-y: auto;
-  margin-top: 0.5rem;
-}
-
-.searchDropdownList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.searchDropdownItem {
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  color: #1f2937;
-  transition: background-color 0.2s;
-}
-
-.searchDropdownItem:hover {
-  background-color: #f3f4f6;
-  color: #4f46e5;
-}
-
-.noResults {
-  color: #6b7280;
-  font-style: italic;
-  text-align: center;
-  cursor: default;
-}
-
-.noResults:hover {
-  background-color: transparent;
-  color: #6b7280;
-}
-
-.logoutModalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  top: -6px;
+  right: -8px;
+  width: 18px;
+  height: 18px;
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  border-radius: 50%;
+  border: 2px solid white;
 }
 
-.logoutModal {
-  background: #fff;
-  border-radius: 1.5rem;
-  padding: 2.5rem;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08);
-  text-align: center;
+/* Animations and Responsiveness (kept similar but clean) */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.logoutModal h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 1.5rem;
-  line-height: 1.4;
+.searchDropdownContainer {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px -5px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  z-index: 50;
+  border: 1px solid #f3f4f6;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
-.logoutModalButtons {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+.searchDropdownItem {
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #374151;
+  transition: background 0.15s;
 }
 
-.logoutConfirmBtn {
-  background: #4338ca;
-  color: #fff;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid #4338ca;
-  box-shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
-  transition: background 0.2s, border-color 0.2s;
-  outline: none;
+.searchDropdownItem:hover {
+  background: #f3f4f6;
+  color: #4f46e5;
+}
+
+.mobileMenuToggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #111827;
   cursor: pointer;
 }
 
-.logoutConfirmBtn:hover {
-  background: #3730a3;
-  border-color: #3730a3;
+.hiddenMobile {
+  display: none;
 }
-
-.logoutCancelBtn {
-  background: #fff;
-  color: #4338ca;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid #4338ca;
-  box-shadow: 0 2px 8px 0 rgba(67, 56, 202, 0.1);
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
-  outline: none;
-  cursor: pointer;
-}
-
-.logoutCancelBtn:hover {
-  background: #e0e7ff;
-  color: #3730a3;
-  border-color: #3730a3;
-}
-
 
 @media (max-width: 1024px) {
-  .navbarSearchInput {
-    width: 200px;
-  }
-
-  .navbarMenu {
-    gap: 1rem;
-  }
-
-  .navbarAuthSection {
-    margin-left: 1rem;
+  .navbarSearch {
+    margin: 0 1rem;
   }
 }
 
 @media (max-width: 768px) {
-  .navbarContainer {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    /* Space between brand and toggle/cart */
-    gap: 1rem;
-    position: relative;
-  }
-
-  .brandWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    flex: 1;
-  }
-
-  .navbarBrand {
-    font-size: 1.8rem;
-    width: auto;
-    margin: 0;
+  .navbar {
+    padding: 1rem;
   }
 
   .mobileMenuToggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    font-size: 2rem;
-    color: #4f46e5;
-    cursor: pointer;
+    display: block;
   }
 
   .navbarSearch {
     order: 3;
     width: 100%;
-    justify-content: center;
-    margin-top: 10px;
+    max-width: 100%;
+    margin-top: 1rem;
+    display: none;
   }
 
-  .hiddenMobile {
-    display: none;
+  .brandWrapper {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .navLinksContainer {
     display: none;
-    /* Hidden by default on mobile */
-    flex-direction: column;
     width: 100%;
     order: 4;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
-    animation: slideDown 0.3s ease;
+    flex-direction: column;
+    padding: 1rem 0;
+    gap: 1rem;
+    border-top: 1px solid #f3f4f6;
+    margin-top: 1rem;
   }
 
   .navLinksContainer.mobileMenuOpen {
     display: flex;
   }
 
-  .navbarMenu {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 15px;
+  .navbarSearch:not(.hiddenMobile) {
+    display: flex;
   }
 
-  .navbarMenuItem {
-    justify-content: center;
-    padding: 10px;
-    font-size: 1.1rem;
+  /* Show when menu open logic handled by parent */
+
+  .navbarMenu {
+    flex-direction: column;
+    width: 100%;
   }
 
   .navbarAuthSection {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #f1f5f9;
-    justify-content: center;
     width: 100%;
-    margin-left: 0;
     flex-direction: column;
-  }
-
-  .userMenuContainer {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .userMenuTrigger {
-    width: 100%;
     justify-content: center;
   }
 
-  .userDropdown {
-    position: static;
-    /* Relative to flow in mobile */
-    width: 100%;
-    box-shadow: none;
-    border: none;
-    padding: 0;
-    padding-top: 10px;
-  }
-
-  .dropdownList {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .dropdownItem {
-    justify-content: center;
-  }
-
-  .navbarAuthButtons {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .navbarLoginBtn,
-  .navbarRegisterBtn {
-    width: 100%;
-    text-align: center;
-    justify-content: center;
-  }
-
-  .navbarCartContainer {
-    /* If we want cart always visible separate from menu */
-    position: absolute;
-    right: 50px;
-    /* Space for hamburger */
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  /* Ensure hamburger has space */
-  .mobileMenuToggle {
-    margin-left: 10px;
+  /* Reset special search width on mobile */
+  .navbarSearch:focus-within {
+    max-width: 100%;
   }
 }
 
-@media (min-width: 769px) {
-  .mobileMenuToggle {
-    display: none;
-  }
-
-  .brandWrapper {
-    display: contents;
-    /* Allows children to participate in flex layout of container */
-  }
-
-  .navLinksContainer {
-    display: contents;
-    /* Allows children (menu and auth) to be part of the main flex container */
-  }
+/* Modals */
+.logoutModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@media (max-width: 480px) {
-  .navbarBrand {
-    font-size: 1.5rem;
-  }
+.logoutModal {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
 
-  .image1 {
-    width: 40px;
-    height: 40px;
-  }
+.logoutModalButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
 
-  .navbarCartContainer {
-    right: 45px;
-  }
+.logoutConfirmBtn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logoutCancelBtn {
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
 }
