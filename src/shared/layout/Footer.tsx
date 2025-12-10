@@ -21,7 +21,6 @@ const Footer: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     navigate(path);
   };
-
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
@@ -51,7 +50,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className={styles.footerLinks}>
-          {user?.role !== 'company' && (
+          {user?.role !== 'company' && user?.role !== 'admin' && (
             <div className={styles.footerLinksColumn}>
               <h4>Eventos</h4>
               <ul>
