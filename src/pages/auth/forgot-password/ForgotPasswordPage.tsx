@@ -13,9 +13,17 @@ const ForgotPasswordPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setMessage(null);
+
         if (!email) return;
 
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setMessage({ text: 'Formato de email inválido', type: 'error' });
+            return;
+        }
+
         setLoading(true);
+        // ... rest of logic
+
 
         try {
             await AuthService.forgotPassword(email);

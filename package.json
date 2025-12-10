@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test:e2e": "playwright test tests/buy.e2e.spec.ts --headed",
-    "test:unit": "vitest run src/pages/login/LoginUser.test.tsx"
+    "test:unit": "vitest run src"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",
