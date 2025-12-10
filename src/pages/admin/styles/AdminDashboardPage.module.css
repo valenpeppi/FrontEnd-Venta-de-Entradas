@@ -5,18 +5,24 @@
 
 .header {
     margin-bottom: 2rem;
+    text-align: center;
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    font-weight: 800;
     color: var(--text-color);
     margin-bottom: 0.5rem;
-    font-weight: 700;
+    background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.05em;
+    padding-bottom: 5px;
 }
 
 .subtitle {
-    color: var(--text-muted);
-    font-size: 1rem;
+    color: #64748b;
+    font-size: 1.1rem;
 }
 
 .statsGrid {

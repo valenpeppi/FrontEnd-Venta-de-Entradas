@@ -235,35 +235,37 @@ export default function AdminPanel() {
                 )}
               </div>
 
-              <div className={styles.actions}>
-                {ev.state === 'Pending' && (
-                  <>
+              {(ev.state === 'Pending' || ev.state === 'Rejected') && (
+                <div className={styles.actions}>
+                  {ev.state === 'Pending' && (
+                    <>
+                      <button
+                        className={`${styles.btn} ${styles.btnApprove}`}
+                        onClick={() => handleAction(ev.idEvent, "approve")}
+                        title="Aprobar"
+                      >
+                        <FaCheck /> Aprobar
+                      </button>
+                      <button
+                        className={`${styles.btn} ${styles.btnReject}`}
+                        onClick={() => handleAction(ev.idEvent, "reject")}
+                        title="Rechazar"
+                      >
+                        <FaTimes /> Rechazar
+                      </button>
+                    </>
+                  )}
+                  {ev.state === 'Rejected' && (
                     <button
                       className={`${styles.btn} ${styles.btnApprove}`}
                       onClick={() => handleAction(ev.idEvent, "approve")}
-                      title="Aprobar"
+                      title="Re-aprobar"
                     >
                       <FaCheck /> Aprobar
                     </button>
-                    <button
-                      className={`${styles.btn} ${styles.btnReject}`}
-                      onClick={() => handleAction(ev.idEvent, "reject")}
-                      title="Rechazar"
-                    >
-                      <FaTimes /> Rechazar
-                    </button>
-                  </>
-                )}
-                {ev.state === 'Rejected' && (
-                  <button
-                    className={`${styles.btn} ${styles.btnApprove}`}
-                    onClick={() => handleAction(ev.idEvent, "approve")}
-                    title="Re-aprobar"
-                  >
-                    <FaCheck /> Aprobar
-                  </button>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
             </li>
           ))}
         </ul>

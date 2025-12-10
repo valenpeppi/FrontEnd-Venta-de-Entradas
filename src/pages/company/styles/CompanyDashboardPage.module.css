@@ -15,11 +15,13 @@
 
 .title {
     font-size: 2.5rem;
-    color: #1e293b;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+    font-weight: 800;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    letter-spacing: -0.05em;
+    padding-bottom: 5px;
 }
 
 .subtitle {

@@ -23,10 +23,15 @@
 
 .adminHeader h1 {
   margin: 0;
-  font-size: 1.9rem;
-  letter-spacing: -0.3px;
-  color: var(--text);
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-align: center;
+  letter-spacing: -0.05em;
+  padding-bottom: 0.5rem;
+  /* Space for descenders */
 }
 
 /* Filter Tabs */
@@ -229,7 +234,7 @@
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 12px;
 }
 
 p {
