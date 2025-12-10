@@ -22,7 +22,6 @@ const CompanyDashboardPage: React.FC = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                // Using AdminService but calling the company endpoint
                 const data = await AdminService.getCompanyStats();
                 setStats(data);
             } catch (err: any) {

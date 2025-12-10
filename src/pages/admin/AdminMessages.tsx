@@ -11,7 +11,6 @@ export const AdminMessages: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Reply state
     const [replyingId, setReplyingId] = useState<number | null>(null);
     const [replyText, setReplyText] = useState('');
 
@@ -66,18 +65,16 @@ export const AdminMessages: React.FC = () => {
         if (!replyText.trim()) return;
 
         try {
-            // Optimistic update
             setMessages(prev => prev.map(m => m.idMessage === id ? { ...m, state: 'answered', response: replyText } : m));
-            setReplyingId(null); // Close form
+            setReplyingId(null);
             await MessageService.replyMessage(id, replyText);
         } catch (e) {
             alert('Error al responder mensaje');
-            loadMessages(); // Revert
+            loadMessages();
         }
     };
 
     const handleReject = async (id: number) => {
-        // Reject: Set state to rejected, kept in list (moved to bottom by sort)
         try {
             setMessages(prev => {
                 const updated: Message[] = prev.map(m => m.idMessage === id ? { ...m, state: 'rejected' } : m);
@@ -120,7 +117,6 @@ export const AdminMessages: React.FC = () => {
                 <div className={styles.messagesList}>
                     {messages.map(msg => (
                         <div key={msg.idMessage} className={styles.messageCard}>
-                            {/* Discard Button (X) - Only for Answered or Rejected */}
                             {(msg.state === 'answered' || msg.state === 'rejected') && (
                                 <button
                                     className={styles.closeBtn}
@@ -148,7 +144,6 @@ export const AdminMessages: React.FC = () => {
                                 {msg.description}
                             </div>
 
-                            {/* Response Display */}
                             {msg.response && replyingId !== msg.idMessage && (
                                 <div className={styles.responseBox}>
                                     <span className={styles.responseLabel}>Tu Respuesta</span>
@@ -156,7 +151,6 @@ export const AdminMessages: React.FC = () => {
                                 </div>
                             )}
 
-                            {/* Reply Form */}
                             {replyingId === msg.idMessage && (
                                 <div className={styles.replyForm}>
                                     <textarea
@@ -177,7 +171,6 @@ export const AdminMessages: React.FC = () => {
                                 </div>
                             )}
 
-                            {/* Actions Buttons (Hide if replying) */}
                             {replyingId !== msg.idMessage && (
                                 <div className={styles.actions}>
                                     {msg.state === 'unread' && (

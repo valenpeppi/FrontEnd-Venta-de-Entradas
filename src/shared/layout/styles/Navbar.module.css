@@ -46,7 +46,6 @@
   vertical-align: middle;
 }
 
-/* --- SUPER SEARCH BAR STYLES --- */
 .navbarSearch {
   display: flex;
   align-items: center;
@@ -109,7 +108,6 @@
   transform: translateY(-50%) scale(1.1);
 }
 
-/* --- END SEARCH BAR --- */
 
 .navLinksContainer {
   display: flex;
@@ -317,7 +315,6 @@
   border: 2px solid white;
 }
 
-/* Animations and Responsiveness (kept similar but clean) */
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -419,8 +416,6 @@
     display: flex;
   }
 
-  /* Show when menu open logic handled by parent */
-
   .navbarMenu {
     flex-direction: column;
     width: 100%;
@@ -432,13 +427,12 @@
     justify-content: center;
   }
 
-  /* Reset special search width on mobile */
   .navbarSearch:focus-within {
     max-width: 100%;
   }
 }
 
-/* Modals */
+
 .logoutModalOverlay {
   position: fixed;
   inset: 0;

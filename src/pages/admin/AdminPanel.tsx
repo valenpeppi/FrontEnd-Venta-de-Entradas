@@ -42,7 +42,6 @@ export default function AdminPanel() {
   const filtered = useMemo(() => {
     let result = events;
 
-    // 1. Text Search
     const v = q.trim().toLowerCase();
     if (v) {
       result = result.filter((e) =>
@@ -50,7 +49,6 @@ export default function AdminPanel() {
       );
     }
 
-    // 2. Status/Feature Filter
     switch (filter) {
       case 'pending':
         return result.filter(e => e.state === 'Pending');
@@ -67,7 +65,6 @@ export default function AdminPanel() {
   }, [q, events, filter]);
 
   const handleAction = async (id: number | string, action: "approve" | "reject") => {
-    // Optimistic update
     setEvents(prev => prev.map(e => {
       if (e.idEvent === id) {
         return { ...e, state: action === 'approve' ? 'Approved' : 'Rejected' };
