@@ -22,10 +22,10 @@ const Failure: React.FC = () => {
         const ticketGroups = JSON.parse(ticketGroupsRaw);
         if (!Array.isArray(ticketGroups) || ticketGroups.length === 0) return;
 
-        console.log("🔄 Liberando reservas (cancel_url)...", ticketGroups);
+
         await PaymentService.releaseReservations(ticketGroups);
       } catch (e) {
-        console.warn("⚠️ No se pudieron liberar reservas en Failure.", e);
+
       }
     };
 

@@ -22,7 +22,7 @@ const ForgotPasswordPage: React.FC = () => {
         }
 
         setLoading(true);
-        // ... rest of logic
+
 
 
         try {
@@ -32,7 +32,7 @@ const ForgotPasswordPage: React.FC = () => {
                 type: 'success'
             });
         } catch (error) {
-            console.error('Error sending request:', error);
+            // console.error('Error sending request:', error);
             setMessage({
                 text: 'Ocurrió un error. Inténtalo de nuevo más tarde.',
                 type: 'error'
@@ -50,7 +50,7 @@ const ForgotPasswordPage: React.FC = () => {
             footerLinkTo="/login"
             backButton
         >
-            <p style={{ color: '#6b7280', marginBottom: '20px', textAlign: 'center', fontSize: '14px' }}>
+            <p className={styles.forgotPasswordText}>
                 Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
             </p>
 
