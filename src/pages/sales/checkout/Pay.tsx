@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/shared/context/CartContext.tsx';
 import { useAuth } from '@/shared/context/AuthContext.tsx';
+import { useMessage } from '@/shared/context/MessageContext';
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import { PaymentService } from '@/services/PaymentService';
@@ -12,6 +13,7 @@ const Pay: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useCart();
   const { user } = useAuth();
+  const { setAppMessage } = useMessage();
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,8 +24,8 @@ const Pay: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log('👤 Usuario desde AuthContext:', user);
-    console.log('🛒 Items del carrito:', cartItems);
+    // console.log('👤 Usuario desde AuthContext:', user);
+    // console.log('🛒 Items del carrito:', cartItems);
   }, [user, cartItems]);
 
   const calculateTotal = () => {
@@ -118,13 +120,13 @@ const Pay: React.FC = () => {
 
   const handleMPPayment = async () => {
     if (!user || !user.dni || !user.mail) {
-      alert('Debes iniciar sesión para pagar con Mercado Pago.');
+      setAppMessage('Debes iniciar sesión para pagar con Mercado Pago.', 'error');
       return;
     }
 
     const validation = validateCartForPayment();
     if (!validation.valid) {
-      alert(validation.reason || 'Hay datos inválidos en el carrito.');
+      setAppMessage(validation.reason || 'Hay datos inválidos en el carrito.', 'error');
       return;
     }
 
@@ -151,24 +153,24 @@ const Pay: React.FC = () => {
         localStorage.setItem('dniClient', String(user.dni));
         localStorage.setItem('ticket-cart', JSON.stringify(cartItems));
       } else {
-        console.error('❌ No se recibió preferenceId:', data);
-        alert('No se pudo generar la preferencia de pago.');
+        // console.error('❌ No se recibió preferenceId:', data);
+        setAppMessage('No se pudo generar la preferencia de pago.', 'error');
       }
     } catch (error: any) {
-      console.error('❌ Error al generar preferencia de pago:', error.response?.data || error.message);
-      alert('Error al generar la preferencia. Ver consola.');
+      // console.error('❌ Error al generar preferencia de pago:', error.response?.data || error.message);
+      setAppMessage('Error al generar la preferencia. Intenta nuevamente.', 'error');
     }
   };
 
   const handleStripePayment = async () => {
     if (!user || !user.dni || !user.mail) {
-      alert('Debes iniciar sesión con un usuario válido para pagar con Stripe.');
+      setAppMessage('Debes iniciar sesión con un usuario válido para pagar con Stripe.', 'error');
       return;
     }
 
     const validation = validateCartForPayment();
     if (!validation.valid) {
-      alert(validation.reason || 'Hay datos inválidos en el carrito.');
+      setAppMessage(validation.reason || 'Hay datos inválidos en el carrito.', 'error');
       return;
     }
 
@@ -195,12 +197,12 @@ const Pay: React.FC = () => {
 
         window.location.href = data.url;
       } else {
-        console.error('❌ Error en Stripe Checkout, respuesta inválida:', data);
-        alert('Respuesta inválida de Stripe.');
+        // console.error('❌ Error en Stripe Checkout, respuesta inválida:', data);
+        setAppMessage('Respuesta inválida de Stripe.', 'error');
       }
     } catch (error: any) {
-      console.error('❌ Error en Stripe Checkout:', error.response?.data || error.message);
-      alert('Error inesperado. Ver consola.');
+      // console.error('❌ Error en Stripe Checkout:', error.response?.data || error.message);
+      setAppMessage('Error inesperado al procesar el pago.', 'error');
     }
   };
 
