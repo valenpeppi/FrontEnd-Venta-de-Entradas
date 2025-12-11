@@ -3,45 +3,72 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 200px;
+  text-align: center;
+  padding: 40px 20px;
   width: 100%;
 }
 
-.loadingDots {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.dot {
-  width: 15px;
-  height: 15px;
+.loader {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: blueviolet;
-  animation: bounce 0.6s infinite alternate;
+  position: relative;
+  animation: rotate 1s linear infinite;
+  margin: 20px auto;
 }
 
-.dot:nth-child(2) {
-  animation-delay: 0.2s;
+.loader::before,
+.loader::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #4f46e5;
+  animation: prixClipFix 2s linear infinite;
 }
 
-.dot:nth-child(3) {
-  animation-delay: 0.4s;
+.loader::after {
+  border-color: #b2acff;
+  animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
+  inset: 6px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes prixClipFix {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+  }
+
+  25% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+  }
+
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+  }
+
+  75% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+  }
+
+  100% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+  }
 }
 
 .loadingStateText {
-  color: #6b7280;
+  color: #4b5563;
   font-size: 1.1rem;
-  margin-top: 1rem;
-}
-
-@keyframes bounce {
-  from {
-    transform: translateY(0);
-    opacity: 0.6;
-  }
-  to {
-    transform: translateY(-10px);
-    opacity: 1;
-  }
+  text-align: center;
+  margin-top: 12px;
 }
