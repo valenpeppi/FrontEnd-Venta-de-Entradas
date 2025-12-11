@@ -17,7 +17,7 @@ export default function AdminPanel() {
   const [events, setEvents] = useState<AdminEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [q, setQ] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<FilterType>('all');
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function AdminPanel() {
   const filtered = useMemo(() => {
     let result = events;
 
-    const v = q.trim().toLowerCase();
+    const v = searchQuery.trim().toLowerCase();
     if (v) {
       result = result.filter((e) =>
         [e.name, e.description].some((t) => (t || "").toLowerCase().includes(v))
@@ -62,7 +62,7 @@ export default function AdminPanel() {
       default:
         return result;
     }
-  }, [q, events, filter]);
+  }, [searchQuery, events, filter]);
 
   const handleAction = async (id: number | string, action: "approve" | "reject") => {
     setEvents(prev => prev.map(e => {
@@ -179,8 +179,8 @@ export default function AdminPanel() {
           <input
             className={styles.adminSearch}
             placeholder="Buscar por nombre..."
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <span className={styles.adminCounter}>
             {filtered.length} evento(s)
@@ -229,7 +229,7 @@ export default function AdminPanel() {
                   {ev.name}
                 </h3>
                 {ev.description && (
-                  <p className={styles.desc} title={ev.description}>
+                  <p className={styles.cardText} title={ev.description}>
                     {ev.description}
                   </p>
                 )}

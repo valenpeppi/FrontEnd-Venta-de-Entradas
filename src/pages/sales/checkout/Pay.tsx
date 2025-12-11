@@ -24,8 +24,7 @@ const Pay: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // console.log('👤 Usuario desde AuthContext:', user);
-    // console.log('🛒 Items del carrito:', cartItems);
+
   }, [user, cartItems]);
 
   const calculateTotal = () => {
@@ -153,11 +152,11 @@ const Pay: React.FC = () => {
         localStorage.setItem('dniClient', String(user.dni));
         localStorage.setItem('ticket-cart', JSON.stringify(cartItems));
       } else {
-        // console.error('❌ No se recibió preferenceId:', data);
+
         setAppMessage('No se pudo generar la preferencia de pago.', 'error');
       }
     } catch (error: any) {
-      // console.error('❌ Error al generar preferencia de pago:', error.response?.data || error.message);
+
       setAppMessage('Error al generar la preferencia. Intenta nuevamente.', 'error');
     }
   };
@@ -197,11 +196,11 @@ const Pay: React.FC = () => {
 
         window.location.href = data.url;
       } else {
-        // console.error('❌ Error en Stripe Checkout, respuesta inválida:', data);
+
         setAppMessage('Respuesta inválida de Stripe.', 'error');
       }
     } catch (error: any) {
-      // console.error('❌ Error en Stripe Checkout:', error.response?.data || error.message);
+
       setAppMessage('Error inesperado al procesar el pago.', 'error');
     }
   };
