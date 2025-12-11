@@ -23,6 +23,11 @@ export const AdminService = {
         return response.data;
     },
 
+    deleteEventState: async (id: number | string) => {
+        const response = await api.patch(`/events/${id}/state-delete`);
+        return response.data;
+    },
+
     toggleFeature: async (id: number | string) => {
         const response = await api.patch(`/events/${id}/feature`);
         return response.data;

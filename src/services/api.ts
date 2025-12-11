@@ -28,9 +28,6 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
-            // Dispatch a custom event so AuthContext can handle logout
-            // We verify it's not a login attempt to avoid loop (though 401 on login just returns error usually)
-            // But generally, if any request fails with 401, token is invalid.
             window.dispatchEvent(new Event('auth:logout'));
         }
         return Promise.reject(error);
