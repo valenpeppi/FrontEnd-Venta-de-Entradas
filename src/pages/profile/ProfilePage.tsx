@@ -7,6 +7,7 @@ import globalStyles from '@/shared/styles/GlobalStyles.module.css';
 import { FiUser, FiMail, FiSave, FiEdit2 } from 'react-icons/fi';
 import ConfirmationModal from '@/shared/components/ConfirmationModal';
 import { useNavigate } from 'react-router-dom';
+import ChangePasswordModal from './components/ChangePasswordModal';
 
 const ProfilePage: React.FC = () => {
     const { user, updateUser, logout } = useAuth();
@@ -16,6 +17,7 @@ const ProfilePage: React.FC = () => {
     // Local state for form
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [birthDate, setBirthDate] = useState('');
@@ -244,6 +246,17 @@ const ProfilePage: React.FC = () => {
                         )}
                     </div>
 
+                    <div className={styles.securitySection}>
+                        <h3 className={styles.sectionTitle}>Seguridad</h3>
+                        <button
+                            type="button"
+                            className={styles.changePasswordBtn}
+                            onClick={() => setIsChangePasswordModalOpen(true)}
+                        >
+                            Cambiar Contraseña
+                        </button>
+                    </div>
+
                     {user.role !== 'admin' && (
                         <div className={styles.dangerZone}>
                             <button
@@ -264,6 +277,11 @@ const ProfilePage: React.FC = () => {
                 message="Esta acción es irreversible. ¿Estás seguro de que quieres eliminar tu cuenta permanentemente?"
                 onConfirm={handleDeleteAccount}
                 onCancel={() => setIsDeleteModalOpen(false)}
+            />
+
+            <ChangePasswordModal
+                isOpen={isChangePasswordModalOpen}
+                onClose={() => setIsChangePasswordModalOpen(false)}
             />
         </div>
     );
