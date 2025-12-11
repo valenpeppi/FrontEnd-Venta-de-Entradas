@@ -31,6 +31,8 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
       };
     case 'SET_IMAGE':
       return { ...state, image: action.payload.image };
+    case 'SET_LOADING':
+      return { ...state, loading: action.payload.loading };
     default:
       return state;
   }
@@ -48,6 +50,7 @@ const CreateEventPage: React.FC = () => {
     idPlace: '',
     occupiedDates: [],
     sectorPrices: {},
+    loading: false,
   });
 
   const [places, setPlaces] = useState<Place[]>([]);
@@ -179,8 +182,7 @@ const CreateEventPage: React.FC = () => {
     formData.append('image', state.image);
 
     try {
-
-
+      dispatch({ type: 'SET_LOADING', payload: { loading: true } });
       await EventService.createEvent(formData);
 
       setAppMessage('¡Evento creado exitosamente!', 'success');
@@ -191,6 +193,8 @@ const CreateEventPage: React.FC = () => {
       const errorMessage = (err?.response?.data as any)?.message || 'Error al crear el evento.';
       dispatch({ type: 'SET_ERROR', payload: { error: errorMessage } });
       setAppMessage(`Error: ${errorMessage}`, 'error');
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: { loading: false } });
     }
   };
 
@@ -327,7 +331,9 @@ const CreateEventPage: React.FC = () => {
           </div>
 
           <div className={styles.formActions}>
-            <button type="submit" className={styles.createEventBtn}>Crear Evento</button>
+            <button type="submit" className={styles.createEventBtn} disabled={state.loading}>
+              {state.loading ? 'Validando con IA...' : 'Crear Evento'}
+            </button>
             <button type="button" onClick={() => navigate('/')} className={styles.cancelBtn}>Cancelar</button>
           </div>
         </form>
