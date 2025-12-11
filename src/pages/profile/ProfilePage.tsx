@@ -247,7 +247,6 @@ const ProfilePage: React.FC = () => {
                     </div>
 
                     <div className={styles.securitySection}>
-                        <h3 className={styles.sectionTitle}>Seguridad</h3>
                         <button
                             type="button"
                             className={styles.changePasswordBtn}
