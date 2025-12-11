@@ -143,6 +143,10 @@
   gap: 1rem;
 }
 
+.userMenuContainer {
+  position: relative;
+}
+
 .userMenuTrigger {
   display: flex;
   align-items: center;
