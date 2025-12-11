@@ -322,7 +322,6 @@ const CreateEventPage: React.FC = () => {
                   type="file"
                   accept="image/*"
                   onChange={(e) => handleImageChange(e.target.files?.[0] || null)}
-                  required
                 />
                 {imagePreview ? (
                   <img src={imagePreview} alt="Vista previa" className={styles.imagePreview} />
