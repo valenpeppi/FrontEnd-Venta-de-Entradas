@@ -148,31 +148,27 @@
 
 <h2>📁 Estructura del repositorio (FrontEnd)</h2>
 
-<p>Organización general del proyecto React:</p>
+<p>
+  La estructura del proyecto se organiza directamente bajo <code>src/</code>, eliminando carpetas intermedias para una arquitectura más plana y modular:
+</p>
 
 <ul>
-  <li><code>react-app/</code> – raíz de la aplicación Vite + React.</li>
-  <li><code>react-app/src/App.tsx</code> – punto de entrada de la SPA, definición de rutas principales y Providers globales.</li>
-  <li><code>react-app/src/pages/</code> – páginas de alto nivel (Home, Login, Register, Cart, Pay, MyTickets, Admin, etc.).</li>
-  <li><code>react-app/src/pages/purchase/</code> – flujo de compra:
+  <li><code>src/pages/</code> – Vistas de la aplicación organizadas por módulos:
     <ul>
-      <li><code>Pay.tsx</code> – armado de orden y redirección a pasarela.</li>
-      <li><code>ProcessingPayment.tsx</code> – confirmación de pago y polling al backend.</li>
+      <li><code>admin/</code>, <code>auth/</code>, <code>company/</code>, <code>events/</code>, <code>home/</code>, <code>sales/</code> (flujo de compra), etc.</li>
     </ul>
   </li>
-  <li><code>react-app/src/components/</code> – componentes reutilizables (layout, cards de eventos, inputs, etc.).</li>
-  <li><code>react-app/src/shared/context/</code> – Context API:
+  <li><code>src/shared/</code> – Núcleo de lógica y componentes reutilizables:
     <ul>
-      <li><code>AuthContext.tsx</code> – autenticación y usuario actual.</li>
-      <li><code>CartContext.tsx</code> – estado del carrito.</li>
-      <li><code>EventsContext.tsx</code> – listado y filtros de eventos.</li>
-      <li><code>MessageContext.tsx</code> – mensajes globales / toasts.</li>
-      <li><code>SearchContext.tsx</code> – estado de búsqueda.</li>
-      <li><code>EventDetailContext.tsx</code> – estado de la página de detalle.</li>
+      <li><code>components/</code>, <code>context/</code> (Estado Global), <code>adapters/</code>, <code>utils/</code>, <code>layout/</code> y <code>styles/</code>.</li>
     </ul>
   </li>
-  <li><code>react-app/src/shared/AuthRoute.tsx</code> – componente de protección de rutas.</li>
-  <li><code>react-app/tests/</code> – pruebas E2E (Playwright).</li>
+  <li><code>src/services/</code> – Lógica de integración y peticiones a APIs externas.</li>
+  <li><code>src/types/</code> – Definiciones de tipos TypeScript globales.</li>
+  <li><code>src/assets/</code> – Recursos estáticos (imágenes, fuentes).</li>
+  <li><code>src/App.tsx</code> & <code>src/Main.tsx</code> – Punto de entrada, configuración de providers y rutas principales.</li>
+  <li><code>tests/</code> – Configuración y archivos de pruebas (E2E con Playwright).</li>
+  <li>Archivos de configuración en raíz (<code>vite.config.ts</code>, <code>package.json</code>, etc.).</li>
 </ul>
 
 <hr/>
@@ -286,10 +282,10 @@
     <code>/</code> → <code>/event/:id</code> → <code>/cart</code>
   </li>
   <li><strong>Purchase Flow</strong>:
-    <code>/cart</code> → <code>/pay</code> → <code>/pay/processing</code> → <code>/pay/success</code> → <code>/myTickets</code>
+    <code>/cart</code> → <code>/pay</code> → <code>/pay/processing</code> → <code>/pay/success</code> (o <code>/pay/failure</code>) → <code>/myTickets</code>
   </li>
   <li><strong>Authentication Flow</strong>:
-    <code>/login</code> o <code>/register</code> → redirección a <code>/</code> o home según rol
+    <code>/login</code> o <code>/register</code> → redirección según rol (User, Company, Admin).
   </li>
   <li><strong>Event Management Flow (Company)</strong>:
     <code>/create-event</code> → aprobación en <code>/admin</code> → destacado en <code>/feature-events</code>
@@ -315,85 +311,38 @@
 <h3>Contexts principales</h3>
 
 <ul>
-  <li><strong>AuthContext</strong>
-    <ul>
-      <li>Almacena token JWT, usuario actual y rol.</li>
-      <li>Sincroniza con <code>localStorage</code> para persistencia de sesión.</li>
-      <li>Expone helpers como <code>login</code>, <code>logout</code> y chequeo de roles.</li>
-    </ul>
-  </li>
-  <li><strong>CartContext</strong>
-    <ul>
-      <li>Modelo de items del carrito: evento, sector, butaca, precio.</li>
-      <li>Permite agregar/quitar entradas y limpiar el carrito luego de la compra.</li>
-    </ul>
-  </li>
-  <li><strong>EventsContext</strong>
-    <ul>
-      <li>Fetch de eventos desde la API.</li>
-      <li>Aplica filtros (búsqueda, categoría, fecha).</li>
-    </ul>
-  </li>
-  <li><strong>SearchContext</strong> – texto y parámetros de búsqueda, compartidos entre barra de búsqueda y resultados.</li>
-  <li><strong>EventDetailContext</strong> – estado dedicado para la página de detalle y selección de butacas.</li>
-  <li><strong>MessageContext</strong> – sistema de mensajes/toasts globales.</li>
+  <li><strong>AuthContext</strong>: Control de sesión, token JWT y sincronización con localStorage.</li>
+  <li><strong>CartContext</strong>: Gestión de items (eventos, sectores, butacas) previo al pago.</li>
+  <li><strong>EventsContext</strong>: Listado, filtrado y búsqueda de eventos desde la API.</li>
+  <li><strong>SearchContext</strong>: Estado compartido de parámetros de búsqueda.</li>
+  <li><strong>EventDetailContext</strong>: Lógica específica para la selección de butacas en un evento.</li>
+  <li><strong>MessageContext</strong>: Feedback visual global (toasts/notificaciones).</li>
 </ul>
-
-<p>
-  El estado crítico (auth, carrito) se refleja en <code>localStorage</code> para poder recuperar contexto después
-  de los redireccionamientos a Stripe / Mercado Pago.
-</p>
 
 <hr/>
 
 <h2>💳 Flujo de pago e integración con pasarelas</h2>
 
 <p>
-  El FrontEnd coordina el flujo de pago contra el backend, que a su vez integra con <strong>Stripe</strong> y 
-  <strong>Mercado Pago</strong>:
+  El FrontEnd coordina el flujo de pago contra el backend, persistiendo el estado en <code>localStorage</code> para recuperar la sesión tras los redireccionamientos externos:
 </p>
 
-<ul>
-  <li>Desde la pantalla de <strong>carrito</strong> se arma la orden de compra con la información de los tickets seleccionados.</li>
-  <li>La pantalla <strong>Pay</strong> se comunica con el backend para crear la sesión de pago.</li>
-  <li>El usuario es redirigido a la pasarela externa (Stripe/Mercado Pago).</li>
-  <li>Al finalizar, vuelve a <code>/pay/processing</code>, donde:
+<ol>
+  <li><strong>Selección:</strong> El usuario arma su pedido, agrupado por eventos y sectores (TicketGroup).</li>
+  <li><strong>Inicio de Pago (Pay.tsx):</strong> Se comunica con el backend para iniciar sesión en Stripe o Mercado Pago.</li>
+  <li><strong>Procesamiento (ProcessingPayment.tsx):</strong>
     <ul>
-      <li>Se intenta confirmar la sesión de pago con el backend.</li>
-      <li>Si la confirmación no es inmediata, se realiza <strong>polling</strong> al endpoint de ventas.</li>
-      <li>Al confirmarse, se limpia el carrito y se redirige a <code>/pay/success</code> y <code>/myTickets</code>.</li>
+      <li>Al regresar de la pasarela, se muestra una pantalla de carga.</li>
+      <li>Se ejecuta una estrategia de <strong>polling</strong> (hasta 8 intentos) para confirmar el estado de la transacción.</li>
     </ul>
   </li>
-</ul>
-
-<p>
-  Los tickets pueden descargarse en formato <strong>PDF</strong> mediante <code>jsPDF</code>, incluyendo datos del evento,
-  comprador y código identificador.
-</p>
-
-<hr/>
-
-<h2>🤖 Asistente de Chat con IA</h2>
-
-<p>
-  La aplicación incluye un asistente de chat que ayuda al usuario a:
-</p>
-
-<ul>
-  <li>Descubrir eventos por intereses.</li>
-  <li>Recibir ayuda sobre el flujo de compra.</li>
-  <li>Responder preguntas frecuentes.</li>
-</ul>
-
-<p>
-  A nivel técnico:
-</p>
-
-<ul>
-  <li>El FrontEnd envía consultas a un endpoint del backend.</li>
-  <li>El backend se integra con un proveedor de IA (por ejemplo, via <code>OPENROUTER_API_KEY</code>). </li>
-  <li>Se manejan timeouts y errores de red para no bloquear la UI.</li>
-</ul>
+  <li><strong>Resolución:</strong>
+    <ul>
+      <li><strong>Éxito (Success.tsx):</strong> Se limpia el carrito y se redirige a mis tickets.</li>
+      <li><strong>Fallo (Failure.tsx):</strong> Se informa el error y permite reintentar.</li>
+    </ul>
+  </li>
+</ol>
 
 <hr/>
 
@@ -441,7 +390,6 @@
 <ul>
   <li><code>VITE_API_BASE</code> – URL base de la API (ej: <code>http://localhost:3000</code>).</li>
   <li><code>VITE_BACKEND_URL</code> – alternativa para la URL del backend.</li>
-  <li><code>VITE_RECAPTCHA_SITE_KEY</code> – clave pública de Google reCAPTCHA (si se usa en el FrontEnd).</li>
 </ul>
 
 <hr/>
@@ -503,7 +451,7 @@ npm run dev
 
 <h3>6️⃣ Levantar frontend</h3>
 
-<pre><code>cd ../FrontEnd-Venta-de-Entradas/react-app
+<pre><code>cd ../FrontEnd-Venta-de-Entradas
 npm install
 npm run dev
 </code></pre>
