@@ -16,66 +16,11 @@ interface LoginPageProps {
 const CustomGoogleLoginButton = ({ onSuccess, onError }: { onSuccess: (response: any) => void, onError: () => void }) => {
     const login = useGoogleLogin({
         onSuccess: (codeResponse) => onSuccess({ credential: codeResponse.access_token }),
-        onError: onError,
-        flow: 'implicit' // or 'auth-code' if backend expects it differently, but existing code used credential from GoogleLogin which is usually ID token. Let's stick to default implicit returning token or check existing.
-        // Wait, GoogleLogin returns a credential (JWT ID Token). useGoogleLogin returns access_token by default unless flow is 'auth-code'.
-        // Existing backend expects `credential`.
-        // If I use useGoogleLogin, I might get an access_token, not an ID token credential.
-        // Correction: GoogleLogin (from @react-oauth/google) returns `credential` (JWT).
-        // useGoogleLogin with default settings returns access_token.
-        // useGoogleLogin CAN return ID token if we don't ask for scopes? No, the new library separates them.
-
-        // Let's check backend `auth.controller.ts` -> `verifyGoogleToken` uses `client.verifyIdToken`.
-        // So backend expects an ID Token.
-        // `useGoogleLogin` does NOT return an ID token easily in the new flow.
-
-        // Actually, we can just style the GoogleLogin component slightly? No, it's an iframe.
-        // Wait, `useGoogleLogin` documentation says:
-        // "If you want to get the ID token... you should use the <GoogleLogin> component."
-        // BUT, we can use `onSuccess` response to get code and exchange it?
-        // Or simply use the access_token? Backend verifies `credential` which usually implies ID token.
-
-        // Alternative: Use `window.google.accounts.id.renderButton` on a ref if we want to stick to standard but style it? No that's what GoogleLogin does.
-
-        // Let's try to pass `flow: 'auth-code'`? No that returns code.
-
-        // Okay, if existing backend uses `verifyGoogleToken` (google-auth-library), it wants an ID Token.
-        // I should probably NOT switch to `useGoogleLogin` unless I change the backend to accept access_token (which verifyGoogleToken doesn't do usually).
-
-        // Wait, `verifyGoogleToken` uses `client.verifyIdToken`.
-        // So I MUST provide an ID Token.
-
-        // Does `useGoogleLogin` provide ID token? 
-        // No, it provides access_token.
-        // Unless... 
-        // Actually, there is `onSuccess` for `GoogleLogin` which gives `credential`.
-
-        // If I want a custom button, the recommendation is to use the Implicit Flow to get access token, 
-        // OR ask for 'openid email profile' scopes and maybe get id_token?
-        // The `useGoogleLogin` hook is primarily for implicit/auth-code flows.
-
-        // However, I can just WRAP the google login? No.
-
-        // Let's try to Style the GoogleLogin container?
-        // Or use `type="icon"`? 
-
-        // Wait, the user said "poner un poco con estetica mas acorde". 
-        // Maybe I can just CSS filter it? Or opacity?
-
-        // Better yet: Backend modification?
-        // Changing backend to verify access_token is easy. 
-        // `axios.get('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: \`Bearer ${token}\` } })`
-
-        // Let's do that. It is safer and allows full UI customization.
-        // Plan:
-        // 1. Modify `auth.controller.ts` `verifyGoogleToken` to accept access_token OR id_token? Or just switch to access_token/userinfo endpoint?
-        // 2. Actually, `verifyGoogleToken` helper is likely just a wrapper.
-
     });
 
     return (
         <button type="button" onClick={() => login()} className={styles.googleButton}>
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '20px', height: '20px' }} />
+            <img src="/src/assets/google.svg" alt="Google" style={{ width: '20px', height: '20px' }} />
             Continuar con Google
         </button>
     );
