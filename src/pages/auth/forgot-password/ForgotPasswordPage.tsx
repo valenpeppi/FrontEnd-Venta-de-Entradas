@@ -22,8 +22,6 @@ const ForgotPasswordPage: React.FC = () => {
         }
 
         setLoading(true);
-        // ... rest of logic
-
 
         try {
             await AuthService.forgotPassword(email);
