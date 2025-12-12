@@ -10,7 +10,7 @@ const Faq: React.FC = () => {
     },
     {
       question: '¿Qué métodos de pago aceptan?',
-      answer: 'Actualmente aceptamos todas las principales tarjetas de crédito y débito a través de Mercado Pago. Todas las transacciones son seguras y están encriptadas.'
+      answer: 'Actualmente aceptamos tarjetas de crédito y débito (Visa, Mastercard, American Express) a través de nuestra plataforma de pagos segura procesada por Stripe.'
     },
     {
       question: '¿Puedo cancelar o cambiar mis entradas?',

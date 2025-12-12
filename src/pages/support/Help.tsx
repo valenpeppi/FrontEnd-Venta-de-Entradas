@@ -29,8 +29,8 @@ const Help: React.FC = () => {
           <div className={styles.helpCard} onClick={() => navigate('/faq')}>
             <FaQuestionCircle className={styles.helpIcon} />
             <h3>Preguntas Frecuentes</h3>
-            <p>Encuentra respuestas a las dudas más comunes sobre compras, pagos y eventos.</p>
-            <span className={styles.helpLink}>Ir a Preguntas Frecuentes</span>
+            <p>Resuelve tus dudas rápidamente sobre el proceso de compra, métodos de pago y gestión de entradas.</p>
+            <span className={styles.helpLink}>Ver Preguntas Frecuentes</span>
           </div>
           <div className={styles.helpCard} onClick={() => navigate('/contact')}>
             <FaEnvelope className={styles.helpIcon} />
