@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/shared/context/CartContext.tsx';
 import { useAuth } from '@/shared/context/AuthContext.tsx';
+import { useMessage } from '@/shared/context/MessageContext';
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 
 import { PaymentService } from '@/services/PaymentService';
@@ -15,8 +16,7 @@ const Pay: React.FC = () => {
 
 
   useEffect(() => {
-    console.log('👤 Usuario desde AuthContext:', user);
-    console.log('🛒 Items del carrito:', cartItems);
+
   }, [user, cartItems]);
 
   const calculateTotal = () => {
@@ -113,13 +113,13 @@ const Pay: React.FC = () => {
 
   const handleStripePayment = async () => {
     if (!user || !user.dni || !user.mail) {
-      alert('Debes iniciar sesión con un usuario válido para pagar con Stripe.');
+      setAppMessage('Debes iniciar sesión con un usuario válido para pagar con Stripe.', 'error');
       return;
     }
 
     const validation = validateCartForPayment();
     if (!validation.valid) {
-      alert(validation.reason || 'Hay datos inválidos en el carrito.');
+      setAppMessage(validation.reason || 'Hay datos inválidos en el carrito.', 'error');
       return;
     }
 
@@ -146,12 +146,12 @@ const Pay: React.FC = () => {
 
         window.location.href = data.url;
       } else {
-        console.error('❌ Error en Stripe Checkout, respuesta inválida:', data);
-        alert('Respuesta inválida de Stripe.');
+
+        setAppMessage('Respuesta inválida de Stripe.', 'error');
       }
     } catch (error: any) {
-      console.error('❌ Error en Stripe Checkout:', error.response?.data || error.message);
-      alert('Error inesperado. Ver consola.');
+
+      setAppMessage('Error inesperado al procesar el pago.', 'error');
     }
   };
 

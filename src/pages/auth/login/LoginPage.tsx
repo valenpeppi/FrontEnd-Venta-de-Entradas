@@ -22,7 +22,7 @@ const CustomGoogleLoginButton = ({ onSuccess, onError }: { onSuccess: (response:
 
     return (
         <button type="button" onClick={() => login()} className={styles.googleButton}>
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '20px', height: '20px' }} />
+            <img src="/src/assets/google.svg" alt="Google" style={{ width: '20px', height: '20px' }} />
             Continuar con Google
         </button>
     );

@@ -141,6 +141,43 @@
     color: #475569;
 }
 
+
+.securitySection {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.sectionTitle {
+    color: #334155;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.changePasswordBtn {
+    background: white;
+    border: 1px solid #e2e8f0;
+    color: #4f46e5;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.changePasswordBtn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    cursor: pointer;
+}
+
 .dangerZone {
     margin-top: 30px;
     padding-top: 20px;

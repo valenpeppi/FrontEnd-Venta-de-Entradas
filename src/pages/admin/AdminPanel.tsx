@@ -64,24 +64,37 @@ export default function AdminPanel() {
     }
   }, [searchQuery, events, filter]);
 
-  const handleAction = async (id: number | string, action: "approve" | "reject") => {
-    setEvents(prev => prev.map(e => {
-      if (e.idEvent === id) {
-        return { ...e, state: action === 'approve' ? 'Approved' : 'Rejected' };
-      }
-      return e;
-    }));
+  const handleAction = async (id: number | string, action: "approve" | "reject" | "delete") => {
+    if (action === "delete") {
+      setEvents(prev => prev.filter(e => e.idEvent !== id));
+    } else {
+      setEvents(prev => prev.map(e => {
+        if (e.idEvent === id) {
+          return { ...e, state: action === 'approve' ? 'Approved' : 'Rejected' };
+        }
+        return e;
+      }));
+    }
 
     try {
       if (action === 'approve') {
         await AdminService.approveEvent(id);
-      } else {
+      } else if (action === 'reject') {
         await AdminService.rejectEvent(id);
+      } else if (action === 'delete') {
+        await AdminService.deleteEventState(id);
       }
     } catch (e: any) {
+      if (action === "delete") {
+        const msg = e?.response?.data?.message || e.message || "No se pudo eliminar el evento.";
+        alert(`${msg} Recargando...`);
+        window.location.reload();
+        return;
+      }
+
       alert(
         e?.response?.data?.message ||
-        `No se pudo ${action === "approve" ? "aprobar" : "rechazar"}`
+        `No se pudo completar la acción: ${action}`
       );
     }
   };

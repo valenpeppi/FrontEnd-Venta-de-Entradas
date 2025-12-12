@@ -53,7 +53,7 @@ const App: React.FC = () => {
     setAppMessage(`¡Inicio de sesión exitoso como ${user.name}!`);
 
     if (user.role === 'admin') {
-      navigate('/admin-dashboard');
+      navigate('/admin/dashboard');
     } else {
       const from = location.state?.from?.pathname || '/';
       navigate(from);
