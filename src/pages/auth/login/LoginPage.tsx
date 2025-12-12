@@ -16,6 +16,8 @@ interface LoginPageProps {
 const CustomGoogleLoginButton = ({ onSuccess, onError }: { onSuccess: (response: any) => void, onError: () => void }) => {
     const login = useGoogleLogin({
         onSuccess: (codeResponse) => onSuccess({ credential: codeResponse.access_token }),
+        onError: onError,
+        flow: 'implicit'
     });
 
     return (

@@ -23,8 +23,6 @@ const ForgotPasswordPage: React.FC = () => {
 
         setLoading(true);
 
-
-
         try {
             await AuthService.forgotPassword(email);
             setMessage({
@@ -32,7 +30,6 @@ const ForgotPasswordPage: React.FC = () => {
                 type: 'success'
             });
         } catch (error) {
-            // console.error('Error sending request:', error);
             setMessage({
                 text: 'Ocurrió un error. Inténtalo de nuevo más tarde.',
                 type: 'error'

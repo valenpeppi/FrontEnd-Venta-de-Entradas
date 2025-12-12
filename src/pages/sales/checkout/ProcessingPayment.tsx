@@ -27,7 +27,7 @@ const ProcessingPayment = () => {
 
     const qs = new URLSearchParams(window.location.search);
     const sessionId = qs.get("session_id");
-    const paymentId = qs.get("payment_id");
+
 
     const confirmByStripeSession = async (sid: string) => {
       try {
@@ -39,15 +39,7 @@ const ProcessingPayment = () => {
       }
     };
 
-    const confirmByMercadoPago = async (pid: string) => {
-      try {
-        setLoadingMessage("Confirmando pago con Mercado Pago...");
-        const data = await PaymentService.confirmMercadoPagoPayment(pid);
-        return !!data?.confirmed;
-      } catch {
-        return false;
-      }
-    };
+
 
     const pollSaleConfirmation = async () => {
       const dniClient = localStorage.getItem("dniClient");
@@ -69,18 +61,7 @@ const ProcessingPayment = () => {
           return;
         }
       }
-      if (paymentId) {
-        const ok = await confirmByMercadoPago(paymentId);
-        if (ok) {
-          setLoadingMessage("¡Venta confirmada!");
-          clearCart();
-          localStorage.removeItem("ticket-cart");
-          localStorage.removeItem("ticketGroups");
-          localStorage.removeItem("dniClient");
-          navigate("/pay/success");
-          return;
-        }
-      }
+
 
       setLoadingMessage("Verificando confirmación de venta...");
       const MAX_ATTEMPTS = 8;
