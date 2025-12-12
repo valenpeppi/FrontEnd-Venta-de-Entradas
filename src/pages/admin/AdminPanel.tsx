@@ -17,7 +17,7 @@ export default function AdminPanel() {
   const [events, setEvents] = useState<AdminEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [q, setQ] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<FilterType>('all');
 
   useEffect(() => {
@@ -39,30 +39,30 @@ export default function AdminPanel() {
     fetchEvents();
   }, []);
 
-  const filtered = useMemo(() => {
+  const filteredEvents = useMemo(() => {
     let result = events;
 
-    const v = q.trim().toLowerCase();
-    if (v) {
-      result = result.filter((e) =>
-        [e.name, e.description].some((t) => (t || "").toLowerCase().includes(v))
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    if (normalizedQuery) {
+      result = result.filter((event) =>
+        [event.name, event.description].some((text) => (text || "").toLowerCase().includes(normalizedQuery))
       );
     }
 
     switch (filter) {
       case 'pending':
-        return result.filter(e => e.state === 'Pending');
+        return result.filter(event => event.state === 'Pending');
       case 'approved':
-        return result.filter(e => e.state === 'Approved');
+        return result.filter(event => event.state === 'Approved');
       case 'rejected':
-        return result.filter(e => e.state === 'Rejected');
+        return result.filter(event => event.state === 'Rejected');
       case 'featured':
-        return result.filter(e => e.featured);
+        return result.filter(event => event.featured);
       case 'all':
       default:
         return result;
     }
-  }, [q, events, filter]);
+  }, [searchQuery, events, filter]);
 
   const handleAction = async (id: number | string, action: "approve" | "reject") => {
     setEvents(prev => prev.map(e => {
@@ -179,16 +179,16 @@ export default function AdminPanel() {
           <input
             className={styles.adminSearch}
             placeholder="Buscar por nombre..."
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <span className={styles.adminCounter}>
-            {filtered.length} evento(s)
+            {filteredEvents.length} evento(s)
           </span>
         </div>
       </header>
 
-      {filtered.length === 0 ? (
+      {filteredEvents.length === 0 ? (
         <EmptyState
           title="No se encontraron eventos"
           description="Intenta cambiar los filtros o la búsqueda."
@@ -197,13 +197,13 @@ export default function AdminPanel() {
         />
       ) : (
         <ul className={styles.masonry}>
-          {filtered.map((ev) => (
-            <li key={ev.idEvent} className={styles.card}>
+          {filteredEvents.map((event) => (
+            <li key={event.idEvent} className={styles.card}>
               <div className={styles.mediaWrap}>
-                {ev.image ? (
+                {event.image ? (
                   <img
-                    src={`${BASE_URL}${ev.image}`}
-                    alt={ev.name}
+                    src={`${BASE_URL}${event.image}`}
+                    alt={event.name}
                     className={styles.media}
                     onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                   />
@@ -212,53 +212,53 @@ export default function AdminPanel() {
                 )}
 
                 <button
-                  className={`${styles.featureBtn} ${ev.featured ? styles.featured : ''}`}
-                  onClick={() => toggleFeature(ev.idEvent)}
-                  title={ev.featured ? 'Quitar de destacados' : 'Destacar evento'}
+                  className={`${styles.featureBtn} ${event.featured ? styles.featured : ''}`}
+                  onClick={() => toggleFeature(event.idEvent)}
+                  title={event.featured ? 'Quitar de destacados' : 'Destacar evento'}
                 >
-                  {ev.featured ? <FaStar /> : <FaRegStar />}
+                  {event.featured ? <FaStar /> : <FaRegStar />}
                 </button>
 
                 <div className={styles.badges}>
-                  <StatusBadge status={ev.state || 'Pending'} />
+                  <StatusBadge status={event.state || 'Pending'} />
                 </div>
               </div>
 
               <div className={styles.body}>
-                <h3 className={styles.title} title={ev.name}>
-                  {ev.name}
+                <h3 className={styles.title} title={event.name}>
+                  {event.name}
                 </h3>
-                {ev.description && (
-                  <p className={styles.desc} title={ev.description}>
-                    {ev.description}
+                {event.description && (
+                  <p className={styles.desc} title={event.description}>
+                    {event.description}
                   </p>
                 )}
               </div>
 
-              {(ev.state === 'Pending' || ev.state === 'Rejected') && (
+              {(event.state === 'Pending' || event.state === 'Rejected') && (
                 <div className={styles.actions}>
-                  {ev.state === 'Pending' && (
+                  {event.state === 'Pending' && (
                     <>
                       <button
                         className={`${styles.btn} ${styles.btnApprove}`}
-                        onClick={() => handleAction(ev.idEvent, "approve")}
+                        onClick={() => handleAction(event.idEvent, "approve")}
                         title="Aprobar"
                       >
                         <FaCheck /> Aprobar
                       </button>
                       <button
                         className={`${styles.btn} ${styles.btnReject}`}
-                        onClick={() => handleAction(ev.idEvent, "reject")}
+                        onClick={() => handleAction(event.idEvent, "reject")}
                         title="Rechazar"
                       >
                         <FaTimes /> Rechazar
                       </button>
                     </>
                   )}
-                  {ev.state === 'Rejected' && (
+                  {event.state === 'Rejected' && (
                     <button
                       className={`${styles.btn} ${styles.btnApprove}`}
-                      onClick={() => handleAction(ev.idEvent, "approve")}
+                      onClick={() => handleAction(event.idEvent, "approve")}
                       title="Re-aprobar"
                     >
                       <FaCheck /> Aprobar
