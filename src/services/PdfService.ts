@@ -1,9 +1,10 @@
 import jsPDF from 'jspdf';
+import QRCode from 'qrcode';
 import axios from 'axios';
 import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
 import type { PurchasedTicket } from '@/types/purchase';
 
- 
+
 interface UserInfo {
     name: string;
     dni?: string | number;
@@ -103,16 +104,15 @@ export const PdfService = {
             : `ticket:${ticket.idTicket}-venta:${ticket.idSale}`;
 
         try {
-            const qrResponse = await axios.get(`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(qrData)}`, { responseType: 'blob' });
-            const qrImg = await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result as string);
-                reader.onerror = reject;
-                reader.readAsDataURL(qrResponse.data);
+            const qrImg = await QRCode.toDataURL(qrData, {
+                errorCorrectionLevel: 'M',
+                type: 'image/png',
+                width: 140,
+                margin: 1
             });
             pdf.addImage(qrImg, 'PNG', pageWidth / 2 - 70, y, 140, 140);
         } catch (error) {
-            console.warn('Error fetching QR code:', error);
+            console.warn('Error generating QR code:', error);
         }
         y += 170;
 
