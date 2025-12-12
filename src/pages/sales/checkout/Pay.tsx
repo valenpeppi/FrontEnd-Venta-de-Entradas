@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/shared/context/CartContext.tsx';
 import { useAuth } from '@/shared/context/AuthContext.tsx';
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+
 import { PaymentService } from '@/services/PaymentService';
 
 import type { PaymentTicketGroup as TicketGroup, GroupedByEvent } from '@/types/purchase.ts';
@@ -12,14 +12,7 @@ const Pay: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useCart();
   const { user } = useAuth();
-  const [preferenceId, setPreferenceId] = useState<string | null>(null);
 
-  useEffect(() => {
-    initMercadoPago('APP_USR-cd78e2e4-b7ee-4b1d-ad89-e90d69693f9c', {
-      locale: 'es-AR',
-      advancedFraudPrevention: false,
-    });
-  }, []);
 
   useEffect(() => {
     console.log('👤 Usuario desde AuthContext:', user);
@@ -116,49 +109,7 @@ const Pay: React.FC = () => {
     return { valid: true };
   };
 
-  const handleMPPayment = async () => {
-    if (!user || !user.dni || !user.mail) {
-      alert('Debes iniciar sesión para pagar con Mercado Pago.');
-      return;
-    }
 
-    const validation = validateCartForPayment();
-    if (!validation.valid) {
-      alert(validation.reason || 'Hay datos inválidos en el carrito.');
-      return;
-    }
-
-    try {
-      const items = cartItems.map((item, index) => ({
-        id: item.ticketIds?.[0]?.toString() || item.id?.toString() || String(index),
-        name: item.eventName,
-        amount: Math.round(item.price * 100),
-        quantity: item.quantity,
-      }));
-
-      const ticketGroups = buildTicketGroups();
-
-      const data = await PaymentService.mpCheckout({
-        items,
-        dniClient: user.dni,
-        customerEmail: user.mail,
-        ticketGroups,
-      });
-
-      if (data.preferenceId) {
-        setPreferenceId(data.preferenceId);
-        localStorage.setItem('ticketGroups', JSON.stringify(ticketGroups));
-        localStorage.setItem('dniClient', String(user.dni));
-        localStorage.setItem('ticket-cart', JSON.stringify(cartItems));
-      } else {
-        console.error('❌ No se recibió preferenceId:', data);
-        alert('No se pudo generar la preferencia de pago.');
-      }
-    } catch (error: any) {
-      console.error('❌ Error al generar preferencia de pago:', error.response?.data || error.message);
-      alert('Error al generar la preferencia. Ver consola.');
-    }
-  };
 
   const handleStripePayment = async () => {
     if (!user || !user.dni || !user.mail) {
@@ -204,18 +155,6 @@ const Pay: React.FC = () => {
     }
   };
 
-  /*
-    const groupedItems = cartItems.reduce((acc, item) => {
-      const key = `${item.eventName}-${item.price}`;
-      if (!acc[key]) {
-        acc[key] = { ...item, quantity: 0 };
-      }
-      acc[key].quantity += item.quantity;
-      return acc;
-    }, {} as Record<string, typeof cartItems[0]>);
-  */
-
-  // const groupedArray = Object.values(groupedItems); // Unused
 
   const groupCartByEventSector = (): GroupedByEvent[] => {
     const eventMap = new Map<string, GroupedByEvent>();
@@ -303,13 +242,7 @@ const Pay: React.FC = () => {
           </div>
 
           <div className={styles.payButtons}>
-            {!preferenceId ? (
-              <button onClick={handleMPPayment} className={styles.btnPay}>
-                Pagar con Mercado Pago
-              </button>
-            ) : (
-              <Wallet initialization={{ preferenceId }} />
-            )}
+
 
             <button onClick={handleStripePayment} className={styles.btnStripe} disabled={!user?.dni}>
               Pagar con Stripe{!user?.dni ? ' (requiere login)' : ''}

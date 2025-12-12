@@ -1,10 +1,7 @@
 import api from '@/services/api';
 
 export const PaymentService = {
-    mpCheckout: async (data: any) => {
-        const response = await api.post('/mp/checkout', data);
-        return response.data;
-    },
+
 
     stripeCheckout: async (data: any) => {
         const response = await api.post('/stripe/checkout', data);
@@ -23,12 +20,7 @@ export const PaymentService = {
         return response.data;
     },
 
-    confirmMercadoPagoPayment: async (paymentId: string) => {
-        const response = await api.get("/mp/confirm-payment", {
-            params: { payment_id: paymentId },
-        });
-        return response.data;
-    },
+
 
     checkSaleStatus: async (dniClient: string) => {
         const response = await api.get(`/sales/check?dniClient=${dniClient}`);
