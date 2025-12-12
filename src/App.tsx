@@ -67,7 +67,7 @@ const App: React.FC = () => {
   const handleCompanyLoginSuccess = (company: any, token: string) => {
     const companyUser: User = {
       ...company,
-      name: company.name || company.companyName, // Ensure name is set
+      name: company.name || company.companyName,  
       role: 'company'
     };
     login(companyUser, token);
@@ -82,7 +82,7 @@ const App: React.FC = () => {
   return (
     <div className={`${styles.appRoot} ${globalStyles.appRoot}`}>
       <Routes>
-        {/* Rutas Públicas */}
+        { }
         <Route path="/" element={<RestrictCompanyRoute><Layout><HomePage /></Layout></RestrictCompanyRoute>} />
         <Route path="/help" element={<Layout><Help /></Layout>} />
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
@@ -93,7 +93,7 @@ const App: React.FC = () => {
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/searchedEvents" element={<RestrictCompanyRoute><Layout><SearchedEvents /></Layout></RestrictCompanyRoute>} />
 
-        {/* Rutas para Invitados (no logueados) */}
+        { }
         <Route path="/login" element={<AuthRoute guestOnly><LoginPage onLoginSuccess={(userOrCompany, token) => {
           if (userOrCompany.role === 'company') {
             handleCompanyLoginSuccess(userOrCompany, token);
@@ -106,7 +106,7 @@ const App: React.FC = () => {
         <Route path="/forgot-password" element={<AuthRoute guestOnly><ForgotPasswordPage /></AuthRoute>} />
         <Route path="/auth/reset-password" element={<AuthRoute guestOnly><ResetPasswordPage /></AuthRoute>} />
 
-        {/* Rutas Protegidas para Usuarios */}
+        { }
         <Route path="/cart" element={<AuthRoute allowedRoles={['user']}><Layout><CartPage /></Layout></AuthRoute>} />
         <Route path="/pay" element={<AuthRoute allowedRoles={['user']}><Layout><Pay /></Layout></AuthRoute>} />
         <Route path="/myTickets" element={<AuthRoute allowedRoles={['user']}><Layout><MyTickets /></Layout></AuthRoute>} />
@@ -114,20 +114,20 @@ const App: React.FC = () => {
         <Route path="/pay/success" element={<AuthRoute allowedRoles={['user']}><Layout><Success /></Layout></AuthRoute>} />
         <Route path="/pay/failure" element={<AuthRoute allowedRoles={['user']}><Layout><Failure /></Layout></AuthRoute>} />
 
-        {/* Rutas Protegidas para Administradores */}
+        { }
         <Route path="/admin/dashboard" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminPanel /></Layout></AuthRoute>} />
         <Route path="/admin/messages" element={<AuthRoute allowedRoles={['admin']}><Layout><AdminMessages /></Layout></AuthRoute>} />
 
-        {/* Rutas Protegidas para Empresas */}
+        { }
         <Route path="/company/dashboard" element={<AuthRoute allowedRoles={['company']}><Layout><CompanyDashboardPage /></Layout></AuthRoute>} />
         <Route path="/company/my-events" element={<AuthRoute allowedRoles={['company', 'admin']}><Layout><MyEventsPage /></Layout></AuthRoute>} />
         <Route path="/create-event" element={<AuthRoute allowedRoles={['company', 'admin']}><Layout><CreateEventPage /></Layout></AuthRoute>} />
         <Route path="/edit-event/:id" element={<AuthRoute allowedRoles={['company', 'admin']}><Layout><EditEventPage /></Layout></AuthRoute>} />
 
-        {/* Ruta para visualizar la página de error (Solo desarrollo/demo) */}
+        { }
         <Route path="/test-error" element={<FatalErrorPage error={new Error("Este es un error de prueba simulado para verificar el diseño.")} resetErrorBoundary={() => window.location.href = '/'} />} />
 
-        {/* Perfil de Usuario Generico */}
+        { }
         <Route path="/profile" element={<AuthRoute><Layout><ProfilePage /></Layout></AuthRoute>} />
       </Routes>
       <ChatAssistant />

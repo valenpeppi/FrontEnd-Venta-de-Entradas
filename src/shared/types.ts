@@ -1,9 +1,9 @@
-// Re-export domain types
+ 
 export * from '@/types/events';
 export * from '@/types/cart';
 
-// Component specific props (kept here or moved to component files eventually)
-// For now, we keep them here but they depend on the re-exported types
+ 
+ 
 import type { EventSummary, Sector, Seat } from '@/types/events';
 
 export interface EventInfoProps {

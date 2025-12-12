@@ -13,7 +13,7 @@ const Pay: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useCart();
   const { user } = useAuth();
-
+  const { setAppMessage } = useMessage();
 
   useEffect(() => {
 

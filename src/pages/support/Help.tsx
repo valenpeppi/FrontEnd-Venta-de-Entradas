@@ -44,7 +44,7 @@ const Help: React.FC = () => {
             <p>Conoce más sobre nuestra misión y quiénes somos.</p>
             <span className={styles.helpLink}>Leer más</span>
           </div>
-          {/* New Card: Chat Assistant */}
+          { }
           <div className={styles.helpCard} onClick={handleProfileClick}>
             <FaQuestionCircle className={styles.helpIcon} />
             <h3>Mi Perfil</h3>

@@ -86,7 +86,7 @@ const Contact: React.FC = () => {
                 onChange={handleChange}
                 required
                 placeholder="tu@email.com"
-                disabled={!!user} // Si está logueado, aparece pre-filled disabled o enabled? User dijo "holder", implying input. Pero si está logueado, mejor asegurar que sea su email.
+                disabled={!!user}  
               />
             </div>
 

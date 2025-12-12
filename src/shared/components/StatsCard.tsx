@@ -6,7 +6,7 @@ interface StatsCardProps {
     title: string;
     value: string | number;
     icon: IconType;
-    iconColorClass: string; // 'blue', 'green', 'purple', 'orange', etc.
+    iconColorClass: string;  
 }
 
 const StatsCard: React.FC<StatsCardProps> = ({ title, value, icon: Icon, iconColorClass }) => {

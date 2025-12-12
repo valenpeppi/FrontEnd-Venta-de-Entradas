@@ -7,7 +7,7 @@ const API_BASE = 'http://localhost:3000';
 
 test.setTimeout(120_000);
 
-// Helper: siempre devuelve una Page viva (o lanza)
+ 
 function pickTargetPage(ctx: BrowserContext, primary: Page, popup: Page | null): Page {
   if (popup && !popup.isClosed()) return popup;
 
@@ -25,7 +25,7 @@ function pickTargetPage(ctx: BrowserContext, primary: Page, popup: Page | null):
 test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async ({ page }) => {
   await login(page);
 
-  // A) Enumerado 
+   
   await page.goto(EVENT_URL, { waitUntil: 'domcontentloaded' });
   await expect(page.getByRole('heading').first()).toBeVisible({ timeout: 15000 });
 
@@ -67,7 +67,7 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
     const successToast = page.getByText(/has agregado|agregado .* entrada/i);
     const toastShown   = await successToast.count().then(c => c > 0).catch(() => false);
 
-    if (!toastShown && /\/event\//.test(page.url())) {
+    if (!toastShown && /\/event\ 
       const pageAdd = page
         .getByTestId('page-add-to-cart')
         .or(page.locator('button:has-text("Agregar al Carrito")'))
@@ -89,7 +89,7 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
 
 
 
-  // B) No enumerado
+   
   await page.goto(EVENT_URL, { waitUntil: 'domcontentloaded' });
 
   const generalQty = page.locator('#general-quantity').first();
@@ -304,7 +304,7 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
   }
 
 
-  // Pagar 
+   
   const payNowButton = page.getByRole('button', { name: /pagar|pay|confirmar pago|pagar ahora/i }).first();
   await expect(payNowButton).toBeEnabled({ timeout: 30000 });
   await payNowButton.click();
@@ -332,7 +332,7 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
     page.getByRole('heading', { name: /pago exitoso|gracias|éxito/i })
   ).toBeVisible({ timeout: 20000 });
 
-  // Ver mis tickets 
+   
   const goMyTickets = page
     .getByRole('button', { name: /ver mis tickets/i })
     .or(page.getByRole('link', { name: /ver mis tickets/i }))

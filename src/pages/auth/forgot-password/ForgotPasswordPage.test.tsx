@@ -5,14 +5,14 @@ import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { AuthService } from '@/services/AuthService';
 
-// Mock AuthService
+ 
 vi.mock('@/services/AuthService', () => ({
     AuthService: {
         forgotPassword: vi.fn(),
     },
 }));
 
-// Mock MessageContext
+ 
 vi.mock('@/shared/context/MessageContext', () => ({
     useMessage: () => ({
         addMessage: vi.fn(),

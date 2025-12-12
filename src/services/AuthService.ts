@@ -8,14 +8,14 @@ export const AuthService = {
     },
 
     login: async (credentials: any): Promise<{ token: string, user: any }> => {
-        // Implement if used elsewhere, currently AuthContext has logic inside but we are refactoring.
-        // AuthContext uses manual fetch. usage: fetch(`${import.meta.env.VITE_BACKEND_URL}.../api/auth/validate
-        // We are replacing that one.
-        // The login/register pages might use other endpoints.
-        // I should check LoginUser.tsx to see what it uses.
-        // For now, only validateToken is clearly seen in AuthContext.
-        // I'll add login/register placeholders or implementations if I find them.
-        // I'll stick to what I verified in AuthContext for now.
+         
+         
+         
+         
+         
+         
+         
+         
         const response = await api.post('/auth/login', credentials);
         return response.data;
     },

@@ -3,7 +3,7 @@ export interface User {
     name: string;
     surname?: string;
     mail?: string;
-    email?: string; // Alias for mail/contactEmail
+    email?: string;  
     dni?: number;
     role: string | null;
     type?: 'user' | 'company';

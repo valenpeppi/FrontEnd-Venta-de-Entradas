@@ -49,12 +49,12 @@ const MyTickets: React.FC = () => {
   }, [isLoggedIn, user, isLoading]);
 
   const handleDownloadPDF = async (ticket: PurchasedTicket) => {
-    // Si no hay usuario (caso raro si ya cargó tickets), pasamos null o un objeto básico
+     
     const currentUser = user ? { name: user.name, dni: user.dni } : null;
     await PdfService.generateTicketPdf(ticket, currentUser);
   };
 
-  // --- Agrupar tickets por (venta + evento + sector) ---
+   
   const normalizeSectorName = (name: string) =>
     (name || 'Sin sector').replace(/\s+/g, ' ').trim();
 
@@ -92,7 +92,7 @@ const MyTickets: React.FC = () => {
       });
     }
 
-    // Ordenar grupos por fecha/hora y luego por sector
+     
     return Array.from(map.values()).sort((a, b) => {
       const da = new Date(a.date).getTime();
       const db = new Date(b.date).getTime();

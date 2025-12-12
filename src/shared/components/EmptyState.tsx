@@ -5,8 +5,8 @@ interface EmptyStateProps {
     title: string;
     description?: string;
     icon?: ReactNode;
-    children?: ReactNode; // For action buttons
-    compact?: boolean; // For smaller versions like in search dropdowns or small lists
+    children?: ReactNode;  
+    compact?: boolean;  
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({ title, description, icon, children, compact = false }) => {

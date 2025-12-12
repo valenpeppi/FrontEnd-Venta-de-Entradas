@@ -11,7 +11,7 @@ const RestrictCompanyRoute: React.FC<RestrictCompanyRouteProps> = ({ children })
     const location = useLocation();
 
     if (isLoading) {
-        return null; // Or a loading spinner
+        return null;  
     }
 
     if (user?.role === 'company') {

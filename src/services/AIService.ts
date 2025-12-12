@@ -1,5 +1,5 @@
 import api from "@/services/api";
-import axios from "axios"; // Keep axios for isCancel check
+import axios from "axios";  
 
 export const AIService = {
     sendMessage: async (message: string): Promise<string> => {

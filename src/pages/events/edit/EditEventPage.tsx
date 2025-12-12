@@ -96,10 +96,10 @@ const EditEventPage: React.FC = () => {
                     setImagePreview(`${event.imageUrl}`);
                 }
 
-                // We might need to fetch sectors logic or just populate if possible
-                // Re-fetch sectors for the place to populate prices if we had them stored
-                // Implementation Gaps: Getting original prices per sector might need endpoint support or simple logic
-                // For now, let's just allow editing main details. 
+                 
+                 
+                 
+                 
 
             } catch (e) {
                 console.error("Error al cargar el evento:", e);
@@ -120,21 +120,21 @@ const EditEventPage: React.FC = () => {
                         PlaceService.getPlaceSectors(state.idPlace),
                         PlaceService.getAvailableDates(state.idPlace)
                     ]);
-                    // setSectors(sectorsRes); // Removed as unused
-                    // Don't overwrite date if it's the current event's date (edit mode logic refinement needed if changing dates)
+                     
+                     
                     dispatch({ type: 'SET_OCCUPIED_DATES', payload: { dates: datesRes } });
 
-                    // Logic to pre-fill prices would go here if we had them available in 'event' object from getEventById
-                    // For now, prices will reset if place changes or might need manual entry. 
-                    // This is a known limitation for this iteration.
+                     
+                     
+                     
                 } catch (e) {
                     console.error("Error al cargar sectores o fechas:", e);
                 }
             } else {
-                // setSectors([]); // Removed as unused
+                 
             }
         };
-        if (!loading) { // Only fetch dependencies after initial load
+        if (!loading) {  
             fetchSectorsAndDates();
         }
     }, [state.idPlace, loading]);
@@ -153,8 +153,8 @@ const EditEventPage: React.FC = () => {
             const newPreviewUrl = URL.createObjectURL(file);
             setImagePreview(newPreviewUrl);
         } else {
-            // If clearing file, maybe keep original preview or clear it? 
-            // For update, if null, we don't send image, backend keeps old one.
+             
+             
         }
     };
 
@@ -194,8 +194,8 @@ const EditEventPage: React.FC = () => {
         if (state.image) {
             formData.append('image', state.image);
         }
-        // Sectors update logic depends if backend supports it. `updateEvent` in controller only handled basic fields + image.
-        // So we skip sectors for now.
+         
+         
 
         try {
             if (id) {
@@ -268,7 +268,7 @@ const EditEventPage: React.FC = () => {
                             />
                             {state.idPlace && state.occupiedDates.length > 0 && (
                                 <div className={styles.occupiedDatesContainer}>
-                                    {/* Occupied dates listing */}
+                                    { }
                                 </div>
                             )}
                         </div>
@@ -292,7 +292,7 @@ const EditEventPage: React.FC = () => {
                         </select>
                     </div>
 
-                    {/* Skipping sector prices for Edit mode simplicity, assume they remain unless re-implementation complex logic */}
+                    { }
 
                     <div className={styles.formGroup}>
                         <label htmlFor="image">Foto del Evento</label>

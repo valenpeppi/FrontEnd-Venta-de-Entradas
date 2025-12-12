@@ -6,16 +6,14 @@ interface FatalErrorPageProps {
     resetErrorBoundary?: () => void;
 }
 
-/**
- * Página que se muestra cuando ocurre un crash irrecuperable en la aplicación.
- */
+ 
 const FatalErrorPage: React.FC<FatalErrorPageProps> = ({ error, resetErrorBoundary }) => {
     const handleRetry = () => {
-        // Si tenemos una función de reset (del ErrorBoundary), la usamos
+         
         if (resetErrorBoundary) {
             resetErrorBoundary();
         }
-        // Fallback: recargar la página completa o ir al home sin usar router
+         
         window.location.href = '/';
     };
 

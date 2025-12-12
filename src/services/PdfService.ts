@@ -3,7 +3,7 @@ import axios from 'axios';
 import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
 import type { PurchasedTicket } from '@/types/purchase';
 
-// Definimos una interfaz minima para el usuario si no existe una compartida
+ 
 interface UserInfo {
     name: string;
     dni?: string | number;

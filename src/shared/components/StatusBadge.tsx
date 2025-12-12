@@ -2,8 +2,8 @@ import React from 'react';
 import styles from '@/shared/components/styles/StatusBadge.module.css';
 
 interface StatusBadgeProps {
-    status: string; // 'Approved', 'Rejected', 'Pending', or others
-    label?: string; // Optional custom label, otherwise uses status
+    status: string;  
+    label?: string;  
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label }) => {

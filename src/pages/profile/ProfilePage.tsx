@@ -14,7 +14,7 @@ const ProfilePage: React.FC = () => {
     const { setAppMessage } = useMessage();
     const navigate = useNavigate();
 
-    // Local state for form
+     
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
@@ -54,8 +54,8 @@ const ProfilePage: React.FC = () => {
 
             await AuthService.updateUser(updateData);
 
-            // Update local context manually with new data
-            // Note: updateUser context helper now accepts generic Partial<User>
+             
+             
             updateUser(updateData);
 
             setAppMessage('Perfil actualizado correctamente', 'success');
@@ -96,7 +96,7 @@ const ProfilePage: React.FC = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    {/* Common Fields */}
+                    { }
                     <div className={styles.formGroup}>
                         <label className={styles.label}>
                             <FiUser className={styles.icon} /> Nombre {user.role === 'company' ? 'Empresa' : ''}
@@ -111,7 +111,7 @@ const ProfilePage: React.FC = () => {
                         />
                     </div>
 
-                    {/* User Specific Fields */}
+                    { }
                     {user.role !== 'company' && (
                         <>
                             <div className={styles.formGroup}>
@@ -133,7 +133,7 @@ const ProfilePage: React.FC = () => {
                                 <input
                                     type="date"
                                     className={isEditing ? styles.input : styles.inputDisabled}
-                                    value={birthDate} // Format YYYY-MM-DD
+                                    value={birthDate}  
                                     onChange={(e) => setBirthDate(e.target.value)}
                                     disabled={!isEditing}
                                 />
@@ -153,7 +153,7 @@ const ProfilePage: React.FC = () => {
                         </>
                     )}
 
-                    {/* Company Specific Fields */}
+                    { }
                     {user.role === 'company' && (
                         <>
                             <div className={styles.formGroup}>
@@ -224,7 +224,7 @@ const ProfilePage: React.FC = () => {
                                     className={styles.cancelBtn}
                                     onClick={() => {
                                         setIsEditing(false);
-                                        // Reset fields
+                                         
                                         setName(user.name || '');
                                         setSurname(user.surname || '');
                                         setPhone(user.phone || '');

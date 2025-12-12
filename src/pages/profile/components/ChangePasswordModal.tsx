@@ -43,7 +43,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
             });
             setAppMessage('Contraseña actualizada correctamente', 'success');
             onClose();
-            // Reset form
+             
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');

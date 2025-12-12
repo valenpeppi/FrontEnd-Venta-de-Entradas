@@ -132,12 +132,12 @@ function CartProvider({ children }: CartProviderProps) {
         if (localBoot !== serverBoot) {
           console.log("Reiniciando carrito por cambio de versión del servidor");
           localStorage.setItem('bootId', serverBoot);
-          // Do not clear token here, AuthContext handles token validation.
-          // localStorage.removeItem('token'); 
+           
+           
           localStorage.removeItem('ticket-cart');
           localStorage.removeItem('ticketGroups');
-          // Maybe keep dniClient/saleConfirmed or clear them if they are cart-related?
-          // Assuming saleConfirmed is relevant to current session.
+           
+           
           localStorage.removeItem('saleConfirmed');
 
           dispatch({ type: 'CLEAR_CART' });

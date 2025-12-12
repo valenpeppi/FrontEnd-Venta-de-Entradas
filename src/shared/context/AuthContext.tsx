@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 
-import type { User, AuthState, AuthContextType, AuthProviderProps } from '@/types/auth'; // Import from new types
+import type { User, AuthState, AuthContextType, AuthProviderProps } from '@/types/auth';  
 import { AuthService } from '@/services/AuthService';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -66,17 +66,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           const user = JSON.parse(userString);
 
-          // Use AuthService instead of direct fetch
+           
           const data = await AuthService.validateToken();
 
           if (data && data.valid && data.user) {
             const freshUser = data.user;
-            // Update local storage with fresh data
+             
             localStorage.setItem('user', JSON.stringify(freshUser));
             dispatch({ type: 'INITIALIZE', payload: { user: freshUser } });
           } else {
-            // Fallback to local storage if response structure is unexpected but no error thrown
-            // (Unlikely given the controller, but safe)
+             
+             
             dispatch({ type: 'INITIALIZE', payload: { user } });
           }
 
@@ -93,7 +93,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     validateToken();
 
-    // Listen for global logout events (from api interceptor 401s)
+     
     const handleGlobalLogout = () => {
       logout();
     };

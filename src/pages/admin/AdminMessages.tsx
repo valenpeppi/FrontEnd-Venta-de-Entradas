@@ -88,7 +88,7 @@ export const AdminMessages: React.FC = () => {
     };
 
     const handleDiscard = async (id: number) => {
-        // Discard: Remove from list entirely
+         
         try {
             setMessages(prev => prev.filter(m => m.idMessage !== id));
             await MessageService.discardMessage(id);

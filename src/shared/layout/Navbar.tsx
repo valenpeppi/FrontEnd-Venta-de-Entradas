@@ -91,7 +91,7 @@ const Navbar: React.FC = () => {
   };
 
   const closeUserMenu = () => {
-    // Small timeout to allow clicks on links to register before closing
+     
     setTimeout(() => setShowUserMenu(false), 200);
   };
 

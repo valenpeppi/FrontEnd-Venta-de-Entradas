@@ -22,4 +22,4 @@ export interface AdminEvent {
     featured: boolean;
 }
 
-// Will add more from FeatureEventsPage once viewed
+ 

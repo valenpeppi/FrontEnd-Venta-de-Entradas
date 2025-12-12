@@ -36,7 +36,7 @@ const EventDetailBody: React.FC = () => {
   const [isModalClosing, setIsModalClosing] = useState(false);
   const [seatTicketMap, setSeatTicketMap] = useState<Record<string, number>>({});
 
-  // Fetch Ticket Map logic moved here
+   
   useEffect(() => {
     if (!summary) return;
     const fetchTicketMap = async () => {
@@ -52,9 +52,9 @@ const EventDetailBody: React.FC = () => {
     fetchTicketMap();
   }, [summary]);
 
-  // Fetch Seats logic needs to be triggered when sector is selected
-  // The context exposes setSeats.
-  // The original page had this logic. We replicate it here.
+   
+   
+   
   useEffect(() => {
     if (selectedSector === null || !summary) return;
     const sec = sectors.find((s) => s.idSector === selectedSector);
@@ -137,7 +137,7 @@ const EventDetailBody: React.FC = () => {
         nonEnum.reduce((sum, s) => sum + (s.selected || 0), 0) +
         enumSectors.reduce((sum, s) => sum + (selectedSeatsMap[s.idSector] || []).length, 0);
 
-      // No enumeradas
+       
       nonEnum.forEach((sec) => {
         const tempTicketIds = Array.from({ length: sec.selected || 0 }, (_, i) =>
           `${summary.idPlace}-${sec.idSector}-temp-${i}`,
@@ -170,7 +170,7 @@ const EventDetailBody: React.FC = () => {
         });
       });
 
-      // Enumeradas
+       
       enumSectors.forEach((sec) => {
         (selectedSeatsMap[sec.idSector] || []).forEach((seatId) => {
           const ticketKey = `${summary.idPlace}-${sec.idSector}-${seatId}`;

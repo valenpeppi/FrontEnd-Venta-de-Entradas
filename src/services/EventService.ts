@@ -15,11 +15,11 @@ export const EventService = {
 
     getEventById: async (id: string | number): Promise<EventSummary> => {
         const response = await api.get(`/events/events/${id}`);
-        // EventById returns object, not array. Check for valid object keys or assume wrapper if .data exists.
-        // If response.data is the object, it won't have .data usually unless it's a field.
-        // Safest: check known wrapper key like 'ok' or check if .data is object.
-        // Given previous issues, let's assume if .data property exists and looks like wrapper...
-        // Actually, for single object: if (response.data.data) return response.data.data; return response.data;
+         
+         
+         
+         
+         
         return response.data?.data ?? response.data;
     },
 
@@ -30,7 +30,7 @@ export const EventService = {
 
     getEventTicketMap: async (id: string | number): Promise<any> => {
         const response = await api.get(`/events/events/${id}/tickets/map`);
-        // Map is object usually.
+         
         return response.data?.data ?? response.data;
     },
 

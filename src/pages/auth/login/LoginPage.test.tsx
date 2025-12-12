@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { AuthService } from '@/services/AuthService';
 
-// Mock dependencies
+ 
 vi.mock('@/services/AuthService', () => ({
     AuthService: {
         login: vi.fn(),
@@ -60,7 +60,7 @@ describe('🔐 Componente LoginPage', () => {
         fireEvent.change(emailInput, { target: { value: 'bad-email' } });
         fireEvent.click(submitBtn);
 
-        // Expect validation logic to prevent service call
+         
         expect(mockLogin).not.toHaveBeenCalled();
     });
 

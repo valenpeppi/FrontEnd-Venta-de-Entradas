@@ -26,7 +26,7 @@ export interface PurchasedTicketGroup {
     tickets: PurchasedTicket[];
 }
 
-// Payment/Checkout Types
+ 
 export interface PaymentTicketGroup {
     idEvent: number;
     idPlace: number;
