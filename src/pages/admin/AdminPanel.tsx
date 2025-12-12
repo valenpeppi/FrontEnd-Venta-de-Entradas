@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AdminService } from "@/services/AdminService";
 import styles from "@/pages/admin/styles/AdminPanel.module.css";
 import globalStyles from "@/shared/styles/GlobalStyles.module.css";
-import { FaStar, FaRegStar, FaCheck, FaTimes, FaInbox } from "react-icons/fa";
+import { FaStar as StarFilledIcon, FaRegStar as StarOutlineIcon, FaCheck as CheckIcon, FaTimes as CrossIcon, FaInbox as InboxIcon } from "react-icons/fa";
 import StatusBadge from "@/shared/components/StatusBadge";
 import EmptyState from "@/shared/components/EmptyState";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
@@ -192,7 +192,7 @@ export default function AdminPanel() {
         <EmptyState
           title="No se encontraron eventos"
           description="Intenta cambiar los filtros o la búsqueda."
-          icon={<FaInbox />}
+          icon={<InboxIcon />}
           compact
         />
       ) : (
@@ -216,7 +216,7 @@ export default function AdminPanel() {
                   onClick={() => toggleFeature(event.idEvent)}
                   title={event.featured ? 'Quitar de destacados' : 'Destacar evento'}
                 >
-                  {event.featured ? <FaStar /> : <FaRegStar />}
+                  {event.featured ? <StarFilledIcon /> : <StarOutlineIcon />}
                 </button>
 
                 <div className={styles.badges}>
@@ -244,14 +244,14 @@ export default function AdminPanel() {
                         onClick={() => handleAction(event.idEvent, "approve")}
                         title="Aprobar"
                       >
-                        <FaCheck /> Aprobar
+                        <CheckIcon /> Aprobar
                       </button>
                       <button
                         className={`${styles.btn} ${styles.btnReject}`}
                         onClick={() => handleAction(event.idEvent, "reject")}
                         title="Rechazar"
                       >
-                        <FaTimes /> Rechazar
+                        <CrossIcon /> Rechazar
                       </button>
                     </>
                   )}
@@ -261,7 +261,7 @@ export default function AdminPanel() {
                       onClick={() => handleAction(event.idEvent, "approve")}
                       title="Re-aprobar"
                     >
-                      <FaCheck /> Aprobar
+                      <CheckIcon /> Aprobar
                     </button>
                   )}
                 </div>
