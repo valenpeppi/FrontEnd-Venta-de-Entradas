@@ -1,0 +1,55 @@
+
+# Ignorar la carpeta donde se instalan los paquetes de npm, pnpm o yarn.
+node_modules/
+
+# Ignorar los directorios de salida de la compilación.
+dist/
+dist-ssr/
+build/
+.next/
+out/
+
+# Ignorar archivos de logs que se generan durante la ejecución o el debug.
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Ignorar archivos de variables de entorno locales.
+
+.env.local
+.env.*.local
+.env
+
+# Ignorar los reportes de cobertura de tests.
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+
+# Ignorar configuraciones específicas de editores de código para evitar conflictos.
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# JetBrains (WebStorm, etc.)
+.idea/
+
+# Otros
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignorar archivos de caché de herramientas como Vite o ESLint.
+.vite/
+.eslintcache
+.tmp
+.cache
+
+# Ignorar el archivo de información de compilación de TypeScript.
+tsconfig.tsbuildinfo
