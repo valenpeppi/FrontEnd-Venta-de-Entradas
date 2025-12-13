@@ -242,17 +242,12 @@ const Pay: React.FC = () => {
           </div>
 
           <div className={styles.payButtons}>
-
-
-            <button onClick={handleStripePayment} className={styles.btnStripe} disabled={!user?.dni}>
-              Pagar con Stripe{!user?.dni ? ' (requiere login)' : ''}
+            <button onClick={() => navigate('/cart')} className={styles.btnBack}>
+              Volver al carrito
             </button>
-
-            <div className={styles.payActions}>
-              <button onClick={() => navigate('/cart')} className={styles.btnBack}>
-                Volver al carrito
-              </button>
-            </div>
+            <button onClick={handleStripePayment} className={styles.btnStripe} disabled={!user?.dni}>
+              Pagar{!user?.dni ? ' (requiere login)' : ''}
+            </button>
           </div>
         </>
       ) : (
