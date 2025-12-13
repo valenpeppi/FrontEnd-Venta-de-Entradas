@@ -63,7 +63,7 @@
   <li>Exploración y búsqueda de eventos.</li>
   <li>Selección de butacas (sectores enumerados) y entradas generales.</li>
   <li>Gestión de carrito y validaciones.</li>
-  <li>Flujo de pago con <strong>Stripe</strong> y <strong>Mercado Pago</strong>.</li>
+  <li>Flujo de pago con <strong>Stripe</strong>.</li>
   <li>Descarga de tickets en <strong>PDF</strong>.</li>
   <li>Gestión de eventos por parte de empresas organizadoras.</li>
   <li>Panel administrativo para aprobación y destacado de eventos.</li>
@@ -328,7 +328,7 @@
 
 <ol>
   <li><strong>Selección:</strong> El usuario arma su pedido, agrupado por eventos y sectores (TicketGroup).</li>
-  <li><strong>Inicio de Pago (Pay.tsx):</strong> Se comunica con el backend para iniciar sesión en Stripe o Mercado Pago.</li>
+  <li><strong>Inicio de Pago (Pay.tsx):</strong> Se comunica con el backend para iniciar sesión en Stripe.</li>
   <li><strong>Procesamiento (ProcessingPayment.tsx):</strong>
     <ul>
       <li>Al regresar de la pasarela, se muestra una pantalla de carga.</li>
