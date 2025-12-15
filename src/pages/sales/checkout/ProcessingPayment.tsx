@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from '@/shared/context/CartContext';
 import { PaymentService } from '@/services/PaymentService';
+import { StorageService } from '@/services/StorageService';
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 
 const ProcessingPayment = () => {
@@ -12,7 +13,7 @@ const ProcessingPayment = () => {
   useEffect(() => {
     const releaseReservations = async () => {
       try {
-        const ticketGroupsRaw = localStorage.getItem("ticketGroups");
+        const ticketGroupsRaw = StorageService.getItem("ticketGroups");
         if (!ticketGroupsRaw) return;
 
         const ticketGroups = JSON.parse(ticketGroupsRaw);
@@ -42,7 +43,7 @@ const ProcessingPayment = () => {
 
 
     const pollSaleConfirmation = async () => {
-      const dniClient = localStorage.getItem("dniClient");
+      const dniClient = StorageService.getItem("dniClient");
       if (!dniClient) {
         await releaseReservations();
         navigate("/pay/failure");
@@ -54,9 +55,9 @@ const ProcessingPayment = () => {
         if (ok) {
           setLoadingMessage("¡Venta confirmada!");
           clearCart();
-          localStorage.removeItem("ticket-cart");
-          localStorage.removeItem("ticketGroups");
-          localStorage.removeItem("dniClient");
+          StorageService.removeItem("ticket-cart");
+          StorageService.removeItem("ticketGroups");
+          StorageService.removeItem("dniClient");
           navigate("/pay/success");
           return;
         }
@@ -73,9 +74,9 @@ const ProcessingPayment = () => {
           if (data?.confirmed) {
             setLoadingMessage("¡Venta confirmada!");
             clearCart();
-            localStorage.removeItem("ticket-cart");
-            localStorage.removeItem("ticketGroups");
-            localStorage.removeItem("dniClient");
+            StorageService.removeItem("ticket-cart");
+            StorageService.removeItem("ticketGroups");
+            StorageService.removeItem("dniClient");
             navigate("/pay/success");
             return;
           }

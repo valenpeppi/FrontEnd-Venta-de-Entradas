@@ -5,27 +5,30 @@ import { PaymentService } from '@/services/PaymentService';
 import { MdCancel } from "react-icons/md";
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 
+import { StorageService } from '@/services/StorageService';
+
 const Failure: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems, addToCart } = useCart();
 
   useEffect(() => {
-    localStorage.removeItem("saleConfirmed");
+    StorageService.removeItem("saleConfirmed");
   }, []);
 
   useEffect(() => {
     const releaseReservations = async () => {
       try {
-        const ticketGroupsRaw = localStorage.getItem("ticketGroups");
+        const ticketGroupsRaw = StorageService.getItem("ticketGroups");
         if (!ticketGroupsRaw) return;
 
         const ticketGroups = JSON.parse(ticketGroupsRaw);
         if (!Array.isArray(ticketGroups) || ticketGroups.length === 0) return;
 
-
         await PaymentService.releaseReservations(ticketGroups);
       } catch (e) {
-
+        console.error(e);
+      } finally {
+        StorageService.removeItem("ticketGroups");
       }
     };
 
@@ -34,7 +37,7 @@ const Failure: React.FC = () => {
 
   useEffect(() => {
     if (cartItems.length === 0) {
-      const stored = localStorage.getItem("ticket-cart");
+      const stored = StorageService.getItem("ticket-cart");
       if (stored) {
         const items = JSON.parse(stored);
         items.forEach((item: any) => {

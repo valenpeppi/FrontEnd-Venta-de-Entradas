@@ -2,6 +2,7 @@ import { MdCheckCircle } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useCart } from '@/shared/context/CartContext';
+import { StorageService } from '@/services/StorageService';
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 
 const Success = () => {
@@ -9,14 +10,14 @@ const Success = () => {
   const { clearCart } = useCart();
 
   useEffect(() => {
-    localStorage.removeItem("saleConfirmed");
+    StorageService.removeItem("saleConfirmed");
   }, []);
 
   useEffect(() => {
     clearCart();
-    localStorage.removeItem("ticket-cart");
-    localStorage.removeItem("ticketGroups");
-    localStorage.removeItem("dniClient");
+    StorageService.removeItem("ticket-cart");
+    StorageService.removeItem("ticketGroups");
+    StorageService.removeItem("dniClient");
   }, [clearCart]);
 
   return (
