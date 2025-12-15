@@ -1,4 +1,4 @@
-import { test, expect, Route,BrowserContext,Page  } from '@playwright/test';
+import { test, expect, Route, BrowserContext, Page } from '@playwright/test';
 import { login } from './login';
 
 const FRONTEND_URL = 'http://localhost:5173';
@@ -7,7 +7,7 @@ const API_BASE = 'http://localhost:3000';
 
 test.setTimeout(120_000);
 
- 
+
 function pickTargetPage(ctx: BrowserContext, primary: Page, popup: Page | null): Page {
   if (popup && !popup.isClosed()) return popup;
 
@@ -25,7 +25,7 @@ function pickTargetPage(ctx: BrowserContext, primary: Page, popup: Page | null):
 test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async ({ page }) => {
   await login(page);
 
-   
+
   await page.goto(EVENT_URL, { waitUntil: 'domcontentloaded' });
   await expect(page.getByRole('heading').first()).toBeVisible({ timeout: 15000 });
 
@@ -48,37 +48,37 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
 
   await availableSeats.first().click();
 
-  await modal.getByText(/Asientos seleccionados:\s*1/i).waitFor({ timeout: 3000 }).catch(() => {});
+  await modal.getByText(/Asientos seleccionados:\s*1/i).waitFor({ timeout: 3000 }).catch(() => { });
 
   const confirmAdd = modal
     .getByTestId('add-to-cart')
     .or(modal.locator('button:has-text("Agregar al carrito")'))
     .first();
 
-  await confirmAdd.scrollIntoViewIfNeeded().catch(() => {});
+  await confirmAdd.scrollIntoViewIfNeeded().catch(() => { });
   await expect(confirmAdd).toBeEnabled({ timeout: 5000 });
   await confirmAdd.click({ force: true });
 
-  const toCart  = page.waitForURL('**/cart',  { timeout: 8000 }).catch(() => null);
+  const toCart = page.waitForURL('**/cart', { timeout: 8000 }).catch(() => null);
   const toLogin = page.waitForURL('**/login', { timeout: 8000 }).catch(() => null);
-  const landed  = await Promise.race([toCart, toLogin]);
+  const landed = await Promise.race([toCart, toLogin]);
 
   if (landed === null) {
     const successToast = page.getByText(/has agregado|agregado .* entrada/i);
-    const toastShown   = await successToast.count().then(c => c > 0).catch(() => false);
+    const toastShown = await successToast.count().then(c => c > 0).catch(() => false);
 
-    if (!toastShown && /\/event\ 
+    if (!toastShown && /\/event\/.+/.test(page.url())) {
       const pageAdd = page
         .getByTestId('page-add-to-cart')
         .or(page.locator('button:has-text("Agregar al Carrito")'))
         .first();
       if (await pageAdd.count()) {
-        await pageAdd.click({ force: true }).catch(() => {});
+        await pageAdd.click({ force: true }).catch(() => { });
       }
     }
 
     if (!/\/cart\b/.test(page.url())) {
-      await page.goto(`${FRONTEND_URL}/cart`, { waitUntil: 'domcontentloaded' }).catch(() => {});
+      await page.goto(`${FRONTEND_URL}/cart`, { waitUntil: 'domcontentloaded' }).catch(() => { });
     }
   }
 
@@ -89,7 +89,7 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
 
 
 
-   
+
   await page.goto(EVENT_URL, { waitUntil: 'domcontentloaded' });
 
   const generalQty = page.locator('#general-quantity').first();
@@ -132,7 +132,7 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
     await addGlobal.click();
   }
 
-  const toCart2  = page.waitForURL('**/cart',  { timeout: 20000 }).catch(() => null);
+  const toCart2 = page.waitForURL('**/cart', { timeout: 20000 }).catch(() => null);
   const toLogin2 = page.waitForURL('**/login', { timeout: 20000 }).catch(() => null);
   const hit2 = await Promise.race([toCart2, toLogin2]);
 
@@ -141,14 +141,14 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
     await page.goto(`${FRONTEND_URL}/cart`, { waitUntil: 'domcontentloaded' });
   }
 
-  await page.unroute(`${API_BASE}/api/mp/checkout`).catch(() => {});
-  await page.unroute(`${API_BASE}/api/stripe/checkout`).catch(() => {});
+  await page.unroute(`${API_BASE}/api/mp/checkout`).catch(() => { });
+  await page.unroute(`${API_BASE}/api/stripe/checkout`).catch(() => { });
 
   const payBtn = page.getByRole('button', { name: /proceder al pago/i }).first();
   await payBtn.click();
   await page.waitForURL('**/pay', { timeout: 20000 });
 
-  const stripeBtn = page.getByRole('button', { name: /^pagar con stripe(?:\s*\(requiere login\))?$/i });
+  const stripeBtn = page.getByRole('button', { name: /^pagar(?: con stripe)?(?:\s*\(requiere login\))?$/i });
   await expect(stripeBtn).toBeVisible({ timeout: 15000 });
   await expect(stripeBtn).toBeEnabled({ timeout: 15000 });
 
@@ -203,8 +203,8 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
         if (!(await emailTop.first().inputValue())) {
           await emailTop.first().fill(`juan${Date.now()}@example.com`);
         } else {
-          await emailTop.first().focus().catch(() => {});
-          await emailTop.first().press('Tab').catch(() => {});
+          await emailTop.first().focus().catch(() => { });
+          await emailTop.first().press('Tab').catch(() => { });
         }
       }
 
@@ -248,7 +248,7 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
   ];
   for (const s of possibleCardButtons) {
     const b = page.locator(s);
-    if (await b.count()) { await b.first().click({ force: true }).catch(() => {}); break; }
+    if (await b.count()) { await b.first().click({ force: true }).catch(() => { }); break; }
   }
 
   const numberSelectors = [
@@ -279,11 +279,11 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
   ];
 
   const { locator: numberInput } = await findStripeField(page, numberSelectors);
-  const { locator: expInput }    = await findStripeField(page, expSelectors);
-  const { locator: cvcInput }    = await findStripeField(page, cvcSelectors);
+  const { locator: expInput } = await findStripeField(page, expSelectors);
+  const { locator: cvcInput } = await findStripeField(page, cvcSelectors);
 
-  await numberInput.fill('4000000320000021');   
-  await expInput.fill('12 / 29');               
+  await numberInput.fill('4000000320000021');
+  await expInput.fill('12 / 29');
   await cvcInput.fill('123');
 
   const nameCandidates = [
@@ -300,11 +300,11 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
     page.locator('select[name*="country" i]'),
   ];
   for (const cand of countryCandidates) {
-    if (await cand.count()) { await cand.first().selectOption('AR').catch(() => {}); break; }
+    if (await cand.count()) { await cand.first().selectOption('AR').catch(() => { }); break; }
   }
 
 
-   
+
   const payNowButton = page.getByRole('button', { name: /pagar|pay|confirmar pago|pagar ahora/i }).first();
   await expect(payNowButton).toBeEnabled({ timeout: 30000 });
   await payNowButton.click();
@@ -312,15 +312,15 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
   const threeDSFrame = page.frameLocator('iframe[name*="challenge"], iframe[title*="challenge" i]');
   if (await threeDSFrame.locator('button, input[type="submit"]').count()) {
     const approve = threeDSFrame.getByRole('button', { name: /complete authentication|authorize|continuar|aceptar|submit/i }).first();
-    if (await approve.count()) await approve.click({ trial: true }).catch(() => {});
+    if (await approve.count()) await approve.click({ trial: true }).catch(() => { });
   }
 
   const processingUrlRe = /\/pay\/processing\b/i;
-  const successUrlRe    = /\/pay\/success\b/i;
+  const successUrlRe = /\/pay\/success\b/i;
 
   const hitAfterPay = await Promise.race([
     page.waitForURL(processingUrlRe, { timeout: 60_000 }).then(() => 'processing').catch(() => null),
-    page.waitForURL(successUrlRe,    { timeout: 60_000 }).then(() => 'success').catch(() => null),
+    page.waitForURL(successUrlRe, { timeout: 60_000 }).then(() => 'success').catch(() => null),
   ]);
 
   if (hitAfterPay === 'processing') {
@@ -332,16 +332,16 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
     page.getByRole('heading', { name: /pago exitoso|gracias|éxito/i })
   ).toBeVisible({ timeout: 20000 });
 
-   
+
   const goMyTickets = page
     .getByRole('button', { name: /ver mis tickets/i })
     .or(page.getByRole('link', { name: /ver mis tickets/i }))
     .or(page.locator('button:has-text("Ver mis tickets"), a:has-text("Ver mis tickets")'))
     .first();
 
-  await goMyTickets.scrollIntoViewIfNeeded().catch(() => {});
+  await goMyTickets.scrollIntoViewIfNeeded().catch(() => { });
   await expect(goMyTickets).toBeVisible({ timeout: 15_000 });
-  await expect(goMyTickets).toBeEnabled({ timeout: 15_000 }).catch(() => {});
+  await expect(goMyTickets).toBeEnabled({ timeout: 15_000 }).catch(() => { });
 
   const ctx = page.context();
   const urlRegex = /\/(myTickets|my-tickets)(\/)?$/i;
@@ -356,7 +356,7 @@ test('🎟️ Compra mixta: enumerado + no enumerado y pago con Stripe', async (
 
   if (!urlRegex.test(targetPage.url())) {
     await targetPage.goto(`${FRONTEND_URL}/myTickets`).catch(() =>
-      targetPage.goto(`${FRONTEND_URL}/my-tickets`).catch(() => {})
+      targetPage.goto(`${FRONTEND_URL}/my-tickets`).catch(() => { })
     );
   }
 

@@ -6,6 +6,7 @@ import { useMessage } from '@/shared/context/MessageContext';
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 
 import { PaymentService } from '@/services/PaymentService';
+import { StorageService } from '@/services/StorageService';
 
 import type { PaymentTicketGroup as TicketGroup, GroupedByEvent } from '@/types/purchase.ts';
 
@@ -140,9 +141,9 @@ const Pay: React.FC = () => {
       });
 
       if (data.url) {
-        localStorage.setItem('ticketGroups', JSON.stringify(ticketGroups));
-        localStorage.setItem('dniClient', String(user.dni));
-        localStorage.setItem('ticket-cart', JSON.stringify(cartItems));
+        StorageService.setItem('ticketGroups', JSON.stringify(ticketGroups));
+        StorageService.setItem('dniClient', String(user.dni));
+        StorageService.setItem('ticket-cart', JSON.stringify(cartItems));
 
         window.location.href = data.url;
       } else {
