@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/agussantinelli/FrontEnd-Venta-de-Entradas" target="_blank" style="text-decoration: none;">
+  <a href="https://github.com/valenpeppi/FrontEnd-Venta-de-Entradas" target="_blank" style="text-decoration: none;">
     <img src="https://img.shields.io/badge/💻%20Repo%20Frontend-TicketApp-0b7285?style=for-the-badge&logo=github&logoColor=white" alt="Repo Frontend"/>
   </a>
   <a href="https://github.com/valenpeppi/BackEnd-Venta-de-Entradas" target="_blank" style="text-decoration: none;">
