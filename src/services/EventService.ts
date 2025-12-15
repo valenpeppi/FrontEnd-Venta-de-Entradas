@@ -15,11 +15,11 @@ export const EventService = {
 
     getEventById: async (id: string | number): Promise<EventSummary> => {
         const response = await api.get(`/events/events/${id}`);
-         
-         
-         
-         
-         
+
+
+
+
+
         return response.data?.data ?? response.data;
     },
 
@@ -30,7 +30,7 @@ export const EventService = {
 
     getEventTicketMap: async (id: string | number): Promise<any> => {
         const response = await api.get(`/events/events/${id}/tickets/map`);
-         
+
         return response.data?.data ?? response.data;
     },
 
@@ -72,12 +72,12 @@ export const EventService = {
         return (Array.isArray(response.data) ? response.data : response.data?.data) ?? [];
     },
 
-    deleteEvent: async (id: number) => {
+    deleteEvent: async (id: string) => {
         const response = await api.delete(`/events/${id}`);
         return response.data;
     },
 
-    updateEvent: async (id: number, eventData: FormData) => {
+    updateEvent: async (id: string, eventData: FormData) => {
         const response = await api.put(`/events/${id}`, eventData, {
             headers: {
                 'Content-Type': 'multipart/form-data',

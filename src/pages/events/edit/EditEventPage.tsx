@@ -96,10 +96,10 @@ const EditEventPage: React.FC = () => {
                     setImagePreview(`${event.imageUrl}`);
                 }
 
-                 
-                 
-                 
-                 
+
+
+
+
 
             } catch (e) {
                 console.error("Error al cargar el evento:", e);
@@ -120,21 +120,21 @@ const EditEventPage: React.FC = () => {
                         PlaceService.getPlaceSectors(state.idPlace),
                         PlaceService.getAvailableDates(state.idPlace)
                     ]);
-                     
-                     
+
+
                     dispatch({ type: 'SET_OCCUPIED_DATES', payload: { dates: datesRes } });
 
-                     
-                     
-                     
+
+
+
                 } catch (e) {
                     console.error("Error al cargar sectores o fechas:", e);
                 }
             } else {
-                 
+
             }
         };
-        if (!loading) {  
+        if (!loading) {
             fetchSectorsAndDates();
         }
     }, [state.idPlace, loading]);
@@ -153,8 +153,8 @@ const EditEventPage: React.FC = () => {
             const newPreviewUrl = URL.createObjectURL(file);
             setImagePreview(newPreviewUrl);
         } else {
-             
-             
+
+
         }
     };
 
@@ -194,12 +194,12 @@ const EditEventPage: React.FC = () => {
         if (state.image) {
             formData.append('image', state.image);
         }
-         
-         
+
+
 
         try {
             if (id) {
-                await EventService.updateEvent(Number(id), formData);
+                await EventService.updateEvent(String(id), formData);
                 setAppMessage('¡Evento actualizado exitosamente!', 'success');
                 navigate('/company/my-events');
             }

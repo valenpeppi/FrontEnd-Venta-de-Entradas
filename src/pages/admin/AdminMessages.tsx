@@ -11,7 +11,7 @@ export const AdminMessages: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const [replyingId, setReplyingId] = useState<number | null>(null);
+    const [replyingId, setReplyingId] = useState<string | null>(null);
     const [replyText, setReplyText] = useState('');
 
     const getStatusLabel = (status: string) => {
@@ -50,7 +50,7 @@ export const AdminMessages: React.FC = () => {
         }
     };
 
-    const startReply = (id: number) => {
+    const startReply = (id: string) => {
         setReplyingId(id);
         const currentMsg = messages.find(m => m.idMessage === id);
         setReplyText(currentMsg?.response || '');
@@ -61,7 +61,7 @@ export const AdminMessages: React.FC = () => {
         setReplyText('');
     };
 
-    const submitReply = async (id: number) => {
+    const submitReply = async (id: string) => {
         if (!replyText.trim()) return;
 
         try {
@@ -74,7 +74,7 @@ export const AdminMessages: React.FC = () => {
         }
     };
 
-    const handleReject = async (id: number) => {
+    const handleReject = async (id: string) => {
         try {
             setMessages(prev => {
                 const updated: Message[] = prev.map(m => m.idMessage === id ? { ...m, state: 'rejected' } : m);
@@ -87,8 +87,8 @@ export const AdminMessages: React.FC = () => {
         }
     };
 
-    const handleDiscard = async (id: number) => {
-         
+    const handleDiscard = async (id: string) => {
+
         try {
             setMessages(prev => prev.filter(m => m.idMessage !== id));
             await MessageService.discardMessage(id);

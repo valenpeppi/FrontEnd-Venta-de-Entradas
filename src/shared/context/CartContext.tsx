@@ -62,7 +62,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
             {
               ...ticket,
               quantity,
-              idPlace: ticket.idPlace ?? 0,
+              idPlace: ticket.idPlace,
               idSector: ticket.idSector ?? 0,
               ticketIds: Array.isArray(ticket.ticketIds)
                 ? ticket.ticketIds.map(id => Number(id))
@@ -132,12 +132,12 @@ function CartProvider({ children }: CartProviderProps) {
         if (localBoot !== serverBoot) {
           console.log("Reiniciando carrito por cambio de versión del servidor");
           localStorage.setItem('bootId', serverBoot);
-           
-           
+
+
           localStorage.removeItem('ticket-cart');
           localStorage.removeItem('ticketGroups');
-           
-           
+
+
           localStorage.removeItem('saleConfirmed');
 
           dispatch({ type: 'CLEAR_CART' });

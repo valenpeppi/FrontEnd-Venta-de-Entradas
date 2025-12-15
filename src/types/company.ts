@@ -1,6 +1,6 @@
 
 export interface Place {
-    idPlace: number;
+    idPlace: string;
     name: string;
 }
 

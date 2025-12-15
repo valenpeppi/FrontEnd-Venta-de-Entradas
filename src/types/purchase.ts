@@ -1,8 +1,8 @@
 
 export interface PurchasedTicket {
     id: string;
-    idSale: number;
-    eventId: number;
+    idSale: string;
+    eventId: string;
     eventName: string;
     date: string;
     time: string;
@@ -15,8 +15,8 @@ export interface PurchasedTicket {
 }
 
 export interface PurchasedTicketGroup {
-    idSale: number;
-    eventId: number;
+    idSale: string;
+    eventId: string;
     eventName: string;
     date: string;
     time: string;
@@ -26,10 +26,10 @@ export interface PurchasedTicketGroup {
     tickets: PurchasedTicket[];
 }
 
- 
+
 export interface PaymentTicketGroup {
-    idEvent: number;
-    idPlace: number;
+    idEvent: string;
+    idPlace: string;
     idSector: number;
     ids?: number[];
     quantity?: number;

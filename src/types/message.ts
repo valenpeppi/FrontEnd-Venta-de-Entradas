@@ -1,5 +1,5 @@
 export interface Message {
-    idMessage: number;
+    idMessage: string;
     title: string;
     description: string;
     senderEmail: string;

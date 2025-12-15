@@ -49,12 +49,12 @@ const MyTickets: React.FC = () => {
   }, [isLoggedIn, user, isLoading]);
 
   const handleDownloadPDF = async (ticket: PurchasedTicket) => {
-     
+
     const currentUser = user ? { name: user.name, dni: user.dni } : null;
     await PdfService.generateTicketPdf(ticket, currentUser);
   };
 
-   
+
   const normalizeSectorName = (name: string) =>
     (name || 'Sin sector').replace(/\s+/g, ' ').trim();
 
@@ -92,12 +92,12 @@ const MyTickets: React.FC = () => {
       });
     }
 
-     
+
     return Array.from(map.values()).sort((a, b) => {
       const da = new Date(a.date).getTime();
       const db = new Date(b.date).getTime();
       if (da !== db) return da - db;
-      if (a.idSale !== b.idSale) return a.idSale - b.idSale;
+      if (a.idSale !== b.idSale) return a.idSale.localeCompare(b.idSale);
       return a.sectorName.localeCompare(b.sectorName);
     });
   };

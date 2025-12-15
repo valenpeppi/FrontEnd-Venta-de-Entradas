@@ -11,17 +11,17 @@ export const MessageService = {
         return response.data;
     },
 
-    replyMessage: async (id: number, responseText: string) => {
+    replyMessage: async (id: string, responseText: string) => {
         const response = await api.put(`/messages/${id}/reply`, { responseText });
         return response.data;
     },
 
-    rejectMessage: async (id: number) => {
+    rejectMessage: async (id: string) => {
         const response = await api.put(`/messages/${id}/reject`);
         return response.data;
     },
 
-    discardMessage: async (id: number) => {
+    discardMessage: async (id: string) => {
         const response = await api.put(`/messages/${id}/discard`);
         return response.data;
     }

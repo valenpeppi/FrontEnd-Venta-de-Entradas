@@ -24,7 +24,7 @@ const MyEventsPage: React.FC = () => {
                 console.error('Error fetching company events:', err);
                 if (err.response && (err.response.status === 401 || err.response.status === 403)) {
                     setError('Tu sesión ha expirado o no tienes permisos. Por favor, inicia sesión nuevamente.');
-                     
+
                 } else {
                     setError('No se pudieron cargar tus eventos. Inténtalo de nuevo más tarde.');
                 }
@@ -36,12 +36,12 @@ const MyEventsPage: React.FC = () => {
         fetchEvents();
     }, []);
 
-    const handleDeleteEvent = async (id: number) => {
+    const handleDeleteEvent = async (id: string) => {
         try {
             await EventService.deleteEvent(id);
             setEvents(events.filter(e => e.idEvent !== id));
-             
-             
+
+
         } catch (err: any) {
             console.error('Error deleting event:', err);
             const msg = err?.response?.data?.message || 'Error al eliminar el evento.';

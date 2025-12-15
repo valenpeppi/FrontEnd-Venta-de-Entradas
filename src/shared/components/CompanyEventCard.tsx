@@ -7,7 +7,7 @@ import StatusBadge from '@/shared/components/StatusBadge';
 
 interface CompanyEventCardProps {
     event: {
-        idEvent: number;
+        idEvent: string;
         name: string;
         date: string;
         imageUrl?: string;
@@ -16,7 +16,7 @@ interface CompanyEventCardProps {
         soldSeats: number;
         totalSeats: number;
     };
-    onDelete?: (id: number) => void;
+    onDelete?: (id: string) => void;
 }
 
 const CompanyEventCard: React.FC<CompanyEventCardProps> = ({ event, onDelete }) => {

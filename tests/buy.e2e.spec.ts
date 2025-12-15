@@ -2,7 +2,7 @@ import { test, expect, Route, BrowserContext, Page } from '@playwright/test';
 import { login } from './login';
 
 const FRONTEND_URL = 'http://localhost:5173';
-const EVENT_URL = `${FRONTEND_URL}/event/2`;
+const EVENT_URL = `${FRONTEND_URL}/event/550e8400-e29b-41d4-a716-446655440031`;
 const API_BASE = 'http://localhost:3000';
 
 test.setTimeout(120_000);

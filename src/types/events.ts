@@ -1,7 +1,7 @@
 import type { CartItem, Ticket } from '@/types/cart';
 
 export interface Sector {
-    idEvent: number;
+    idEvent: string;
     idSector: number;
     name: string;
     price: number;
@@ -11,8 +11,8 @@ export interface Sector {
 }
 
 export interface EventSummary {
-    id: number;
-    idPlace: number;
+    id: string;
+    idPlace: string;
     eventName: string;
     imageUrl: string;
     type: string;
@@ -23,7 +23,7 @@ export interface EventSummary {
     availableTickets: number;
     agotado: boolean;
     price?: number;
-    idEventType: number;
+    idEventType: string;
 }
 
 export interface Seat {
@@ -33,7 +33,7 @@ export interface Seat {
 }
 
 export interface EventType {
-    idType: number;
+    idType: string;
     name: string;
 }
 

@@ -3,11 +3,11 @@ export interface User {
     name: string;
     surname?: string;
     mail?: string;
-    email?: string;  
+    email?: string;
     dni?: number;
     role: string | null;
     type?: 'user' | 'company';
-    idOrganiser?: number;
+    idOrganiser?: string;
     contactEmail?: string;
     companyName?: string;
     phone?: string;

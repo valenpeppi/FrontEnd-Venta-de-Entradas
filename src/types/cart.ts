@@ -19,7 +19,7 @@ export interface Ticket {
     idTicket?: number;
     seats?: (string | number)[];
     ticketIds?: number[];
-    idPlace?: number;
+    idPlace?: string;
     idSector?: number;
 }
 

@@ -43,12 +43,12 @@ export const useCheckout = () => {
     const ticketGroups = useMemo((): TicketGroup[] => {
         const map: Record<
             string,
-            { idEvent: number; idPlace: number; idSector: number; ids: number[]; quantity: number }
+            { idEvent: string; idPlace: string; idSector: number; ids: number[]; quantity: number }
         > = {};
 
         for (const item of cartItems) {
-            const idEvent = Number(item.eventId);
-            const idPlace = Number(item.idPlace);
+            const idEvent = String(item.eventId);
+            const idPlace = String(item.idPlace);
             const idSector = Number(item.idSector);
 
             const hasSeatIds = Array.isArray(item.ticketIds) && item.ticketIds.length > 0;
