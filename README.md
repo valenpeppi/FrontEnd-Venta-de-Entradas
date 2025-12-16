@@ -457,6 +457,10 @@ BACKEND_URL=http://localhost:3000
 RECAPTCHA_SECRET_KEY=tu_recaptcha_secret
 STRIPE_SECRET_KEY=tu_stripe_secret
 STRIPE_WEBHOOK_SECRET=tu_stripe_webhook_secret
+
+EMAIL_USER=ticketapp15@gmail.com
+EMAIL_PASS=""
+JWT_SECRET=super-secret-key
 </code></pre>
 
 <h3>4️⃣ Configurar frontend (.env)</h3>
