@@ -11,7 +11,7 @@ interface PasswordEvaluation {
   feedback: string[];
 }
 
- 
+
 const evaluatePasswordStrength = (pwd: string): PasswordEvaluation => {
   let score = 0;
   const feedback: string[] = [];
@@ -20,35 +20,35 @@ const evaluatePasswordStrength = (pwd: string): PasswordEvaluation => {
     return { strength: 'weak', score: 0, feedback: ['La contraseña no puede estar vacía'] };
   }
 
-   
+
   if (pwd.length >= 8) {
     score += 30;
   } else {
     feedback.push(`Mínimo 8 caracteres (${pwd.length}/8)`);
   }
 
-   
+
   if (/[a-z]/.test(pwd)) {
     score += 20;
   } else {
     feedback.push('Incluye minúsculas (a-z)');
   }
 
-   
+
   if (/[A-Z]/.test(pwd)) {
     score += 20;
   } else {
     feedback.push('Incluye mayúsculas (A-Z)');
   }
 
-   
+
   if (/\d/.test(pwd)) {
     score += 15;
   } else {
     feedback.push('Incluye números (0-9)');
   }
 
-   
+
   if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) {
     score += 15;
   }
@@ -73,7 +73,7 @@ const PasswordStrengthBar: React.FC<PasswordStrengthBarProps> = ({ password }) =
       return;
     }
 
-    // Evalúa localmente sin necesidad del backend
+    // Evaluates locally without needing the backend
     const result = evaluatePasswordStrength(password);
     setEvaluation(result);
   }, [password]);
