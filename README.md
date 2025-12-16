@@ -558,12 +558,9 @@ npm run dev
 <hr/>
 
 <h2>🎥 Video demostrativo</h2>
-
-<p>
   <a href="https://youtu.be/UICpO64qw9c" target="_blank">
-    ▶️ Ver demo completa de TicketApp en YouTube
+    <img src="https://img.shields.io/badge/🎥%20Ver%20Video%20Demo-YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Video Demo"/>
   </a>
-</p>
 
 <hr/>
 
