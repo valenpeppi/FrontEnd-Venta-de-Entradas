@@ -160,9 +160,10 @@
 <ul>
   <li><code>src/pages/</code> – Vistas de la aplicación organizadas por módulos:
     <ul>
-      <li><code>admin/</code>, <code>auth/</code>, <code>company/</code>, <code>events/</code>, <code>home/</code>, <code>sales/</code> (flujo de compra), etc.</li>
+      <li><code>admin/</code>, <code>auth/</code>, <code>company/</code>, <code>events/</code>, <code>home/</code>, <code>profile/</code>, <code>sales/</code> (flujo de compra), <code>support/</code>, etc.</li>
     </ul>
   </li>
+  <li><code>src/hooks/</code> – Custom hooks reutilizables.</li>
   <li><code>src/shared/</code> – Núcleo de lógica y componentes reutilizables:
     <ul>
       <li><code>components/</code>, <code>context/</code> (Estado Global), <code>adapters/</code>, <code>utils/</code>, <code>layout/</code> y <code>styles/</code>.</li>
@@ -248,6 +249,13 @@
       <td>✓</td>
       <td>–</td>
       <td>–</td>
+    </tr>
+    <tr>
+      <td>Manage Support Messages</td>
+      <td>–</td>
+      <td>–</td>
+      <td>–</td>
+      <td>✓</td>
     </tr>
     <tr>
       <td>Create Events</td>
@@ -492,6 +500,11 @@ npm run dev
       <td>Organizador</td>
       <td><code>sbrolla@gmail.com</code></td>
       <td><code>peppi</code></td>
+    </tr>
+    <tr>
+      <td>Admin Sistema</td>
+      <td><code>ticketapp15@gmail.com</code></td>
+      <td><code>ticket</code> (Check seed.ts)</td>
     </tr>
   </tbody>
 </table>
