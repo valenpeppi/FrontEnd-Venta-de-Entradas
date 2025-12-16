@@ -441,7 +441,8 @@ cd BackEnd-Venta-de-Entradas
 
 <h3>3️⃣ Configurar backend (.env)</h3>
 
-<pre><code>OPENROUTER_API_KEY=
+<pre><code>OPENROUTER_API_KEY=tu_api_key_ai
+GOOGLE_CLIENT_ID=tu_google_client_id
 
 DB_HOST=localhost
 DB_PORT=3306
@@ -453,19 +454,26 @@ DATABASE_URL="mysql://root:password@localhost:3306/ticketapp"
 FRONTEND_URL=http://localhost:5173
 BACKEND_URL=http://localhost:3000
 
-RECAPTCHA_SECRET_KEY=
-MP_ACCESS_TOKEN=
-
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
+RECAPTCHA_SECRET_KEY=tu_recaptcha_secret
+STRIPE_SECRET_KEY=tu_stripe_secret
+STRIPE_WEBHOOK_SECRET=tu_stripe_webhook_secret
 </code></pre>
 
-<h3>4️⃣ Migraciones Prisma</h3>
+<h3>4️⃣ Configurar frontend (.env)</h3>
+<p>Crear archivo <code>.env</code> en <code>FrontEnd-Venta-de-Entradas/</code>:</p>
+
+<pre><code>VITE_API_BASE=http://localhost:3000/api
+VITE_BACKEND_URL=http://localhost:3000
+VITE_GOOGLE_CLIENT_ID=tu_google_client_id
+VITE_RECAPTCHA_SITE_KEY=tu_recaptcha_site_key
+</code></pre>
+
+<h3>5️⃣ Migraciones Prisma</h3>
 
 <pre><code>npx prisma migrate reset
 </code></pre>
 
-<h3>5️⃣ Levantar backend</h3>
+<h3>6️⃣ Levantar backend</h3>
 
 <pre><code>npm install
 npm run dev
@@ -473,7 +481,7 @@ npm run dev
 
 <p>El backend queda escuchando en <code>http://localhost:3000</code>.</p>
 
-<h3>6️⃣ Levantar frontend</h3>
+<h3>7️⃣ Levantar frontend</h3>
 
 <pre><code>cd ../FrontEnd-Venta-de-Entradas
 npm install
