@@ -546,7 +546,7 @@ npm run dev
 <h2>🎥 Video demostrativo</h2>
 
 <p>
-  <a href="https://www.youtube.com/watch?si=NOzRUeTZ0B0ZajA8&v=8xIs6wFfBYE&feature=youtu.be" target="_blank">
+  <a href="https://youtu.be/UICpO64qw9c" target="_blank">
     ▶️ Ver demo completa de TicketApp en YouTube
   </a>
 </p>
