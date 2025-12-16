@@ -198,36 +198,36 @@
       <td>Browse Events</td>
       <td>✓</td>
       <td>✓</td>
-      <td>✓</td>
+      <td>–</td>
       <td>✓</td>
     </tr>
     <tr>
       <td>Search Events</td>
       <td>✓</td>
       <td>✓</td>
-      <td>✓</td>
+      <td>–</td>
       <td>✓</td>
     </tr>
     <tr>
       <td>View Event Details</td>
       <td>✓</td>
       <td>✓</td>
-      <td>✓</td>
+      <td>–</td>
       <td>✓</td>
     </tr>
     <tr>
       <td>Select Seats/Tickets</td>
       <td>✓</td>
       <td>✓</td>
-      <td>✓</td>
+      <td>–</td>
       <td>✓</td>
     </tr>
     <tr>
       <td>Add to Cart</td>
+      <td>–</td>
       <td>✓</td>
-      <td>✓</td>
-      <td>✓</td>
-      <td>✓</td>
+      <td>–</td>
+      <td>–</td>
     </tr>
     <tr>
       <td>Purchase Tickets</td>
@@ -262,7 +262,7 @@
       <td>–</td>
       <td>–</td>
       <td>✓</td>
-      <td>–</td>
+      <td>✓</td>
     </tr>
     <tr>
       <td>Approve Events</td>
@@ -504,7 +504,7 @@ npm run dev
     <tr>
       <td>Admin Sistema</td>
       <td><code>ticketapp15@gmail.com</code></td>
-      <td><code>ticket</code> (Check seed.ts)</td>
+      <td><code>ticket</code></td>
     </tr>
   </tbody>
 </table>
