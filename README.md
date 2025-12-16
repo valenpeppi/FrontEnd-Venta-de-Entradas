@@ -139,7 +139,7 @@
     <tr>
       <td><strong>Tickets PDF</strong></td>
       <td>jsPDF</td>
-      <td>Generación de comprobantes</td>
+      <td>3.0.2</td>
     </tr>
   </tbody>
 </table>
