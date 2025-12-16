@@ -410,8 +410,10 @@
 <h3>Variables de entorno (FrontEnd)</h3>
 
 <ul>
-  <li><code>VITE_API_BASE</code> – URL base de la API (ej: <code>http://localhost:3000</code>).</li>
-  <li><code>VITE_BACKEND_URL</code> – alternativa para la URL del backend.</li>
+  <li><code>VITE_API_BASE</code> – URL base de la API (ej: <code>http://localhost:3000/api</code>).</li>
+  <li><code>VITE_GOOGLE_CLIENT_ID</code> – Client ID para autenticación con Google.</li>
+  <li><code>VITE_RECAPTCHA_SITE_KEY</code> – Clave de sitio para reCAPTCHA v2.</li>
+  <li><code>VITE_BACKEND_URL</code> – (Opcional) Alternativa para la URL del backend si se requiere.</li>
 </ul>
 
 <hr/>
