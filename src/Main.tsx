@@ -2,7 +2,6 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import '@/shared/styles/Main.css';
-
 import App from '@/App.tsx';
 import { CartProvider } from '@/shared/context/CartContext.tsx';
 import { SearchProvider } from '@/shared/context/SearchContext.tsx';
@@ -33,5 +32,3 @@ createRoot(document.getElementById('root')!).render(
     </GlobalErrorBoundary>
   </StrictMode>
 );
-
-console.log('main.tsx: Aplicación renderizada dentro de todos los providers (Auth, Message, Cart, Search, Events, EventDetail).');

@@ -3,7 +3,14 @@ import { Link } from 'react-router-dom';
 import { AdminService } from '@/services/AdminService';
 import StatsCard from '@/shared/components/StatsCard';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
-import { FaMoneyBillWave, FaTicketAlt, FaCalendarCheck, FaCalendarPlus, FaList, FaUserEdit } from 'react-icons/fa';
+import {
+    FaMoneyBillWave,
+    FaTicketAlt,
+    FaCalendarCheck,
+    FaCalendarPlus,
+    FaList,
+    FaUserEdit
+} from 'react-icons/fa';
 import styles from '@/pages/company/styles/CompanyDashboardPage.module.css';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -12,6 +19,8 @@ interface CompanyStats {
     ticketsSold: number;
     totalRevenue: number;
 }
+import { useAuth } from '@/shared/context/AuthContext';
+import type { CompanyStats } from '@/types/company';
 
 const CompanyDashboardPage: React.FC = () => {
     const { user } = useAuth();

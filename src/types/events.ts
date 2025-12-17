@@ -1,5 +1,21 @@
 import type { CartItem, Ticket } from '@/types/cart';
 
+export interface EventsState {
+    featuredEvents: Ticket[];
+    approvedEvents: Ticket[];
+}
+
+export type EventsAction =
+    | { type: 'SET_FEATURED_EVENTS'; payload: { events: Ticket[] } }
+    | { type: 'SET_APPROVED_EVENTS'; payload: { events: Ticket[] } }
+    | { type: 'UPDATE_AVAILABLE_TICKETS'; payload: { id: string; quantity: number } };
+
+export interface EventsContextType {
+    featuredEvents: Ticket[];
+    approvedEvents: Ticket[];
+    updateAvailableTickets: (id: string, quantity: number) => void;
+}
+
 export interface Sector {
     idEvent: string;
     idSector: number;
@@ -120,4 +136,22 @@ export interface CarouselProps {
     currentEventIndex: number;
     onPreviousEvent: () => void;
     onNextEvent: () => void;
+}
+
+export interface EventCardTicket {
+    id: string;
+    eventId: string;
+    eventName: string;
+    date: string;
+    time: string;
+    location: string;
+    price: number;
+    type: string;
+    imageUrl?: string;
+    agotado: boolean;
+}
+
+export interface EventCardProps {
+    ticket: EventCardTicket;
+    index?: number;
 }

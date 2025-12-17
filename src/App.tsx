@@ -7,7 +7,6 @@ import CartPage from '@/pages/sales/checkout/CartPage';
 import Pay from '@/pages/sales/checkout/Pay';
 import AdminPanel from '@/pages/admin/AdminPanel';
 import { AdminMessages } from '@/pages/admin/AdminMessages';
-
 import MyTickets from '@/pages/sales/tickets/MyTickets';
 import Help from '@/pages/support/Help';
 import EventDetailPage from '@/pages/events/detail/EventDetailPage';
@@ -38,9 +37,6 @@ import Failure from '@/pages/sales/checkout/Failure';
 import ChatAssistant from '@/pages/support/ChatAssistant';
 import FatalErrorPage from '@/shared/error/FatalErrorPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
-
-
-
 
 const App: React.FC = () => {
   const { login } = useAuth();

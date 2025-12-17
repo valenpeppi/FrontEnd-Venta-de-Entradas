@@ -27,6 +27,7 @@ const EventDetailBody: React.FC = () => {
     setAppMessage
   } = useEventDetailActions();
 
+
   if (!summary) return null;
 
   const currentSelectedSector = sectors.find((s) => s.idSector === selectedSector);

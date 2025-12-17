@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/hooks/useCart';
 import styles from '@/pages/sales/checkout/styles/CarritoPage.module.css';
 import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
-
 import {
   MdCalendarToday,
   MdAccessTime,
@@ -12,7 +11,6 @@ import {
   MdEventSeat,
   MdAttachMoney,
 } from "react-icons/md";
-
 type CartItemGroupKey = string;
 
 const CartPage = () => {

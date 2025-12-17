@@ -4,20 +4,7 @@ import { FaCalendarAlt, FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '@/shared/components/ConfirmationModal';
 import StatusBadge from '@/shared/components/StatusBadge';
-
-interface CompanyEventCardProps {
-    event: {
-        idEvent: string;
-        name: string;
-        date: string;
-        imageUrl?: string;
-        state: string;
-        soldPercentage: number;
-        soldSeats: number;
-        totalSeats: number;
-    };
-    onDelete?: (id: string) => void;
-}
+import type { CompanyEventCardProps } from '@/types/company';
 
 const CompanyEventCard: React.FC<CompanyEventCardProps> = ({ event, onDelete }) => {
     const navigate = useNavigate();

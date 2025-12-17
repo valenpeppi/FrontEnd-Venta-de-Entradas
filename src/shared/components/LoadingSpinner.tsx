@@ -1,10 +1,7 @@
 import React from 'react';
 import styles from '@/shared/components/styles/LoadingSpinner.module.css';
+import type { LoadingSpinnerProps } from '@/types/common';
 
-interface LoadingSpinnerProps {
-    text?: string;
-    className?: string;
-}
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ text = "Cargando...", className = "" }) => {
     return (

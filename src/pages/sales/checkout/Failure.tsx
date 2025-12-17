@@ -4,7 +4,6 @@ import { useCart } from '@/hooks/useCart';
 import { PaymentService } from '@/services/PaymentService';
 import { MdCancel } from "react-icons/md";
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';
-
 import { StorageService } from '@/services/StorageService';
 
 const Failure: React.FC = () => {

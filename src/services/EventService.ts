@@ -1,4 +1,3 @@
-
 import api from '@/services/api';
 import type { EventType, EventSummary } from '@/types/events';
 

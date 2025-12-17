@@ -4,7 +4,6 @@
     display: flex;
     justify-content: center;
     padding: 3rem 1rem;
-    /* Removed opaque background-color to let global background show through */
 }
 
 .wrapper {
@@ -51,18 +50,13 @@
 }
 
 .contentCard {
-    /* Using a subtle glass effect instead of solid white to blend with backgrounds */
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-
     padding: 2.5rem;
     border-radius: 1.5rem;
-
-    /* Softer shadow and border */
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.5);
-
     color: #374151;
     line-height: 1.7;
     font-size: 1.05rem;
@@ -89,7 +83,6 @@
     }
 }
 
-/* Typography for content inside the card */
 .contentCard h2 {
     font-size: 1.5rem;
     font-weight: 700;

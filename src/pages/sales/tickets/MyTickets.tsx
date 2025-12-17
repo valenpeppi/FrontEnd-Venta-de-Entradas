@@ -4,7 +4,6 @@ import { SalesService } from '@/services/SalesService';
 import { useAuth } from '@/hooks/useAuth';
 import styles from '@/pages/sales/tickets/styles/MyTickets.module.css';
 import { PdfService } from '@/services/PdfService';
-
 import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
 import EmptyState from '@/shared/components/EmptyState';
 import { FaTicketAlt } from 'react-icons/fa';
@@ -17,8 +16,6 @@ const MyTickets: React.FC = () => {
   const [tickets, setTickets] = useState<PurchasedTicket[]>([]);
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-
 
   const isNonEnumeratedGroup = (g: PurchasedTicketGroup) => {
     if (g.sectorType) return g.sectorType.toLowerCase() === 'nonenumerated';

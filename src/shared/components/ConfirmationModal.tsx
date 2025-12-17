@@ -1,13 +1,7 @@
 import React from 'react';
 import styles from '@/shared/components/styles/ConfirmationModal.module.css';
+import type { ConfirmationModalProps } from '@/types/common';
 
-interface ConfirmationModalProps {
-    isOpen: boolean;
-    title: string;
-    message: string;
-    onConfirm: () => void;
-    onCancel: () => void;
-}
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, message, onConfirm, onCancel }) => {
     if (!isOpen) return null;

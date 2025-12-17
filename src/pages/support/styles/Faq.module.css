@@ -1,5 +1,3 @@
-/* Layout handled by SupportLayout */
-
 .faqList {
   display: flex;
   flex-direction: column;

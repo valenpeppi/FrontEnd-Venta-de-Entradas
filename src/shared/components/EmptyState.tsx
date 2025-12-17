@@ -1,13 +1,7 @@
-import React, { type ReactNode } from 'react';
+import React from 'react';
 import styles from '@/shared/components/styles/EmptyState.module.css';
+import type { EmptyStateProps } from '@/types/common';
 
-interface EmptyStateProps {
-    title: string;
-    description?: string;
-    icon?: ReactNode;
-    children?: ReactNode;  
-    compact?: boolean;  
-}
 
 const EmptyState: React.FC<EmptyStateProps> = ({ title, description, icon, children, compact = false }) => {
     return (

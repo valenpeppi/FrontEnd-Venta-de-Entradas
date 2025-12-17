@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import styles from '@/pages/home/styles/Carousel.module.css';
 import GlobalStyles from '@/shared/styles/GlobalStyles.module.css';
 import {
@@ -10,7 +9,6 @@ import {
   MdChevronLeft,
   MdChevronRight
 } from "react-icons/md";
-
 import type { CarouselProps } from '@/types/events';
 
 const Carousel: React.FC<CarouselProps> = ({

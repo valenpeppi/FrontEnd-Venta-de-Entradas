@@ -19,6 +19,7 @@ const EditEventPage: React.FC = () => {
         handleSubmit
     } = useEditEvent();
 
+
     if (loading) return <div>Cargando...</div>;
 
     return (

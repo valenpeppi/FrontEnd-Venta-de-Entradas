@@ -59,3 +59,78 @@ export interface GradientTextProps {
     children: ReactNode;
     className?: string;
 }
+
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: 'primary' | 'secondary' | 'danger' | 'outline' | 'ghost';
+    fullWidth?: boolean;
+    isLoading?: boolean;
+}
+
+export interface ConfirmationModalProps {
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    onCancel: () => void;
+}
+
+export interface EmptyStateProps {
+    title: string;
+    description?: string;
+    icon?: ReactNode;
+    children?: ReactNode;
+    compact?: boolean;
+}
+
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    label: string;
+    error?: string;
+    touched?: boolean;
+    containerClassName?: string;
+}
+
+export interface LoadingSpinnerProps {
+    text?: string;
+    className?: string;
+}
+
+export interface PasswordEvaluation {
+    strength: 'weak' | 'medium' | 'strong';
+    score: number;
+    feedback: string[];
+}
+
+export interface PasswordStrengthBarProps {
+    password: string;
+}
+
+import type { IconType } from 'react-icons';
+
+export interface StatsCardProps {
+    title: string;
+    value: string | number;
+    icon: IconType;
+    iconColorClass: string;
+}
+
+export interface StatusBadgeProps {
+    status: string;
+    label?: string;
+}
+
+export interface SupportLayoutProps {
+    children: ReactNode;
+    title: string;
+    subtitle?: string;
+    transparent?: boolean;
+}
+
+export interface FatalErrorPageProps {
+    error?: Error;
+    resetErrorBoundary?: () => void;
+}
+
+export interface GlobalErrorBoundaryProps {
+    children: ReactNode;
+}

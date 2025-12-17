@@ -8,24 +8,8 @@ import {
     MdAttachMoney,
     MdAccessTime
 } from 'react-icons/md';
+import type { EventCardProps } from '@/types/events';
 
-export interface EventCardTicket {
-    id: string;
-    eventId: string;
-    eventName: string;
-    date: string;
-    time: string;
-    location: string;
-    price: number;
-    type: string;
-    imageUrl?: string;
-    agotado: boolean;
-}
-
-interface EventCardProps {
-    ticket: EventCardTicket;
-    index?: number;
-}
 
 const EventCard: React.FC<EventCardProps> = ({ ticket, index = 0 }) => {
     const navigate = useNavigate();

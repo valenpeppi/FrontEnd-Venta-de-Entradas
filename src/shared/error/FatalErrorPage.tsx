@@ -1,19 +1,14 @@
 import React from 'react';
 import styles from '@/shared/error/styles/FatalErrorPage.module.css';
+import type { FatalErrorPageProps } from '@/types/common';
 
-interface FatalErrorPageProps {
-    error?: Error;
-    resetErrorBoundary?: () => void;
-}
-
- 
 const FatalErrorPage: React.FC<FatalErrorPageProps> = ({ error, resetErrorBoundary }) => {
     const handleRetry = () => {
-         
+
         if (resetErrorBoundary) {
             resetErrorBoundary();
         }
-         
+
         window.location.href = '/';
     };
 

@@ -1,12 +1,7 @@
-import React, { type ReactNode } from 'react';
+import React from 'react';
 import styles from '@/shared/components/styles/SupportLayout.module.css';
+import type { SupportLayoutProps } from '@/types/common';
 
-interface SupportLayoutProps {
-    children: ReactNode;
-    title: string;
-    subtitle?: string;
-    transparent?: boolean;
-}
 
 const SupportLayout: React.FC<SupportLayoutProps> = ({ children, title, subtitle, transparent = false }) => {
     return (

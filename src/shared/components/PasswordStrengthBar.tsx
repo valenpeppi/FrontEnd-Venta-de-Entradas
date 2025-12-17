@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './styles/PasswordStrengthBar.module.css';
-
-interface PasswordStrengthBarProps {
-  password: string;
-}
-
-interface PasswordEvaluation {
-  strength: 'weak' | 'medium' | 'strong';
-  score: number;
-  feedback: string[];
-}
+import type { PasswordStrengthBarProps, PasswordEvaluation } from '@/types/common';
 
 
 const evaluatePasswordStrength = (pwd: string): PasswordEvaluation => {

@@ -22,6 +22,12 @@ export interface AuthState {
     isLoading: boolean;
 }
 
+export type AuthAction =
+    | { type: 'INITIALIZE'; payload: { user: User | null } }
+    | { type: 'LOGIN'; payload: { user: User } }
+    | { type: 'LOGOUT' }
+    | { type: 'UPDATE_USER'; payload: Partial<User> };
+
 export interface AuthContextType {
     isLoggedIn: boolean;
     user: User | null;
@@ -56,4 +62,28 @@ export interface RegisterCompanyProps {
 export interface UserInfo {
     name: string;
     dni?: string | number;
+}
+
+export interface ChangePasswordModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export interface AuthLayoutProps {
+    children: ReactNode;
+    title: string;
+    footerText?: string;
+    footerLinkText?: string;
+    footerLinkTo?: string;
+    backButton?: boolean;
+}
+
+export interface AuthRouteProps {
+    children: ReactNode;
+    allowedRoles?: string[];
+    guestOnly?: boolean;
+}
+
+export interface RestrictCompanyRouteProps {
+    children: ReactNode;
 }

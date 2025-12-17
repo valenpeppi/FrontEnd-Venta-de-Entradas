@@ -24,4 +24,23 @@ export type CreateEventAction =
     | { type: 'SET_ERROR'; payload: { error: string | null } }
     | { type: 'RESET_FORM' }
     | { type: 'SET_IMAGE'; payload: { image: File | null } }
-    | { type: 'SET_LOADING'; payload: { loading: boolean } };
+
+export interface CompanyStats {
+    activeEvents: number;
+    ticketsSold: number;
+    totalRevenue: number;
+}
+
+export interface CompanyEventCardProps {
+    event: {
+        idEvent: string;
+        name: string;
+        date: string;
+        imageUrl?: string;
+        state: string;
+        soldPercentage: number;
+        soldSeats: number;
+        totalSeats: number;
+    };
+    onDelete?: (id: string) => void;
+}
