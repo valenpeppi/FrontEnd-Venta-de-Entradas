@@ -4,7 +4,7 @@ import type { Message } from '@/types/message';
 import styles from '@/pages/admin/styles/AdminMessages.module.css';
 import StatusBadge from "@/shared/components/StatusBadge";
 import EmptyState from "@/shared/components/EmptyState";
-import { FaInbox, FaReply, FaCheck, FaUser, FaPaperPlane, FaTimes } from 'react-icons/fa';
+import { FaInbox, FaReply, FaCheck, FaUser, FaPaperPlane, FaTimes, FaMagic, FaSpinner } from 'react-icons/fa';
 import { useMessage } from '@/hooks/useMessage';
 
 export const AdminMessages: React.FC = () => {
@@ -15,6 +15,7 @@ export const AdminMessages: React.FC = () => {
 
     const [replyingId, setReplyingId] = useState<string | null>(null);
     const [replyText, setReplyText] = useState('');
+    const [generating, setGenerating] = useState(false);
 
     const getStatusLabel = (status: string) => {
         switch (status) {
@@ -103,6 +104,21 @@ export const AdminMessages: React.FC = () => {
         }
     };
 
+    const handleGenerateReply = async (messageDescription: string) => {
+        if (generating) return;
+        setGenerating(true);
+        try {
+            const data = await MessageService.generateAIReply(messageDescription);
+            if (data && data.reply) {
+                setReplyText(data.reply);
+            }
+        } catch (e) {
+            setAppMessage('No se pudo generar la respuesta automática', 'error');
+        } finally {
+            setGenerating(false);
+        }
+    };
+
     if (loading) return <div className={styles.loadingState}>Cargando mensajes...</div>;
     if (error) return <div className={styles.error}>{error}</div>;
 
@@ -164,12 +180,22 @@ export const AdminMessages: React.FC = () => {
                                         value={replyText}
                                         onChange={(e) => setReplyText(e.target.value)}
                                         autoFocus
+                                        disabled={generating}
                                     />
                                     <div className={styles.formActions}>
-                                        <button className={`${styles.btn} ${styles.btnCancel}`} onClick={cancelReply}>
+                                        <button 
+                                            className={styles.btn} 
+                                            onClick={() => handleGenerateReply(msg.description)}
+                                            style={{ marginRight: 'auto', backgroundColor: '#8b5cf6', color: 'white' }}
+                                            title="Generar respuesta automática con IA"
+                                            disabled={generating}
+                                        >
+                                            {generating ? <FaSpinner className="spin" /> : <FaMagic />} {generating ? 'Generando...' : 'Generar con IA'}
+                                        </button>
+                                        <button className={`${styles.btn} ${styles.btnCancel}`} onClick={cancelReply} disabled={generating}>
                                             Cancelar
                                         </button>
-                                        <button className={`${styles.btn} ${styles.btnSend}`} onClick={() => submitReply(msg.idMessage)}>
+                                        <button className={`${styles.btn} ${styles.btnSend}`} onClick={() => submitReply(msg.idMessage)} disabled={generating}>
                                             <FaPaperPlane /> Enviar Respuesta
                                         </button>
                                     </div>

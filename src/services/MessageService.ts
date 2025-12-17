@@ -24,5 +24,10 @@ export const MessageService = {
     discardMessage: async (id: string) => {
         const response = await api.put(`/messages/${id}/discard`);
         return response.data;
+    },
+
+    generateAIReply: async (userMessage: string) => {
+        const response = await api.post('/ai/generate-reply', { userMessage });
+        return response.data;
     }
 };
