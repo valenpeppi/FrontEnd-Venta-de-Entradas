@@ -1,10 +1,7 @@
 import React from 'react';
 import styles from '@/shared/components/styles/StatusBadge.module.css';
+import type { StatusBadgeProps } from '@/types/common';
 
-interface StatusBadgeProps {
-    status: string;  
-    label?: string;  
-}
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label }) => {
     const getStatusClass = (s: string) => {

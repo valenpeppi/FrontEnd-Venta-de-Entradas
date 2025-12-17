@@ -121,3 +121,21 @@ export interface CarouselProps {
     onPreviousEvent: () => void;
     onNextEvent: () => void;
 }
+
+export interface EventCardTicket {
+    id: string;
+    eventId: string;
+    eventName: string;
+    date: string;
+    time: string;
+    location: string;
+    price: number;
+    type: string;
+    imageUrl?: string;
+    agotado: boolean;
+}
+
+export interface EventCardProps {
+    ticket: EventCardTicket;
+    index?: number;
+}

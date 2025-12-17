@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '@/shared/components/ConfirmationModal';
 import StatusBadge from '@/shared/components/StatusBadge';
 import type { CompanyEventCardProps } from '@/types/company';
+
 const CompanyEventCard: React.FC<CompanyEventCardProps> = ({ event, onDelete }) => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);

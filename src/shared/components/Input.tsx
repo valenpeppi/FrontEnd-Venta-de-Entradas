@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import styles from '@/shared/components/styles/Input.module.css';
 import { FaCheckCircle, FaExclamationCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
+import type { InputProps } from '@/types/common';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label: string;
-    error?: string;
-    touched?: boolean;
-    containerClassName?: string;
-}
 
 const Input: React.FC<InputProps> = ({
     label,
