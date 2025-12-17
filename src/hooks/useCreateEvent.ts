@@ -57,7 +57,6 @@ export const useCreateEvent = () => {
     const [sectors, setSectors] = useState<Sector[]>([]);
     const [types, setTypes] = useState<EventType[]>([]);
 
-    // Moved image logic to useImageUpload hook
     const {
         image,
         setImage,
@@ -73,20 +72,10 @@ export const useCreateEvent = () => {
     const { setAppMessage } = useMessage();
     const { user } = useAuth();
 
-    // Sync hook image state with reducer state
     useEffect(() => {
         dispatch({ type: 'SET_IMAGE', payload: { image } });
     }, [image]);
 
-    // Wrapper to match expected signature if needed or just use hook's direct handler
-    // But the reducer expects dispatch SET_IMAGE. 
-    // The hook manages 'image' state. We need to sync them or just rely on the hook's state
-    // but the reducer controls the submission data currently.
-    // The reducer has 'image' field.
-    // Ideally we remove 'image' from reducer and use the hook's state. 
-    // For now I'm syncing them to minimize impact on specific logic that might rely on state.image
-
-    // Intercept handleImageChange to just call hook's handler
     const handleImageChange = (file: File | null) => {
         originalHandleImageChange(file);
     };
@@ -174,7 +163,7 @@ export const useCreateEvent = () => {
             }
         }
 
-        if (!image) { // Check hook state instead of reducer state (although synced)
+        if (!image) {
             dispatch({ type: 'SET_ERROR', payload: { error: 'La imagen es obligatoria.' } });
             return;
         }
@@ -196,7 +185,7 @@ export const useCreateEvent = () => {
 
             setAppMessage('¡Evento creado exitosamente!', 'success');
             dispatch({ type: 'RESET_FORM' });
-            setImage(null); // Clear hook state
+            setImage(null);
             setImagePreview(null);
 
             if (user?.role === 'admin') {

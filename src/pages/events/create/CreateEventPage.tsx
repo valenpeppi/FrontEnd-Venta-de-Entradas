@@ -67,8 +67,6 @@ const CreateEventPage: React.FC = () => {
                 <input
                   type="date" id="date" value={state.date}
                   onChange={(e) => handleDateChange(e.target.value)}
-                  // WAIT: I can't access setAppMessage easily here unless exposed.
-                  // I'll modify the loop below to fix this.
                   required disabled={!state.idPlace}
                   min={new Date().toISOString().split("T")[0]}
                 />
