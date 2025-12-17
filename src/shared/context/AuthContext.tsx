@@ -1,16 +1,8 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
-
-import type { User, AuthState, AuthContextType, AuthProviderProps } from '@/types/auth';  
+import type { User, AuthState, AuthAction, AuthContextType, AuthProviderProps } from '@/types/auth';
 import { AuthService } from '@/services/AuthService';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-
-type AuthAction =
-  | { type: 'INITIALIZE'; payload: { user: User | null } }
-  | { type: 'LOGIN'; payload: { user: User } }
-  | { type: 'LOGOUT' }
-  | { type: 'UPDATE_USER'; payload: Partial<User> };
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
@@ -66,17 +58,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           const user = JSON.parse(userString);
 
-           
+
           const data = await AuthService.validateToken();
 
           if (data && data.valid && data.user) {
             const freshUser = data.user;
-             
+
             localStorage.setItem('user', JSON.stringify(freshUser));
             dispatch({ type: 'INITIALIZE', payload: { user: freshUser } });
           } else {
-             
-             
+
+
             dispatch({ type: 'INITIALIZE', payload: { user } });
           }
 
@@ -93,7 +85,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     validateToken();
 
-     
+
     const handleGlobalLogout = () => {
       logout();
     };

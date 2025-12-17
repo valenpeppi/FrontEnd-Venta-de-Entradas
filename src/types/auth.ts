@@ -22,6 +22,12 @@ export interface AuthState {
     isLoading: boolean;
 }
 
+export type AuthAction =
+    | { type: 'INITIALIZE'; payload: { user: User | null } }
+    | { type: 'LOGIN'; payload: { user: User } }
+    | { type: 'LOGOUT' }
+    | { type: 'UPDATE_USER'; payload: Partial<User> };
+
 export interface AuthContextType {
     isLoggedIn: boolean;
     user: User | null;

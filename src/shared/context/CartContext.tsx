@@ -1,36 +1,15 @@
 import { createContext, useReducer, useEffect, useContext } from 'react';
-
 import { SystemService } from '@/services/SystemService';
 import { SalesService } from '@/services/SalesService';
-import type { CartItem } from '@/types/cart';
-
-
-
-interface CartState {
-  cartItems: CartItem[];
-}
-
-type CartAction =
-  | { type: 'ADD_TO_CART'; payload: { ticket: Omit<CartItem, 'quantity'>; quantity: number } }
-  | { type: 'REMOVE_ITEM'; payload: { id: string } }
-  | { type: 'CLEAR_CART' }
-  | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
-  | { type: 'LOAD_CART'; payload: { items: CartItem[] } };
-
-interface CartContextType {
-  cartItems: CartItem[];
-  cartCount: number;
-  addToCart: (ticket: Omit<CartItem, 'quantity'>, quantity: number) => boolean;
-  removeItem: (id: string) => void;
-  clearCart: () => void;
-  updateItemQuantity: (id: string, newQuantity: number) => boolean;
-  canAddTicketsToEvent: (eventId: string | number, quantity: number) => Promise<boolean>;
-}
-
-import type { CartProviderProps } from '@/types/cart';
+import type {
+  CartItem,
+  CartState,
+  CartAction,
+  CartContextType,
+  CartProviderProps
+} from '@/types/cart';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
-
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
