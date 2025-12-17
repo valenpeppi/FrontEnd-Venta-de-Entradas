@@ -1,17 +1,15 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/shared/context/AuthContext';
+import type { RestrictCompanyRouteProps } from '@/types/auth';
 
-interface RestrictCompanyRouteProps {
-    children: React.ReactElement;
-}
 
 const RestrictCompanyRoute: React.FC<RestrictCompanyRouteProps> = ({ children }) => {
     const { user, isLoading } = useAuth();
     const location = useLocation();
 
     if (isLoading) {
-        return null;  
+        return null;
     }
 
     if (user?.role === 'company') {

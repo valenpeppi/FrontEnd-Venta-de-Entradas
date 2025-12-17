@@ -2,12 +2,8 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/shared/context/AuthContext';
 import { useMessage } from '@/shared/context/MessageContext';
+import type { AuthRouteProps } from '@/types/auth';
 
-interface AuthRouteProps {
-  children: React.ReactElement;
-  allowedRoles?: string[];
-  guestOnly?: boolean;
-}
 
 const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly }) => {
   const { isLoggedIn, user, isLoading } = useAuth();
@@ -27,7 +23,7 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
     return <Navigate to={to} state={{ from: location }} replace />;
   };
 
-   
+
   if (guestOnly) {
     if (isLoggedIn) {
       const redirectTo = user?.role === 'admin' ? '/admin/dashboard' : (user?.role === 'company' ? '/company/dashboard' : '/');
@@ -36,7 +32,7 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children, allowedRoles, guestOnly
     return children;
   }
 
-   
+
   if (allowedRoles) {
     if (!isLoggedIn) {
       return <RedirectWithMessage to="/login" message="Debes iniciar sesión para acceder a esta página." type="error" />;

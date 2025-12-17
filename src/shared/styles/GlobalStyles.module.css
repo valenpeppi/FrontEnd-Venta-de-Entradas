@@ -237,7 +237,6 @@
     padding: 10px 25px;
     font-size: 1rem;
     width: 100%;
-    /* Full width on mobile often looks better */
     max-width: 300px;
   }
 
@@ -251,21 +250,15 @@
   .formCard {
     padding: 30px 20px;
     margin: 0;
-    /* Remove margin, use container padding */
     width: 100%;
     max-width: 100%;
-    /* Allow full width */
     box-shadow: none;
-    /* Often cleaner on mobile */
     border-radius: 0;
-    /* Or keep small radius */
   }
 
   .mainContainer {
     padding: 20px 15px;
-    /* Less padding */
     align-items: flex-start;
-    /* Prevent vertical centering issues on small screens */
   }
 
   .formCard h2 {

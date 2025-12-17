@@ -77,3 +77,13 @@ export interface AuthLayoutProps {
     footerLinkTo?: string;
     backButton?: boolean;
 }
+
+export interface AuthRouteProps {
+    children: ReactNode;
+    allowedRoles?: string[];
+    guestOnly?: boolean;
+}
+
+export interface RestrictCompanyRouteProps {
+    children: ReactNode;
+}
