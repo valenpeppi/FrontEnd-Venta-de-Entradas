@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SupportLayout from '@/shared/components/SupportLayout';
 import styles from '@/pages/support/styles/Contact.module.css';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { MessageService } from '@/services/MessageService';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useMessage } from '@/hooks/useMessage';
 
 const Contact: React.FC = () => {
   const { user } = useAuth();
@@ -86,7 +86,7 @@ const Contact: React.FC = () => {
                 onChange={handleChange}
                 required
                 placeholder="tu@email.com"
-                disabled={!!user}  
+                disabled={!!user}
               />
             </div>
 

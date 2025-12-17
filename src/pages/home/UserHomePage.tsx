@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
-import { useEvents } from '@/shared/context/EventsContext';
+import { useEvents } from '@/hooks/useEvents';
 import { Link } from 'react-router-dom';
 import Carousel from '@/pages/home/Carousel';
 import styles from '@/pages/home/styles/UserHomePage.module.css';

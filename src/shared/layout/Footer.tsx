@@ -10,7 +10,7 @@ import visaIcon from '@/assets/visa.png';
 import mastercardIcon from '@/assets/mastercard.png';
 import paypalIcon from '@/assets/paypal.png';
 
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();

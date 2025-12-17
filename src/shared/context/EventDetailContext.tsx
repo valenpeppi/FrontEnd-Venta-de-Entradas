@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 
 import type { EventDetailContextType, EventSummary, Sector, Seat, EventDetailProviderProps } from '@/types/events';
 
-const EventDetailContext = createContext<EventDetailContextType | undefined>(undefined);
+export const EventDetailContext = createContext<EventDetailContextType | undefined>(undefined);
 
 
 export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ children }) => {
@@ -85,10 +85,4 @@ export const EventDetailProvider: React.FC<EventDetailProviderProps> = ({ childr
   );
 };
 
-export const useEventDetail = (): EventDetailContextType => {
-  const context = useContext(EventDetailContext);
-  if (context === undefined) {
-    throw new Error('useEventDetail debe ser usado dentro de un EventDetailProvider');
-  }
-  return context;
-};
+

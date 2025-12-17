@@ -1,9 +1,9 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 
-import type { User, AuthState, AuthContextType, AuthProviderProps } from '@/types/auth';  
+import type { User, AuthState, AuthContextType, AuthProviderProps } from '@/types/auth';
 import { AuthService } from '@/services/AuthService';
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 
 type AuthAction =
@@ -66,17 +66,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           const user = JSON.parse(userString);
 
-           
+
           const data = await AuthService.validateToken();
 
           if (data && data.valid && data.user) {
             const freshUser = data.user;
-             
+
             localStorage.setItem('user', JSON.stringify(freshUser));
             dispatch({ type: 'INITIALIZE', payload: { user: freshUser } });
           } else {
-             
-             
+
+
             dispatch({ type: 'INITIALIZE', payload: { user } });
           }
 
@@ -93,7 +93,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     validateToken();
 
-     
+
     const handleGlobalLogout = () => {
       logout();
     };
@@ -136,10 +136,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
-  }
-  return context;
-};
+

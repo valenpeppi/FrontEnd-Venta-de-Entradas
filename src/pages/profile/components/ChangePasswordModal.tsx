@@ -3,7 +3,7 @@ import styles from './styles/ChangePasswordModal.module.css';
 import globalStyles from '@/shared/styles/GlobalStyles.module.css';
 import { FiX, FiLock, FiAlertCircle, FiCheck } from 'react-icons/fi';
 import { AuthService } from '@/services/AuthService';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useMessage } from '@/hooks/useMessage';
 import PasswordStrengthBar from '@/shared/components/PasswordStrengthBar';
 
 interface ChangePasswordModalProps {
@@ -43,7 +43,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
             });
             setAppMessage('Contraseña actualizada correctamente', 'success');
             onClose();
-             
+
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');

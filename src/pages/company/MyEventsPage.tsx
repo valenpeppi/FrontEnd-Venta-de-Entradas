@@ -4,8 +4,8 @@ import { EventService } from '@/services/EventService';
 import CompanyEventCard from '@/shared/components/CompanyEventCard';
 import EmptyState from '@/shared/components/EmptyState';
 import styles from '@/pages/company/styles/MyEventsPage.module.css';
-import { useMessage } from '@/shared/context/MessageContext';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useMessage } from '@/hooks/useMessage';
+import { useAuth } from '@/hooks/useAuth';
 import { FaCalendarPlus } from 'react-icons/fa';
 
 const MyEventsPage: React.FC = () => {

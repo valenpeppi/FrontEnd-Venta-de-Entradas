@@ -21,9 +21,9 @@ import RegisterCompany from '@/pages/auth/register/RegisterCompany';
 import ForgotPasswordPage from '@/pages/auth/forgot-password/ForgotPasswordPage';
 import ResetPasswordPage from '@/pages/auth/reset-password/ResetPasswordPage';
 import CompanyDashboardPage from '@/pages/company/CompanyDashboardPage';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import type { User } from '@/types/auth';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useMessage } from '@/hooks/useMessage';
 import styles from '@/shared/styles/App.module.css';
 import globalStyles from '@/shared/styles/GlobalStyles.module.css';
 import AuthRoute from '@/shared/AuthRoute';
@@ -67,7 +67,7 @@ const App: React.FC = () => {
   const handleCompanyLoginSuccess = (company: any, token: string) => {
     const companyUser: User = {
       ...company,
-      name: company.name || company.companyName,  
+      name: company.name || company.companyName,
       role: 'company'
     };
     login(companyUser, token);

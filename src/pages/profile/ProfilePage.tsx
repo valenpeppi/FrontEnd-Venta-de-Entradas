@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { AuthService } from '@/services/AuthService';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useMessage } from '@/hooks/useMessage';
 import styles from '@/pages/profile/styles/ProfilePage.module.css';
 import globalStyles from '@/shared/styles/GlobalStyles.module.css';
 import { FiUser, FiMail, FiSave, FiEdit2 } from 'react-icons/fi';
@@ -14,7 +14,7 @@ const ProfilePage: React.FC = () => {
     const { setAppMessage } = useMessage();
     const navigate = useNavigate();
 
-     
+
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
@@ -54,8 +54,8 @@ const ProfilePage: React.FC = () => {
 
             await AuthService.updateUser(updateData);
 
-             
-             
+
+
             updateUser(updateData);
 
             setAppMessage('Perfil actualizado correctamente', 'success');
@@ -133,7 +133,7 @@ const ProfilePage: React.FC = () => {
                                 <input
                                     type="date"
                                     className={isEditing ? styles.input : styles.inputDisabled}
-                                    value={birthDate}  
+                                    value={birthDate}
                                     onChange={(e) => setBirthDate(e.target.value)}
                                     disabled={!isEditing}
                                 />
@@ -224,7 +224,7 @@ const ProfilePage: React.FC = () => {
                                     className={styles.cancelBtn}
                                     onClick={() => {
                                         setIsEditing(false);
-                                         
+
                                         setName(user.name || '');
                                         setSurname(user.surname || '');
                                         setPhone(user.phone || '');

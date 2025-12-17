@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '@/shared/context/CartContext';
+import { useCart } from '@/hooks/useCart';
 import styles from '@/pages/sales/checkout/styles/CarritoPage.module.css';
 import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
 
@@ -139,7 +139,7 @@ const CartPage = () => {
                       {formatTime(group.date)}
                     </p>
                   )}
-                  
+
                   {group.placeName && (
                     <p className={styles.itemRow}>
                       <MdLocationOn className={styles.icon} />

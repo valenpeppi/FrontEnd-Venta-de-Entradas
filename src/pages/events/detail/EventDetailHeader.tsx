@@ -7,7 +7,7 @@ import {
   MdConfirmationNumber,
 } from "react-icons/md";
 import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
-import { useEventDetail } from '@/shared/context/EventDetailContext';
+import { useEventDetail } from '@/hooks/useEventDetail';
 import styles from '@/pages/events/detail/styles/EventDetailPage.module.css';
 
 const EventDetailHeader: React.FC = () => {

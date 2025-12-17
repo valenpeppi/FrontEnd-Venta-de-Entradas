@@ -3,8 +3,8 @@ import type { ReactNode } from 'react';
 import Navbar from '@/shared/layout/Navbar';
 import Footer from '@/shared/layout/Footer';
 import MessageDisplay from '@/shared/MessageDisplay';
-import { useMessage } from '@/shared/context/MessageContext';
-import { useLocation } from "react-router-dom"; 
+import { useMessage } from '@/hooks/useMessage';
+import { useLocation } from "react-router-dom";
 import styles from '@/shared/layout/styles/Layout.module.css';
 
 interface LayoutProps {
@@ -22,13 +22,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className={disableHeaderFooter ? styles.disabled : ""}>
         <Navbar />
       </div>
-      
+
       <div className={styles.messageListContainer}>
         {messages.map(message => (
-          <MessageDisplay 
+          <MessageDisplay
             key={message.id}
-            message={message.text} 
-            type={message.type} 
+            message={message.text}
+            type={message.type}
           />
         ))}
       </div>

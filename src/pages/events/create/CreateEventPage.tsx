@@ -1,9 +1,9 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useMessage } from '@/hooks/useMessage';
 import { EventService } from '@/services/EventService';
 import { PlaceService } from '@/services/PlaceService';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import styles from '@/pages/events/create/styles/CreateEventPage.module.css';
 

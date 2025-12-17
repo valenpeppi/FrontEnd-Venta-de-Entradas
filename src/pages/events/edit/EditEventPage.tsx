@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useMessage } from '@/hooks/useMessage';
 import { EventService } from '@/services/EventService';
 import { PlaceService } from '@/services/PlaceService';
 import styles from '@/pages/events/create/styles/CreateEventPage.module.css';

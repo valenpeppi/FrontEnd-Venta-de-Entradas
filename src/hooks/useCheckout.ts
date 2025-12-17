@@ -1,8 +1,8 @@
 
 import { useState, useMemo, useEffect } from 'react';
-import { useCart } from '@/shared/context/CartContext.tsx';
-import { useAuth } from '@/shared/context/AuthContext.tsx';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useCart } from '@/hooks/useCart';
+import { useAuth } from '@/hooks/useAuth';
+import { useMessage } from '@/hooks/useMessage';
 import { PaymentService } from '@/services/PaymentService';
 import { StorageService } from '@/services/StorageService';
 import type { PaymentTicketGroup as TicketGroup, GroupedByEvent } from '@/types/purchase.ts';
@@ -13,7 +13,6 @@ export const useCheckout = () => {
     const { setAppMessage } = useMessage();
     const [isProcessing, setIsProcessing] = useState(false);
 
-    // Auto-release stale reservations (e.g., from Back button navigation)
     useEffect(() => {
         const checkPendingReservations = async () => {
             const ticketGroupsRaw = StorageService.getItem('ticketGroups');

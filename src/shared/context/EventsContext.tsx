@@ -21,7 +21,7 @@ interface EventsContextType {
 
 import type { EventsProviderProps } from '@/types/events';
 
-const EventsContext = createContext<EventsContextType | undefined>(undefined);
+export const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
 const eventsReducer = (state: EventsState, action: EventsAction): EventsState => {
   switch (action.type) {
@@ -84,8 +84,4 @@ function EventsProvider({ children }: EventsProviderProps) {
 
 export { EventsProvider };
 
-export const useEvents = () => {
-  const ctx = useContext(EventsContext);
-  if (!ctx) throw new Error('useEvents debe ser usado dentro de un EventsProvider');
-  return ctx;
-};
+

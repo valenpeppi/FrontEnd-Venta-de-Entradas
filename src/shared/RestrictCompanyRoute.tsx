@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 interface RestrictCompanyRouteProps {
     children: React.ReactElement;
@@ -11,7 +11,7 @@ const RestrictCompanyRoute: React.FC<RestrictCompanyRouteProps> = ({ children })
     const location = useLocation();
 
     if (isLoading) {
-        return null;  
+        return null;
     }
 
     if (user?.role === 'company') {

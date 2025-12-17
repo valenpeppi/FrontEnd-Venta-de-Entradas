@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthService } from '@/services/AuthService';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useMessage } from '@/hooks/useMessage';
 import MessageDisplay from '@/shared/MessageDisplay';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';

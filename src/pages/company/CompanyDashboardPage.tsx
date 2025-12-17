@@ -5,7 +5,7 @@ import StatsCard from '@/shared/components/StatsCard';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import { FaMoneyBillWave, FaTicketAlt, FaCalendarCheck, FaCalendarPlus, FaList, FaUserEdit } from 'react-icons/fa';
 import styles from '@/pages/company/styles/CompanyDashboardPage.module.css';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 interface CompanyStats {
     activeEvents: number;

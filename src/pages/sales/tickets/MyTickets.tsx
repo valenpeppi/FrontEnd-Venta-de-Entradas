@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SalesService } from '@/services/SalesService';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import styles from '@/pages/sales/tickets/styles/MyTickets.module.css';
 import { PdfService } from '@/services/PdfService';
 
