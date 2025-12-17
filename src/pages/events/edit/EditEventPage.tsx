@@ -96,11 +96,6 @@ const EditEventPage: React.FC = () => {
                     setImagePreview(`${event.imageUrl}`);
                 }
 
-
-
-
-
-
             } catch (e) {
                 console.error("Error al cargar el evento:", e);
                 setAppMessage('Error al cargar el evento.', 'error');

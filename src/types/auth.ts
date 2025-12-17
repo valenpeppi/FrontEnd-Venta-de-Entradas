@@ -57,3 +57,8 @@ export interface UserInfo {
     name: string;
     dni?: string | number;
 }
+
+export interface ChangePasswordModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+}

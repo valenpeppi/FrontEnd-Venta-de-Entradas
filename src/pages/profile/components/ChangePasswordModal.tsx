@@ -5,12 +5,7 @@ import { FiX, FiLock, FiAlertCircle, FiCheck } from 'react-icons/fi';
 import { AuthService } from '@/services/AuthService';
 import { useMessage } from '@/shared/context/MessageContext';
 import PasswordStrengthBar from '@/shared/components/PasswordStrengthBar';
-
-interface ChangePasswordModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
-
+import type { ChangePasswordModalProps } from '@/types/auth';
 const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose }) => {
     const { setAppMessage } = useMessage();
     const [currentPassword, setCurrentPassword] = useState('');
@@ -43,7 +38,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
             });
             setAppMessage('Contraseña actualizada correctamente', 'success');
             onClose();
-             
+
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');

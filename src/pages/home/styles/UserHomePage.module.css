@@ -226,7 +226,6 @@
   .eventTypeFilterContainer {
     flex-wrap: nowrap;
     overflow-x: auto;
-    /* Scrollable filters on mobile */
     justify-content: flex-start;
     padding-bottom: 1.5rem;
     -webkit-overflow-scrolling: touch;

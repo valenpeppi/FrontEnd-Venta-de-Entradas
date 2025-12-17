@@ -2,7 +2,6 @@ import type { SectorListProps } from '@/types/events';
 import styles from '@/pages/events/seats/styles/SectorList.module.css';
 
 
-
 const SectorList: React.FC<SectorListProps> = ({
   sectors,
   onQuantityChange,
