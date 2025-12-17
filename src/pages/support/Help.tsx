@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import SupportLayout from '@/shared/components/SupportLayout';
 import styles from '@/pages/support/styles/Help.module.css';
 import { FaQuestionCircle, FaEnvelope, FaInfoCircle } from 'react-icons/fa';
-
 import { useAuth } from '@/shared/context/AuthContext';
 
 const Help: React.FC = () => {

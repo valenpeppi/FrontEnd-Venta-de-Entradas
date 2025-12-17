@@ -3,7 +3,6 @@
     justify-content: center;
     padding: 60px 20px;
     min-height: calc(100vh - 80px);
-    /* Approx height minus navbar */
 }
 
 .card {
@@ -130,7 +129,6 @@
     cursor: pointer;
     transition: all 0.2s;
     white-space: nowrap;
-    /* Prevent line break */
     display: flex;
     align-items: center;
     gap: 8px;
@@ -201,7 +199,6 @@
     color: #dc2626;
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .container {
         padding: 20px 15px;
@@ -226,14 +223,12 @@
 
     .actionBtn {
         width: 100%;
-        /* Full width buttons on mobile usually look better */
         justify-content: center;
         padding: 12px 20px !important;
     }
 
     .editActions {
         flex-direction: column-reverse;
-        /* Stack buttons, cancel at bottom usually safer or top? Standard is vertical stack */
         gap: 10px;
     }
 

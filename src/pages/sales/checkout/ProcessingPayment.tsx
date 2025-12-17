@@ -40,8 +40,6 @@ const ProcessingPayment = () => {
       }
     };
 
-
-
     const pollSaleConfirmation = async () => {
       const dniClient = StorageService.getItem("dniClient");
       if (!dniClient) {
@@ -62,7 +60,6 @@ const ProcessingPayment = () => {
           return;
         }
       }
-
 
       setLoadingMessage("Verificando confirmación de venta...");
       const MAX_ATTEMPTS = 8;

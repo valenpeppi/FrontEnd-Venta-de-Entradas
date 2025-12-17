@@ -12,7 +12,7 @@ const About: React.FC = () => {
     >
       <div className={styles.aboutContainer}>
 
-        {/* Hero Section */}
+        { }
         <div className={styles.heroCard}>
           <p className={styles.heroText}>
             En <span className={styles.heroHighlight}>TicketApp</span>, creemos que la vida se mide en momentos.
@@ -21,7 +21,7 @@ const About: React.FC = () => {
           </p>
         </div>
 
-        {/* Stats Section */}
+        { }
         <div className={styles.statsContainer}>
           <div className={styles.statCard}>
             <span className={styles.statNumber}>+1M</span>
@@ -37,7 +37,7 @@ const About: React.FC = () => {
           </div>
         </div>
 
-        {/* Values Section */}
+        { }
         <div className={styles.valuesSection}>
           <h2 className={styles.valuesTitle}>¿Por qué elegirnos?</h2>
 
