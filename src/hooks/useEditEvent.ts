@@ -1,11 +1,10 @@
 import { useReducer, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useMessage } from '@/hooks/useMessage';
-import { useAuth } from '@/hooks/useAuth';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { EventService } from '@/services/EventService';
 import { PlaceService } from '@/services/PlaceService';
-import type { EventType, Sector } from '@/types/events';
+import type { EventType } from '@/types/events';
 import type { Place, CreateEventState, CreateEventAction } from '@/types/company';
 
 const createEventReducer = (state: CreateEventState, action: CreateEventAction): CreateEventState => {
@@ -31,14 +30,16 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
             };
         case 'SET_IMAGE':
             return { ...state, image: action.payload.image };
-        case 'SET_LOADING':
-            return { ...state, loading: action.payload.loading };
         default:
             return state;
     }
 };
 
-export const useCreateEvent = () => {
+export const useEditEvent = () => {
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+    const { setAppMessage } = useMessage();
+
     const [state, dispatch] = useReducer(createEventReducer, {
         eventName: '',
         description: '',
@@ -50,14 +51,12 @@ export const useCreateEvent = () => {
         idPlace: '',
         occupiedDates: [],
         sectorPrices: {},
-        loading: false,
     });
 
     const [places, setPlaces] = useState<Place[]>([]);
-    const [sectors, setSectors] = useState<Sector[]>([]);
     const [types, setTypes] = useState<EventType[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    // Moved image logic to useImageUpload hook
     const {
         image,
         setImage,
@@ -69,24 +68,10 @@ export const useCreateEvent = () => {
         handleDrop
     } = useImageUpload();
 
-    const navigate = useNavigate();
-    const { setAppMessage } = useMessage();
-    const { user } = useAuth();
-
-    // Sync hook image state with reducer state
     useEffect(() => {
         dispatch({ type: 'SET_IMAGE', payload: { image } });
     }, [image]);
 
-    // Wrapper to match expected signature if needed or just use hook's direct handler
-    // But the reducer expects dispatch SET_IMAGE. 
-    // The hook manages 'image' state. We need to sync them or just rely on the hook's state
-    // but the reducer controls the submission data currently.
-    // The reducer has 'image' field.
-    // Ideally we remove 'image' from reducer and use the hook's state. 
-    // For now I'm syncing them to minimize impact on specific logic that might rely on state.image
-
-    // Intercept handleImageChange to just call hook's handler
     const handleImageChange = (file: File | null) => {
         originalHandleImageChange(file);
     };
@@ -102,46 +87,63 @@ export const useCreateEvent = () => {
                 setPlaces(placesRes);
             } catch (e) {
                 console.error("Error al cargar datos iniciales:", e);
-                setAppMessage('No se pudieron cargar los datos para crear el evento.', 'error');
+                setAppMessage('No se pudieron cargar los datos.', 'error');
             }
         };
         fetchInitialData();
     }, [setAppMessage]);
 
     useEffect(() => {
+        const fetchEventDetails = async () => {
+            if (!id) return;
+            try {
+                const event = await EventService.getEventById(id);
+
+                dispatch({ type: 'SET_FIELD', payload: { field: 'eventName', value: event.eventName } });
+                dispatch({ type: 'SET_FIELD', payload: { field: 'description', value: event.description } });
+                dispatch({ type: 'SET_FIELD', payload: { field: 'idEventType', value: event.idEventType } });
+                dispatch({ type: 'SET_FIELD', payload: { field: 'idPlace', value: event.idPlace } });
+
+                const eventDate = new Date(event.date);
+                dispatch({ type: 'SET_FIELD', payload: { field: 'date', value: eventDate.toISOString().split('T')[0] } });
+                dispatch({ type: 'SET_FIELD', payload: { field: 'time', value: eventDate.toTimeString().slice(0, 5) } });
+
+                if (event.imageUrl) {
+                    setImagePreview(`${event.imageUrl}`);
+                }
+
+            } catch (e) {
+                console.error("Error al cargar el evento:", e);
+                setAppMessage('Error al cargar el evento.', 'error');
+                navigate('/company/my-events');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchEventDetails();
+    }, [id, setAppMessage, navigate, setImagePreview]);
+
+    useEffect(() => {
         const fetchSectorsAndDates = async () => {
             if (state.idPlace) {
                 try {
-                    const [sectorsRes, datesRes] = await Promise.all([
+                    const [, datesRes] = await Promise.all([
                         PlaceService.getPlaceSectors(state.idPlace),
                         PlaceService.getAvailableDates(state.idPlace)
                     ]);
-                    setSectors(sectorsRes);
                     dispatch({ type: 'SET_OCCUPIED_DATES', payload: { dates: datesRes } });
-                    dispatch({ type: 'SET_FIELD', payload: { field: 'sectorPrices', value: {} } });
                 } catch (e) {
                     console.error("Error al cargar sectores o fechas:", e);
-                    setAppMessage('No se pudieron cargar los detalles del lugar.', 'error');
                 }
-            } else {
-                setSectors([]);
             }
         };
-        fetchSectorsAndDates();
-    }, [state.idPlace, setAppMessage]);
+        if (!loading) {
+            fetchSectorsAndDates();
+        }
+    }, [state.idPlace, loading]);
 
     const handleFieldChange = (field: keyof CreateEventState, value: any) => {
         dispatch({ type: 'SET_FIELD', payload: { field, value } });
-    };
-
-    const handlePriceChange = (sectorId: number, price: string) => {
-        dispatch({
-            type: 'SET_FIELD',
-            payload: {
-                field: 'sectorPrices',
-                value: { ...state.sectorPrices, [sectorId]: price }
-            }
-        });
     };
 
     const handleDateChange = (value: string) => {
@@ -162,69 +164,41 @@ export const useCreateEvent = () => {
             return;
         }
 
-        const sectorsWithPrices = sectors.map(sector => ({
-            idSector: sector.idSector,
-            price: parseFloat(state.sectorPrices[sector.idSector] || '0')
-        }));
-
-        for (const item of sectorsWithPrices) {
-            if (isNaN(item.price) || item.price <= 0) {
-                dispatch({ type: 'SET_ERROR', payload: { error: `El precio para el sector "${sectors.find(s => s.idSector === item.idSector)?.name}" no es válido.` } });
-                return;
-            }
-        }
-
-        if (!image) { // Check hook state instead of reducer state (although synced)
-            dispatch({ type: 'SET_ERROR', payload: { error: 'La imagen es obligatoria.' } });
-            return;
-        }
-
         const datetime = new Date(`${state.date}T${state.time}:00`).toISOString();
 
         const formData = new FormData();
         formData.append('name', state.eventName);
         formData.append('description', state.description);
         formData.append('date', datetime);
-        formData.append('idEventType', state.idEventType);
-        formData.append('idPlace', state.idPlace);
-        formData.append('sectors', JSON.stringify(sectorsWithPrices));
-        formData.append('image', image);
+        formData.append('idEventType', String(state.idEventType));
+        formData.append('idPlace', String(state.idPlace));
+        if (image) {
+            formData.append('image', image);
+        }
 
         try {
-            dispatch({ type: 'SET_LOADING', payload: { loading: true } });
-            await EventService.createEvent(formData);
-
-            setAppMessage('¡Evento creado exitosamente!', 'success');
-            dispatch({ type: 'RESET_FORM' });
-            setImage(null); // Clear hook state
-            setImagePreview(null);
-
-            if (user?.role === 'admin') {
-                navigate('/admin/dashboard');
-            } else {
-                navigate('/');
+            if (id) {
+                await EventService.updateEvent(String(id), formData);
+                setAppMessage('¡Evento actualizado exitosamente!', 'success');
+                navigate('/company/my-events');
             }
-
         } catch (err: any) {
-            console.error('Error al crear evento:', err);
-            const errorMessage = (err?.response?.data as any)?.message || 'Error al crear el evento.';
+            console.error('Error al actualizar evento:', err);
+            const errorMessage = (err?.response?.data as any)?.message || 'Error al actualizar el evento.';
             dispatch({ type: 'SET_ERROR', payload: { error: errorMessage } });
             setAppMessage(`Error: ${errorMessage}`, 'error');
-        } finally {
-            dispatch({ type: 'SET_LOADING', payload: { loading: false } });
         }
     };
 
     return {
         state,
         places,
-        sectors,
         types,
         imagePreview,
         isDragging,
+        loading,
         navigate,
         handleFieldChange,
-        handlePriceChange,
         handleImageChange,
         handleDateChange,
         handleDragEvents,
