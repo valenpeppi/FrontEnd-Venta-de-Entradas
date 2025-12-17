@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMessage } from '@/shared/context/MessageContext';
 import { EventService } from '@/services/EventService';
 import { PlaceService } from '@/services/PlaceService';
+import { useAuth } from '@/shared/context/AuthContext';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import styles from '@/pages/events/create/styles/CreateEventPage.module.css';
 
@@ -61,6 +62,7 @@ const CreateEventPage: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const navigate = useNavigate();
   const { setAppMessage } = useMessage();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -188,7 +190,13 @@ const CreateEventPage: React.FC = () => {
 
       setAppMessage('¡Evento creado exitosamente!', 'success');
       dispatch({ type: 'RESET_FORM' });
-      navigate('/');
+
+      if (user?.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
+
     } catch (err: any) {
       console.error('Error al crear evento:', err);
       const errorMessage = (err?.response?.data as any)?.message || 'Error al crear el evento.';
@@ -347,6 +355,3 @@ const CreateEventPage: React.FC = () => {
 };
 
 export default CreateEventPage;
-
-
-
