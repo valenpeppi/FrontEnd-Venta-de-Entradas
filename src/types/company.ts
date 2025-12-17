@@ -30,3 +30,17 @@ export interface CompanyStats {
     ticketsSold: number;
     totalRevenue: number;
 }
+
+export interface CompanyEventCardProps {
+    event: {
+        idEvent: string;
+        name: string;
+        date: string;
+        imageUrl?: string;
+        state: string;
+        soldPercentage: number;
+        soldSeats: number;
+        totalSeats: number;
+    };
+    onDelete?: (id: string) => void;
+}
