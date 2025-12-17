@@ -62,3 +62,12 @@ export interface ChangePasswordModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
+
+export interface AuthLayoutProps {
+    children: ReactNode;
+    title: string;
+    footerText?: string;
+    footerLinkText?: string;
+    footerLinkTo?: string;
+    backButton?: boolean;
+}

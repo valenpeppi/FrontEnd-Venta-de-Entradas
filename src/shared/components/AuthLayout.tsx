@@ -1,15 +1,8 @@
-import React, { type ReactNode } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from '@/shared/components/styles/AuthLayout.module.css';
+import type { AuthLayoutProps } from '@/types/auth';
 
-interface AuthLayoutProps {
-    children: ReactNode;
-    title: string;
-    footerText?: string;
-    footerLinkText?: string;
-    footerLinkTo?: string;
-    backButton?: boolean;
-}
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({
     children,
@@ -19,6 +12,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
     footerLinkTo,
     backButton = false
 }) => {
+
+
     return (
         <div className={styles.container}>
             <div className={styles.card}>
