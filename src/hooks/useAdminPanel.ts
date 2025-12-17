@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AdminService } from "@/services/AdminService";
+import { useMessage } from "@/hooks/useMessage";
 import type { AdminEvent } from '@/types/admin';
 
 type FilterType = 'all' | 'pending' | 'approved' | 'rejected' | 'featured';
@@ -10,6 +11,7 @@ export const useAdminPanel = () => {
     const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [filter, setFilter] = useState<FilterType>('all');
+    const { setAppMessage } = useMessage();
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -70,22 +72,26 @@ export const useAdminPanel = () => {
         try {
             if (action === 'approve') {
                 await AdminService.approveEvent(id);
+                setAppMessage('Evento aprobado con éxito', 'success');
             } else if (action === 'reject') {
                 await AdminService.rejectEvent(id);
+                setAppMessage('Evento rechazado', 'success');
             } else if (action === 'delete') {
                 await AdminService.deleteEventState(id);
+                setAppMessage('Evento eliminado con éxito', 'success');
             }
         } catch (e: any) {
             if (action === "delete") {
                 const msg = e?.response?.data?.message || e.message || "No se pudo eliminar el evento.";
-                alert(`${msg} Recargando...`);
-                window.location.reload();
+                setAppMessage(`${msg} Recargando...`, 'error');
+                setTimeout(() => window.location.reload(), 1500);
                 return;
             }
 
-            alert(
+            setAppMessage(
                 e?.response?.data?.message ||
-                `No se pudo completar la acción: ${action}`
+                `No se pudo completar la acción: ${action}`,
+                'error'
             );
         }
     };
@@ -105,9 +111,10 @@ export const useAdminPanel = () => {
                     e.idEvent === id ? { ...e, featured: !e.featured } : e
                 )
             );
-            alert(
+            setAppMessage(
                 e?.response?.data?.message ||
-                `No se pudo actualizar el estado de destacado.`
+                `No se pudo actualizar el estado de destacado.`,
+                'error'
             );
         }
     };

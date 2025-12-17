@@ -5,11 +5,13 @@ import styles from '@/pages/admin/styles/AdminMessages.module.css';
 import StatusBadge from "@/shared/components/StatusBadge";
 import EmptyState from "@/shared/components/EmptyState";
 import { FaInbox, FaReply, FaCheck, FaUser, FaPaperPlane, FaTimes } from 'react-icons/fa';
+import { useMessage } from '@/hooks/useMessage';
 
 export const AdminMessages: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { setAppMessage } = useMessage();
 
     const [replyingId, setReplyingId] = useState<string | null>(null);
     const [replyText, setReplyText] = useState('');
@@ -68,8 +70,9 @@ export const AdminMessages: React.FC = () => {
             setMessages(prev => prev.map(m => m.idMessage === id ? { ...m, state: 'answered', response: replyText } : m));
             setReplyingId(null);
             await MessageService.replyMessage(id, replyText);
+            setAppMessage('Mensaje respondido correctamente', 'success');
         } catch (e) {
-            alert('Error al responder mensaje');
+            setAppMessage('Error al responder mensaje', 'error');
             loadMessages();
         }
     };
@@ -81,8 +84,9 @@ export const AdminMessages: React.FC = () => {
                 return sortMessages(updated);
             });
             await MessageService.rejectMessage(id);
+            setAppMessage('Mensaje rechazado', 'success');
         } catch (e) {
-            alert('Error al rechazar mensaje');
+            setAppMessage('Error al rechazar mensaje', 'error');
             loadMessages();
         }
     };
@@ -92,8 +96,9 @@ export const AdminMessages: React.FC = () => {
         try {
             setMessages(prev => prev.filter(m => m.idMessage !== id));
             await MessageService.discardMessage(id);
+            setAppMessage('Mensaje descartado', 'success');
         } catch (e) {
-            alert('Error al descartar mensaje');
+            setAppMessage('Error al descartar mensaje', 'error');
             loadMessages();
         }
     };

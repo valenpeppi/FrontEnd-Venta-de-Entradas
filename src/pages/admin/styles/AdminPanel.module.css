@@ -163,7 +163,6 @@
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #0f172a;
-  /* Dark text */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -173,7 +172,6 @@
 .desc {
   font-size: 0.9rem;
   color: #64748b;
-  /* Muted text */
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 3;
