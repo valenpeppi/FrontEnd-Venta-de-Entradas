@@ -44,7 +44,7 @@ export default function AdminPanel() {
     const normalizedQuery = searchQuery.trim().toLowerCase();
     if (normalizedQuery) {
       result = result.filter((event) =>
-        [event.name, event.description].some((text) => (text || "").toLowerCase().includes(normalizedQuery))
+        (event.name).toLowerCase().includes(normalizedQuery)
       );
     }
 
@@ -190,7 +190,7 @@ export default function AdminPanel() {
         <div className={styles.adminTools}>
           <input
             className={styles.adminSearch}
-            placeholder="Buscar por nombre..."
+            placeholder="Buscar por descripción..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -244,6 +244,14 @@ export default function AdminPanel() {
                   <p className={styles.desc} title={event.description}>
                     {event.description}
                   </p>
+                )}
+
+                {event.state === 'Pending' && (
+                  <div className={styles.metaInfo}>
+                    <p className={styles.organiserInfo}>
+                      <strong>Organizador:</strong> {event.organiser?.companyName || "Administrador"}
+                    </p>
+                  </div>
                 )}
               </div>
 
