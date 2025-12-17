@@ -91,7 +91,7 @@ const Navbar: React.FC = () => {
   };
 
   const closeUserMenu = () => {
-     
+
     setTimeout(() => setShowUserMenu(false), 200);
   };
 
@@ -109,7 +109,7 @@ const Navbar: React.FC = () => {
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
         <div className={styles.brandWrapper}>
-          <Link to={user?.role === 'company' ? "/company/dashboard" : "/"} className={styles.navbarBrand} onClick={closeMobileMenu}>
+          <Link to={user?.role === 'company' ? "/company/dashboard" : user?.role === 'admin' ? "/admin/dashboard" : "/"} className={styles.navbarBrand} onClick={closeMobileMenu}>
             <img src={logoTicket} alt="TicketApp Logo" className={styles.image1} />
             <GradientText>TicketApp</GradientText>
           </Link>

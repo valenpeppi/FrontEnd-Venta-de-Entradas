@@ -4,7 +4,6 @@
   align-items: center;
   min-height: calc(100vh - 10rem);
   padding: 2rem;
-  background: linear-gradient(to bottom right, #eff6ff, #c7d2fe);
   font-family: 'Inter', sans-serif;
   color: #1f2937;
 }
@@ -24,6 +23,7 @@
     transform: scale(0.98);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -188,11 +188,11 @@
 .occupiedDatesContainer {
   margin-top: 0.75rem;
   padding: 0.75rem;
-  background-color: #fef2f2; 
-  border: 1px solid #fecaca; 
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
   border-radius: 0.5rem;
   font-size: 0.9rem;
-  color: #991b1b; 
+  color: #991b1b;
 }
 
 .occupiedDatesContainer strong {
@@ -236,6 +236,7 @@
   -moz-appearance: textfield;
   appearance: none;
 }
+
 .priceInput::-webkit-outer-spin-button,
 .priceInput::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -325,4 +326,3 @@
     font-size: 0.9rem;
   }
 }
-
