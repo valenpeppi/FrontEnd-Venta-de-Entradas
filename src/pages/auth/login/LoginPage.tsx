@@ -8,10 +8,7 @@ import Button from '@/shared/components/Button';
 import AuthLayout from '@/shared/components/AuthLayout';
 import styles from '@/pages/auth/login/styles/LoginPage.module.css';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
-
-interface LoginPageProps {
-    onLoginSuccess: (userHelper: any, token: string) => void;
-}
+import type { LoginProps } from '@/types/auth';
 
 const CustomGoogleLoginButton = ({ onSuccess, onError }: { onSuccess: (response: any) => void, onError: () => void }) => {
     const login = useGoogleLogin({
@@ -28,7 +25,7 @@ const CustomGoogleLoginButton = ({ onSuccess, onError }: { onSuccess: (response:
     );
 };
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
+const LoginPage: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -104,7 +101,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
             if (response && response.token && response.user) {
                 onLoginSuccess(response.user, response.token);
-                 
+
                 if (response.user.role === 'admin' || response.user.role === 'ADMIN') {
                     navigate('/admin/dashboard');
                 } else if (response.user.role === 'company' || response.user.role === 'COMPANY') {

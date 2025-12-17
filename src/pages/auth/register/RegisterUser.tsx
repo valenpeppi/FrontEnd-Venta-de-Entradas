@@ -7,7 +7,6 @@ import Button from '@/shared/components/Button';
 import AuthLayout from '@/shared/components/AuthLayout';
 import PasswordStrengthBar from '@/shared/components/PasswordStrengthBar';
 import styles from '@/pages/auth/register/styles/RegisterUser.module.css';
-
 import type { RegisterUserProps } from '@/types/auth';
 
 const Register: React.FC<RegisterUserProps> = ({ onRegisterSuccess }) => {

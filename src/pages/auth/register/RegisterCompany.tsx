@@ -8,7 +8,6 @@ import Button from '@/shared/components/Button';
 import AuthLayout from '@/shared/components/AuthLayout';
 import PasswordStrengthBar from '@/shared/components/PasswordStrengthBar';
 import styles from '@/pages/auth/register/styles/RegisterCompany.module.css';
-
 import type { RegisterCompanyProps } from '@/types/auth';
 
 const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onRegisterSuccess }) => {
