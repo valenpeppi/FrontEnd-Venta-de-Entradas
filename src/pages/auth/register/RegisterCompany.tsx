@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useMessage } from '@/hooks/useMessage';
 import { AuthService } from '@/services/AuthService';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Input from '@/shared/components/Input';

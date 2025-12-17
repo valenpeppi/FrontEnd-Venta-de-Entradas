@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useContext } from 'react';
 import type { Message, MessageState, MessageAction, MessageContextType, MessageProviderProps } from '@/types/common';
 
-const MessageContext = createContext<MessageContextType | undefined>(undefined);
+export const MessageContext = createContext<MessageContextType | undefined>(undefined);
 
 
 const messageReducer = (state: MessageState, action: MessageAction): MessageState => {
@@ -82,10 +82,3 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) =>
   );
 };
 
-export const useMessage = () => {
-  const context = useContext(MessageContext);
-  if (context === undefined) {
-    throw new Error('useMessage debe ser usado dentro de un MessageProvider');
-  }
-  return context;
-};

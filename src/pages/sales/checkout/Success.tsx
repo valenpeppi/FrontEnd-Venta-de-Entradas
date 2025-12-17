@@ -1,7 +1,7 @@
 import { MdCheckCircle } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useCart } from '@/shared/context/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { StorageService } from '@/services/StorageService';
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';
 

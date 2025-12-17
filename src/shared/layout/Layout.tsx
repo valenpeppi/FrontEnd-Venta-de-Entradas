@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from '@/shared/layout/Navbar';
 import Footer from '@/shared/layout/Footer';
 import MessageDisplay from '@/shared/MessageDisplay';
-import { useMessage } from '@/shared/context/MessageContext';
+import { useMessage } from '@/hooks/useMessage';
 import { useLocation } from "react-router-dom";
 import styles from '@/shared/layout/styles/Layout.module.css';
 import type { LayoutProps } from '@/types/common';

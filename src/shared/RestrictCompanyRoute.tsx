@@ -4,6 +4,7 @@ import { useAuth } from '@/shared/context/AuthContext';
 import type { RestrictCompanyRouteProps } from '@/types/auth';
 
 
+
 const RestrictCompanyRoute: React.FC<RestrictCompanyRouteProps> = ({ children }) => {
     const { user, isLoading } = useAuth();
     const location = useLocation();

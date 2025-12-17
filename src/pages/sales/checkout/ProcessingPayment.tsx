@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from '@/shared/context/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { PaymentService } from '@/services/PaymentService';
 import { StorageService } from '@/services/StorageService';
 import styles from '@/pages/sales/checkout/styles/Pay.module.css';

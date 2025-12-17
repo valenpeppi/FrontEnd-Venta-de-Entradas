@@ -6,7 +6,7 @@ import type {
   SearchProviderProps
 } from '@/types/common';
 
-const SearchContext = createContext<SearchContextType | undefined>(undefined);
+export const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 const searchReducer = (state: SearchState, action: SearchAction): SearchState => {
   switch (action.type) {
@@ -45,10 +45,4 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   );
 };
 
-export const useSearch = () => {
-  const context = useContext(SearchContext);
-  if (context === undefined) {
-    throw new Error('useSearch debe ser usado dentro de un SearchProvider');
-  }
-  return context;
-};
+

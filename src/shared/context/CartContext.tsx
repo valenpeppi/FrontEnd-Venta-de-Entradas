@@ -9,7 +9,7 @@ import type {
   CartProviderProps
 } from '@/types/cart';
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
@@ -224,10 +224,4 @@ function CartProvider({ children }: CartProviderProps) {
 
 export { CartProvider };
 
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart debe ser usado dentro de un CartProvider');
-  }
-  return context;
-};
+

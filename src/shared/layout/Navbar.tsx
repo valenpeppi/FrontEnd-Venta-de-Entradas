@@ -3,9 +3,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from '@/shared/layout/styles/Navbar.module.css';
 import logoTicket from '@/assets/ticket.png';
 import cartIcon from '@/assets/cart.png';
-import { useCart } from '@/shared/context/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { EventService } from '@/services/EventService';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import GradientText from '@/shared/layout/GradientText';
 import { FiSearch, FiUser, FiLogOut, FiChevronDown, FiSettings, FiList, FiPlusCircle, FiMenu, FiX, FiPieChart } from 'react-icons/fi';
 

@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import type { User, AuthState, AuthAction, AuthContextType, AuthProviderProps } from '@/types/auth';
 import { AuthService } from '@/services/AuthService';
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
@@ -128,10 +128,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
-  }
-  return context;
-};
+
