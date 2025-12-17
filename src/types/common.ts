@@ -125,3 +125,12 @@ export interface SupportLayoutProps {
     subtitle?: string;
     transparent?: boolean;
 }
+
+export interface FatalErrorPageProps {
+    error?: Error;
+    resetErrorBoundary?: () => void;
+}
+
+export interface GlobalErrorBoundaryProps {
+    children: ReactNode;
+}

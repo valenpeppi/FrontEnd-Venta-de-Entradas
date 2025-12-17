@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '@/shared/layout/styles/Footer.module.css';
-
 import logoTicket from '@/assets/ticket.png';
 import facebookIcon from '@/assets/facebook.png';
 import twitterIcon from '@/assets/x.png';
@@ -9,7 +8,6 @@ import instagramIcon from '@/assets/instagram.png';
 import visaIcon from '@/assets/visa.png';
 import mastercardIcon from '@/assets/mastercard.png';
 import paypalIcon from '@/assets/paypal.png';
-
 import { useAuth } from '@/shared/context/AuthContext';
 
 const Footer: React.FC = () => {
