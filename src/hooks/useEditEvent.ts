@@ -23,13 +23,10 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
                 time: '',
                 idEventType: '',
                 error: null,
-                image: null,
                 idPlace: '',
                 occupiedDates: [],
                 sectorPrices: {},
             };
-        case 'SET_IMAGE':
-            return { ...state, image: action.payload.image };
         default:
             return state;
     }
@@ -47,7 +44,6 @@ export const useEditEvent = () => {
         time: '',
         idEventType: '',
         error: null,
-        image: null,
         idPlace: '',
         occupiedDates: [],
         sectorPrices: {},
@@ -59,22 +55,13 @@ export const useEditEvent = () => {
 
     const {
         image,
-        setImage,
         preview: imagePreview,
         setPreview: setImagePreview,
         isDragging,
-        handleImageChange: originalHandleImageChange,
+        handleImageChange,
         handleDragEvents,
         handleDrop
     } = useImageUpload();
-
-    useEffect(() => {
-        dispatch({ type: 'SET_IMAGE', payload: { image } });
-    }, [image]);
-
-    const handleImageChange = (file: File | null) => {
-        originalHandleImageChange(file);
-    };
 
     useEffect(() => {
         const fetchInitialData = async () => {

@@ -11,7 +11,6 @@ export interface CreateEventState {
     time: string;
     idEventType: string;
     error: string | null;
-    image: File | null;
     idPlace: string;
     occupiedDates: string[];
     sectorPrices: { [key: string]: string };
@@ -23,7 +22,7 @@ export type CreateEventAction =
     | { type: 'SET_OCCUPIED_DATES'; payload: { dates: string[] } }
     | { type: 'SET_ERROR'; payload: { error: string | null } }
     | { type: 'RESET_FORM' }
-    | { type: 'SET_IMAGE'; payload: { image: File | null } }
+    | { type: 'SET_LOADING'; payload: { loading: boolean } }
 
 export interface CompanyStats {
     activeEvents: number;

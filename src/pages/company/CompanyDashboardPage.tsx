@@ -14,12 +14,6 @@ import {
 import styles from '@/pages/company/styles/CompanyDashboardPage.module.css';
 import { useAuth } from '@/hooks/useAuth';
 
-interface CompanyStats {
-    activeEvents: number;
-    ticketsSold: number;
-    totalRevenue: number;
-}
-import { useAuth } from '@/shared/context/AuthContext';
 import type { CompanyStats } from '@/types/company';
 
 const CompanyDashboardPage: React.FC = () => {
