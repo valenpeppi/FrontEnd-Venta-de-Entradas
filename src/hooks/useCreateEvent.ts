@@ -24,13 +24,10 @@ const createEventReducer = (state: CreateEventState, action: CreateEventAction):
                 time: '',
                 idEventType: '',
                 error: null,
-                image: null,
                 idPlace: '',
                 occupiedDates: [],
                 sectorPrices: {},
             };
-        case 'SET_IMAGE':
-            return { ...state, image: action.payload.image };
         case 'SET_LOADING':
             return { ...state, loading: action.payload.loading };
         default:
@@ -46,7 +43,6 @@ export const useCreateEvent = () => {
         time: '',
         idEventType: '',
         error: null,
-        image: null,
         idPlace: '',
         occupiedDates: [],
         sectorPrices: {},
@@ -63,7 +59,7 @@ export const useCreateEvent = () => {
         preview: imagePreview,
         setPreview: setImagePreview,
         isDragging,
-        handleImageChange: originalHandleImageChange,
+        handleImageChange,
         handleDragEvents,
         handleDrop
     } = useImageUpload();
@@ -71,14 +67,6 @@ export const useCreateEvent = () => {
     const navigate = useNavigate();
     const { setAppMessage } = useMessage();
     const { user } = useAuth();
-
-    useEffect(() => {
-        dispatch({ type: 'SET_IMAGE', payload: { image } });
-    }, [image]);
-
-    const handleImageChange = (file: File | null) => {
-        originalHandleImageChange(file);
-    };
 
     useEffect(() => {
         const fetchInitialData = async () => {
