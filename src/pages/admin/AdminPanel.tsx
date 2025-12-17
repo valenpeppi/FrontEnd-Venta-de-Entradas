@@ -246,6 +246,14 @@ export default function AdminPanel() {
                     {event.description}
                   </p>
                 )}
+
+                {event.state === 'Pending' && (
+                  <div className={styles.metaInfo}>
+                    <p className={styles.organiserInfo}>
+                      <strong>Organizador:</strong> {event.organiser?.companyName || "Administrador"}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {(event.state === 'Pending' || event.state === 'Rejected') && (

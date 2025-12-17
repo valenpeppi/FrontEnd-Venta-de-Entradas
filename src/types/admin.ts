@@ -18,8 +18,12 @@ export interface AdminEvent {
     image?: string;
     idEventType?: number;
     state?: string;
-    idOrganiser?: string;
+    idOrganiser?: string | null;
     featured: boolean;
+    organiser?: {
+        companyName?: string | null;
+        contactEmail?: string | null;
+    } | null;
 }
 
- 
+
