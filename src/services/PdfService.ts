@@ -3,12 +3,7 @@ import QRCode from 'qrcode';
 import axios from 'axios';
 import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
 import type { PurchasedTicket } from '@/types/purchase';
-
-
-interface UserInfo {
-    name: string;
-    dni?: string | number;
-}
+import type { UserInfo } from '@/types/auth';
 
 export const PdfService = {
     generateTicketPdf: async (ticket: PurchasedTicket, user: UserInfo | null) => {

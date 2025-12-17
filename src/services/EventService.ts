@@ -15,11 +15,6 @@ export const EventService = {
 
     getEventById: async (id: string | number): Promise<EventSummary> => {
         const response = await api.get(`/events/events/${id}`);
-
-
-
-
-
         return response.data?.data ?? response.data;
     },
 
@@ -30,7 +25,6 @@ export const EventService = {
 
     getEventTicketMap: async (id: string | number): Promise<any> => {
         const response = await api.get(`/events/events/${id}/tickets/map`);
-
         return response.data?.data ?? response.data;
     },
 

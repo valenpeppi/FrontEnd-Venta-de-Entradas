@@ -8,14 +8,6 @@ export const AuthService = {
     },
 
     login: async (credentials: any): Promise<{ token: string, user: any }> => {
-         
-         
-         
-         
-         
-         
-         
-         
         const response = await api.post('/auth/login', credentials);
         return response.data;
     },

@@ -1,6 +1,4 @@
 import React, { createContext, useReducer, useContext } from 'react';
-
-
 import type { Message, MessageState, MessageAction, MessageContextType, MessageProviderProps } from '@/types/common';
 
 const MessageContext = createContext<MessageContextType | undefined>(undefined);

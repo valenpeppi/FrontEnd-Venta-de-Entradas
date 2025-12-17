@@ -52,3 +52,8 @@ export interface RegisterUserProps {
 export interface RegisterCompanyProps {
     onRegisterSuccess: () => void;
 }
+
+export interface UserInfo {
+    name: string;
+    dni?: string | number;
+}

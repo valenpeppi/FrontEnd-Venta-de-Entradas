@@ -22,4 +22,9 @@ export interface AdminEvent {
     featured: boolean;
 }
 
- 
+export interface DashboardStats {
+    salesToday: number;
+    ticketsToday: number;
+    revenueToday: number;
+    pendingEvents: number;
+}

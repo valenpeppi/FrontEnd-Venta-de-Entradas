@@ -20,8 +20,6 @@ export const PaymentService = {
         return response.data;
     },
 
-
-
     checkSaleStatus: async (dniClient: string) => {
         const response = await api.get(`/sales/check?dniClient=${dniClient}`);
         return response.data;

@@ -1,10 +1,12 @@
 import React, { createContext, useReducer, useContext } from 'react';
-
-
-import type { SearchState, SearchAction, SearchContextType, SearchProviderProps } from '@/types/common';
+import type {
+  SearchState,
+  SearchAction,
+  SearchContextType,
+  SearchProviderProps
+} from '@/types/common';
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
-
 
 const searchReducer = (state: SearchState, action: SearchAction): SearchState => {
   switch (action.type) {

@@ -6,7 +6,6 @@ import { FaStar as StarFilledIcon, FaRegStar as StarOutlineIcon, FaCheck as Chec
 import StatusBadge from "@/shared/components/StatusBadge";
 import EmptyState from "@/shared/components/EmptyState";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
-
 import type { AdminEvent } from '@/types/admin';
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";

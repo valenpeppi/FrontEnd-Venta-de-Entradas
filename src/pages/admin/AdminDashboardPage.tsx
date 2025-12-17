@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { AdminService } from '@/services/AdminService';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import StatsCard from '@/shared/components/StatsCard';
-import { FaMoneyBillWave, FaTicketAlt, FaCalendarCheck, FaChartLine } from 'react-icons/fa';
+import {
+    FaMoneyBillWave,
+    FaTicketAlt,
+    FaCalendarCheck,
+    FaChartLine
+} from 'react-icons/fa';
 import styles from '@/pages/admin/styles/AdminDashboardPage.module.css';
-
-interface DashboardStats {
-    salesToday: number;
-    ticketsToday: number;
-    revenueToday: number;
-    pendingEvents: number;
-}
+import type { DashboardStats } from '@/types/admin';
 
 const AdminDashboardPage: React.FC = () => {
     const [stats, setStats] = useState<DashboardStats | null>(null);
