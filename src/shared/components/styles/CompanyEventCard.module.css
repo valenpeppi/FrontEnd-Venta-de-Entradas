@@ -21,8 +21,6 @@
     height: 180px;
     overflow: hidden;
     position: relative;
-
-    /* group-hover removed */
 }
 
 .imageContainer:hover .overlayActions {

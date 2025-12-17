@@ -62,7 +62,6 @@
     font-weight: 700;
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 640px) {
     .statCard {
         padding: 16px;
