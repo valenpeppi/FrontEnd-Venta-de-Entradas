@@ -59,3 +59,9 @@ export interface GradientTextProps {
     children: ReactNode;
     className?: string;
 }
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: 'primary' | 'secondary' | 'danger' | 'outline' | 'ghost';
+    fullWidth?: boolean;
+    isLoading?: boolean;
+}
