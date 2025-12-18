@@ -34,9 +34,6 @@
     padding-bottom: 5px;
 }
 
-/* ... (omitting intermediate unchanged blocks for brevity if possible, but replace_file needs contiguous block. 
-   Since I am token limited, I will prioritize the Variables introduction and usage)
-*/
 .messagesList {
     display: flex;
     flex-direction: column;
@@ -159,7 +156,6 @@
     line-height: 1.5;
 }
 
-/* Reply Form */
 .replyForm {
     margin-top: 1.5rem;
     background: #f8fafc;
@@ -194,7 +190,6 @@
     outline: none;
     transition: border-color 0.2s;
     box-sizing: border-box;
-    /* Important so padding fits */
 }
 
 .replyTextarea:focus {
@@ -342,7 +337,6 @@
     .formActions button {
         width: 100%;
         margin-right: 0 !important;
-        /* Override inline style logic */
         justify-content: center;
     }
 

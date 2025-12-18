@@ -2,15 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiX, FiUser, FiSettings, FiPieChart, FiList, FiPlusCircle, FiLogOut } from 'react-icons/fi';
 import styles from '@/shared/layout/styles/Navbar.module.css';
-
-interface MobileMenuProps {
-    isOpen: boolean;
-    onClose: () => void;
-    user: any;
-    isAdmin: boolean;
-    isLoggedIn: boolean;
-    handleLogout: () => void;
-}
+import type { MobileMenuProps } from '@/types/layout';
 
 const MobileMenu: React.FC<MobileMenuProps> = ({
     isOpen,
