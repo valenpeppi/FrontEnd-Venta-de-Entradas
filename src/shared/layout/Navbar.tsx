@@ -8,7 +8,7 @@ import { EventService } from '@/services/EventService';
 import { useAuth } from '@/hooks/useAuth';
 import GradientText from '@/shared/layout/GradientText';
 import { FiSearch, FiUser, FiLogOut, FiChevronDown, FiSettings, FiList, FiPlusCircle, FiMenu, FiX, FiPieChart } from 'react-icons/fi';
-
+import MobileMenu from '@/shared/layout/components/MobileMenu';
 
 const Navbar: React.FC = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -91,7 +91,6 @@ const Navbar: React.FC = () => {
   };
 
   const closeUserMenu = () => {
-
     setTimeout(() => setShowUserMenu(false), 200);
   };
 
@@ -262,112 +261,14 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Overlay */}
-        {isMobileMenuOpen && (
-          <div className={styles.mobileMenuOverlay} onClick={closeMobileMenu}>
-            <div className={styles.mobileMenuContent} onClick={e => e.stopPropagation()}>
-              <div className={styles.mobileMenuHeader}>
-                <h2>Menú</h2>
-                <button className={styles.mobileCloseBtn} onClick={closeMobileMenu}>
-                  <FiX />
-                </button>
-              </div>
-
-              {isLoggedIn && user ? (
-                <div className={styles.mobileUserCard}>
-                  <div className={styles.mobileUserInfo}>
-                    <div className={styles.mobileUserAvatar}>
-                      {user.name?.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <h3 className={styles.mobileUserName}>{user.name}</h3>
-                      <span className={styles.mobileUserRole}>
-                        {user.role === 'company' ? 'ORGANIZADOR' : user.role === 'admin' ? 'ADMINISTRADOR' : 'USUARIO'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className={styles.mobileUserActions}>
-                    <Link to="/profile" className={styles.mobileUserActionBtn} onClick={closeMobileMenu}>
-                      <FiUser /> Mi Perfil
-                    </Link>
-                    {isAdmin && (
-                      <Link to="/admin/dashboard" className={`${styles.mobileUserActionBtn} ${styles.primaryAction}`} onClick={closeMobileMenu}>
-                        <FiSettings /> Panel Admin
-                      </Link>
-                    )}
-                    {user.role === 'company' && (
-                      <Link to="/company/dashboard" className={`${styles.mobileUserActionBtn} ${styles.primaryAction}`} onClick={closeMobileMenu}>
-                        <FiPieChart /> Dashboard
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className={styles.mobileAuthButtons}>
-                  <Link to="/login" className={styles.mobileLoginBtn} onClick={closeMobileMenu}>Iniciar Sesión</Link>
-                  <Link to="/register" className={styles.mobileRegisterBtn} onClick={closeMobileMenu}>Registrarse</Link>
-                </div>
-              )}
-
-              <ul className={styles.mobileNavList}>
-                {!isAdmin && user?.role !== 'company' && (
-                  <li>
-                    <Link to="/help" className={styles.mobileNavItem} onClick={closeMobileMenu}>
-                      <FiList /> Ayuda
-                    </Link>
-                  </li>
-                )}
-
-                {isLoggedIn && user?.role === 'user' && (
-                  <li>
-                    <Link to="/myTickets" className={styles.mobileNavItem} onClick={closeMobileMenu}>
-                      <FiList /> Mis Entradas
-                    </Link>
-                  </li>
-                )}
-
-                {isAdmin && (
-                  <>
-                    <li>
-                      <Link to="/admin/dashboard" className={styles.mobileNavItem} onClick={closeMobileMenu}>
-                        <FiSettings /> Dashboard
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/admin/messages" className={styles.mobileNavItem} onClick={closeMobileMenu}>
-                        <FiList /> Mensajes
-                      </Link>
-                    </li>
-                  </>
-                )}
-
-                {user?.role === 'company' && (
-                  <>
-                    <li>
-                      <Link to="/company/my-events" className={styles.mobileNavItem} onClick={closeMobileMenu}>
-                        <FiList /> Mis Eventos
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/create-event" className={styles.mobileNavItem} onClick={closeMobileMenu}>
-                        <FiPlusCircle /> Crear Evento
-                      </Link>
-                    </li>
-                  </>
-                )}
-
-                {isLoggedIn && (
-                  <li className={styles.mobileLogoutContainer}>
-                    <button onClick={handleLogoutClick} className={styles.mobileLogoutBtn}>
-                      <FiLogOut /> Cerrar Sesión
-                    </button>
-                  </li>
-                )}
-              </ul>
-            </div>
-          </div>
-        )}
+        <MobileMenu
+          isOpen={isMobileMenuOpen}
+          onClose={closeMobileMenu}
+          user={user}
+          isAdmin={isAdmin}
+          isLoggedIn={isLoggedIn}
+          handleLogout={handleLogoutClick}
+        />
 
         {isLoggedIn && user?.role === 'user' && (
           <div className={styles.navbarCartContainer}>

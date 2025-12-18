@@ -44,7 +44,7 @@ const evaluatePasswordStrength = (pwd: string): PasswordEvaluation => {
     score += 15;
   }
 
-  // Determine strength level
+
   let strength: 'weak' | 'medium' | 'strong' = 'weak';
   if (score >= 70) {
     strength = 'strong';
@@ -64,7 +64,7 @@ const PasswordStrengthBar: React.FC<PasswordStrengthBarProps> = ({ password }) =
       return;
     }
 
-    // Evaluates locally without needing the backend
+
     const result = evaluatePasswordStrength(password);
     setEvaluation(result);
   }, [password]);
@@ -76,13 +76,13 @@ const PasswordStrengthBar: React.FC<PasswordStrengthBarProps> = ({ password }) =
   const getStrengthColor = (strength: string) => {
     switch (strength) {
       case 'weak':
-        return '#ef4444'; // red
+        return '#ef4444';
       case 'medium':
-        return '#f59e0b'; // amber
+        return '#f59e0b';
       case 'strong':
-        return '#10b981'; // green
+        return '#10b981';
       default:
-        return '#d1d5db'; // gray
+        return '#d1d5db';
     }
   };
 

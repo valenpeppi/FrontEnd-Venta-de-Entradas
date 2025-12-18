@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Inter', sans-serif; 
+  font-family: 'Inter', sans-serif;
   animation: scaleIn 0.4s ease-out forwards;
 }
 
@@ -11,6 +11,7 @@
     transform: scale(0.98);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -21,7 +22,7 @@
   color: #333;
   text-align: center;
   margin-bottom: 30px;
-  font-size: 2.5rem; 
+  font-size: 2.5rem;
   font-weight: 700;
 }
 
@@ -66,7 +67,7 @@
 .itemInfo {
   display: flex;
   flex-direction: column;
-  gap: 8px; 
+  gap: 8px;
 }
 
 .itemName {
@@ -74,20 +75,24 @@
   color: #222;
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 
-.itemDate, .itemLocation, .itemSector {
+.itemDate,
+.itemLocation,
+.itemSector {
   margin: 0;
   color: #666;
-  font-size: 0.95rem; 
+  font-size: 0.95rem;
   line-height: 1.5;
 }
 
-.itemDate strong, .itemLocation strong, .itemSector strong {
-    font-weight: 600;
-    color: #333;
+.itemDate strong,
+.itemLocation strong,
+.itemSector strong {
+  font-weight: 600;
+  color: #333;
 }
 
 
@@ -151,14 +156,15 @@
   gap: 15px;
 }
 
-.continueBtn, .checkoutBtn {
+.continueBtn,
+.checkoutBtn {
   padding: 12px 24px;
   border: none;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .continueBtn {
@@ -239,8 +245,8 @@
   gap: 10px;
   font-size: 0.95rem;
   color: #444;
-  line-height: 1.8; 
-  margin-bottom: 6px; 
+  line-height: 1.8;
+  margin-bottom: 6px;
 }
 
 @media (max-width: 768px) {
@@ -249,11 +255,12 @@
   }
 
   .cartItem {
+    display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
     padding: 15px;
   }
-  
+
   .itemInfo {
     align-items: flex-start;
   }
@@ -262,7 +269,9 @@
     font-size: 1.1rem;
   }
 
-  .itemPrice, .itemQuantity, .itemSubtotal {
+  .itemPrice,
+  .itemQuantity,
+  .itemSubtotal {
     text-align: left;
   }
 
@@ -275,14 +284,15 @@
     width: 100%;
     margin-top: 10px;
   }
-  
+
   .actionButtons {
     flex-direction: column;
     gap: 10px;
     align-items: stretch;
   }
 
-  .continueBtn, .checkoutBtn {
+  .continueBtn,
+  .checkoutBtn {
     width: 100%;
   }
 
@@ -313,11 +323,14 @@
     font-size: 1rem;
   }
 
-  .itemDate, .itemLocation {
+  .itemDate,
+  .itemLocation {
     font-size: 0.8rem;
   }
 
-  .itemPrice, .itemQuantity, .itemSubtotal {
+  .itemPrice,
+  .itemQuantity,
+  .itemSubtotal {
     font-size: 0.9rem;
   }
 
@@ -331,7 +344,8 @@
     font-size: 0.9rem;
   }
 
-  .continueBtn, .checkoutBtn {
+  .continueBtn,
+  .checkoutBtn {
     padding: 10px 15px;
     font-size: 0.95rem;
   }

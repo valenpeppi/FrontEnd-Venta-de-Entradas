@@ -90,7 +90,7 @@ export const useRegisterUser = (onRegisterSuccess?: () => void) => {
                 case 'dni': if (!/^\d{7,8}$/.test(value)) errorMsg = 'x'; break;
                 case 'fullName': if (value.trim().split(' ').length < 2) errorMsg = 'x'; break;
                 case 'email': if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMsg = 'x'; break;
-                case 'password': if (value.length < 8) errorMsg = 'x'; break; // Fixed min length consistency
+                case 'password': if (value.length < 8) errorMsg = 'x'; break;
                 case 'confirmPassword': if (value !== formData.password) errorMsg = 'x'; break;
                 case 'birthDate': if (!value || new Date(value) > new Date()) errorMsg = 'x'; break;
             }

@@ -14,7 +14,7 @@ export const useProfile = () => {
     const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    // Form fields
+
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [birthDate, setBirthDate] = useState('');
