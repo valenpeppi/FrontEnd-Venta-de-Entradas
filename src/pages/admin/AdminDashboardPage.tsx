@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { AdminService } from '@/services/AdminService';
+import React from 'react';
+import { useAdminDashboard } from '@/hooks/useAdminDashboard'; // Importamos el hook
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import StatsCard from '@/shared/components/StatsCard';
 import {
@@ -9,27 +9,9 @@ import {
     FaChartLine
 } from 'react-icons/fa';
 import styles from '@/pages/admin/styles/AdminDashboardPage.module.css';
-import type { DashboardStats } from '@/types/admin';
 
 const AdminDashboardPage: React.FC = () => {
-    const [stats, setStats] = useState<DashboardStats | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                const data = await AdminService.getDashboardStats();
-                setStats(data);
-            } catch (err: any) {
-                console.error('Error fetching admin stats', err);
-                setError('No se pudieron cargar las estadísticas.');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchStats();
-    }, []);
+    const { stats, loading, error } = useAdminDashboard();
 
     if (loading) return <LoadingSpinner text="Cargando reporte..." />;
 
