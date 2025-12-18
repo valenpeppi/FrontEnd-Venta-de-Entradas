@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, useEffect } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 import type { User, AuthState, AuthAction, AuthContextType, AuthProviderProps } from '@/types/auth';
 import { AuthService } from '@/services/AuthService';
 

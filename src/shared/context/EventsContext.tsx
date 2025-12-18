@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect, useContext } from 'react';
+import { createContext, useReducer, useEffect } from 'react';
 import type { Ticket } from '@/types/cart';
 import { EventService } from '@/services/EventService';
 import { mapApiEventToTicket } from '@/shared/adapters/eventAdapter';
