@@ -103,7 +103,6 @@ const ProfilePage: React.FC = () => {
                         </>
                     )}
 
-                    {/* Campos adicionales empresa */}
                     {user.role === 'company' && (
                         <>
                             <div className={styles.formGroup}>

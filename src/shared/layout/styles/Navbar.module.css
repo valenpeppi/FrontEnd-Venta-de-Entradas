@@ -401,7 +401,7 @@
     justify-content: space-between;
   }
 
-  /* Hide default nav items */
+
   .navLinksContainer {
     display: none;
   }
@@ -414,7 +414,7 @@
     max-width: 100%;
   }
 
-  /* --- Mobile Menu Overlay Styles --- */
+
 
   .mobileMenuOverlay {
     position: fixed;
@@ -475,10 +475,10 @@
     color: #ef4444;
   }
 
-  /* User Card */
+
   .mobileUserCard {
     background: #1f2937;
-    /* Dark background */
+
     margin: 1rem;
     padding: 1.25rem;
     border-radius: 16px;
@@ -553,7 +553,7 @@
     background: #4338ca;
   }
 
-  /* Nav List */
+
   .mobileNavList {
     list-style: none;
     padding: 0 1rem 2rem 1rem;
@@ -583,7 +583,7 @@
     transform: translateX(5px);
   }
 
-  /* Logout */
+
   .mobileLogoutContainer {
     margin-top: auto;
     padding-top: 1rem;
@@ -610,7 +610,7 @@
     background: #fef2f2;
   }
 
-  /* Auth Buttons (Logged Out) */
+
   .mobileAuthButtons {
     padding: 1.5rem;
     display: flex;
