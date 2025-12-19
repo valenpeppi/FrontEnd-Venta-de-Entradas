@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAdminDashboard } from '@/hooks/useAdminDashboard'; // Importamos el hook
+import { useAdminDashboard } from '@/hooks/useAdminDashboard';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import StatsCard from '@/shared/components/StatsCard';
 import {
