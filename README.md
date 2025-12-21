@@ -160,31 +160,28 @@
 
 <hr/>
 
-<h2>📁 Estructura del repositorio (FrontEnd)</h2>
+<h2>📦 Estructura del proyecto</h2>
 
-<p>
-  La estructura del proyecto se organiza directamente bajo <code>src/</code>, eliminando carpetas intermedias para una arquitectura más plana y modular:
-</p>
-
-<ul>
-  <li><code>src/pages/</code> – Vistas de la aplicación organizadas por módulos:
-    <ul>
-      <li><code>admin/</code>, <code>auth/</code>, <code>company/</code>, <code>events/</code>, <code>home/</code>, <code>profile/</code>, <code>sales/</code> (flujo de compra), <code>support/</code>, etc.</li>
-    </ul>
-  </li>
-  <li><code>src/hooks/</code> – Custom hooks reutilizables.</li>
-  <li><code>src/shared/</code> – Núcleo de lógica y componentes reutilizables:
-    <ul>
-      <li><code>components/</code>, <code>context/</code> (Estado Global), <code>adapters/</code>, <code>utils/</code>, <code>layout/</code> y <code>styles/</code>.</li>
-    </ul>
-  </li>
-  <li><code>src/services/</code> – Lógica de integración y peticiones a APIs externas.</li>
-  <li><code>src/types/</code> – Definiciones de tipos TypeScript globales.</li>
-  <li><code>src/assets/</code> – Recursos estáticos (imágenes, fuentes).</li>
-  <li><code>src/App.tsx</code> & <code>src/Main.tsx</code> – Punto de entrada, configuración de providers y rutas principales.</li>
-  <li><code>tests/</code> – Configuración y archivos de pruebas (E2E con Playwright).</li>
-  <li>Archivos de configuración en raíz (<code>vite.config.ts</code>, <code>package.json</code>, etc.).</li>
-</ul>
+<pre><code>FrontEnd-Venta-de-Entradas/
+├── public/                      # Archivos estáticos públicos
+├── src/
+│   ├── assets/                  # Recursos estáticos (imágenes, fuentes)
+│   ├── hooks/                   # Custom hooks reutilizables
+│   ├── pages/                   # Vistas por módulo (Admin, Auth, Events, Sales...)
+│   ├── services/                # Servicios de API y lógica de negocio
+│   ├── shared/                  # Componentes (UI), Contexts, Utilidades
+│   ├── types/                   # Definiciones de tipos TypeScript globales
+│   ├── App.tsx                  # Configuración de rutas y providers
+│   └── Main.tsx                 # Entry point de la aplicación
+├── tests/                       # Configuración y tests E2E
+├── .env                         # Variables de entorno
+├── .gitignore                   # Archivos ignorados por Git
+├── index.html                   # HTML base de la aplicación
+├── package.json                 # Dependencias y scripts
+├── README.md                    # Documentación
+├── tsconfig.json                # Configuración de TypeScript
+└── vite.config.ts               # Configuración de Vite
+</code></pre>
 
 <hr/>
 
