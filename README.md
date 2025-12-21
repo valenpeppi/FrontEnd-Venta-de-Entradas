@@ -41,6 +41,7 @@
   <img src="https://img.shields.io/badge/axios-1.11.0-5A29E4?style=for-the-badge&logo=axios&logoColor=white" alt="Axios Badge"/>
   <img src="https://img.shields.io/badge/Vitest-3.2.4-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" alt="Vitest Badge"/>
   <img src="https://img.shields.io/badge/Playwright-1.56.0-2EAD33?style=for-the-badge&logo=playwright&logoColor=white" alt="Playwright Badge"/>
+  <img src="https://img.shields.io/badge/ESLint-9.25.0-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint Badge"/>
   <img src="https://img.shields.io/badge/jsPDF-Tickets%20PDF-000000?style=for-the-badge" alt="jsPDF Badge"/>
   <img src="https://img.shields.io/badge/Stripe-Checkout-635BFF?style=for-the-badge&logo=stripe&logoColor=white" alt="Stripe Badge"/>
   <img src="https://img.shields.io/badge/Google%20reCAPTCHA-Seguridad-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="reCAPTCHA Badge"/>
