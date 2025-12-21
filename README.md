@@ -1,4 +1,4 @@
-<h1>🎟️ TicketApp – FrontEnd</h1>
+<h1 align="center">🎟️ TicketApp – FrontEnd</h1>
 
 <p align="center">
   <a href="https://github.com/valenpeppi/tp" target="_blank" style="text-decoration: none;">
