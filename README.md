@@ -431,7 +431,7 @@
 <h3>2️⃣ Clonar repositorios</h3>
 
 <pre><code># Frontend
-git clone https://github.com/agussantinelli/FrontEnd-Venta-de-Entradas.git
+git clone https://github.com/valenpeppi/FrontEnd-Venta-de-Entradas.git
 cd FrontEnd-Venta-de-Entradas
 
 # Backend
