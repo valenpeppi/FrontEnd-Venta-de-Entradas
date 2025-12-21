@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useState, useCallback } from 'react';
 import type { EventDetailContextType, EventSummary, Sector, Seat, EventDetailProviderProps } from '@/types/events';
 
 export const EventDetailContext = createContext<EventDetailContextType | undefined>(undefined);

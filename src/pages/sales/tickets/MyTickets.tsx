@@ -1,103 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SalesService } from '@/services/SalesService';
-import { useAuth } from '@/hooks/useAuth';
 import styles from '@/pages/sales/tickets/styles/MyTickets.module.css';
-import { PdfService } from '@/services/PdfService';
 import { formatLongDate, formatTime } from '@/shared/utils/dateFormatter';
 import EmptyState from '@/shared/components/EmptyState';
 import { FaTicketAlt } from 'react-icons/fa';
-
-import type { PurchasedTicket, PurchasedTicketGroup } from '@/types/purchase';
+import { useMyTickets } from '@/hooks/useMyTickets';
 
 const MyTickets: React.FC = () => {
   const navigate = useNavigate();
-  const { user, isLoggedIn, isLoading } = useAuth();
-  const [tickets, setTickets] = useState<PurchasedTicket[]>([]);
-  const [isFetching, setIsFetching] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const isNonEnumeratedGroup = (g: PurchasedTicketGroup) => {
-    if (g.sectorType) return g.sectorType.toLowerCase() === 'nonenumerated';
-    return g.tickets.every(t => t.seatNumber == null);
-  };
-
-  useEffect(() => {
-    const fetchTickets = async () => {
-      if (!isLoggedIn || !user?.dni) {
-        if (!isLoading) {
-          setError("Debes iniciar sesión para ver tus entradas.");
-          setIsFetching(false);
-        }
-        return;
-      }
-      try {
-        const data: PurchasedTicket[] = await SalesService.getMyTickets();
-        setTickets(data);
-      } catch (err) {
-        console.error("Error al obtener las entradas:", err);
-        setError("No se pudieron cargar tus entradas. Inténtalo de nuevo más tarde.");
-      } finally {
-        setIsFetching(false);
-      }
-    };
-
-    if (!isLoading) fetchTickets();
-  }, [isLoggedIn, user, isLoading]);
-
-  const handleDownloadPDF = async (ticket: PurchasedTicket) => {
-
-    const currentUser = user ? { name: user.name, dni: user.dni } : null;
-    await PdfService.generateTicketPdf(ticket, currentUser);
-  };
-
-
-  const normalizeSectorName = (name: string) =>
-    (name || 'Sin sector').replace(/\s+/g, ' ').trim();
-
-  const groupTicketsBySaleAndSector = (ts: PurchasedTicket[]): PurchasedTicketGroup[] => {
-    const map = new Map<string, PurchasedTicketGroup>();
-
-    for (const tk of ts) {
-      const sector = normalizeSectorName(tk.sectorName);
-      const key = `${tk.idSale}|${tk.eventId}|${sector}`;
-
-      let grp = map.get(key);
-      if (!grp) {
-        grp = {
-          idSale: tk.idSale,
-          eventId: tk.eventId,
-          eventName: tk.eventName,
-          date: tk.date,
-          time: tk.time,
-          location: tk.location,
-          sectorName: sector,
-          sectorType: tk.sectorType,
-          tickets: [],
-        };
-        map.set(key, grp);
-      }
-      if (tk.sectorType && !grp.sectorType) grp.sectorType = tk.sectorType;
-      grp.tickets.push(tk);
-    }
-
-    for (const g of map.values()) {
-      g.tickets.sort((a, b) => {
-        const av = Number.isFinite(a.seatNumber as number) ? (a.seatNumber as number) : Infinity;
-        const bv = Number.isFinite(b.seatNumber as number) ? (b.seatNumber as number) : Infinity;
-        return av - bv;
-      });
-    }
-
-
-    return Array.from(map.values()).sort((a, b) => {
-      const da = new Date(a.date).getTime();
-      const db = new Date(b.date).getTime();
-      if (da !== db) return da - db;
-      if (a.idSale !== b.idSale) return a.idSale.localeCompare(b.idSale);
-      return a.sectorName.localeCompare(b.sectorName);
-    });
-  };
+  const {
+    isFetching,
+    error,
+    ticketGroups,
+    handleDownloadPDF,
+    isNonEnumeratedGroup
+  } = useMyTickets();
 
   if (isFetching) {
     return (
@@ -106,8 +23,6 @@ const MyTickets: React.FC = () => {
       </div>
     );
   }
-
-  const ticketGroups = groupTicketsBySaleAndSector(tickets);
 
   return (
     <div className={styles.myTicketsContainer}>
@@ -187,5 +102,3 @@ const MyTickets: React.FC = () => {
 };
 
 export default MyTickets;
-
-

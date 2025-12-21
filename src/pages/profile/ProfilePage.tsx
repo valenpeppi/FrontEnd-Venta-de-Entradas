@@ -1,92 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { AuthService } from '@/services/AuthService';
-import { useMessage } from '@/hooks/useMessage';
+import { useProfile } from '@/hooks/useProfile';
 import styles from '@/pages/profile/styles/ProfilePage.module.css';
 import globalStyles from '@/shared/styles/GlobalStyles.module.css';
 import { FiUser, FiMail, FiSave, FiEdit2 } from 'react-icons/fi';
 import ConfirmationModal from '@/shared/components/ConfirmationModal';
-import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from './components/ChangePasswordModal';
 
 const ProfilePage: React.FC = () => {
-    const { user, updateUser, logout } = useAuth();
-    const { setAppMessage } = useMessage();
-    const navigate = useNavigate();
-
-
-    const [isEditing, setIsEditing] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
-    const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
-    const [birthDate, setBirthDate] = useState('');
-    const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        if (user) {
-            setName(user.name || '');
-            setSurname(user.surname || '');
-            setPhone(user.phone || '');
-            setAddress(user.address || '');
-            setBirthDate(user.birthDate ? String(user.birthDate).split('T')[0] : '');
-        }
-    }, [user]);
+    const {
+        user,
+        loading,
+        isEditing,
+        setIsEditing,
+        isDeleteModalOpen,
+        setIsDeleteModalOpen,
+        isChangePasswordModalOpen,
+        setIsChangePasswordModalOpen,
+        formState: {
+            name, setName,
+            surname, setSurname,
+            birthDate, setBirthDate,
+            phone, setPhone,
+            address, setAddress
+        },
+        handleSubmit,
+        handleDeleteAccount,
+        resetForm
+    } = useProfile();
 
     if (!user) {
         return <div className={styles.container}>Cargando perfil...</div>;
     }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const updateData: any = { name };
-            if (user.role === 'company') {
-                updateData.phone = phone;
-                updateData.address = address;
-            } else {
-                updateData.surname = surname;
-                updateData.birthDate = birthDate;
-            }
-
-            await AuthService.updateUser(updateData);
-
-
-
-            updateUser(updateData);
-
-            setAppMessage('Perfil actualizado correctamente', 'success');
-            setIsEditing(false);
-        } catch (error) {
-            console.error('Error updating profile:', error);
-            setAppMessage('Error al actualizar el perfil', 'error');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleDeleteAccount = async () => {
-        try {
-            await AuthService.deleteAccount();
-            logout();
-            setAppMessage('Tu cuenta ha sido eliminada.', 'success');
-            navigate('/');
-        } catch (error: any) {
-            const msg = error.response?.data?.message || 'Error al eliminar la cuenta.';
-            setAppMessage(msg, 'error');
-            setIsDeleteModalOpen(false);
-        }
-    };
 
     return (
         <div className={styles.container}>
             <div className={styles.card}>
                 <div className={styles.header}>
                     <div className={styles.avatar}>
-                        {name.charAt(0).toUpperCase()}
+                        {(name || user.name || '').charAt(0).toUpperCase()}
                     </div>
                     <h1>Mi Perfil</h1>
                     <span className={styles.roleBadge}>
@@ -96,7 +46,7 @@ const ProfilePage: React.FC = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    { }
+                    {/* Nombre / Empresa */}
                     <div className={styles.formGroup}>
                         <label className={styles.label}>
                             <FiUser className={styles.icon} /> Nombre {user.role === 'company' ? 'Empresa' : ''}
@@ -111,7 +61,7 @@ const ProfilePage: React.FC = () => {
                         />
                     </div>
 
-                    { }
+                    {/* Campos adicionales usuario */}
                     {user.role !== 'company' && (
                         <>
                             <div className={styles.formGroup}>
@@ -153,7 +103,6 @@ const ProfilePage: React.FC = () => {
                         </>
                     )}
 
-                    { }
                     {user.role === 'company' && (
                         <>
                             <div className={styles.formGroup}>
@@ -224,12 +173,7 @@ const ProfilePage: React.FC = () => {
                                     className={styles.cancelBtn}
                                     onClick={() => {
                                         setIsEditing(false);
-
-                                        setName(user.name || '');
-                                        setSurname(user.surname || '');
-                                        setPhone(user.phone || '');
-                                        setAddress(user.address || '');
-                                        setBirthDate(user.birthDate ? String(user.birthDate).split('T')[0] : '');
+                                        resetForm();
                                     }}
                                     disabled={loading}
                                 >

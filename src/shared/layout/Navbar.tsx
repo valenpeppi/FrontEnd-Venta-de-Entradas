@@ -8,7 +8,7 @@ import { EventService } from '@/services/EventService';
 import { useAuth } from '@/hooks/useAuth';
 import GradientText from '@/shared/layout/GradientText';
 import { FiSearch, FiUser, FiLogOut, FiChevronDown, FiSettings, FiList, FiPlusCircle, FiMenu, FiX, FiPieChart } from 'react-icons/fi';
-
+import MobileMenu from '@/shared/layout/components/MobileMenu';
 
 const Navbar: React.FC = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -91,7 +91,6 @@ const Navbar: React.FC = () => {
   };
 
   const closeUserMenu = () => {
-
     setTimeout(() => setShowUserMenu(false), 200);
   };
 
@@ -158,24 +157,23 @@ const Navbar: React.FC = () => {
           </div>
         )}
 
-        <div className={`${styles.navLinksContainer} ${isMobileMenuOpen ? styles.mobileMenuOpen : ''}`}>
+        <div className={styles.navLinksContainer}>
           <ul className={styles.navbarMenu}>
-            {!isAdmin && user?.role !== 'company' && <li><Link to="/help" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Ayuda</Link></li>}
-            {isLoggedIn && user?.role === 'user' && <li><Link to="/myTickets" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mis Entradas</Link></li>}
+            {!isAdmin && user?.role !== 'company' && <li><Link to="/help" className={styles.navbarMenuItem}>Ayuda</Link></li>}
+            {isLoggedIn && user?.role === 'user' && <li><Link to="/myTickets" className={styles.navbarMenuItem}>Mis Entradas</Link></li>}
             {isAdmin && (
               <>
-                <li><Link to="/admin/dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Dashboard</Link></li>
-                <li><Link to="/admin/messages" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mensajes</Link></li>
+                <li><Link to="/admin/dashboard" className={styles.navbarMenuItem}>Dashboard</Link></li>
+                <li><Link to="/admin/messages" className={styles.navbarMenuItem}>Mensajes</Link></li>
               </>
             )}
             {(isLoggedIn && user?.role === 'company') || (isLoggedIn && user?.role === 'admin') ? (
               <>
-                {user?.role === 'company' && <li><Link to="/company/dashboard" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Dashboard</Link></li>}
-                <li><Link to="/company/my-events" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Mis Eventos</Link></li>
-                <li><Link to="/create-event" className={styles.navbarMenuItem} onClick={closeMobileMenu}>Crear Evento</Link></li>
+                {user?.role === 'company' && <li><Link to="/company/dashboard" className={styles.navbarMenuItem}>Dashboard</Link></li>}
+                <li><Link to="/company/my-events" className={styles.navbarMenuItem}>Mis Eventos</Link></li>
+                <li><Link to="/create-event" className={styles.navbarMenuItem}>Crear Evento</Link></li>
               </>
             ) : null}
-
           </ul>
 
           <div className={styles.navbarAuthSection}>
@@ -202,14 +200,14 @@ const Navbar: React.FC = () => {
 
                     <ul className={styles.dropdownList}>
                       <li>
-                        <Link to="/profile" className={styles.dropdownItem} onClick={closeMobileMenu}>
+                        <Link to="/profile" className={styles.dropdownItem}>
                           <FiUser /> Editar mi perfil
                         </Link>
                       </li>
 
                       {user?.role === 'user' && (
                         <li>
-                          <Link to="/myTickets" className={styles.dropdownItem} onClick={closeMobileMenu}>
+                          <Link to="/myTickets" className={styles.dropdownItem}>
                             <FiList /> Mis Entradas
                           </Link>
                         </li>
@@ -218,17 +216,17 @@ const Navbar: React.FC = () => {
                       {user?.role === 'company' && (
                         <>
                           <li>
-                            <Link to="/company/dashboard" className={styles.dropdownItem} onClick={closeMobileMenu}>
+                            <Link to="/company/dashboard" className={styles.dropdownItem}>
                               <FiPieChart /> Dashboard
                             </Link>
                           </li>
                           <li>
-                            <Link to="/company/my-events" className={styles.dropdownItem} onClick={closeMobileMenu}>
+                            <Link to="/company/my-events" className={styles.dropdownItem}>
                               <FiList /> Mis Eventos
                             </Link>
                           </li>
                           <li>
-                            <Link to="/create-event" className={styles.dropdownItem} onClick={closeMobileMenu}>
+                            <Link to="/create-event" className={styles.dropdownItem}>
                               <FiPlusCircle /> Crear Evento
                             </Link>
                           </li>
@@ -237,7 +235,7 @@ const Navbar: React.FC = () => {
 
                       {user?.role === 'admin' && (
                         <li>
-                          <Link to="/admin/dashboard" className={styles.dropdownItem} onClick={closeMobileMenu}>
+                          <Link to="/admin/dashboard" className={styles.dropdownItem}>
                             <FiSettings /> Panel Admin
                           </Link>
                         </li>
@@ -256,12 +254,21 @@ const Navbar: React.FC = () => {
               </div>
             ) : (
               <div className={styles.navbarAuthButtons}>
-                <Link to="/login" state={{ from: location }} className={styles.navbarLoginBtn} onClick={closeMobileMenu}>Iniciar Sesión</Link>
-                <Link to="/register" className={styles.navbarRegisterBtn} onClick={closeMobileMenu}>Registrarse</Link>
+                <Link to="/login" state={{ from: location }} className={styles.navbarLoginBtn}>Iniciar Sesión</Link>
+                <Link to="/register" className={styles.navbarRegisterBtn}>Registrarse</Link>
               </div>
             )}
           </div>
         </div>
+
+        <MobileMenu
+          isOpen={isMobileMenuOpen}
+          onClose={closeMobileMenu}
+          user={user}
+          isAdmin={isAdmin}
+          isLoggedIn={isLoggedIn}
+          handleLogout={handleLogoutClick}
+        />
 
         {isLoggedIn && user?.role === 'user' && (
           <div className={styles.navbarCartContainer}>
