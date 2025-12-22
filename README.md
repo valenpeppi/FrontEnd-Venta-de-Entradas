@@ -220,7 +220,7 @@
       <td>✓</td>
       <td>✓</td>
       <td>–</td>
-      <td>✓</td>
+      <td>–</td>
     </tr>
     <tr>
       <td>Select Seats/Tickets</td>
