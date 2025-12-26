@@ -1,0 +1,231 @@
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.eventCarousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1100px;
+  box-sizing: border-box;
+  padding: 0 3rem;
+  overflow: hidden;
+}
+
+
+.carouselNavigationBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  transition: transform 0.14s ease, background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carouselNavigationBtn:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.carouselNavigationBtn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carouselNavigationBtnPrev {
+  left: 0;
+}
+
+.carouselNavigationBtnNext {
+  right: 0;
+}
+
+.carouselNavigationIcon {
+  font-size: 1.8rem;
+  color: #4f46e5;
+  pointer-events: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.carouselNavigationBtn:hover .carouselNavigationIcon {
+  color: #3730a3;
+  transform: scale(1.1);
+}
+
+.eventCard {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 460px;
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  animation: slideIn 0.5s ease-out;
+  box-sizing: border-box;
+}
+
+.eventCardImage {
+  width: 50%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.eventCardDetailsWrapper {
+  width: 50%;
+  padding: 2rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.eventCardTitle {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  word-break: break-word;
+}
+
+.eventCardType {
+  display: inline-block;
+  background-color: #e0e7ff;
+  color: #4338ca;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.8rem;
+}
+
+.eventCardMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+.eventCardDetailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eventCardIcon {
+  color: #4f46e5;
+  width: 1.2rem;
+}
+
+.eventCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  font-size: 1.2rem;
+}
+
+.eventCardPrice {
+  font-weight: 800;
+  color: #059669;
+  font-size: 1.4rem;
+}
+
+.btnPurchase {
+  background-color: #4f46e5;
+  color: white;
+  font-weight: 600;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.15);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.btnPurchase:hover {
+  background-color: #3730a3;
+  transform: translateY(-2px);
+}
+
+.btnPurchase:disabled,
+.btnPurchaseDisabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btnPurchase:hover {
+  background-color: #3730a3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.2);
+}
+
+.eventCarouselEmpty {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.2rem;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .eventCarousel {
+    padding: 0 1rem;
+  }
+
+  .carouselNavigationBtn {
+    display: none;
+  }
+
+  .eventCard {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .eventCardImage {
+    width: 100%;
+    height: 280px;
+  }
+
+  .eventCardDetailsWrapper {
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .eventCardTitle {
+    font-size: 1.8rem;
+  }
+
+  .eventCardPrice {
+    font-size: 1.2rem;
+  }
+
+  .btnPurchase {
+    font-size: 1rem;
+  }
+}

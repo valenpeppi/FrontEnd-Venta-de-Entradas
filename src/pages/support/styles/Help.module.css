@@ -1,0 +1,62 @@
+.helpSection {
+  margin-bottom: 3rem;
+}
+
+.helpGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .helpGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.helpCard {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.helpCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+.helpIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #4f46e5;
+}
+
+.helpCard h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1f2937;
+}
+
+.helpCard p {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.helpLink {
+  color: #4f46e5;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: auto;
+}

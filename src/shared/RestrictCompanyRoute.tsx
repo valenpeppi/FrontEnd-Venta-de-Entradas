@@ -1,0 +1,23 @@
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import type { RestrictCompanyRouteProps } from '@/types/auth';
+
+
+
+const RestrictCompanyRoute: React.FC<RestrictCompanyRouteProps> = ({ children }) => {
+    const { user, isLoading } = useAuth();
+    const location = useLocation();
+
+    if (isLoading) {
+        return null;
+    }
+
+    if (user?.role === 'company') {
+        return <Navigate to="/company/dashboard" state={{ from: location }} replace />;
+    }
+
+    return children;
+};
+
+export default RestrictCompanyRoute;
