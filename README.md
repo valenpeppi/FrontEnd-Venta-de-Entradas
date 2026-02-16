@@ -46,7 +46,11 @@
   <img src="https://img.shields.io/badge/Stripe-Checkout-635BFF?style=for-the-badge&logo=stripe&logoColor=white" alt="Stripe Badge"/>
   <img src="https://img.shields.io/badge/Google%20reCAPTCHA-Seguridad-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="reCAPTCHA Badge"/>
 </p>
-
+<div align="center">
+    <a href="https://opensource.org/licenses/MIT">
+        <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License: MIT"/>
+    </a>
+</div>
 <hr/>
 
 <h2>🎯 Objetivo</h2>
@@ -595,13 +599,23 @@ npm run dev
   <li>Abrir un <strong>Pull Request</strong> descriptivo.</li>
 </ol>
 
-<hr/>
+<hr />
 
-<h2>⚖️ Licencia</h2>
+<h2 align="left">⚖️ Licencia</h2>
 
-<p>
-  La licencia del proyecto se detalla en el archivo <code>LICENSE</code> de este repositorio (si corresponde).
+<p align="left">
+  Este proyecto está bajo la <b>Licencia MIT</b>. Para más detalles, puedes consultar el archivo 
+  <a href="LICENSE"><code>LICENSE</code></a> incluido en la raíz de este repositorio.
 </p>
+
+<p align="left">
+  <i>
+    La licencia MIT permite el uso, copia, modificación y distribución del software de forma gratuita, 
+    siempre que se incluya el aviso de copyright original.
+  </i>
+</p>
+
+<hr />
 
 <p>
   <em>TicketApp – FrontEnd de Venta de Entradas para el TP de Desarrollo de Software 2025.</em>
