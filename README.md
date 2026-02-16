@@ -46,7 +46,11 @@
   <img src="https://img.shields.io/badge/Stripe-Checkout-635BFF?style=for-the-badge&logo=stripe&logoColor=white" alt="Stripe Badge"/>
   <img src="https://img.shields.io/badge/Google%20reCAPTCHA-Seguridad-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="reCAPTCHA Badge"/>
 </p>
-
+<div align="center">
+    <a href="https://opensource.org/licenses/MIT">
+        <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License: MIT"/>
+    </a>
+</div>
 <hr/>
 
 <h2>🎯 Objetivo</h2>
