@@ -607,7 +607,7 @@ npm run dev
 </p>
 
 <p align="left">
-  Si tienes sugerencias directas o deseas explorar colaboraciones comerciales, por favor contacta al autor: 
+  Si tienes sugerencias directas o deseas explorar colaboraciones comerciales, por favor contacta a: 
   <a href="mailto:agustinsantinelli@gmail.com">agustinsantinelli@gmail.com</a>.
 </p>
 
