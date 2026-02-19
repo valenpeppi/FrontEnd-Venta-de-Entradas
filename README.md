@@ -600,6 +600,18 @@ npm run dev
 </p>
 <hr />
 
+<h2 align="left">🚫 Copyright Total</h2>
+
+<p align="left">
+  Este proyecto es propiedad intelectual exclusiva de <b>Agustín Santinelli</b>. No se aceptan contribuciones externas o forks para su uso público sin previo acuerdo por escrito.
+</p>
+
+<p align="left">
+  Si tienes sugerencias directas o deseas explorar colaboraciones comerciales, por favor contacta al autor: 
+  <a href="mailto:agustinsantinelli@gmail.com">agustinsantinelli@gmail.com</a>.
+</p>
+
+<hr />
 <p>
   <em>TicketApp – FrontEnd de Venta de Entradas para el TP de Desarrollo de Software 2025.</em>
 </p>
