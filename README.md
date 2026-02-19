@@ -603,7 +603,7 @@ npm run dev
 <h2 align="left">🚫 Copyright Total</h2>
 
 <p align="left">
-  Este proyecto es propiedad intelectual exclusiva de <b>Agustín Santinelli</b>. No se aceptan contribuciones externas o forks para su uso público sin previo acuerdo por escrito.
+  Este proyecto es propiedad intelectual exclusiva de <b>Agustín Santinelli, Martin Ratti, Valentin Peppino y Gianlucas Zabaleta</b>. No se aceptan contribuciones externas o forks para su uso público sin previo acuerdo por escrito.
 </p>
 
 <p align="left">
