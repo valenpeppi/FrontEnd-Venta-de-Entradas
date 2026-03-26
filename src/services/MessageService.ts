@@ -1,0 +1,33 @@
+import api from '@/services/api';
+
+export const MessageService = {
+    createMessage: async (data: { title: string; description: string; senderEmail: string; }) => {
+        const response = await api.post('/messages', data);
+        return response.data;
+    },
+
+    getMessages: async () => {
+        const response = await api.get('/messages');
+        return response.data;
+    },
+
+    replyMessage: async (id: string, responseText: string) => {
+        const response = await api.put(`/messages/${id}/reply`, { responseText });
+        return response.data;
+    },
+
+    rejectMessage: async (id: string) => {
+        const response = await api.put(`/messages/${id}/reject`);
+        return response.data;
+    },
+
+    discardMessage: async (id: string) => {
+        const response = await api.put(`/messages/${id}/discard`);
+        return response.data;
+    },
+
+    generateAIReply: async (userMessage: string) => {
+        const response = await api.post('/ai/generate-reply', { userMessage });
+        return response.data;
+    }
+};

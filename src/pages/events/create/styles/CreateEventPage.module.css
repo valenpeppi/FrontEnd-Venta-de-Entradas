@@ -1,0 +1,328 @@
+.createEventContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 10rem);
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+  color: #1f2937;
+}
+
+.createEventCard {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 600px;
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.createEventTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3730a3;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.createEventError {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid #ef4444;
+}
+
+.createEventForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.formGroup {
+  margin-bottom: 0.5rem;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.formRow {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.formRow .formGroup {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.createEventBtn {
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+  font-size: 1.125rem;
+  border: none;
+  cursor: pointer;
+  flex: 1;
+}
+
+.createEventBtn:hover {
+  background-color: #4338ca;
+}
+
+.cancelBtn {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  outline: none;
+  cursor: pointer;
+  flex: 1;
+}
+
+.cancelBtn:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
+  border-color: #9ca3af;
+}
+
+.fileInputContainer {
+  border: 2px dashed #d1d5db;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.fileInputContainer:hover {
+  background-color: #f9fafb;
+  border-color: #6366f1;
+}
+
+.fileInputContainer.dragOver {
+  background-color: #e0e7ff;
+  border-color: #4f46e5;
+}
+
+.fileInputButton {
+  display: none;
+}
+
+.fileInputText {
+  color: #6b7280;
+}
+
+.fileInputText strong {
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.imagePreview {
+  max-width: 100%;
+  max-height: 150px;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+
+
+.occupiedDatesContainer {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  color: #991b1b;
+}
+
+.occupiedDatesContainer strong {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.occupiedDatesContainer ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.occupiedDatesContainer li {
+  background-color: #fee2e2;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.sectorsContainer {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #f9fafb;
+}
+
+.sectorsContainer h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  color: #374151;
+  text-align: center;
+}
+
+.priceInput {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+.priceInput::-webkit-outer-spin-button,
+.priceInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+@media (max-width: 768px) {
+  .createEventContainer {
+    padding: 1.5rem;
+  }
+
+  .createEventCard {
+    padding: 2rem 1.5rem;
+    border-radius: 0.75rem;
+  }
+
+  .createEventTitle {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .createEventForm {
+    gap: 1rem;
+  }
+
+  .formGroup label {
+    font-size: 0.95rem;
+  }
+
+  .formGroup input,
+  .formGroup textarea,
+  .formGroup select {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .formRow {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .formActions {
+    flex-direction: column;
+  }
+
+  .createEventBtn,
+  .cancelBtn {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .createEventContainer {
+    padding: 1rem;
+  }
+
+  .createEventCard {
+    padding: 1.5rem 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .createEventTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .createEventForm {
+    gap: 0.8rem;
+  }
+
+  .formGroup label {
+    font-size: 0.85rem;
+  }
+
+  .formGroup input,
+  .formGroup textarea,
+  .formGroup select {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .createEventBtn,
+  .cancelBtn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
